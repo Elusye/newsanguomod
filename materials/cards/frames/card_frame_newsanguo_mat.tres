@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3]
+
+[ext_resource type="Shader" path="res://shaders/hsv.gdshader" id="1_newsanguo"]
+
+[resource]
+resource_local_to_scene = true
+shader = ExtResource("1_newsanguo")
+shader_parameter/h = 0.07
+shader_parameter/s = 0.7
+shader_parameter/v = 0.8

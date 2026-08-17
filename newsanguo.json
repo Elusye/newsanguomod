@@ -1,0 +1,14 @@
+{
+  "id": "newsanguo",
+  "name": "新三国",
+  "author": "U_Light",
+  "description": "一个被天意侵蚀的世界。",
+  "version": "0.1.14",
+  "min_game_version": "0.111.0", 
+  "has_pck": true,
+  "has_dll": true,
+  "dependencies": [
+    { "id": "STS2-RitsuLib", "min_version": "0.5.1" }
+  ],
+  "affects_gameplay": true
+}

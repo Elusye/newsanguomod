@@ -1,0 +1,17 @@
+{
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.title": "新三国",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.titleObject": "新三国",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.description": "一个被天意侵蚀的世界。",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.pronounObject": "他",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.possessiveAdjective": "他的",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.pronounPossessive": "他的",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.pronounSubject": "他",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.cardsModifierTitle": "新三国卡牌",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.cardsModifierDescription": "卡牌池中包含新三国专属卡牌。",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.eventDeathPrevention": "我命不该绝！",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.unlockText": "该角色一开始就可以使用。",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.aromaPrinciple": "[sine]……这香气，像陈年的酒，又像新浇的血。天命，要变了。[/sine]",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.goldMonologue": "[sine]这堆金子……够换一城的酒，够喝到三分归一统。[/sine]",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.banter.alive.endTurnPing": "且慢！待我浮一大白，再来！",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.banter.dead.endTurnPing": "我躺一会儿，你们先打着。"
+}

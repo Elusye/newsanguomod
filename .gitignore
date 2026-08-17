@@ -1,0 +1,15 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# IDE / 编辑器缓存（含本机路径等个人信息）
+.idea/
+.vs/
+*.user
+
+# 本地诊断日志
+debug.log
+
+# 构建产物（保险）
+bin/
+obj/
