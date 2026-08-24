@@ -13,3 +13,9 @@ debug.log
 # 构建产物（保险）
 bin/
 obj/
+
+# 本地反编译/临时产物
+.decomp_tmp/
+
+# TRAE IDE 本地配置
+.trae/

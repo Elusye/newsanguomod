@@ -2,10 +2,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Cards;
+using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -18,14 +20,14 @@ namespace newsanguo.Scripts;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class plot : NewsanguoCardTemplate
 {
-    // 基础耗能：1
-    private const int energyCost = 1;
-    // 卡牌类型：技能
-    private const CardType type = CardType.Skill;
+    // 基础耗能：0
+    private const int energyCost = 0;
+    // 卡牌类型：攻击
+    private const CardType type = CardType.Attack;
     // 卡牌稀有度：普通
     private const CardRarity rarity = CardRarity.Common;
-    // 目标类型：自身
-    private const TargetType targetType = TargetType.Self;
+    // 目标类型：任意敌人
+    private const TargetType targetType = TargetType.AnyEnemy;
     // 是否在卡牌图鉴中显示
     private const bool shouldShowInCardLibrary = true;
 
@@ -34,9 +36,10 @@ public class plot : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：抽 2 张牌
+    // 卡牌基础数值：造成 6 点伤害；满足条件时额外抽 1 张牌（升级不再增加抽牌数）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new CardsVar(2)
+        new DamageVar(6m, ValueProp.Move),
+        new CardsVar(1)
     ];
 
     // 当前手牌数恰好为 3 时金色高亮（打出后剩 2，可触发额外抽牌）
@@ -51,7 +54,8 @@ public class plot : NewsanguoCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         Player? owner = base.Owner;
-        if (owner is null)
+        Creature? target = cardPlay.Target;
+        if (owner is null || target is null)
         {
             return;
         }
@@ -59,27 +63,26 @@ public class plot : NewsanguoCardTemplate
         // 播放出牌音效
         SfxCmd.Play("event:/newsanguo/sfx/plot");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
+        // 播放角色攻击动画
+        await CreatureCmd.TriggerAnim(owner.Creature, "Attack", owner.Character.CastAnimDelay);
 
-        // 若打出这张牌后手牌数为 2，则多抽一张
+        // 造成 6 点伤害
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+            .FromCard(this, cardPlay)
+            .Targeting(target)
+            .Execute(choiceContext);
+
+        // 若打出这张牌后手牌数为 2，则额外抽 1 张牌
         // （打出时这张牌已离开手牌，此时的手牌数即为“打出后”的手牌数）
-        int drawCount = PileType.Hand.GetPile(owner).Cards.Count == 2
-            ? DynamicVars["Cards"].IntValue + 1
-            : DynamicVars["Cards"].IntValue;
-
-        await CardPileCmd.Draw(choiceContext, drawCount, owner);
+        if (PileType.Hand.GetPile(owner).Cards.Count == 2)
+        {
+            await CardPileCmd.Draw(choiceContext, DynamicVars["Cards"].IntValue, owner);
+        }
     }
 
-    // 升级：获得“保留”
+    // 升级：伤害 6 → 9（抽牌效果不再升级）
     protected override void OnUpgrade()
     {
-        AddKeyword(CardKeyword.Retain);
-    }
-
-    // 降级：移除“保留”
-    protected override void AfterDowngraded()
-    {
-        RemoveKeyword(CardKeyword.Retain);
+        DynamicVars.Damage.UpgradeValueBy(3m);
     }
 }

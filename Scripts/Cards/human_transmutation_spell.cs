@@ -54,7 +54,7 @@ public class human_transmutation_spell : NewsanguoCardTemplate
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromCard<soldier>(IsUpgraded),
         HoverTipFactory.FromPower<heavens_force>(),
-        HoverTipFactory.FromPower<heavens_decay>()
+        HoverTipFactory.FromPower<heavens_decay_power>()
     ];
 
     public human_transmutation_spell() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)

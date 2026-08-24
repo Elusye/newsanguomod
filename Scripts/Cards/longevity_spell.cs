@@ -54,7 +54,7 @@ public class longevity_spell : NewsanguoCardTemplate
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<RegenPower>(),
         HoverTipFactory.FromPower<heavens_force>(),
-        HoverTipFactory.FromPower<heavens_decay>()
+        HoverTipFactory.FromPower<heavens_decay_power>()
     ];
 
     public longevity_spell() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)

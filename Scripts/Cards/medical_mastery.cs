@@ -12,9 +12,7 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Rooms;
-using MegaCrit.Sts2.Core.Saves.Runs;
 using MegaCrit.Sts2.Core.ValueProps;
-using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -38,11 +36,8 @@ public class medical_mastery : NewsanguoCardTemplate
     // 是否在卡牌图鉴中显示
     private const bool shouldShowInCardLibrary = true;
 
-    // 斩杀成长的基础伤害（不随升级变化）
+    // 基础伤害
     private const int baseDamage = 15;
-
-    // 注意：v0.111.0 起存档属性改由 ModelIdSerializationCache 自动扫描 ModelDb 中的类型，
-    // 本卡注册进 ModelDb 后其 [SavedProperty] 会被自动收录，无需手动注入（旧 API 已删除）。
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
@@ -52,46 +47,18 @@ public class medical_mastery : NewsanguoCardTemplate
     // 卡牌自带“消耗”关键词
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
+    // 可被无限升级：升级来源（锻造/升级卡）按 IsUpgradable 过滤，
+    // MaxUpgradeLevel 足够大即可反复升级（卡名会自动显示「医术高明+N」）
+    public override int MaxUpgradeLevel => int.MaxValue;
+
     // 鼠标悬停时显示“斩杀”关键词说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.Static(StaticHoverTip.Fatal)
     ];
 
-    // 当前伤害（含斩杀成长），随存档持久化
-    private int _currentDamage = baseDamage;
-
-    [SavedProperty]
-    public int CurrentDamage
-    {
-        get => _currentDamage;
-        set
-        {
-            AssertMutable();
-            _currentDamage = value;
-            // 同步卡面显示的基础伤害
-            base.DynamicVars.Damage.BaseValue = _currentDamage;
-        }
-    }
-
-    // 累计斩杀成长值，随存档持久化
-    private int _increasedDamage;
-
-    [SavedProperty]
-    public int IncreasedDamage
-    {
-        get => _increasedDamage;
-        set
-        {
-            AssertMutable();
-            _increasedDamage = value;
-        }
-    }
-
-    // 卡牌基础数值：造成当前伤害（初始 15 点）；斩杀成长：普通 +3（升级 +5）、精英/BOSS +5（升级 +7）
+    // 卡牌基础数值：造成 15 点伤害
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(CurrentDamage, ValueProp.Move),
-        new IntVar("fatal_bonus", 3),
-        new IntVar("fatal_bonus_elite", 5)
+        new DamageVar(baseDamage, ValueProp.Move)
     ];
 
     public medical_mastery() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
@@ -123,43 +90,23 @@ public class medical_mastery : NewsanguoCardTemplate
         if (shouldTriggerFatal &&
             attackCommand.Results.SelectMany(results => results).Any(result => result.WasTargetKilled))
         {
-            // 精英/BOSS 战获得更多永久提升（fatal_bonus_elite > fatal_bonus）
+            // 斩杀：升级牌库中的自身——普通敌人升 1 级，精英/BOSS 战升 2 级
             RoomType? roomType = base.Owner.RunState.CurrentRoom?.RoomType;
-            bool isEliteOrBoss = roomType is RoomType.Elite or RoomType.Boss;
-            int permanentBonus = isEliteOrBoss
-                ? DynamicVars["fatal_bonus_elite"].IntValue
-                : DynamicVars["fatal_bonus"].IntValue;
-
-            // 本局游戏永久成长：战斗中的卡牌与牌库中的卡牌同时提升（与“遗传算法”一致）
-            BuffFromPlay(permanentBonus);
-            (base.DeckVersion as medical_mastery)?.BuffFromPlay(permanentBonus);
+            int upgradeCount = roomType is RoomType.Elite or RoomType.Boss ? 2 : 1;
+            medical_mastery? deckCopy = base.DeckVersion as medical_mastery;
+            for (int i = 0; i < upgradeCount && deckCopy is not null; i++)
+            {
+                CardCmd.Upgrade(deckCopy);
+            }
         }
     }
 
-    // 斩杀后累计成长值并刷新伤害
-    private void BuffFromPlay(int bonus)
-    {
-        IncreasedDamage += bonus;
-        UpdateDamage();
-    }
-
-    // 伤害 = 基础伤害 + 累计成长值
-    private void UpdateDamage()
-    {
-        CurrentDamage = baseDamage + IncreasedDamage;
-    }
-
-    // 战斗中降级会重建 DynamicVars（恢复为卡池初始值），需把斩杀成长后的伤害重新同步回卡面
-    protected override void AfterDowngraded()
-    {
-        base.AfterDowngraded();
-        base.DynamicVars.Damage.BaseValue = _currentDamage;
-    }
-
-    // 升级后的效果逻辑：斩杀成长 +3/+5 → +5/+7
+    // 升级效果：造成的伤害增加 n+2，n 为升级次数。
+    // UpgradeInternal 会先自增 CurrentUpgradeLevel 再调用本方法，
+    // 所以第 n 次升级时 CurrentUpgradeLevel == n：第 1 次 +3、第 2 次 +4、第 3 次 +5……
+    // 存档读档时引擎按升级次数重放本方法，数值自动保持一致。
     protected override void OnUpgrade()
     {
-        DynamicVars["fatal_bonus"].UpgradeValueBy(2);
-        DynamicVars["fatal_bonus_elite"].UpgradeValueBy(2);
+        DynamicVars.Damage.UpgradeValueBy(CurrentUpgradeLevel + 2);
     }
 }

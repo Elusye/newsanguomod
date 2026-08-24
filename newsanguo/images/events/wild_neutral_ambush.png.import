@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ben008nrjr1cr"
-path="res://.godot/imported/old_brightest_flame.png-c4c9578b20af468eef371cbbebfe3ccd.ctex"
+uid="uid://b71x5rv1it0sy"
+path="res://.godot/imported/wild_neutral_ambush.png-e7219b7da51b865167a4d5aec3a4de11.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/cards/old_brightest_flame.png"
-dest_files=["res://.godot/imported/old_brightest_flame.png-c4c9578b20af468eef371cbbebfe3ccd.ctex"]
+source_file="res://newsanguo/images/events/wild_neutral_ambush.png"
+dest_files=["res://.godot/imported/wild_neutral_ambush.png-e7219b7da51b865167a4d5aec3a4de11.ctex"]
 
 [params]
 

@@ -55,7 +55,7 @@ public class new_game_plus : NewsanguoCardTemplate
     // 鼠标悬停时显示天意之力、天意侵蚀与酒力提示
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<heavens_force>(),
-        HoverTipFactory.FromPower<heavens_decay>(),
+        HoverTipFactory.FromPower<heavens_decay_power>(),
         HoverTipFactory.FromPower<drunken_might>()
     ];
 

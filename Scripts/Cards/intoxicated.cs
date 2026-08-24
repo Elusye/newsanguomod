@@ -52,6 +52,21 @@ public class intoxicated : NewsanguoCardTemplate
         HoverTipFactory.FromPower<drunken_might>()
     ];
 
+    // 上一张打出的牌是技能牌时金色高亮（提示会获得额外酒力）
+    protected override bool ShouldGlowGoldInternal
+    {
+        get
+        {
+            if (base.CombatState is null || base.Owner is null)
+            {
+                return false;
+            }
+            CardPlayFinishedEntry? lastPlay = CombatManager.Instance.History.CardPlaysFinished
+                .LastOrDefault(entry => entry.CardPlay?.Card?.Owner == base.Owner);
+            return lastPlay is not null && lastPlay.CardPlay.Card.Type == CardType.Skill;
+        }
+    }
+
     public intoxicated() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
     }

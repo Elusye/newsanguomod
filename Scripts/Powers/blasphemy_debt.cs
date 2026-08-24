@@ -56,7 +56,7 @@ public class blasphemy_debt : ModPowerTemplate
         {
             // 亵渎债务到期触发音效（对应 FMOD 事件 event:/newsanguo/sfx/blasphemy_debt）
             SfxCmd.Play("event:/newsanguo/sfx/blasphemy_debt");
-            await PowerCmd.Apply<heavens_decay>(choiceContext, Owner, decayAmount, Owner, null, silent: false);
+            await PowerCmd.Apply<heavens_decay_power>(choiceContext, Owner, decayAmount, Owner, null, silent: false);
         }
     }
 }

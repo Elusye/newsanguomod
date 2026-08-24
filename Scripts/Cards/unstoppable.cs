@@ -51,7 +51,7 @@ public class unstoppable : NewsanguoCardTemplate
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<IntangiblePower>(),
         HoverTipFactory.FromPower<heavens_force>(),
-        HoverTipFactory.FromPower<heavens_decay>()
+        HoverTipFactory.FromPower<heavens_decay_power>()
     ];
 
     // 自带“虚无”关键词（升级后移除）

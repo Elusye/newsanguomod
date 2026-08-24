@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c5dmihy4ncc56"
-path="res://.godot/imported/old_dominate.png-dac1f9d007860c5d8e8346d307caa2a3.ctex"
+uid="uid://dh5j6ithhcee4"
+path="res://.godot/imported/portal.png-9d3cd021237df5146c0374261c5dc01e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/cards/old_dominate.png"
-dest_files=["res://.godot/imported/old_dominate.png-dac1f9d007860c5d8e8346d307caa2a3.ctex"]
+source_file="res://newsanguo/images/relics/portal.png"
+dest_files=["res://.godot/imported/portal.png-9d3cd021237df5146c0374261c5dc01e.ctex"]
 
 [params]
 

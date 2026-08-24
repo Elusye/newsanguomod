@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.Extensions;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
@@ -16,6 +17,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Helpers;
 
 namespace newsanguo.Scripts;
 
@@ -70,17 +72,29 @@ public class tweak : NewsanguoCardTemplate
             .Targeting(target)
             .Execute(choiceContext);
 
-        // 变化一张手牌
+        // 选择一张手牌（排除已有附魔的牌）：生成带随机附魔的复制品，然后消耗原牌
         CardModel? selected = (await CardSelectCmd.FromHand(
-            prefs: new CardSelectorPrefs(CardSelectorPrefs.TransformSelectionPrompt, 1),
+            prefs: new CardSelectorPrefs(CardSelectorPrefs.EnchantSelectionPrompt, 1),
             context: choiceContext,
             player: owner,
-            filter: null,
+            filter: card => card.Enchantment is null,
             source: this)).FirstOrDefault();
-        if (selected != null)
+        if (selected is null)
         {
-            await CardCmd.TransformToRandom(selected, owner.PlayerRng.Transformations);
+            return;
         }
+
+        // 战斗内克隆，保留原牌全部属性（战斗级实例，战斗结束销毁，附魔天然只持续本场战斗）
+        CardModel copy = selected.CreateClone();
+
+        // 随机施加一个原版附魔
+        EnchantHelper.ApplyRandomEnchant(copy, owner);
+
+        // 附魔后的复制品加入手牌
+        await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Hand, owner, CardPilePosition.Random);
+
+        // 消耗原牌
+        await CardCmd.Exhaust(choiceContext, selected);
     }
 
     // 升级后的效果逻辑

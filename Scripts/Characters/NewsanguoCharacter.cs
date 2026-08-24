@@ -80,7 +80,7 @@ public class NewsanguoCharacter : ModCharacterTemplate<
         ]
     );
 
-    public override int StartingHp => 80;
+    public override int StartingHp => 75;
     public override int MaxEnergy => 3;
     public override int StartingGold => 99;
 
@@ -98,7 +98,7 @@ public class NewsanguoCharacter : ModCharacterTemplate<
 
     public override VfxColor SpeechBubbleColor => VfxColor.Red;
 
-    public override Color MapDrawingColor => new Color("CB282B");
+    public override Color MapDrawingColor => new Color("6B492E");
 
     public override Color RemoteTargetingLineColor => new Color("E15847FF");
 

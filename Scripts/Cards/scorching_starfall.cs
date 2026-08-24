@@ -40,9 +40,16 @@ public class scorching_starfall : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：每有 1 点酒力，对所有敌人造成 1 点伤害
+    // 卡牌基础数值：每点酒力对所有敌人造成 1 点伤害；战斗中动态计算本次的攻击段数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(1, ValueProp.Move)
+        new DamageVar(1, ValueProp.Move),
+        new CalculationBaseVar(0m),
+        new CalculationExtraVar(1m),
+        new CalculatedVar("CalculatedHits").WithMultiplier(static (card, _) =>
+        {
+            PowerModel? drunkenMight = card.Owner?.Creature.GetPower<drunken_might>();
+            return drunkenMight?.Amount ?? 0m;
+        })
     ];
 
     // 鼠标悬停时显示“酒力”关键词说明

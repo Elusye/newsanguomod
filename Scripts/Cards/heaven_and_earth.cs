@@ -48,7 +48,7 @@ public class heaven_and_earth : NewsanguoCardTemplate
     // 悬停提示：展示“天意之力”、“天意侵蚀”、“飞行”说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<heavens_force>(),
-        HoverTipFactory.FromPower<heavens_decay>(),
+        HoverTipFactory.FromPower<heavens_decay_power>(),
         HoverTipFactory.FromPower<flight_power>()
     ];
 

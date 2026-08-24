@@ -51,7 +51,7 @@ public class skyward_blade : NewsanguoCardTemplate
     // 悬停提示：展示“天意之力”与“天意侵蚀”的说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<heavens_force>(),
-        HoverTipFactory.FromPower<heavens_decay>()
+        HoverTipFactory.FromPower<heavens_decay_power>()
     ];
 
     // 天意之力为负时金色高亮（提示会触发额外伤害）

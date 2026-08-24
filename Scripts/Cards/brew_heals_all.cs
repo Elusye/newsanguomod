@@ -48,7 +48,7 @@ public class brew_heals_all : NewsanguoCardTemplate
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<drunken_might>(),
         HoverTipFactory.FromPower<heavens_force>(),
-        HoverTipFactory.FromPower<heavens_decay>()
+        HoverTipFactory.FromPower<heavens_decay_power>()
     ];
 
     public brew_heals_all() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)

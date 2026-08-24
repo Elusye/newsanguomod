@@ -48,7 +48,7 @@ public class never_had_these : NewsanguoCardTemplate
     // 悬停提示：展示“天意之力”和“天意侵蚀”说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<heavens_force>(),
-        HoverTipFactory.FromPower<heavens_decay>()
+        HoverTipFactory.FromPower<heavens_decay_power>()
     ];
 
     public never_had_these() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)

@@ -5,5 +5,8 @@
   "NEWSANGUO_RELIC_CENTURY_BREW.title": "百年佳酿",
   "NEWSANGUO_RELIC_CENTURY_BREW.description": "在每个回合开始时，获得[blue]4[/blue]点[gold]酒力[/gold]。",
   "NEWSANGUO_RELIC_CENTURY_BREW.flavor": "百年佳酿，恭候嘉宾。",
+  "NEWSANGUO_RELIC_PORTAL.title": "传送门",
+  "NEWSANGUO_RELIC_PORTAL.description": "你下{Rooms}次选择下一层的房间时可以无视当前的路线。",
+  "NEWSANGUO_RELIC_PORTAL.flavor": "门后是什么？或许只有天意知道。",
   "SEA_GLASS.NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.title": "酒客玻璃"
 }

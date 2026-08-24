@@ -58,17 +58,15 @@ public class check_the_premiere : NewsanguoCardTemplate
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
 
-        // 从七张“0.99 版本后被削弱”的原始版本卡牌（不含燃料）中随机选出一张，
+        // 从五张“0.99 版本后被削弱”的原始版本卡牌（不含燃料）中随机选出一张，
         // 使用战斗生成 RNG 保证多人同步（与 Splash 一致）
         CardModel[] templates =
         [
-            combatState.CreateCard<old_dominate>(owner),
             combatState.CreateCard<old_forgotten_ritual>(owner),
             combatState.CreateCard<old_borrowed_time>(owner),
             combatState.CreateCard<old_dirge>(owner),
             combatState.CreateCard<old_compact>(owner),
-            combatState.CreateCard<old_expect_a_fight>(owner),
-            combatState.CreateCard<old_brightest_flame>(owner)
+            combatState.CreateCard<old_expect_a_fight>(owner)
         ];
         // 旧版卡牌设了 CanBeGeneratedInCombat = false（避免进入无色牌随机生成池），
         // 不能走 CardFactory.GetDistinctForCombat（其内部 FilterForCombat 会把这些牌全部过滤掉），

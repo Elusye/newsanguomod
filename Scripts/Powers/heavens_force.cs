@@ -41,7 +41,7 @@ public class heavens_force : ModPowerTemplate
     );
 
     // 悬停天意之力时，同时展示天意侵蚀的效果说明，便于玩家了解负向转化
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<heavens_decay>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<heavens_decay_power>()];
 
     // 玩家回合结束时：每回合最多转化一次（10层换1次效果），余数保留
     public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)
@@ -74,7 +74,7 @@ public class heavens_force : ModPowerTemplate
             SfxCmd.Play("event:/newsanguo/sfx/heavens_force_decay");
 
             // 负向转化：获得1层天意侵蚀，天意之力+10（例如-33 → -23；-10 → 0 时能力自然移除，不影响额外回合判定）
-            await PowerCmd.Apply<heavens_decay>(choiceContext, Owner, 1, Owner, null, silent: false);
+            await PowerCmd.Apply<heavens_decay_power>(choiceContext, Owner, 1, Owner, null, silent: false);
             await PowerCmd.ModifyAmount(choiceContext, this, 10, Owner, null, silent: true);
         }
     }

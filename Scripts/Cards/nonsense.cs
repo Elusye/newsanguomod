@@ -37,9 +37,9 @@ public class nonsense : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：抽 2 张牌（升级 3）
+    // 卡牌基础数值：抽 3 张牌（升级 4）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new CardsVar(2)
+        new CardsVar(3)
     ];
 
     public nonsense() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
@@ -78,7 +78,7 @@ public class nonsense : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 抽牌数从 2 提高到 3
+        // 抽牌数从 3 提高到 4
         DynamicVars.Cards.UpgradeValueBy(1);
     }
 }

@@ -55,7 +55,7 @@ public class desecrate_heaven : NewsanguoCardTemplate
             List<IHoverTip> tips =
             [
                 HoverTipFactory.FromPower<heavens_force>(),
-                HoverTipFactory.FromPower<heavens_decay>()
+                HoverTipFactory.FromPower<heavens_decay_power>()
             ];
 
             if (!IsUpgraded)

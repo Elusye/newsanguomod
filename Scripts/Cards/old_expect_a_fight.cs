@@ -38,9 +38,16 @@ public class old_expect_a_fight : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：每张攻击牌获得的能量
+    // 卡牌基础数值：每张攻击牌获得的能量；战斗中动态计算本次可获得的总能量
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new EnergyVar(1)
+        new EnergyVar(1),
+        new CalculationBaseVar(0m),
+        new CalculationExtraVar(1m),
+        new CalculatedVar("CalculatedEnergy").WithMultiplier(static (card, _) =>
+        {
+            Player? owner = card.Owner;
+            return owner is null ? 0m : CardPile.Get(PileType.Hand, owner)!.Cards.Count(c => c.Type == CardType.Attack);
+        })
     ];
 
     // 衍生牌不应出现在无色牌随机生成（无色药水、类星体、光谱偏移等）中

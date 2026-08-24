@@ -44,9 +44,6 @@ public class cricket_form : NewsanguoCardTemplate
         new DynamicVar("HardToKillAmount", 2m)
     ];
 
-    // 自带“虚无”关键词（升级后去除）
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Ethereal];
-
     public cricket_form() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
     }
@@ -85,15 +82,9 @@ public class cricket_form : NewsanguoCardTemplate
         await PowerCmd.Apply<cricket_form_power>(choiceContext, owner.Creature, 1, owner.Creature, this);
     }
 
-    // 升级：去除“虚无”
+    // 升级：难以杀灭层数 -1（2 → 1）
     protected override void OnUpgrade()
     {
-        RemoveKeyword(CardKeyword.Ethereal);
-    }
-
-    // 降级：恢复“虚无”
-    protected override void AfterDowngraded()
-    {
-        AddKeyword(CardKeyword.Ethereal);
+        DynamicVars["HardToKillAmount"].UpgradeValueBy(-1);
     }
 }

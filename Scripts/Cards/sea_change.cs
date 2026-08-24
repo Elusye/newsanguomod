@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.Extensions;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
@@ -13,6 +14,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Helpers;
 
 namespace newsanguo.Scripts;
 
@@ -68,10 +70,10 @@ public class sea_change : NewsanguoCardTemplate
         foreach (CardModel original in originals)
         {
             CardPileAddResult result = await CardCmd.TransformToRandom(original, rng);
-            // 升级后：变化出的牌也会升级
+            // 升级后：为变化出来的牌施加随机附魔
             if (IsUpgraded && result.cardAdded != null)
             {
-                CardCmd.Upgrade(result.cardAdded);
+                EnchantHelper.ApplyRandomEnchant(result.cardAdded, owner);
             }
         }
     }

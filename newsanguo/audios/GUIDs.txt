@@ -30,6 +30,10 @@
 {3f6fa39b-fcd7-4ace-8703-ce4527e5b6ec} event:/newsanguo/sfx/character_death
 {327eb464-2255-4db5-bdb8-5af68bd7e313} event:/newsanguo/sfx/character_select
 {25f8502e-669d-4382-9796-941a74e870f8} event:/newsanguo/sfx/check_the_premiere
+{5dedcad2-bbfa-4d1d-b695-024ef8a639fa} event:/newsanguo/sfx/chenliu_mess_hall
+{bf5ecdbe-7db7-4ec5-b900-540794f00278} event:/newsanguo/sfx/chenliu_mess_hall_heal
+{87706cb4-e2bb-4b65-baeb-5fd36a90394e} event:/newsanguo/sfx/chenliu_mess_hall_max_hp
+{0698fc3b-24dd-49e9-8045-27664e762cec} event:/newsanguo/sfx/chenliu_mess_hall_relic
 {20332bf8-2225-46c7-a048-f5eba31bcfdb} event:/newsanguo/sfx/chorus
 {3bc6d38d-fd59-4d39-858b-16d30c4c89a6} event:/newsanguo/sfx/chow_down
 {96b92adb-6a12-4725-9801-75a275df577a} event:/newsanguo/sfx/commander_arrives

@@ -45,7 +45,7 @@ public class divination : NewsanguoCardTemplate
     // 鼠标悬停时显示天意之力与天意侵蚀提示
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<heavens_force>(),
-        HoverTipFactory.FromPower<heavens_decay>()
+        HoverTipFactory.FromPower<heavens_decay_power>()
     ];
 
     public divination() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
