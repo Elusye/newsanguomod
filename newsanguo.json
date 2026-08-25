@@ -3,7 +3,7 @@
   "name": "新三国",
   "author": "U_Light",
   "description": "一个被天意侵蚀的世界。",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "min_game_version": "0.111.0", 
   "has_pck": true,
   "has_dll": true,

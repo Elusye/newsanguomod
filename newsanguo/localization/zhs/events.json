@@ -10,7 +10,7 @@
   "NEWSANGUO_EVENT_NEW_THREE_KINGDOMS_WAY.pages.GAIN_PORTAL.description": "通过传送门，你又获得了前往任意地点的能力。",
   "NEWSANGUO_EVENT_NEW_THREE_KINGDOMS_WAY.pages.GO_TO_ANCIENT.description": "通过新三国道，你回到了这一幕的先古之民处。",
   "NEWSANGUO_EVENT_CHENLIU_MESS_HALL.title": "陈留大食堂",
-  "NEWSANGUO_EVENT_CHENLIU_MESS_HALL.pages.INITIAL.description": "你来到了[b]陈留城[/b]。\n[gold][b]袁绍[/b][/gold]见到了你，高兴道：\n“[b][gold]孟德[/gold][/b]！你终于来了！我等可都是[sine][b]望眼欲穿[/b][/sine]了！”\n话音刚落，[b][gold]公孙瓒[/gold][/b]便说道：\n\n“你不来我们[b][sine][rainbow]吃什么[/rainbow][/sine][/b]？”\n“是啊！”\n\n接下来，[gold][b]袁绍[/b][/gold]在帅台舍宴，让众诸侯[sine][b]痛饮庆功酒[/b][/sine]。\n你准备：",
+  "NEWSANGUO_EVENT_CHENLIU_MESS_HALL.pages.INITIAL.description": "你来到了[b]陈留城[/b]。\n[gold][b]袁绍[/b][/gold]见到了你，高兴道：\n“[b][gold]孟德[/gold][/b]！你终于来了！我等可都是[sine][b]望眼欲穿[/b][/sine]了！”\n话音刚落，[b][gold]公孙瓒[/gold][/b]便说道：\n\n“你不来我们[b][sine][rainbow]吃什么[/rainbow][/sine][/b]？”\n“是啊！”\n\n接下来，[gold][b]袁绍[/b][/gold]在帅台设宴，让众诸侯[sine][b]痛饮庆功酒[/b][/sine]。\n你准备：",
   "NEWSANGUO_EVENT_CHENLIU_MESS_HALL.pages.INITIAL.options.HEAL_THIRD.title": "喝点美酒",
   "NEWSANGUO_EVENT_CHENLIU_MESS_HALL.pages.INITIAL.options.HEAL_THIRD.description": "回复{HealAmount}点生命。",
   "NEWSANGUO_EVENT_CHENLIU_MESS_HALL.pages.INITIAL.options.GAIN_MAX_HP.title": "吃点鲜肉",

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Commands.Builders;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -94,10 +95,36 @@ public class medical_mastery : NewsanguoCardTemplate
             RoomType? roomType = base.Owner.RunState.CurrentRoom?.RoomType;
             int upgradeCount = roomType is RoomType.Elite or RoomType.Boss ? 2 : 1;
             medical_mastery? deckCopy = base.DeckVersion as medical_mastery;
-            for (int i = 0; i < upgradeCount && deckCopy is not null; i++)
+            if (deckCopy is null || upgradeCount <= 0)
             {
-                CardCmd.Upgrade(deckCopy);
+                return;
             }
+
+            // CardCmd.Upgrade 在战斗即将结束时（IsEnding，例如斩杀的是最后一只敌人）会提前返回，
+            // 导致升级被吞。此时延迟到战斗胜利（CombatWon，此时 IsEnding 已为 false）后再升级。
+            if (CombatManager.Instance.IsEnding)
+            {
+                CombatManager.Instance.CombatWon += OnCombatWon;
+
+                void OnCombatWon(CombatRoom _)
+                {
+                    CombatManager.Instance.CombatWon -= OnCombatWon;
+                    UpgradeDeckVersion(deckCopy, upgradeCount);
+                }
+            }
+            else
+            {
+                UpgradeDeckVersion(deckCopy, upgradeCount);
+            }
+        }
+    }
+
+    // 对牌库中的自身执行 upgradeCount 次升级
+    private static void UpgradeDeckVersion(medical_mastery deckCopy, int upgradeCount)
+    {
+        for (int i = 0; i < upgradeCount; i++)
+        {
+            CardCmd.Upgrade(deckCopy);
         }
     }
 

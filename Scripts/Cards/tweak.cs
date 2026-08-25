@@ -41,9 +41,9 @@ public class tweak : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 9 点伤害（升级 12）
+    // 卡牌基础数值：造成 6 点伤害
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(9m, ValueProp.Move)
+        new DamageVar(6m, ValueProp.Move)
     ];
 
     public tweak() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
@@ -72,35 +72,35 @@ public class tweak : NewsanguoCardTemplate
             .Targeting(target)
             .Execute(choiceContext);
 
-        // 选择一张手牌（排除已有附魔的牌）：生成带随机附魔的复制品，然后消耗原牌
-        CardModel? selected = (await CardSelectCmd.FromHand(
-            prefs: new CardSelectorPrefs(CardSelectorPrefs.EnchantSelectionPrompt, 1),
-            context: choiceContext,
-            player: owner,
-            filter: card => card.Enchantment is null,
-            source: this)).FirstOrDefault();
-        if (selected is null)
+        // 战斗中的卡牌本就是牌组卡牌的复制品，为战斗中的卡牌附魔不会影响牌组，
+        // 因此直接为手牌添加随机附魔即可，无需复制再消耗原牌。
+        if (IsUpgraded)
         {
-            return;
+            // 升级：为所有未附魔的手牌添加随机附魔
+            foreach (CardModel hand in PileType.Hand.GetPile(owner).Cards.Where(c => c.Enchantment is null).ToArray())
+            {
+                EnchantHelper.ApplyRandomEnchant(hand, owner);
+            }
         }
-
-        // 战斗内克隆，保留原牌全部属性（战斗级实例，战斗结束销毁，附魔天然只持续本场战斗）
-        CardModel copy = selected.CreateClone();
-
-        // 随机施加一个原版附魔
-        EnchantHelper.ApplyRandomEnchant(copy, owner);
-
-        // 附魔后的复制品加入手牌
-        await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Hand, owner, CardPilePosition.Random);
-
-        // 消耗原牌
-        await CardCmd.Exhaust(choiceContext, selected);
+        else
+        {
+            // 选择一张未附魔的手牌，直接添加随机附魔
+            CardModel? selected = (await CardSelectCmd.FromHand(
+                prefs: new CardSelectorPrefs(CardSelectorPrefs.EnchantSelectionPrompt, 1),
+                context: choiceContext,
+                player: owner,
+                filter: card => card.Enchantment is null,
+                source: this)).FirstOrDefault();
+            if (selected is null)
+            {
+                return;
+            }
+            EnchantHelper.ApplyRandomEnchant(selected, owner);
+        }
     }
 
-    // 升级后的效果逻辑
+    // 升级后的效果逻辑（升级效果由 OnPlay 中的 IsUpgraded 分支实现）
     protected override void OnUpgrade()
     {
-        // 伤害从 9 提高到 12
-        DynamicVars.Damage.UpgradeValueBy(3m);
     }
 }
