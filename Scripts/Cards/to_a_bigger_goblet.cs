@@ -74,7 +74,7 @@ public class to_a_bigger_goblet : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 换大盏层数从 2 提高到 3 (2+1)
-        DynamicVars["to_a_bigger_goblet"].UpgradeValueBy(1);
+        // 换大盏层数从 2 提高到 4 (2+2)
+        DynamicVars["to_a_bigger_goblet"].UpgradeValueBy(2);
     }
 }

@@ -4,12 +4,13 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Extensions;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Enchantments;
 
 namespace newsanguo.Scripts.Helpers;
 
 /// <summary>
 /// 随机附魔工具：从原版附魔中随机挑选一张卡牌可用的附魔并施加。
-/// 可配置：剔除对玩家无实际收益的机制性附魔；带数值的附魔使用自定义强度。
+/// 可配置：剔除对玩家无实际收益的机制性附魔与测试用 mock/弃用附魔；带数值的附魔使用自定义强度。
 /// </summary>
 public static class EnchantHelper
 {
@@ -37,7 +38,10 @@ public static class EnchantHelper
         // 附魔的 Id.Entry 是大写（如 "ADROIT"），先归一化为小写再比较，
         // 否则剔除表和数值表永远匹配不上
         EnchantmentModel[] candidates = ModelDb.DebugEnchantments
-            .Where(e => !ExcludedEntries.Contains(e.Id.Entry.ToLowerInvariant()) && e.CanEnchant(card))
+            .Where(e => !e.IsMock
+                && e is not DeprecatedEnchantment
+                && !ExcludedEntries.Contains(e.Id.Entry.ToLowerInvariant())
+                && e.CanEnchant(card))
             .ToArray();
         if (candidates.Length == 0)
         {

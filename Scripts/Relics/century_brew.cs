@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -21,6 +23,9 @@ public class century_brew : ModRelicTemplate
     );
 
     public override RelicRarity Rarity => RelicRarity.Ancient;
+
+    // 悬停提示：展示“酒力”能力说明
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<drunken_might>()];
 
     public override bool ShouldReceiveCombatHooks => true;
 

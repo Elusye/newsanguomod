@@ -56,7 +56,7 @@
   "NEWSANGUO_CARD_RELEASE.title": "释怀",
   "NEWSANGUO_CARD_RELEASE.description": "在战斗结束时，回复{heal_amount:diff()}点生命并播放“关羽之歌”。",
   "NEWSANGUO_CARD_INVINCIBLE.title": "天下无敌！",
-  "NEWSANGUO_CARD_INVINCIBLE.description": "若你没有[gold]飞行[/gold]，对没有[gold]振翅[/gold]和[gold]翱翔[/gold]的敌人造成伤害增加{bonus_percent}%。",
+  "NEWSANGUO_CARD_INVINCIBLE.description": "失去{heavens_force:diff()}点[gold]天意之力[/gold]。\n若你没有[gold]飞行[/gold]，对没有[gold]振翅[/gold]和[gold]翱翔[/gold]的敌人造成伤害增加{bonus_percent}%。",
   "NEWSANGUO_CARD_CRICKET_FORM.title": "蛐蛐形态",
   "NEWSANGUO_CARD_CRICKET_FORM.description": "获得{HardToKillAmount:diff()}层[gold]难以杀灭[/gold]。\n回合开始时，将你的[gold]难以杀灭[/gold]层数翻倍。",
   "NEWSANGUO_CARD_CHOW_DOWN.title": "干饭",
@@ -162,7 +162,7 @@
   "NEWSANGUO_CARD_FORTY_SIXTY_TAX.title": "四六征税",
   "NEWSANGUO_CARD_FORTY_SIXTY_TAX.description": "获得目标[gold]当前血量[/gold]{tax_percent}%的金币，除以游戏人数。\n造成{Damage:diff()}点伤害。",
   "NEWSANGUO_CARD_HEAVENLY_TROOPS.title": "天降雄兵",
-  "NEWSANGUO_CARD_HEAVENLY_TROOPS.description": "在{turn_delay}个回合结束后，将{soldier_count}张[gold]{IfUpgraded:show:士兵+|士兵}[/gold]加入你的手牌。",
+  "NEWSANGUO_CARD_HEAVENLY_TROOPS.description": "失去{heavens_force:diff()}点[gold]天意之力[/gold]。\n在{turn_delay}个回合结束后，将{soldier_count}张[gold]{IfUpgraded:show:士兵+|士兵}[/gold]加入你的手牌。",
   "NEWSANGUO_CARD_QIN_JIN_ALLIANCE.title": "秦晋之好",
   "NEWSANGUO_CARD_QIN_JIN_ALLIANCE.description": "选择一名敌人。\n你与其各获得{Block:diff()}点[gold]格挡[/gold]。",
   "NEWSANGUO_CARD_LETS_DISCUSS.title": "议一下吧",
@@ -209,7 +209,7 @@
   "NEWSANGUO_CARD_RAT_POISON.title": "毒鼠计",
   "NEWSANGUO_CARD_RAT_POISON.description": "在你的回合开始时，将一张[gold]{IfUpgraded:show:毒鼠+|毒鼠}[/gold]加入你的手牌。",
   "NEWSANGUO_CARD_FATE_CONTROL.title": "天意操控",
-  "NEWSANGUO_CARD_FATE_CONTROL.description": "所有在战斗中临时增加的牌将被升级。",
+  "NEWSANGUO_CARD_FATE_CONTROL.description": "失去{heavens_force:diff()}点[gold]天意之力[/gold]。\n所有在战斗中临时增加的牌将被升级。",
   "NEWSANGUO_CARD_HEAVENS_DECAY.title": "天意侵蚀",
   "NEWSANGUO_CARD_HEAVENS_DECAY.description": "在你的回合结束时，如果这张牌在你的手牌中，天意爷会接管你的下个回合。"
 }

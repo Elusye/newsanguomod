@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Context;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Events;
 using MegaCrit.Sts2.Core.Helpers;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Acts;
 using MegaCrit.Sts2.Core.Runs;
@@ -31,10 +32,13 @@ public class new_three_kingdoms_way : ModEventTemplate
 
     protected override IReadOnlyList<EventOption> GenerateInitialOptions()
     {
+        EventOption portalOption = CreateModRelicOption<portal>(OnGainPortal);
+        // 悬停时显示“传送门”遗物信息（遗物预览 + 说明）
+        portalOption.HoverTips = HoverTipFactory.FromRelic<portal>();
         return
         [
-            CreateModRelicOption<portal>(OnGainPortal),
-            new EventOption(this, GoToAncient, InitialOptionKey("GO_TO_ANCIENT"))
+            portalOption,
+            new EventOption(this, GoToAncient, InitialOptionKey("GO_TO_ANCIENT"), HoverTipFactory.FromCardWithCardHoverTips<heavens_decay>())
         ];
     }
 

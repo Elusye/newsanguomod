@@ -42,8 +42,8 @@ public class tremble : NewsanguoCardTemplate
     // 卡牌基础数值：对所有敌人施加的虚弱与易伤层数
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new PowerVar<WeakPower>("WeakPower", 2),
-        new PowerVar<VulnerablePower>("VulnerablePower", 2)
+        new PowerVar<WeakPower>("WeakPower", 1),
+        new PowerVar<VulnerablePower>("VulnerablePower", 1)
     ];
 
     // 固有 + 消耗
@@ -91,7 +91,7 @@ public class tremble : NewsanguoCardTemplate
         }
     }
 
-    // 升级：虚弱与易伤 2 → 3
+    // 升级：虚弱与易伤 1 → 2
     protected override void OnUpgrade()
     {
         DynamicVars["WeakPower"].UpgradeValueBy(1m);

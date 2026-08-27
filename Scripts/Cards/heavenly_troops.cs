@@ -22,8 +22,8 @@ namespace newsanguo.Scripts;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class heavenly_troops : NewsanguoCardTemplate
 {
-    // 基础耗能：3
-    private const int energyCost = 3;
+    // 基础耗能：2
+    private const int energyCost = 2;
     // 卡牌类型：技能
     private const CardType type = CardType.Skill;
     // 卡牌稀有度：罕见
@@ -43,14 +43,22 @@ public class heavenly_troops : NewsanguoCardTemplate
         HoverTipFactory.FromCard<soldier>(IsUpgraded)
     ];
 
-    // 卡牌基础数值：经过 2 个回合结束后发放 5 张士兵（turn_delay 需与 heavenly_troops_power 的倒计时保持同步）
+    // 卡牌基础数值：经过 2 个回合结束后发放 5 张士兵（turn_delay 需与 heavenly_troops_power 的倒计时保持同步）；
+    // 打出时失去 3 点天意之力（升级后 2 点）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new PowerVar<heavens_force>("heavens_force", 3),
         new IntVar("soldier_count", 5),
         new IntVar("turn_delay", 2)
     ];
 
     public heavenly_troops() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
+    }
+
+    // 升级效果：失去的天意之力从 3 减少到 2
+    protected override void OnUpgrade()
+    {
+        DynamicVars["heavens_force"].UpgradeValueBy(-1);
     }
 
     // 打出时的效果逻辑
@@ -66,6 +74,16 @@ public class heavenly_troops : NewsanguoCardTemplate
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
+
+        // 失去天意之力
+        int lostAmount = DynamicVars["heavens_force"].IntValue;
+        await PowerCmd.Apply<heavens_force>(
+            choiceContext,
+            owner.Creature,
+            -lostAmount,
+            owner.Creature,
+            this,
+            silent: false);
 
         // 附加“天降雄兵”能力：经过 2 次玩家回合结束后，将对应数量的士兵加入手牌。
         // 升级后改为“天降雄兵+”，发放升级版“士兵+”。

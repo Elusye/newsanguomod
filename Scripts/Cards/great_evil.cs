@@ -40,10 +40,10 @@ public class great_evil : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：对所有敌人造成 10 点伤害；获得 2 点天意之力
+    // 卡牌基础数值：对所有敌人造成 14 点伤害；获得 3 点天意之力
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(10, ValueProp.Move),
-        new PowerVar<heavens_force>("heavens_force", 2)
+        new DamageVar(14, ValueProp.Move),
+        new PowerVar<heavens_force>("heavens_force", 3)
     ];
 
     // 悬停提示：展示“天意之力”与”天意侵蚀”说明
@@ -76,7 +76,7 @@ public class great_evil : NewsanguoCardTemplate
         // 播放角色攻击动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Attack", owner.Character.CastAnimDelay);
 
-        // 对所有敌人造成 10 点伤害
+        // 对所有敌人造成 14 点伤害
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .TargetingAllOpponents(combatState)
@@ -95,9 +95,9 @@ public class great_evil : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 伤害从 10 提高到 12
-        DynamicVars.Damage.UpgradeValueBy(2);
-        // 天意之力从 2 提高到 3
+        // 伤害从 14 提高到 18
+        DynamicVars.Damage.UpgradeValueBy(4);
+        // 天意之力从 3 提高到 4
         DynamicVars["heavens_force"].UpgradeValueBy(1);
     }
 }

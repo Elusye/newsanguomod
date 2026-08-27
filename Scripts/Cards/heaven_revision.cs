@@ -44,10 +44,10 @@ public class heaven_revision : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 5 点基础伤害，本场战斗中每生成过一张牌额外造成 4（升级后 5）点伤害；消耗 1 点天意之力
+    // 卡牌基础数值：造成 2 点基础伤害，本场战斗中每生成过一张牌额外造成 5（升级后 6）点伤害；消耗 3 点天意之力
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new CalculationBaseVar(5m),
-        new ExtraDamageVar(4m),
+        new CalculationBaseVar(2m),
+        new ExtraDamageVar(5m),
         new CalculatedDamageVar(ValueProp.Move).WithMultiplier(
             (card, _) => CombatManager.Instance.History.Entries
                 .OfType<CardGeneratedEntry>()
@@ -79,7 +79,7 @@ public class heaven_revision : NewsanguoCardTemplate
         // 播放角色攻击动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);
 
-        // 造成计算伤害（基础 5 + 每生成一张牌 × 额外伤害）
+        // 造成计算伤害（基础 2 + 每生成一张牌 × 额外伤害）
         await DamageCmd.Attack(DynamicVars.CalculatedDamage)
             .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
@@ -92,7 +92,7 @@ public class heaven_revision : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 每生成一张牌的额外伤害从 4 提升到 5，失去的天意之力 3 → 2
+        // 每生成一张牌的额外伤害从 5 提升到 6，失去的天意之力 3 → 2
         base.DynamicVars.ExtraDamage.UpgradeValueBy(1m);
         DynamicVars["heavens_force"].UpgradeValueBy(-1);
     }

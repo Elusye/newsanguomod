@@ -105,7 +105,7 @@ public class dragon_omen : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 帝王之征层数从 4 提高到 5
-        DynamicVars["dragon_omen"].UpgradeValueBy(1);
+        // 帝王之征层数从 4 提高到 6
+        DynamicVars["dragon_omen"].UpgradeValueBy(2);
     }
 }

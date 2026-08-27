@@ -38,10 +38,10 @@ public class brew_heals_all : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：5 点酒力、3 点天意之力
+    // 卡牌基础数值：6 点酒力、4 点天意之力
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<drunken_might>("drunken_might", 5),
-        new PowerVar<heavens_force>("heavens_force", 3)
+        new PowerVar<drunken_might>("drunken_might", 6),
+        new PowerVar<heavens_force>("heavens_force", 4)
     ];
 
     // 悬停提示：展示“酒力”、“天意之力”、“天意侵蚀”说明
@@ -77,10 +77,10 @@ public class brew_heals_all : NewsanguoCardTemplate
         await PowerCmd.Apply<heavens_force>(choiceContext, owner.Creature, heavensForceAmount, owner.Creature, this, silent: false);
     }
 
-    // 升级：酒力 5 → 6，天意之力 3 → 4
+    // 升级：酒力 6 → 8，天意之力 4 → 5
     protected override void OnUpgrade()
     {
-        DynamicVars["drunken_might"].UpgradeValueBy(1);
+        DynamicVars["drunken_might"].UpgradeValueBy(2);
         DynamicVars["heavens_force"].UpgradeValueBy(1);
     }
 }

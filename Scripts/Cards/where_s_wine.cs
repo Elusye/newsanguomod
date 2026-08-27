@@ -24,8 +24,8 @@ public class where_s_wine : NewsanguoCardTemplate
     private const int energyCost = 2;
     // 卡牌类型：能力
     private const CardType type = CardType.Power;
-    // 卡牌稀有度：罕见
-    private const CardRarity rarity = CardRarity.Uncommon;
+    // 卡牌稀有度：稀有
+    private const CardRarity rarity = CardRarity.Rare;
     // 目标类型：自身
     private const TargetType targetType = TargetType.Self;
     // 是否在卡牌图鉴中显示

@@ -36,9 +36,9 @@ public class chorus : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：获得 5 点天意之力（升级后 7 点）
+    // 卡牌基础数值：获得 6 点天意之力（升级后 8 点）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<heavens_force>("heavens_force", 5)
+        new PowerVar<heavens_force>("heavens_force", 6)
     ];
 
     // 悬停提示：展示“天意之力”和“天意侵蚀”两个说明
@@ -69,7 +69,7 @@ public class chorus : NewsanguoCardTemplate
             silent: false);
     }
 
-    // 升级后的效果逻辑：天意之力 5 → 7
+    // 升级后的效果逻辑：天意之力 6 → 8
     protected override void OnUpgrade()
     {
         DynamicVars["heavens_force"].UpgradeValueBy(2);

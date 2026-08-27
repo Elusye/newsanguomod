@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Relics;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Powers;
@@ -20,6 +22,9 @@ public class fine_brew_of_pei : ModRelicTemplate
     );
 
     public override RelicRarity Rarity => RelicRarity.Starter;
+
+    // 悬停提示：展示“酒力”能力说明
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<drunken_might>()];
 
     public override bool ShouldReceiveCombatHooks => true;
 

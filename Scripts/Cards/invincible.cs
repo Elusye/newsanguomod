@@ -26,8 +26,8 @@ public class invincible : NewsanguoCardTemplate
     private const int energyCost = 2;
     // 卡牌类型：能力
     private const CardType type = CardType.Power;
-    // 卡牌稀有度：稀有
-    private const CardRarity rarity = CardRarity.Rare;
+    // 卡牌稀有度：罕见
+    private const CardRarity rarity = CardRarity.Uncommon;
     // 目标类型：自身
     private const TargetType targetType = TargetType.Self;
     // 是否在卡牌图鉴中显示
@@ -38,9 +38,10 @@ public class invincible : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：对符合条件的敌人造成伤害增加 50%
+    // 卡牌基础数值：对符合条件的敌人造成伤害增加 25%；打出时失去 3 点天意之力（升级后 2 点）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new IntVar("bonus_percent", 50)
+        new PowerVar<heavens_force>("heavens_force", 3),
+        new IntVar("bonus_percent", 25)
     ];
 
     public invincible() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
@@ -70,15 +71,19 @@ public class invincible : NewsanguoCardTemplate
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
 
-        // 附加“天下无敌”能力：对没有振翅和翱翔的敌人造成伤害增加 50%
+        // 打出时失去 3 点天意之力（升级后 2 点）
+        await PowerCmd.Apply<heavens_force>(choiceContext, owner.Creature, -DynamicVars["heavens_force"].IntValue, owner.Creature, this);
+
+        // 附加“天下无敌”能力：对没有振翅和翱翔的敌人造成伤害增加 25%
         // 效果可叠加：每次打出都会叠加对应百分比的增伤
         int bonusPercent = DynamicVars["bonus_percent"].IntValue;
         await PowerCmd.Apply<invincible_power>(choiceContext, owner.Creature, bonusPercent, owner.Creature, this);
     }
 
-    // 升级后的效果逻辑：费用 2 → 1
+    // 升级后的效果逻辑：费用 2 → 1，失去的天意之力从 3 减少到 2
     protected override void OnUpgrade()
     {
         EnergyCost.UpgradeBy(-1);
+        DynamicVars["heavens_force"].UpgradeValueBy(-1);
     }
 }

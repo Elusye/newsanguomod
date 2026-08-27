@@ -38,10 +38,10 @@ public class lightning_strike : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 9 点伤害（升级 11）；获得 2 点天意之力（升级 3）
+    // 卡牌基础数值：造成 9 点伤害（升级 11）；获得 3 点天意之力（升级 4）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(9m, ValueProp.Move),
-        new PowerVar<heavens_force>("heavens_force", 2)
+        new PowerVar<heavens_force>("heavens_force", 3)
     ];
 
     // 悬停提示：展示“天意之力”与“天意侵蚀”的说明
@@ -89,7 +89,7 @@ public class lightning_strike : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 伤害从 9 提高到 11，天意之力从 2 提高到 3
+        // 伤害从 9 提高到 11，天意之力从 3 提高到 4
         DynamicVars.Damage.UpgradeValueBy(2m);
         DynamicVars["heavens_force"].UpgradeValueBy(1);
     }

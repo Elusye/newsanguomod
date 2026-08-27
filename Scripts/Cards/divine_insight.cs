@@ -41,9 +41,10 @@ public class divine_insight : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 悬停提示：展示“天意之力”说明
+    // 悬停提示：展示“天意之力”与“天意侵蚀”的说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<heavens_force>()
+        HoverTipFactory.FromPower<heavens_force>(),
+        HoverTipFactory.FromPower<heavens_decay_power>()
     ];
 
     // 卡牌基础数值：每打出一张牌获得 1 点天意之力

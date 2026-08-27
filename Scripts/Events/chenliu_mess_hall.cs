@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Events;
 using MegaCrit.Sts2.Core.Factories;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Acts;
@@ -55,7 +56,7 @@ public class chenliu_mess_hall : ModEventTemplate
         [
             new EventOption(this, HealThird, InitialOptionKey("HEAL_THIRD")),
             new EventOption(this, GainMaxHp, InitialOptionKey("GAIN_MAX_HP")),
-            new EventOption(this, RegretAndRelic, InitialOptionKey("REGRET_RELIC"))
+            new EventOption(this, RegretAndRelic, InitialOptionKey("REGRET_RELIC"), HoverTipFactory.FromCardWithCardHoverTips<Regret>())
         ];
     }
 

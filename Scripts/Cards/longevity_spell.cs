@@ -44,10 +44,10 @@ public class longevity_spell : NewsanguoCardTemplate
     // 卡牌自带“消耗”关键词
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-    // 卡牌基础数值：失去 5 点天意之力（变量用正值，打出时取负）、获得 4 层再生
+    // 卡牌基础数值：失去 5 点天意之力（变量用正值，打出时取负）、获得 5 层再生
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new PowerVar<heavens_force>("heavens_force", 5),
-        new PowerVar<RegenPower>("RegenPower", 4)
+        new PowerVar<RegenPower>("RegenPower", 5)
     ];
 
     // 鼠标悬停时显示再生、天意之力与天意侵蚀提示
@@ -100,7 +100,7 @@ public class longevity_spell : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 失去的天意之力从 5 减少到 4，再生从 4 提高到 5
+        // 失去的天意之力从 5 减少到 4，再生从 5 提高到 6
         DynamicVars["heavens_force"].UpgradeValueBy(-1);
         DynamicVars["RegenPower"].UpgradeValueBy(1);
     }
