@@ -18,7 +18,9 @@ public static class EnchantHelper
     private static readonly HashSet<string> ExcludedEntries = new()
     {
         "clone",
+        "goopy", // 战斗中会导致游戏卡死
         "imbued",
+        "inky", // 战斗中会导致游戏卡死
         "slumbering_essence"
     };
 
