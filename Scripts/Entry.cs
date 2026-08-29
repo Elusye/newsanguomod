@@ -31,6 +31,7 @@ public class Entry
         ApplyPatch(harmony, typeof(CommanderArrivesSelectionEndPatch));
         ApplyPatch(harmony, typeof(CommanderArrivesGlowPatch));
         ApplyPatch(harmony, typeof(PlayerDeathSfxPatch));
+        ApplyPatch(harmony, typeof(SecondAmountLabelPatch));
         var assembly = Assembly.GetExecutingAssembly();
         RitsuLibFramework.EnsureGodotScriptsRegistered(assembly, Logger);
         // 自动注册内容

@@ -11,7 +11,6 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
-using STS2RitsuLib.Combat.Ui.ExtraCornerAmountLabels;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -24,10 +23,10 @@ namespace newsanguo.Scripts.Powers;
 /// 不同回合打出的各自独立倒计时。
 /// 每个实例：Amount 表示累计士兵数量，倒计时固定为 2，经过 2 次玩家回合结束（弃牌后）
 /// 时将 Amount 张“士兵”加入手牌并移除。
-/// 图标角标：右上角显示士兵数量，右下角显示剩余回合数。
+/// 图标数字：右下角由原版显示士兵数量（Amount），右上角通过 IHasSecondAmount 显示剩余回合数。
 /// </summary>
 [RegisterPower]
-public class heavenly_troops_power : ModPowerTemplate, IPowerExtraIconAmountLabelSpecsProvider, IPowerExtraIconAmountLabelsChangeSource
+public class heavenly_troops_power : ModPowerTemplate, IHasSecondAmount
 {
     // 初始倒计时：还需要经过的玩家回合结束次数
     private const int InitialTurnsLeft = 2;
@@ -40,9 +39,6 @@ public class heavenly_troops_power : ModPowerTemplate, IPowerExtraIconAmountLabe
         public int turnNumber;
     }
 
-    // 角标变化通知：剩余回合数变化（不触发 DisplayAmountChanged）时主动刷新图标角标
-    public event Action? PowerExtraIconAmountLabelsInvalidated;
-
     // 描述变量：剩余回合数（供 powers.json 描述中的 {TurnsLeft} 使用）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new IntVar("TurnsLeft", InitialTurnsLeft)
@@ -50,7 +46,7 @@ public class heavenly_troops_power : ModPowerTemplate, IPowerExtraIconAmountLabe
 
     // 正面效果
     public override PowerType Type => PowerType.Buff;
-    // 计数器：右下角由原版直接显示士兵数量（Amount），角标只负责右上角回合倒计时
+    // 计数器：右下角由原版直接显示士兵数量（Amount），右上角由 IHasSecondAmount 显示回合倒计时
     public override PowerStackType StackType => PowerStackType.Counter;
     public override bool AllowNegative => false;
     // 不同回合各自独立实例；同回合叠加由卡牌打出逻辑合并
@@ -89,7 +85,7 @@ public class heavenly_troops_power : ModPowerTemplate, IPowerExtraIconAmountLabe
         SyncTurnsLeftDisplay();
     }
 
-    // 同步剩余回合数到描述变量并刷新图标角标
+    // 同步剩余回合数到描述变量并刷新图标右上角数字
     private void SyncTurnsLeftDisplay()
     {
         int turnsLeft = GetInternalData<Data>().turnsLeft;
@@ -97,16 +93,13 @@ public class heavenly_troops_power : ModPowerTemplate, IPowerExtraIconAmountLabe
         {
             turnsLeftVar.BaseValue = turnsLeft;
         }
-        PowerExtraIconAmountLabelsInvalidated?.Invoke();
+        this.InvokeSecondAmountChanged();
     }
 
-    // 能力图标角标：右上角显示剩余回合数（士兵数量由原版右下角层数显示）
-    public IReadOnlyList<ExtraIconAmountLabelSpec> GetPowerExtraIconAmountLabelSpecs()
+    // 能力图标右上角第二数字：剩余回合数（右下角由原版显示士兵数量 Amount）
+    public string GetSecondAmount()
     {
-        return
-        [
-            ExtraIconAmountLabelSpec.Plain(ExtraIconAmountLabelCorner.TopRight, GetInternalData<Data>().turnsLeft.ToString()),
-        ];
+        return GetInternalData<Data>().turnsLeft.ToString();
     }
 
     // 玩家回合结束（弃牌后）时倒计时；归零时发放士兵并移除
