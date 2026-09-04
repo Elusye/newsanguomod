@@ -72,9 +72,6 @@ public class old_compact : NewsanguoCardTemplate
             return;
         }
 
-        // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/old_compact");
-
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
 

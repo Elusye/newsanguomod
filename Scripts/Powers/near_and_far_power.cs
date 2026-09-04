@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>
@@ -93,7 +94,7 @@ public class near_and_far_power : ModPowerTemplate
         Flash();
 
         // 触发音效：交替获得临时敏捷/力量
-        SfxCmd.Play("event:/newsanguo/sfx/near_and_far_power");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/near_and_far_power");
 
         if (GetInternalData<Data>().nextIsDexterity)
         {

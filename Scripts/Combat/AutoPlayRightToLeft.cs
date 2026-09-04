@@ -7,7 +7,6 @@ using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.Relics;
 using MegaCrit.Sts2.Core.Random;
 
 namespace newsanguo.Scripts.Combat;
@@ -34,8 +33,12 @@ public static class AutoPlayRightToLeft
         var playerCombatState = owner.PlayerCombatState;
         if (playerCombatState is null) return;
 
-        // 推送选择器，避免自动打牌过程弹出卡牌选择界面（与原版低语耳环一致）
-        using (CardSelectCmd.PushSelector(new VakuuCardSelector()))
+        // 推送选择器，避免自动打牌过程弹出卡牌选择界面（与原版低语耳环一致）。
+        // 与原版 VakuuCardSelector（从左往右选）不同，这里使用照搬它但方向相反的
+        // RightToLeftCardSelector（从右往左选）：自动打出的牌若触发需要选择手牌
+        // （变化/消耗/丢弃）的子效果（如“赋值”），会像取手牌一样选中手牌最右边的一张/多张，
+        // 保证天意爷接管时无需任何手动选择。
+        using (CardSelectCmd.PushSelector(new RightToLeftCardSelector()))
         {
             int cardsPlayed = 0;
             int startTurn = playerCombatState.TurnNumber;

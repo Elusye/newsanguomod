@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -65,7 +65,7 @@ public class my_three_generals : NewsanguoCardTemplate
             return;
         }
 
-        SfxCmd.Play("event:/newsanguo/sfx/my_three_generals");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/my_three_generals");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);

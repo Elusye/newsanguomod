@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -61,7 +61,7 @@ public class soldier : NewsanguoCardTemplate
         }
 
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/soldier");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/soldier");
 
         // 播放角色攻击动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);

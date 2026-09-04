@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -37,7 +37,7 @@ public class victory_by_heavens_will : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：每回合开始时获得 2 点天意之力（升级 3）
+    // 卡牌基础数值：每回合开始时获得 2 点天意之力（升级不改变数值，改为获得“固有”）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new PowerVar<victory_by_heavens_will_power>("victory_by_heavens_will_power", 2)
     ];
@@ -62,7 +62,7 @@ public class victory_by_heavens_will : NewsanguoCardTemplate
         }
 
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/victory_by_heavens_will");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/victory_by_heavens_will");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
@@ -78,9 +78,16 @@ public class victory_by_heavens_will : NewsanguoCardTemplate
             silent: false);
     }
 
-    // 升级：每回合获得的天意之力 2 → 3
+    // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        DynamicVars["victory_by_heavens_will_power"].UpgradeValueBy(1);
+        // 升级：获得“固有”（战斗开始时该牌必定在手牌中）
+        AddKeyword(CardKeyword.Innate);
+    }
+
+    // 降级后的效果逻辑（升级被移除或回退时调用）
+    protected override void AfterDowngraded()
+    {
+        RemoveKeyword(CardKeyword.Innate);
     }
 }

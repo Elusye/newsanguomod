@@ -63,7 +63,7 @@ public class deafen_me : NewsanguoCardTemplate
         }
 
         // 播放出牌音效（静音前的最后一声）
-        SfxCmd.Play("event:/newsanguo/sfx/deafen_me");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/deafen_me");
 
         // 播放角色攻击动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Attack", owner.Character.CastAnimDelay);
@@ -80,11 +80,12 @@ public class deafen_me : NewsanguoCardTemplate
         // 3. 附加“聋”能力，标记本场战斗静音状态（战斗结束由能力恢复音效）
         await PowerCmd.Apply<deafen_me_power>(choiceContext, owner.Creature, 1, owner.Creature, this);
 
-        // 4. 本场战斗中你不能再听到任何声音：静音所有 FMOD 事件
+        // 4. 本场战斗中你不能再听到任何声音：同时静音 FMOD 事件与本 mod 的 Godot 播放音效
         // 仅在本机执行（LocalContext.IsMe），否则多人游戏中所有玩家的音频都会被静音
         if (LocalContext.IsMe(owner))
         {
             FmodStudioMixerGlobals.TryMuteAllEvents();
+            NewsanguoSfx.MuteAll();
         }
     }
 

@@ -1,5 +1,4 @@
 using HarmonyLib;
-using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Nodes.Combat;
 using STS2RitsuLib.Scaffolding.Characters;
@@ -16,6 +15,7 @@ namespace newsanguo.Scripts.Patches;
 // RitsuLib 已通过 NCreatureNonSpineDeathAnimationTriggerPatch 在 StartDeathAnim
 // 后缀补发 Dead 动画（所以能看到倒地动画），但它只补动画不补音效。
 // 本补丁同样在 StartDeathAnim 后缀补播死亡音效，与 RitsuLib 的动画补发同一时机。
+// 音效直接走 NewsanguoSfx（Godot 播放），不再依赖 SfxCmd.PlayDeath / FMOD。
 [HarmonyPatch(typeof(NCreature), nameof(NCreature.StartDeathAnim))]
 public static class PlayerDeathSfxPatch
 {
@@ -26,7 +26,7 @@ public static class PlayerDeathSfxPatch
         {
             return;
         }
-        // 只处理走 RitsuLib 资源管线的 mod 角色（其 DeathSfx 已被替换为 mod 事件）
+        // 只处理走 RitsuLib 资源管线的 mod 角色
         if (player.Character is not IModCharacterAssetOverrides)
         {
             return;
@@ -36,6 +36,6 @@ public static class PlayerDeathSfxPatch
         {
             return;
         }
-        SfxCmd.PlayDeath(player);
+        NewsanguoSfx.Play("event:/newsanguo/sfx/character_death");
     }
 }

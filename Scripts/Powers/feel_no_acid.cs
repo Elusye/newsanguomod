@@ -1,10 +1,11 @@
-using MegaCrit.Sts2.Core.Commands;
+﻿using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
 // 注册能力到游戏
@@ -35,7 +36,7 @@ public class feel_no_acid : ModPowerTemplate
             modifiedAmount = Math.Max(amount, -1m);
             // 触发音效：酒力被削减时（咱家不怕酸生效）
             // 对应 FMOD 事件 event:/newsanguo/sfx/feel_no_acid_power，需在 FMOD 中补齐后重新导出 bank
-            SfxCmd.Play("event:/newsanguo/sfx/feel_no_acid_power");
+            NewsanguoSfx.Play("event:/newsanguo/sfx/feel_no_acid_power");
             return true;
         }
 

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -59,7 +59,7 @@ public class bai_qi : NewsanguoCardTemplate
             return;
         }
 
-        SfxCmd.Play("event:/newsanguo/sfx/bai_qi");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/bai_qi");
 
         // 播放角色攻击动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);

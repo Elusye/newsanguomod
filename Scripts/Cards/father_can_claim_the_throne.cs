@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -64,7 +64,7 @@ public class father_can_claim_the_throne : NewsanguoCardTemplate
         }
 
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/father_can_claim_the_throne");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/father_can_claim_the_throne");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);

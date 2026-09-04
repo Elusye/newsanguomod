@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -20,8 +20,8 @@ namespace newsanguo.Scripts;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class feel_no_acid : NewsanguoCardTemplate
 {
-    // 基础耗能：2
-    private const int energyCost = 2;
+    // 基础耗能：3
+    private const int energyCost = 3;
     // 卡牌类型：能力
     private const CardType type = CardType.Power;
     // 卡牌稀有度：稀有
@@ -44,7 +44,7 @@ public class feel_no_acid : NewsanguoCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/feel_no_acid");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/feel_no_acid");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
@@ -62,7 +62,7 @@ public class feel_no_acid : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 升级后费用 2 → 1
+        // 升级后费用 3 → 2
         EnergyCost.UpgradeBy(-1);
     }
 }

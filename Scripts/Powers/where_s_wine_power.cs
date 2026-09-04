@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
 // 注册能力到游戏
@@ -43,18 +44,18 @@ public class where_s_wine_power : ModPowerTemplate
         return Task.CompletedTask;
     }
 
-    // 在酒力层数变化后，如果减少了则抽牌
+    // 在酒力层数变化后，如果增加了则抽牌
     public override async Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
     {
         if (Owner is null) return;
         if (power is not drunken_might || power.Owner != Owner) return;
         if (Amount <= 0) return;
 
-        int lostAmount = _drunkenMightAmountBeforeChange - power.Amount;
-        if (lostAmount > 0)
+        int gainedAmount = power.Amount - _drunkenMightAmountBeforeChange;
+        if (gainedAmount > 0)
         {
-            // 酒力减少触发音效
-            SfxCmd.Play("event:/newsanguo/sfx/where_s_wine_power");
+            // 获得酒力触发音效
+            NewsanguoSfx.Play("event:/newsanguo/sfx/where_s_wine_power");
 
             // 抽 Amount 张牌
             await CardPileCmd.Draw(choiceContext, Amount, Owner.Player);

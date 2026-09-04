@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -63,7 +63,7 @@ public class near_and_far : NewsanguoCardTemplate
         }
 
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/near_and_far");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/near_and_far");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);

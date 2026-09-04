@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -39,7 +39,7 @@ public class cricket_form : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：获得的难以杀灭层数
+    // 卡牌基础数值：每次打出将难以杀灭层数设为此值（2；升级后 1）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DynamicVar("HardToKillAmount", 2m)
     ];
@@ -61,28 +61,38 @@ public class cricket_form : NewsanguoCardTemplate
         }
 
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/cricket_form");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/cricket_form");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
 
-        // 获得难以杀灭层数（上限999）
-        int gain = DynamicVars["HardToKillAmount"].IntValue;
-        HardToKillPower? existing = owner.Creature.GetPower<HardToKillPower>();
-        if (existing is not null)
+        // 每次打出都将“难以杀灭”层数设为卡面数值（基础 2；升级后 1），
+        // 让再打出的蛐蛐形态“刷新”护盾，而不是把层数越叠越高
+        int target = DynamicVars["HardToKillAmount"].IntValue;
+        HardToKillPower? hardToKill = owner.Creature.GetPower<HardToKillPower>();
+        if (hardToKill is null)
         {
-            gain = System.Math.Min(gain, 999 - existing.Amount);
+            if (target > 0)
+            {
+                await PowerCmd.Apply<HardToKillPower>(choiceContext, owner.Creature, target, owner.Creature, this);
+            }
         }
-        if (gain > 0)
+        else
         {
-            await PowerCmd.Apply<HardToKillPower>(choiceContext, owner.Creature, gain, owner.Creature, this);
+            int delta = target - hardToKill.Amount;
+            if (delta != 0)
+            {
+                await PowerCmd.ModifyAmount(choiceContext, hardToKill, delta, owner.Creature, this);
+            }
         }
 
-        // 附加“蛐蛐形态”能力：回合开始时难以杀灭层数翻倍
-        await PowerCmd.Apply<cricket_form_power>(choiceContext, owner.Creature, 1, owner.Creature, this);
+        // 附加/叠加“蛐蛐形态”能力：右下角层数（Amount = 打出张数，即每几个回合翻倍）
+        // 由 PowerCmd 累加；右上角“距下次翻倍还剩的回合数”随打出同时 +1
+        cricket_form_power? form = await PowerCmd.Apply<cricket_form_power>(choiceContext, owner.Creature, 1, owner.Creature, this);
+        form?.RegisterCopy();
     }
 
-    // 升级：难以杀灭层数 -1（2 → 1）
+    // 升级：将难以杀灭设为目标值 -1（2 → 1）
     protected override void OnUpgrade()
     {
         DynamicVars["HardToKillAmount"].UpgradeValueBy(-1);

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -59,7 +59,7 @@ public class three_blades : NewsanguoCardTemplate
             return;
         }
 
-        SfxCmd.Play("event:/newsanguo/sfx/three_blades");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/three_blades");
 
         // 播放角色攻击动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Attack", owner.Character.CastAnimDelay);

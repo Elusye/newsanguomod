@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -64,7 +64,7 @@ public class qin_jin_alliance : NewsanguoCardTemplate
             return;
         }
 
-        SfxCmd.Play("event:/newsanguo/sfx/qin_jin_alliance");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/qin_jin_alliance");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);

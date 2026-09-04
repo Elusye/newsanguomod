@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -11,6 +11,7 @@ using STS2RitsuLib.Combat.Ui.ExtraCornerAmountLabels;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>
@@ -98,7 +99,7 @@ public class father_can_claim_the_throne_power : ModPowerTemplate, IPowerExtraIc
         Flash();
 
         // 触发“称帝”音效（对应 FMOD 事件 event:/newsanguo/sfx/father_can_claim_the_throne_power）
-        SfxCmd.Play("event:/newsanguo/sfx/father_can_claim_the_throne_power");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/father_can_claim_the_throne_power");
 
         // 失去与层数相同的天意之力
         await PowerCmd.Apply<heavens_force>(choiceContext, Owner, -Amount, Owner, null, silent: false);

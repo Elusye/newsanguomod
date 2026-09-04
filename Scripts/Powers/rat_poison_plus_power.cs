@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -50,7 +50,7 @@ public class rat_poison_plus_power : ModPowerTemplate
         }
 
         // 触发音效：毒鼠+加入手牌
-        SfxCmd.Play("event:/newsanguo/sfx/rat_poison_power");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/rat_poison_power");
 
         for (int i = 0; i < Amount; i++)
         {

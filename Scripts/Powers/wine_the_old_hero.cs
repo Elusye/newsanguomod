@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
 // 注册能力到游戏
@@ -55,7 +56,7 @@ public class wine_the_old_hero : ModPowerTemplate
         if (lostAmount > 0)
         {
             // 酒力减少触发音效（对应 FMOD 事件 event:/newsanguo/sfx/wine_the_old_hero_power）
-            SfxCmd.Play("event:/newsanguo/sfx/wine_the_old_hero_power");
+            NewsanguoSfx.Play("event:/newsanguo/sfx/wine_the_old_hero_power");
 
             // 每失去 1 点酒力获得 Amount 点格挡
             await CreatureCmd.GainBlock(Owner, lostAmount * Amount, ValueProp.Move, cardPlay: null, fast: false);

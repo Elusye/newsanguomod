@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Combat;
@@ -11,6 +11,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>
@@ -86,7 +87,7 @@ public class blood_loss : ModPowerTemplate
         }
 
         // 自刎掉血触发音效（对应 FMOD 事件 event:/newsanguo/sfx/blood_loss）
-        SfxCmd.Play("event:/newsanguo/sfx/blood_loss");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/blood_loss");
 
         await CreatureCmd.Damage(choiceContext, Owner, hpCostPerCard, ValueProp.Unblockable | ValueProp.Unpowered, dealer: null, cardSource: null, cardPlay: cardPlay);
     }

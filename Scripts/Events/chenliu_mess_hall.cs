@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -46,7 +46,7 @@ public class chenliu_mess_hall : ModEventTemplate
     // 对应 FMOD 事件 event:/newsanguo/sfx/chenliu_mess_hall，需在 FMOD 中补齐后重新导出 bank
     public override Task AfterEventStarted()
     {
-        SfxCmd.Play("event:/newsanguo/sfx/chenliu_mess_hall");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/chenliu_mess_hall");
         return Task.CompletedTask;
     }
 
@@ -63,7 +63,7 @@ public class chenliu_mess_hall : ModEventTemplate
     private async Task HealThird()
     {
         // 对应 FMOD 事件 event:/newsanguo/sfx/chenliu_mess_hall_heal
-        SfxCmd.Play("event:/newsanguo/sfx/chenliu_mess_hall_heal");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/chenliu_mess_hall_heal");
         await CreatureCmd.Heal(Owner!.Creature, HealAmount);
         SetEventFinished(PageDescription("HEAL_THIRD"));
     }
@@ -71,7 +71,7 @@ public class chenliu_mess_hall : ModEventTemplate
     private async Task GainMaxHp()
     {
         // 对应 FMOD 事件 event:/newsanguo/sfx/chenliu_mess_hall_max_hp
-        SfxCmd.Play("event:/newsanguo/sfx/chenliu_mess_hall_max_hp");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/chenliu_mess_hall_max_hp");
         await CreatureCmd.GainMaxHp(Owner!.Creature, 5m);
         SetEventFinished(PageDescription("GAIN_MAX_HP"));
     }
@@ -79,7 +79,7 @@ public class chenliu_mess_hall : ModEventTemplate
     private async Task RegretAndRelic()
     {
         // 对应 FMOD 事件 event:/newsanguo/sfx/chenliu_mess_hall_relic
-        SfxCmd.Play("event:/newsanguo/sfx/chenliu_mess_hall_relic");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/chenliu_mess_hall_relic");
         // 将一张原版诅咒「悔恨」加入牌组
         CardModel regret = Owner!.RunState.CreateCard<Regret>(Owner);
         CardCmd.PreviewCardPileAdd(await CardPileCmd.Add(regret, PileType.Deck));

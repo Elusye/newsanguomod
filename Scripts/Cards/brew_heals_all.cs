@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -38,9 +38,9 @@ public class brew_heals_all : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：6 点酒力、4 点天意之力
+    // 卡牌基础数值：5 点酒力、4 点天意之力
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<drunken_might>("drunken_might", 6),
+        new PowerVar<drunken_might>("drunken_might", 5),
         new PowerVar<heavens_force>("heavens_force", 4)
     ];
 
@@ -65,7 +65,7 @@ public class brew_heals_all : NewsanguoCardTemplate
         }
 
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/brew_heals_all");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/brew_heals_all");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
@@ -77,10 +77,10 @@ public class brew_heals_all : NewsanguoCardTemplate
         await PowerCmd.Apply<heavens_force>(choiceContext, owner.Creature, heavensForceAmount, owner.Creature, this, silent: false);
     }
 
-    // 升级：酒力 6 → 8，天意之力 4 → 5
+    // 升级：酒力 5 → 6，天意之力 4 → 5
     protected override void OnUpgrade()
     {
-        DynamicVars["drunken_might"].UpgradeValueBy(2);
+        DynamicVars["drunken_might"].UpgradeValueBy(1);
         DynamicVars["heavens_force"].UpgradeValueBy(1);
     }
 }

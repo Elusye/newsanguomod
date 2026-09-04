@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -48,12 +48,14 @@ public class invincible : NewsanguoCardTemplate
     {
     }
 
-    // 悬停提示：展示“飞行”、“振翅”与“翱翔”三个正面效果的说明
+    // 悬停提示：展示“飞行”、“振翅”、“翱翔”、“天意之力”与“天意侵蚀”的说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
     [
         HoverTipFactory.FromPower<flight_power>(),
         HoverTipFactory.FromPower<FlutterPower>(),
-        HoverTipFactory.FromPower<SoarPower>()
+        HoverTipFactory.FromPower<SoarPower>(),
+        HoverTipFactory.FromPower<heavens_force>(),
+        HoverTipFactory.FromPower<heavens_decay_power>()
     ];
 
     // 打出时的效果逻辑
@@ -66,7 +68,7 @@ public class invincible : NewsanguoCardTemplate
         }
 
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/invincible");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/invincible");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);

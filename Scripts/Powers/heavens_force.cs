@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
@@ -12,6 +12,7 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>
@@ -58,7 +59,7 @@ public class heavens_force : ModPowerTemplate
         if (Amount >= 10)
         {
             // 天意之力正向转化触发音效（对应 FMOD 事件 event:/newsanguo/sfx/heavens_force）
-            SfxCmd.Play("event:/newsanguo/sfx/heavens_force");
+            NewsanguoSfx.Play("event:/newsanguo/sfx/heavens_force");
 
             // 正向转化：执行一次原“天意之助”效果（1层“双倍伤害”+1个额外回合）。
             // 注意：不能在这里先把层数-10——若恰好10层，扣到0后能力会被立即移除，
@@ -71,7 +72,7 @@ public class heavens_force : ModPowerTemplate
         else if (Amount <= -10)
         {
             // 天意之力负向转化触发音效（对应 FMOD 事件 event:/newsanguo/sfx/heavens_force_decay）
-            SfxCmd.Play("event:/newsanguo/sfx/heavens_force_decay");
+            NewsanguoSfx.Play("event:/newsanguo/sfx/heavens_force_decay");
 
             // 负向转化：获得1层天意侵蚀，天意之力+10（例如-33 → -23；-10 → 0 时能力自然移除，不影响额外回合判定）
             await PowerCmd.Apply<heavens_decay_power>(choiceContext, Owner, 1, Owner, null, silent: false);

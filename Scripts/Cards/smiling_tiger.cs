@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -60,7 +60,7 @@ public class smiling_tiger : NewsanguoCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/smiling_tiger");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/smiling_tiger");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
@@ -83,7 +83,7 @@ public class smiling_tiger : NewsanguoCardTemplate
         await CardPileCmd.Add(clone, hand);
 
         // 播放复制音效
-        SfxCmd.Play("event:/newsanguo/sfx/smiling_tiger_copy");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/smiling_tiger_copy");
     }
 
     // 升级后的效果逻辑

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -61,7 +61,7 @@ public class dong_zhuo_the_traitor : NewsanguoCardTemplate
         }
 
         // 播放出牌音效（FMOD 事件由 mod 维护者自行创建）
-        SfxCmd.Play("event:/newsanguo/sfx/dong_zhuo_the_traitor");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/dong_zhuo_the_traitor");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);

@@ -8,12 +8,14 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
 // 注册能力到游戏
@@ -30,8 +32,8 @@ public class empower_power : ModPowerTemplate
 
     // 能力类型：正面 Buff
     public override PowerType Type => PowerType.Buff;
-    // 叠加方式：计数器
-    public override PowerStackType StackType => PowerStackType.Counter;
+    // 非叠加状态：不在右下角显示层数数字
+    public override PowerStackType StackType => PowerStackType.Single;
     // 不允许负数
     public override bool AllowNegative => false;
     // 每次打出“赋值”都是独立实例，各自记录一张牌
@@ -85,11 +87,13 @@ public class empower_power : ModPowerTemplate
         }
 
         // 触发“赋值”音效（对应 FMOD 事件 event:/newsanguo/sfx/empower_power）
-        SfxCmd.Play("event:/newsanguo/sfx/empower_power");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/empower_power");
 
-        // 选择一张手牌
+        // 选择一张手牌变化为记录的牌：提示文案中直接告知会变化成什么牌
+        LocString prompt = new LocString("cards", "NEWSANGUO_CARD_SELECT_TRANSFORM_TO");
+        prompt.Add("Target", data.recordedCard.Title);
         List<CardModel> selected = (await CardSelectCmd.FromHand(
-            prefs: new CardSelectorPrefs(CardSelectorPrefs.TransformSelectionPrompt, 1),
+            prefs: new CardSelectorPrefs(prompt, 1),
             context: choiceContext,
             player: player,
             filter: null,

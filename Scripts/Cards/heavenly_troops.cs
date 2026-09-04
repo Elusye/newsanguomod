@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -70,7 +70,7 @@ public class heavenly_troops : NewsanguoCardTemplate
             return;
         }
 
-        SfxCmd.Play("event:/newsanguo/sfx/heavenly_troops");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/heavenly_troops");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);

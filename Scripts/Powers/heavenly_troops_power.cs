@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Combat;
@@ -138,7 +138,7 @@ public class heavenly_troops_power : ModPowerTemplate, IHasSecondAmount
         }
 
         // 触发音效：士兵加入手牌
-        SfxCmd.Play("event:/newsanguo/sfx/heavenly_troops_power");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/heavenly_troops_power");
 
         for (int i = 0; i < Amount; i++)
         {

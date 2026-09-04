@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>
@@ -40,7 +41,7 @@ public class victory_by_heavens_will_power : ModPowerTemplate
         }
 
         // 触发音效：回合开始时获得天意之力
-        SfxCmd.Play("event:/newsanguo/sfx/victory_by_heavens_will_power");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/victory_by_heavens_will_power");
 
         await PowerCmd.Apply<heavens_force>(choiceContext, Owner, Amount, Owner, null, silent: false);
     }

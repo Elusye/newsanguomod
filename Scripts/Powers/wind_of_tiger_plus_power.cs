@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -52,7 +52,7 @@ public class wind_of_tiger_plus_power : ModPowerTemplate
         }
 
         // 触发音效：笑面虎+与龙可是帝王之征啊+加入手牌
-        SfxCmd.Play("event:/newsanguo/sfx/wind_of_tiger_power");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/wind_of_tiger_power");
 
         for (int i = 0; i < Amount; i++)
         {

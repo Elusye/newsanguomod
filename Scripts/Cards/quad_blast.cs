@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Combat;
@@ -61,7 +61,7 @@ public class quad_blast : NewsanguoCardTemplate
         if (combatState is null) return;
 
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/quad_blast");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/quad_blast");
 
         // 对所有敌人造成 4 点伤害 4 次
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Combat;
@@ -65,7 +65,7 @@ public class scorching_starfall : NewsanguoCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/scorching_starfall");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/scorching_starfall");
 
         if (base.Owner is null)
         {

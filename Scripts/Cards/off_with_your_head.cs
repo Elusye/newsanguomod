@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -75,11 +75,11 @@ public class off_with_your_head : NewsanguoCardTemplate
         // 对应 FMOD 事件 event:/newsanguo/sfx/off_with_your_head / _double
         if (intendsToAttack)
         {
-            SfxCmd.Play("event:/newsanguo/sfx/off_with_your_head");
+            NewsanguoSfx.Play("event:/newsanguo/sfx/off_with_your_head");
         }
         else
         {
-            SfxCmd.Play("event:/newsanguo/sfx/off_with_your_head_double");
+            NewsanguoSfx.Play("event:/newsanguo/sfx/off_with_your_head_double");
         }
 
         // 播放角色攻击动画

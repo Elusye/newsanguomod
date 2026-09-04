@@ -56,7 +56,7 @@ public class NewsanguoCardPool : TypeListCardPoolModel, IModColorfulPhilosophers
     [Obsolete("基类要求保留，请使用新的起始牌注册方式。")]
     protected override IEnumerable<Type> CardTypes =>
     [
-        typeof(attack_newsanguo),
+        typeof(strike_newsanguo),
         typeof(defend_newsanguo),
         typeof(a_grand_toast),
         typeof(cross_for_cross),

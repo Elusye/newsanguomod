@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Combat;
@@ -75,7 +75,7 @@ public class forty_sixty_tax : NewsanguoCardTemplate
             return;
         }
 
-        SfxCmd.Play("event:/newsanguo/sfx/forty_sixty_tax");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/forty_sixty_tax");
 
         // 播放角色攻击动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Attack", owner.Character.CastAnimDelay);

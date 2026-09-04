@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -38,7 +38,7 @@ public class wine_cut : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 7 点伤害（升级 9）；获得 2 点酒力（升级 4）
+    // 卡牌基础数值：造成 7 点伤害（升级 9）；获得 2 点酒力（升级 3）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(7m, ValueProp.Move),
         new PowerVar<drunken_might>("drunken_might", 2)
@@ -62,7 +62,7 @@ public class wine_cut : NewsanguoCardTemplate
         }
 
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/wine_cut");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/wine_cut");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
@@ -93,8 +93,8 @@ public class wine_cut : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 伤害从 7 提高到 9，酒力从 2 提高到 4
+        // 伤害从 7 提高到 9，酒力从 2 提高到 3
         DynamicVars.Damage.UpgradeValueBy(2m);
-        DynamicVars["drunken_might"].UpgradeValueBy(2);
+        DynamicVars["drunken_might"].UpgradeValueBy(1);
     }
 }

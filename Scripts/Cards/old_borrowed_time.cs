@@ -66,9 +66,6 @@ public class old_borrowed_time : NewsanguoCardTemplate
             return;
         }
 
-        // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/old_borrowed_time");
-
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
 

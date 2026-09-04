@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -78,7 +78,7 @@ public class chain_stratagem : NewsanguoCardTemplate
         PlayCounter counter = _playCounters.GetOrCreateValue(CombatState);
         counter.Value++;
         bool isOddPlay = (counter.Value & 1) == 1;
-        SfxCmd.Play(isOddPlay
+        NewsanguoSfx.Play(isOddPlay
             ? "event:/newsanguo/sfx/chain_stratagem1"
             : "event:/newsanguo/sfx/chain_stratagem2");
 

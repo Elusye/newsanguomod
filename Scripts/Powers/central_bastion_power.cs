@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
@@ -10,6 +10,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>
@@ -43,7 +44,7 @@ public class central_bastion_power : ModPowerTemplate
             await CreatureCmd.GainBlock(Owner, Amount, ValueProp.Unpowered, null);
 
             // 触发中原雄关音效（对应 FMOD 事件 event:/newsanguo/sfx/central_bastion_power）
-            SfxCmd.Play("event:/newsanguo/sfx/central_bastion_power");
+            NewsanguoSfx.Play("event:/newsanguo/sfx/central_bastion_power");
             
             await PowerCmd.Remove(this);
         }

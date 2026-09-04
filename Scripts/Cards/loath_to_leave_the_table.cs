@@ -85,7 +85,7 @@ public class loath_to_leave_the_table : NewsanguoCardTemplate
         int wineAmount = owner.Creature.GetPower<drunken_might>()?.Amount ?? 0;
 
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/loath_to_leave_the_table");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/loath_to_leave_the_table");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
@@ -113,13 +113,14 @@ public class loath_to_leave_the_table : NewsanguoCardTemplate
             }
 
             // 播放掀桌音效
-            SfxCmd.Play("event:/newsanguo/sfx/loath_to_leave_the_table_damage");
+            NewsanguoSfx.Play("event:/newsanguo/sfx/loath_to_leave_the_table_damage");
         }
     }
 
-    // 升级后的效果逻辑：酒力阈值 10 → 8
+    // 升级后的效果逻辑：伤害 25 → 35；酒力阈值 10 → 8
     protected override void OnUpgrade()
     {
+        DynamicVars.Damage.UpgradeValueBy(10);
         DynamicVars["wine_threshold"].UpgradeValueBy(-2);
     }
 }

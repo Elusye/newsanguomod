@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.Cards;
+using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -47,15 +48,27 @@ public class infinite_camps : NewsanguoCardTemplate
         }
 
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/infinite_camps");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/infinite_camps");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
 
-        // 附加“无限连营”标记能力：本回合内每打出一张牌（不含本卡自身），
-        // 就为原版“下回合抽牌”（DrawCardsNextTurnPower）增加一层
+        // 附加“无限连营”能力：层数 +1（可叠加）。
+        // 每打出一张牌按“此前已打出的无限连营张数”计入下回合抽牌：
+        // 第 1 张（施放者）此前为 0，不计入；第 2 张起在打出时按打出前的张数补计入。
         infinite_camps_power? power = await PowerCmd.Apply<infinite_camps_power>(choiceContext, owner.Creature, 1, owner.Creature, this);
-        power?.MarkAppliedBy(this);
+        if (power is null)
+        {
+            return;
+        }
+
+        // 打出前已有的“无限连营”张数（= 叠加后的层数 - 本张）
+        int priorCopies = power.Amount - 1;
+        power.MarkAppliedBy(this);
+        if (priorCopies > 0)
+        {
+            await PowerCmd.Apply<DrawCardsNextTurnPower>(choiceContext, owner.Creature, priorCopies, owner.Creature, this);
+        }
     }
 
     // 升级后的效果逻辑

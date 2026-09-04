@@ -4,7 +4,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 rem Usage: git-push.bat ["commit message"]  (optional custom message, default below)
-set "MSG=Update newsanguo source code to 0.2.6"
+set "MSG=Update newsanguo source code to 0.2.7"
 if not "%~1"=="" set "MSG=%~1"
 
 echo === Staging all changes (.gitignore filters sensitive dirs) ===

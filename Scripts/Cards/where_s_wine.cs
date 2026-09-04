@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -36,7 +36,7 @@ public class where_s_wine : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：每次酒力减少时抽 1 张牌
+    // 卡牌基础数值：每次获得酒力时抽 1 张牌
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new PowerVar<where_s_wine_power>("where_s_wine_power", 1)
     ];
@@ -53,12 +53,12 @@ public class where_s_wine : NewsanguoCardTemplate
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        SfxCmd.Play("event:/newsanguo/sfx/where_s_wine");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/where_s_wine");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
-        // 附加“何处饮酒？”能力：酒力减少时抽牌
+        // 附加“哪里饮酒？”能力：获得酒力时抽牌
         int drawCount = DynamicVars["where_s_wine_power"].IntValue;
         await PowerCmd.Apply<where_s_wine_power>(
             choiceContext,

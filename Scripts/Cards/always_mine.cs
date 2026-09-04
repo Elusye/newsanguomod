@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.CardSelection;
@@ -24,8 +24,8 @@ namespace newsanguo.Scripts;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class always_mine : NewsanguoCardTemplate
 {
-    // 基础耗能：0
-    private const int energyCost = 0;
+    // 基础耗能：1
+    private const int energyCost = 1;
     // 卡牌类型：技能
     private const CardType type = CardType.Skill;
     // 卡牌稀有度：普通
@@ -40,8 +40,13 @@ public class always_mine : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌自带“消耗”关键词
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+    // 卡牌自带“奇巧”关键词（打出时若正在弃牌可免费打出，不会真的消耗）
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Sly];
+
+    // 卡牌基础数值：从弃牌堆拿回手牌的张数（基础 2，升级 3）
+    protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new CardsVar(2)
+    ];
 
     public always_mine() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
@@ -57,41 +62,40 @@ public class always_mine : NewsanguoCardTemplate
         }
 
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/always_mine");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/always_mine");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
 
-        // 从弃牌堆中选择一张牌放入手牌
+        // 从弃牌堆中选择至多 N 张牌放入手牌
         CardPile discard = PileType.Discard.GetPile(owner);
         if (discard.Cards.Count == 0)
         {
             return;
         }
 
-        CardModel? selected = (await CardSelectCmd.FromCombatPile(
+        int maxCount = (int)DynamicVars.Cards.BaseValue;
+        if (discard.Cards.Count < maxCount)
+        {
+            maxCount = discard.Cards.Count;
+        }
+
+        List<CardModel> selectedList = (await CardSelectCmd.FromCombatPile(
             context: choiceContext,
             pile: discard,
             player: owner,
-            prefs: new CardSelectorPrefs(new LocString("cards", "NEWSANGUO_CARD_SELECT_ONE_FROM_DISCARD"), 1, 1))).FirstOrDefault();
-        if (selected is null)
-        {
-            return;
-        }
+            prefs: new CardSelectorPrefs(new LocString("cards", "NEWSANGUO_CARD_SELECT_FROM_DISCARD"), 0, maxCount))).ToList();
 
-        await CardPileCmd.Add(selected, PileType.Hand);
+        foreach (CardModel card in selectedList)
+        {
+            await CardPileCmd.Add(card, PileType.Hand);
+        }
     }
 
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 去除消耗
-        RemoveKeyword(CardKeyword.Exhaust);
-    }
-
-    // 降级：恢复消耗
-    protected override void AfterDowngraded()
-    {
-        AddKeyword(CardKeyword.Exhaust);
+        // 拿回手牌的张数从 2 提高到 3
+        DynamicVars.Cards.UpgradeValueBy(1);
     }
 }

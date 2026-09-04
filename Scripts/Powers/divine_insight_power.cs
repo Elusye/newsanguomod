@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>
@@ -58,7 +59,7 @@ public class divine_insight_power : ModPowerTemplate
         }
 
         // 触发“参悟天意”音效（对应 FMOD 事件 event:/newsanguo/sfx/divine_insight_power）
-        SfxCmd.Play("event:/newsanguo/sfx/divine_insight_power");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/divine_insight_power");
         
         await PowerCmd.Apply<heavens_force>(choiceContext, Owner, Amount, Owner, cardPlay.Card, silent: false);
     }

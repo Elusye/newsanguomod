@@ -79,9 +79,6 @@ public class old_forgotten_ritual : NewsanguoCardTemplate
             return;
         }
 
-        // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/old_forgotten_ritual");
-
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
 

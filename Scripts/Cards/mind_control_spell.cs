@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -58,7 +58,7 @@ public class mind_control_spell : NewsanguoCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/mind_control_spell");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/mind_control_spell");
 
         // 击晕需要目标
         if (cardPlay.Target is null)

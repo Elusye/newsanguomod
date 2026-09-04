@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.Rooms;
 using STS2RitsuLib.Audio;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+using newsanguo.Scripts;
 
 namespace newsanguo.Scripts.Powers;
 
@@ -38,6 +39,7 @@ public class deafen_me_power : ModPowerTemplate
         if (LocalContext.IsMe(Owner))
         {
             FmodStudioMixerGlobals.TryUnmuteAllEvents();
+            NewsanguoSfx.UnmuteAll();
         }
         return Task.CompletedTask;
     }

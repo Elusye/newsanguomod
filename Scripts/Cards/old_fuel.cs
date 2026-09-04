@@ -62,9 +62,6 @@ public class old_fuel : NewsanguoCardTemplate
             return;
         }
 
-        // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/old_fuel");
-
         // 获得能量
         await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, owner);
 

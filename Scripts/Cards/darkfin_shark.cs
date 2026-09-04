@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -58,7 +58,7 @@ public class darkfin_shark : NewsanguoCardTemplate
         }
 
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/darkfin_shark");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/darkfin_shark");
 
         // 播放角色攻击动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);
@@ -84,7 +84,7 @@ public class darkfin_shark : NewsanguoCardTemplate
         await CardPileCmd.Add(clone, hand);
 
         // 播放复制音效
-        SfxCmd.Play("event:/newsanguo/sfx/darkfin_shark_copy");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/darkfin_shark_copy");
     }
 
     // 升级后的效果逻辑

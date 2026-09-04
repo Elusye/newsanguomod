@@ -37,15 +37,15 @@ public class NewsanguoCharacter : ModCharacterTemplate<
         Scenes: new CharacterSceneAssetSet(
             VisualsPath: "res://newsanguo/images/characters/Newsanguo/combat_body.png"
         ),
-        // 选人音效（对应 FMOD 事件 event:/newsanguo/sfx/character_select，需在 FMOD 中补齐后重新导出 bank）
+        // 选人/死亡音效：仍以 event:/ 路径经引擎入口触发，EngineSfxRedirectPatch 会截获
+        // 这两个路径并转交 NewsanguoSfx 播放同名音频资源（newsanguo.bank 已删除，不经过 FMOD）。
         Audio: new CharacterAudioAssetSet(
             CharacterSelectSfx: "event:/newsanguo/sfx/character_select",
             CharacterTransitionSfx: null,
             AttackSfx: null,
             CastSfx: null,
-            // 角色死亡音效：由原版死亡动画流程（NCreature.StartDeathAnim → SfxCmd.PlayDeath）播放，
-            // RitsuLib 的 CharacterDeathSfxPatch 会用此值替换原版事件路径。
-            // 对应 FMOD 事件 event:/newsanguo/sfx/character_death，需在 FMOD 中补齐后重新导出 bank。
+            // 角色死亡音效：PNG 视觉下由 PlayerDeathSfxPatch 在 StartDeathAnim 后缀补播，
+            // 直接走 NewsanguoSfx；此处事件路径供引擎级入口匹配。
             DeathSfx: "event:/newsanguo/sfx/character_death"
         ),
         // 多人宝箱石头剪刀布手势图（当前为占位图，可后续替换）：

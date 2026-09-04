@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -41,7 +41,7 @@ public class a_grand_toast : NewsanguoCardTemplate
 
     // 卡牌基础数值：酒力层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<drunken_might>("drunken_might", 6)
+        new PowerVar<drunken_might>("drunken_might", 4)
     ];
 
     // 鼠标悬停时显示酒力提示
@@ -55,7 +55,7 @@ public class a_grand_toast : NewsanguoCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/a_grand_toast");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/a_grand_toast");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
@@ -74,7 +74,7 @@ public class a_grand_toast : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 酒力层数从 6 提高到 8 (6+2)
+        // 酒力层数从 4 提高到 6 (4+2)
         DynamicVars["drunken_might"].UpgradeValueBy(2);
     }
 }

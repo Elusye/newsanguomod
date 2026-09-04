@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -71,7 +71,7 @@ public class who_rules : NewsanguoCardTemplate
         Player targetPlayer = targetCreature.Player;
 
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/who_rules");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/who_rules");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -78,7 +78,7 @@ public class heavens_decay : NewsanguoCardTemplate
         }
 
         // 播放天意侵蚀触发音效（与能力共用事件，GUIDs.txt 已有该事件）
-        SfxCmd.Play("event:/newsanguo/sfx/heavens_decay");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/heavens_decay");
 
         // 获得1层天意侵蚀：下个回合开始时天意爷接管，自动打出手牌
         await PowerCmd.Apply<heavens_decay_power>(choiceContext, owner.Creature, 1, owner.Creature, this);

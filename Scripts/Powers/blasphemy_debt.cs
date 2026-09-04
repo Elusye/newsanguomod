@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>
@@ -55,7 +56,7 @@ public class blasphemy_debt : ModPowerTemplate
         if (Amount <= 0)
         {
             // 亵渎债务到期触发音效（对应 FMOD 事件 event:/newsanguo/sfx/blasphemy_debt）
-            SfxCmd.Play("event:/newsanguo/sfx/blasphemy_debt");
+            NewsanguoSfx.Play("event:/newsanguo/sfx/blasphemy_debt");
             await PowerCmd.Apply<heavens_decay_power>(choiceContext, Owner, decayAmount, Owner, null, silent: false);
         }
     }

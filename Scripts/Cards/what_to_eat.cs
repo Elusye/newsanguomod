@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -26,7 +26,7 @@ public class what_to_eat : NewsanguoCardTemplate
     // 卡牌类型：技能
     private const CardType type = CardType.Skill;
     // 卡牌稀有度：稀有
-    private const CardRarity rarity = CardRarity.Rare;
+    private const CardRarity rarity = CardRarity.Uncommon;
     // 目标类型：所有盟友
     private const TargetType targetType = TargetType.AllAllies;
     // 是否在卡牌图鉴中显示
@@ -74,7 +74,7 @@ public class what_to_eat : NewsanguoCardTemplate
             .ToList();
 
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/what_to_eat");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/what_to_eat");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.CardSelection;
@@ -50,17 +50,18 @@ public class empower : NewsanguoCardTemplate
             return;
         }
 
-        SfxCmd.Play("event:/newsanguo/sfx/empower");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/empower");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
 
-        // 选择一张手牌记录
+        // 选择一张手牌记录（只能选不带“消耗”关键词的攻击牌或技能牌）
         List<CardModel> selected = (await CardSelectCmd.FromHand(
             prefs: new CardSelectorPrefs(SelectionScreenPrompt, 1),
             context: choiceContext,
             player: owner,
-            filter: null,
+            filter: card => (card.Type == CardType.Attack || card.Type == CardType.Skill)
+                && !card.Keywords.Contains(CardKeyword.Exhaust),
             source: this)).ToList();
         CardModel? recordedCard = selected.FirstOrDefault();
         if (recordedCard is null)

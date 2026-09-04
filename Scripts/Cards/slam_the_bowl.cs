@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -53,7 +53,7 @@ public class slam_the_bowl : NewsanguoCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/slam_the_bowl");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/slam_the_bowl");
 
         // 1. 丢弃所有手牌（快照，避免迭代过程中集合被修改）
         // 当前打出的这张牌通常已不在手牌中，保险起见排除自身
@@ -77,7 +77,7 @@ public class slam_the_bowl : NewsanguoCardTemplate
             .Execute(choiceContext);
 
         // 播放伤害音效
-        SfxCmd.Play("event:/newsanguo/sfx/slam_the_bowl_damage");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/slam_the_bowl_damage");
 
         // 3. 将一张此牌的复制品加入弃牌堆
         // 与原版 Anger 一致：AddGeneratedCardToCombat 本身不会更新弃牌堆 UI 计数，

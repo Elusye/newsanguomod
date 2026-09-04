@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -56,7 +56,7 @@ public class cross_for_cross : NewsanguoCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/cross_for_cross");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/cross_for_cross");
         
         // 如果敌人的意图是攻击，则获得能量
         if (cardPlay.Target?.Monster?.IntendsToAttack == true)

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -41,7 +41,7 @@ public class to_a_bigger_goblet : NewsanguoCardTemplate
 
     // 卡牌基础数值：换大盏层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<to_a_bigger_goblet_power>("to_a_bigger_goblet", 2)
+        new PowerVar<to_a_bigger_goblet_power>("to_a_bigger_goblet", 1)
     ];
 
     // 鼠标悬停时显示酒力提示
@@ -55,7 +55,7 @@ public class to_a_bigger_goblet : NewsanguoCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/to_a_bigger_goblet");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/to_a_bigger_goblet");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
@@ -74,7 +74,7 @@ public class to_a_bigger_goblet : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 换大盏层数从 2 提高到 4 (2+2)
-        DynamicVars["to_a_bigger_goblet"].UpgradeValueBy(2);
+        // 换大盏层数从 1 提高到 2 (1+1)
+        DynamicVars["to_a_bigger_goblet"].UpgradeValueBy(1);
     }
 }

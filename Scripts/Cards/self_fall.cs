@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -58,7 +58,7 @@ public class self_fall : NewsanguoCardTemplate
         }
 
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/self_fall");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/self_fall");
 
         // 快照抽牌堆中的所有攻击牌（避免移动过程中集合变化）
         CardPile drawPile = PileType.Draw.GetPile(owner);

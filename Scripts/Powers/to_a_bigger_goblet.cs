@@ -1,10 +1,11 @@
-using MegaCrit.Sts2.Core.Commands;
+﻿using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
 // 注册能力到游戏
@@ -32,7 +33,7 @@ public class to_a_bigger_goblet : ModPowerTemplate
         if (Owner is not null && target == Owner && canonicalPower is drunken_might && amount > 0)
         {
             // 换大盏增强酒力获得触发音效
-            SfxCmd.Play("event:/newsanguo/sfx/to_a_bigger_goblet_power");
+            NewsanguoSfx.Play("event:/newsanguo/sfx/to_a_bigger_goblet_power");
             modifiedAmount = amount + Amount;
             return true;
         }

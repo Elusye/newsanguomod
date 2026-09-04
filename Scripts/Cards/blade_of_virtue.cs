@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -59,7 +59,7 @@ public class blade_of_virtue : NewsanguoCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         // 播放出牌音效
-        SfxCmd.Play("event:/newsanguo/sfx/blade_of_virtue");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/blade_of_virtue");
 
         // 对目标造成 4 点伤害 2 次
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
