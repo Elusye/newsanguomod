@@ -37,9 +37,9 @@ public class father_can_claim_the_throne : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：每回合开始时失去 2 点天意之力（升级后 1），获得 1 点能量并额外抽 1 张牌
+    // 卡牌基础数值：每回合开始时失去 5 点天意之力，获得 1 点能量并额外抽 1 张牌
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<father_can_claim_the_throne_power>("father_can_claim_the_throne_power", 2),
+        new PowerVar<father_can_claim_the_throne_power>("father_can_claim_the_throne_power", 5),
         new EnergyVar(1),
         new IntVar("draw_count", 1)
     ];
@@ -82,7 +82,7 @@ public class father_can_claim_the_throne : NewsanguoCardTemplate
         power?.AddCast(DynamicVars["draw_count"].IntValue);
     }
 
-    // 升级：每回合失去的天意之力 2 → 1
+    // 升级：每回合失去的天意之力减少（单次打出 5 → 4）
     protected override void OnUpgrade()
     {
         DynamicVars["father_can_claim_the_throne_power"].UpgradeValueBy(-1);

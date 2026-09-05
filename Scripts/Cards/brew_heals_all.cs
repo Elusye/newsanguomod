@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -38,10 +38,10 @@ public class brew_heals_all : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：5 点酒力、4 点天意之力
+    // 卡牌基础数值：5 点酒力、3 点天意之力
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new PowerVar<drunken_might>("drunken_might", 5),
-        new PowerVar<heavens_force>("heavens_force", 4)
+        new PowerVar<heavens_force>("heavens_force", 3)
     ];
 
     // 悬停提示：展示“酒力”、“天意之力”、“天意侵蚀”说明

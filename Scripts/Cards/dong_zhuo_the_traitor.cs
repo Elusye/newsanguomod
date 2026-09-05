@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -6,9 +6,11 @@ using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Powers;
+using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -42,6 +44,11 @@ public class dong_zhuo_the_traitor : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
+    // 卡牌基础数值：立即给予的易伤层数
+    protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new PowerVar<VulnerablePower>("VulnerablePower", 1)
+    ];
+
     // 鼠标悬停时显示“易伤”能力的说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<VulnerablePower>()
@@ -66,8 +73,9 @@ public class dong_zhuo_the_traitor : NewsanguoCardTemplate
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
 
-        // 立即给予 1 层易伤
-        await PowerCmd.Apply<VulnerablePower>(choiceContext, cardPlay.Target, 1, owner.Creature, this, silent: false);
+        // 立即给予易伤（层数取自卡牌变量）
+        int vulnerable = DynamicVars["VulnerablePower"].IntValue;
+        await PowerCmd.Apply<VulnerablePower>(choiceContext, cardPlay.Target, vulnerable, owner.Creature, this, silent: false);
 
         // 给予目标“国贼”能力：每个敌方回合结束时补充 1 层易伤
         await PowerCmd.Apply<traitor_tyranny>(choiceContext, cardPlay.Target, 1, owner.Creature, this, silent: false);

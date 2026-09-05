@@ -12,7 +12,8 @@ namespace newsanguo.Scripts;
 /// res://newsanguo/audios/ 下的音频资源（支持 .mp3/.wav/.ogg，自动探测扩展名，与“关羽之歌”同款做法）。
 /// 角色选人/死亡两个由引擎触发的 FMOD 事件，则经 Entry 注册为 RitsuLib 虚拟事件后同样映射到同名资源。
 ///
-/// “聋”（deafen_me）静音只作用于本播放器（Godot 播放），原版 FMOD 事件由 FmodStudioMixerGlobals 另行静音。
+/// “扎聋我自己的耳朵！”（deafen_me）的音量减半只作用于本播放器（Godot 播放），
+/// 原版 FMOD 事件由 HearingVolumeController 另行减半。
 /// </summary>
 public static class NewsanguoSfx
 {
@@ -159,22 +160,48 @@ public static class NewsanguoSfx
         return LoudnessGainDb.TryGetValue(stem, out float gain) ? gain : 0f;
     }
 
-    // “聋”静音门：被扎聋耳朵后置 true，停掉所有正在播放并屏蔽后续播放，战斗结束/回主菜单时复位
-    private static bool _muted;
+    // “听觉受损”门：置位后本 mod 的 Godot 音效整体降低 12 dB（线性音量 0.25），战斗结束/回主菜单时复位。
+    private const float ReducedVolumeDb = 12.0412f; // 10*log10(4)，≈ 音量降至 1/4
 
-    public static bool Muted => _muted;
+    private static bool _volumeReduced;
 
-    // 静音本 mod 的全部 Godot 播放音效（配合 deafen 的 FMOD 全局静音）
-    public static void MuteAll()
+    public static bool VolumeReduced => _volumeReduced;
+
+    // 把本 mod 的全部 Godot 播放音效音量降至 1/4（已降则幂等跳过）
+    public static void ApplyVolumeReduction()
     {
-        _muted = true;
-        StopAllActive();
+        if (_volumeReduced)
+        {
+            return;
+        }
+        _volumeReduced = true;
+        ShiftActiveVolumes(-ReducedVolumeDb);
     }
 
-    // 恢复本 mod 的 Godot 音效播放
-    public static void UnmuteAll()
+    // 恢复本 mod 的 Godot 音效音量（未降则幂等跳过）
+    public static void RestoreVolume()
     {
-        _muted = false;
+        if (!_volumeReduced)
+        {
+            return;
+        }
+        _volumeReduced = false;
+        ShiftActiveVolumes(ReducedVolumeDb);
+    }
+
+    // 对所有正在播放的播放器统一增减 dB，让已响起的声音也立即变轻/恢复
+    private static void ShiftActiveVolumes(float deltaDb)
+    {
+        foreach (List<AudioStreamPlayer> list in ActivePlayers.Values)
+        {
+            foreach (AudioStreamPlayer player in list)
+            {
+                if (GodotObject.IsInstanceValid(player))
+                {
+                    player.VolumeDb += deltaDb;
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -183,7 +210,7 @@ public static class NewsanguoSfx
     /// <param name="sfx">兼容两种传参：事件路径（event:/newsanguo/sfx/xxx）或 res:// 资源路径。</param>
     public static void Play(string sfx, float volume = 1f, float pitch = 1f)
     {
-        if (_muted || string.IsNullOrEmpty(sfx))
+        if (string.IsNullOrEmpty(sfx))
         {
             return;
         }
@@ -222,6 +249,7 @@ public static class NewsanguoSfx
             Bus = "SFX",
             PitchScale = pitch,
             VolumeDb = volume <= 0f ? -80f : Mathf.LinearToDb(volume) + MasterVolumeDb + LoudnessOffsetDb(resourcePath)
+                + (_volumeReduced ? -ReducedVolumeDb : 0f)
         };
         tree.Root.AddChild(player);
         if (!ActivePlayers.TryGetValue(resourcePath, out var list))
@@ -419,21 +447,5 @@ public static class NewsanguoSfx
         {
             player.QueueFree();
         }
-    }
-
-    private static void StopAllActive()
-    {
-        foreach (KeyValuePair<string, List<AudioStreamPlayer>> pair in ActivePlayers.ToList())
-        {
-            foreach (AudioStreamPlayer player in pair.Value)
-            {
-                if (GodotObject.IsInstanceValid(player))
-                {
-                    player.Stop();
-                    player.QueueFree();
-                }
-            }
-        }
-        ActivePlayers.Clear();
     }
 }

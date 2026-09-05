@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -38,10 +38,10 @@ public class lightning_strike : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 9 点伤害（升级 11）；获得 3 点天意之力（升级 4）
+    // 卡牌基础数值：造成 9 点伤害（升级 11）；获得 2 点天意之力（升级 3）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(9m, ValueProp.Move),
-        new PowerVar<heavens_force>("heavens_force", 3)
+        new PowerVar<heavens_force>("heavens_force", 2)
     ];
 
     // 悬停提示：展示“天意之力”与“天意侵蚀”的说明

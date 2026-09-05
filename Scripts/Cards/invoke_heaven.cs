@@ -70,9 +70,9 @@ public class invoke_heaven : NewsanguoCardTemplate
             silent: false);
     }
 
-    // 升级后的效果逻辑：天意之力 5 → 7
+    // 升级后的效果逻辑：天意之力 5 → 6
     protected override void OnUpgrade()
     {
-        DynamicVars["heavens_force"].UpgradeValueBy(2);
+        DynamicVars["heavens_force"].UpgradeValueBy(1);
     }
 }

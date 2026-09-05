@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Combat;
@@ -40,10 +40,10 @@ public class great_evil : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：对所有敌人造成 14 点伤害；获得 3 点天意之力
+    // 卡牌基础数值：对所有敌人造成 14 点伤害；获得 2 点天意之力
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(14, ValueProp.Move),
-        new PowerVar<heavens_force>("heavens_force", 3)
+        new PowerVar<heavens_force>("heavens_force", 2)
     ];
 
     // 悬停提示：展示“天意之力”与”天意侵蚀”说明

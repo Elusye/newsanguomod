@@ -4,7 +4,6 @@ using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Modding;
 using STS2RitsuLib;
 using STS2RitsuLib.Interop;
-using STS2RitsuLib.Audio;
 
 using newsanguo.Scripts.Patches;
 using newsanguo.Scripts.Powers;
@@ -68,9 +67,9 @@ public class Entry
         }
     }
 
-    // 兜底恢复全局静音：若玩家在战斗中打出“扎聋我自己的耳朵！”后直接“保存并退出”，
-    // 战斗结束钩子不会触发，全局静音会残留到下次启动。
-    // 因此在保存完成、进入主菜单时统一恢复声音（重复调用无害）。
+    // 兜底恢复本机音量：若玩家在战斗中打出“扎聋我自己的耳朵！”后直接“保存并退出”，
+    // 战斗结束钩子不会触发，音量减半会残留到下次启动。
+    // 因此在保存完成、进入主菜单时统一恢复音量（重复调用无害）。
     // 注意：RunSavedEvent 在战斗结束时也会触发（游戏自动保存进度），因此不能在这里打断
     // “关羽之歌”——否则歌曲在战斗结束的瞬间就会被停掉。
     // 打断时机：SL 回到主菜单（MainMenuReadyEvent）或进入下一个房间（RoomEnteredEvent）。
@@ -80,15 +79,13 @@ public class Entry
         {
             if (evt is RunSavedEvent)
             {
-                // 只恢复全局静音，不打断“关羽之歌”（战斗结束的自动保存也会走到这里）
-                FmodStudioMixerGlobals.TryUnmuteAllEvents();
-                NewsanguoSfx.UnmuteAll();
+                // 只恢复音量，不打断“关羽之歌”（战斗结束的自动保存也会走到这里）
+                HearingVolumeController.RestoreFullVolume();
             }
             else if (evt is MainMenuReadyEvent)
             {
-                // SL 保存并退出回到主菜单：恢复声音 + 打断“关羽之歌”
-                FmodStudioMixerGlobals.TryUnmuteAllEvents();
-                NewsanguoSfx.UnmuteAll();
+                // SL 保存并退出回到主菜单：恢复音量 + 打断“关羽之歌”
+                HearingVolumeController.RestoreFullVolume();
                 release_power.StopSongOfGuanyu();
             }
             else if (evt is RoomEnteredEvent)

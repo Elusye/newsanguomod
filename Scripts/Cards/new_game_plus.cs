@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -46,9 +46,9 @@ public class new_game_plus : NewsanguoCardTemplate
 
     // 卡牌基础数值：预见数量、天意之力、酒力、抽牌数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DynamicVar("ScryAmount", 3m),
+        new DynamicVar("ScryAmount", 5m),
         new PowerVar<heavens_force>("heavens_force", 2),
-        new PowerVar<drunken_might>("drunken_might", 5),
+        new PowerVar<drunken_might>("drunken_might", 3),
         new CardsVar(1)
     ];
 

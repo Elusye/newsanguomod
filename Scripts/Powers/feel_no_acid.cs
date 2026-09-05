@@ -1,6 +1,8 @@
-﻿using MegaCrit.Sts2.Core.Commands;
+using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -14,11 +16,11 @@ public class feel_no_acid : ModPowerTemplate
 {
     // 能力类型：正面 Buff
     public override PowerType Type => PowerType.Buff;
-    // 叠加方式：单层（效果不随层数提升，不显示层数）
-    public override PowerStackType StackType => PowerStackType.Single;
+    // 叠加方式：计数器，Amount 表示每次失去酒力时补偿的酒力数
+    public override PowerStackType StackType => PowerStackType.Counter;
     // 不允许负数
     public override bool AllowNegative => false;
-    // 允许接收战斗钩子（否则 TryModifyPowerAmountReceived 不会被调用）
+    // 需要酒力变化的战斗钩子（否则 Before/AfterPowerAmountChanged 不会被调用）
     public override bool ShouldReceiveCombatHooks => true;
 
     // 能力图标资源
@@ -27,20 +29,33 @@ public class feel_no_acid : ModPowerTemplate
         BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}_big.png"
     );
 
-    // 酒力每次只会减少 1 点：将酒力的负数变化量截断为 -1
-    // 该钩子会在酒力层数变化前被引擎调用（与原版 ArtifactPower 抵消 debuff 同一机制）
-    public override bool TryModifyPowerAmountReceived(PowerModel canonicalPower, Creature target, decimal amount, Creature? applier, out decimal modifiedAmount)
-    {
-        if (Owner is not null && target == Owner && canonicalPower is drunken_might && amount < 0)
-        {
-            modifiedAmount = Math.Max(amount, -1m);
-            // 触发音效：酒力被削减时（咱家不怕酸生效）
-            // 对应 FMOD 事件 event:/newsanguo/sfx/feel_no_acid_power，需在 FMOD 中补齐后重新导出 bank
-            NewsanguoSfx.Play("event:/newsanguo/sfx/feel_no_acid_power");
-            return true;
-        }
+    // 记录酒力变化前的层数
+    private int _drunkenMightAmountBeforeChange;
 
-        modifiedAmount = amount;
-        return false;
+    // 在酒力层数变化前记录旧值
+    public override Task BeforePowerAmountChanged(PowerModel power, decimal amount, Creature target, Creature? applier, CardModel? cardSource)
+    {
+        if (Owner is null) return Task.CompletedTask;
+        if (power is drunken_might && target == Owner)
+        {
+            _drunkenMightAmountBeforeChange = power.Amount;
+        }
+        return Task.CompletedTask;
+    }
+
+    // 在酒力层数变化后：每当你失去酒力时，获得与自身层数等量的酒力
+    public override async Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
+    {
+        if (Owner is null) return;
+        if (power is not drunken_might || power.Owner != Owner) return;
+
+        int lost = _drunkenMightAmountBeforeChange - power.Amount;
+        if (lost <= 0) return;
+
+        // 触发音效：失去酒力时（咱家不怕酸生效）
+        NewsanguoSfx.Play("event:/newsanguo/sfx/feel_no_acid_power");
+
+        // 获得 Amount 点酒力（gain 不会再触发本钩子，避免死循环）
+        await PowerCmd.Apply<drunken_might>(choiceContext, Owner, base.Amount, Owner, null, silent: true);
     }
 }

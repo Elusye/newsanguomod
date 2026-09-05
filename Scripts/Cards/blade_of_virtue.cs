@@ -37,9 +37,9 @@ public class blade_of_virtue : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 4 点伤害，攻击 2 次；给予目标 1 层虚弱、1 层易伤
+    // 卡牌基础数值：造成 3 点伤害，攻击 2 次；给予目标 1 层虚弱、1 层易伤
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(4, ValueProp.Move),
+        new DamageVar(3, ValueProp.Move),
         new RepeatVar(2),
         new PowerVar<WeakPower>("WeakPower", 1),
         new PowerVar<VulnerablePower>("VulnerablePower", 1)

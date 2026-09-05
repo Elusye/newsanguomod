@@ -10,7 +10,6 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.ValueProps;
-using STS2RitsuLib.Audio;
 using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -44,8 +43,9 @@ public class deafen_me : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成的伤害
+    // 卡牌基础数值：给予自己的帝王之征层数、造成的伤害
     protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new PowerVar<dragon_omen_power>("dragon_omen", 3),
         new DamageVar(15m, ValueProp.Move)
     ];
 
@@ -68,8 +68,9 @@ public class deafen_me : NewsanguoCardTemplate
         // 播放角色攻击动画
         await CreatureCmd.TriggerAnim(owner.Creature, "Attack", owner.Character.CastAnimDelay);
 
-        // 1. 给予自己 1 层帝王之征（自我枷锁）
-        await PowerCmd.Apply<dragon_omen_power>(choiceContext, owner.Creature, 1, owner.Creature, this, silent: false);
+        // 1. 给予自己若干层帝王之征（自我枷锁）
+        int omenAmount = DynamicVars["dragon_omen"].IntValue;
+        await PowerCmd.Apply<dragon_omen_power>(choiceContext, owner.Creature, omenAmount, owner.Creature, this, silent: false);
 
         // 2. 造成伤害
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
@@ -77,15 +78,14 @@ public class deafen_me : NewsanguoCardTemplate
             .Targeting(cardPlay.Target)
             .Execute(choiceContext);
 
-        // 3. 附加“聋”能力，标记本场战斗静音状态（战斗结束由能力恢复音效）
+        // 3. 附加“听觉受损”能力，标记本场战斗音量降低状态（战斗结束由能力恢复音量）
         await PowerCmd.Apply<deafen_me_power>(choiceContext, owner.Creature, 1, owner.Creature, this);
 
-        // 4. 本场战斗中你不能再听到任何声音：同时静音 FMOD 事件与本 mod 的 Godot 播放音效
-        // 仅在本机执行（LocalContext.IsMe），否则多人游戏中所有玩家的音频都会被静音
+        // 4. 本场战斗中你听到的声音音量降低至 25%：FMOD 主总线与本 mod 的 Godot 播放音效分别降为 1/4。
+        // 仅在本机执行（LocalContext.IsMe），否则多人游戏中所有玩家的音频都会被压低
         if (LocalContext.IsMe(owner))
         {
-            FmodStudioMixerGlobals.TryMuteAllEvents();
-            NewsanguoSfx.MuteAll();
+            HearingVolumeController.ReduceToQuarterVolume();
         }
     }
 

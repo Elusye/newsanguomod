@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Cards;
-using MegaCrit.Sts2.Core.ValueProps;
+using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -20,8 +21,8 @@ namespace newsanguo.Scripts;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class feel_no_acid : NewsanguoCardTemplate
 {
-    // 基础耗能：3
-    private const int energyCost = 3;
+    // 基础耗能：1
+    private const int energyCost = 1;
     // 卡牌类型：能力
     private const CardType type = CardType.Power;
     // 卡牌稀有度：稀有
@@ -36,6 +37,11 @@ public class feel_no_acid : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
+    // 卡牌基础数值：每当你失去酒力时，获得 1 点酒力（调整此处的 1 即可联动卡面描述）
+    protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new PowerVar<feel_no_acid_power>("feel_no_acid_power", 1)
+    ];
+
     public feel_no_acid() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
     {
     }
@@ -49,11 +55,12 @@ public class feel_no_acid : NewsanguoCardTemplate
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
-        // 获得咱家不怕酸能力：酒力每次只会减少 1 点
+        // 附加咱家不怕酸能力，层数＝每次失去酒力时补偿的酒力数
+        int compensate = DynamicVars["feel_no_acid_power"].IntValue;
         await PowerCmd.Apply<feel_no_acid_power>(
             choiceContext,
             base.Owner.Creature,
-            1,
+            compensate,
             base.Owner.Creature,
             this,
             silent: false);
@@ -62,7 +69,7 @@ public class feel_no_acid : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 升级后费用 3 → 2
-        EnergyCost.UpgradeBy(-1);
+        // 补偿酒力 1 → 2
+        DynamicVars["feel_no_acid_power"].UpgradeValueBy(1);
     }
 }
