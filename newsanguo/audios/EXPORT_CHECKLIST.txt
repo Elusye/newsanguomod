@@ -60,8 +60,6 @@ heavens_decay
 heavens_force
 heavens_force_decay
 human_transmutation_spell
-infinite_camps
-infinite_camps_power
 intoxicated
 invincible
 invoke_heaven

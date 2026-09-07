@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b3lxda5hkvsms"
-path="res://.godot/imported/nonsense.png-40ad151c796bdd13098efa04d97ad85f.ctex"
+uid="uid://b1p4dvf7wjpyn"
+path="res://.godot/imported/Nonsense.png-8ba6bd9476406a85dda23b363be34a35.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/cards/nonsense.png"
-dest_files=["res://.godot/imported/nonsense.png-40ad151c796bdd13098efa04d97ad85f.ctex"]
+source_file="res://newsanguo/images/cards/Nonsense.png"
+dest_files=["res://.godot/imported/Nonsense.png-8ba6bd9476406a85dda23b363be34a35.ctex"]
 
 [params]
 

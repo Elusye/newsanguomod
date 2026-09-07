@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
@@ -17,18 +17,8 @@ namespace newsanguo.Scripts;
 
 // 注册卡牌到新三国专属卡池
 [RegisterCard(typeof(NewsanguoCardPool))]
-public class release : NewsanguoCardTemplate
+public class Release : NewsanguoCardTemplate
 {
-    // 基础耗能：1
-    private const int energyCost = 1;
-    // 卡牌类型：能力
-    private const CardType type = CardType.Power;
-    // 卡牌稀有度：罕见
-    private const CardRarity rarity = CardRarity.Uncommon;
-    // 目标类型：自身
-    private const TargetType targetType = TargetType.Self;
-    // 是否在卡牌图鉴中显示
-    private const bool shouldShowInCardLibrary = true;
 
     // 不可通过战斗内的变化/随机生成获得（如“稍作修改”的变化）
     public override bool CanBeGeneratedInCombat => false;
@@ -43,28 +33,22 @@ public class release : NewsanguoCardTemplate
         new IntVar("heal_amount", 7)
     ];
 
-    public release() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
+    public Release() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
     {
     }
 
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        Player? owner = base.Owner;
-        if (owner is null)
-        {
-            return;
-        }
-
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/release");
 
         // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
+        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 附加“释怀”能力：战斗结束时回复对应生命并播放「关羽之歌」
         int healAmount = DynamicVars["heal_amount"].IntValue;
-        await PowerCmd.Apply<release_power>(choiceContext, owner.Creature, healAmount, owner.Creature, this);
+        await PowerCmd.Apply<ReleasePower>(choiceContext, base.Owner.Creature, healAmount, base.Owner.Creature, this);
     }
 
     // 升级后的效果逻辑：回复量 7 → 10

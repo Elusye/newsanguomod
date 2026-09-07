@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dkubjlpw6l1hp"
-path="res://.godot/imported/empower.png-a101c08bd199515adfe6e9fbbe6b4524.ctex"
+uid="uid://bk7q2ljsytqn0"
+path="res://.godot/imported/Empower.png-15694fa0c049143c521ffb9912e5d88a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/cards/empower.png"
-dest_files=["res://.godot/imported/empower.png-a101c08bd199515adfe6e9fbbe6b4524.ctex"]
+source_file="res://newsanguo/images/cards/Empower.png"
+dest_files=["res://.godot/imported/Empower.png-15694fa0c049143c521ffb9912e5d88a.ctex"]
 
 [params]
 

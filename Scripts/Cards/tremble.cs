@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -21,18 +21,8 @@ namespace newsanguo.Scripts;
 
 // 注册卡牌到新三国专属卡池
 [RegisterCard(typeof(NewsanguoCardPool))]
-public class tremble : NewsanguoCardTemplate
+public class Tremble : NewsanguoCardTemplate
 {
-    // 基础耗能：0
-    private const int energyCost = 0;
-    // 卡牌类型：技能
-    private const CardType type = CardType.Skill;
-    // 卡牌稀有度：罕见
-    private const CardRarity rarity = CardRarity.Uncommon;
-    // 目标类型：所有敌人
-    private const TargetType targetType = TargetType.AllEnemies;
-    // 是否在卡牌图鉴中显示
-    private const bool shouldShowInCardLibrary = true;
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
@@ -56,38 +46,28 @@ public class tremble : NewsanguoCardTemplate
         HoverTipFactory.FromPower<VulnerablePower>()
     ];
 
-    public tremble() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
+    public Tremble() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.AllEnemies)
     {
     }
 
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        Player? owner = base.Owner;
-        if (owner is null)
-        {
-            return;
-        }
-
-        var combatState = CombatState;
-        if (combatState is null)
-        {
-            return;
-        }
+        var combatState = CombatState!;
 
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/tremble");
 
         // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
+        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 给予所有敌人虚弱和易伤
         int weak = DynamicVars["WeakPower"].IntValue;
         int vulnerable = DynamicVars["VulnerablePower"].IntValue;
-        foreach (Creature enemy in combatState.GetOpponentsOf(owner.Creature).Where(c => c.IsAlive))
+        foreach (Creature enemy in combatState.GetOpponentsOf(base.Owner.Creature).Where(c => c.IsAlive))
         {
-            await PowerCmd.Apply<WeakPower>(choiceContext, enemy, weak, owner.Creature, this);
-            await PowerCmd.Apply<VulnerablePower>(choiceContext, enemy, vulnerable, owner.Creature, this);
+            await PowerCmd.Apply<WeakPower>(choiceContext, enemy, weak, base.Owner.Creature, this);
+            await PowerCmd.Apply<VulnerablePower>(choiceContext, enemy, vulnerable, base.Owner.Creature, this);
         }
     }
 

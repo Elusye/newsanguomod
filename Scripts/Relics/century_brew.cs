@@ -5,10 +5,12 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
-using newsanguo.Scripts.Characters;
-using newsanguo.Scripts.Powers;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Relics;
 
@@ -24,12 +26,17 @@ public class century_brew : ModRelicTemplate
 
     public override RelicRarity Rarity => RelicRarity.Ancient;
 
+    // 描述中的 {drunken_might}：每个回合开始时获得的酒力层数
+    protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new PowerVar<DrunkenMight>("drunken_might", 3)
+    ];
+
     // 悬停提示：展示“酒力”能力说明
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<drunken_might>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMight>()];
 
     public override bool ShouldReceiveCombatHooks => true;
 
-    // 每个回合开始时：获得 4 点酒力（多人下只在 Owner 自己的回合触发）
+    // 每个回合开始时：获得 3 点酒力（多人下只在 Owner 自己的回合触发）
     public override async Task AfterAutoPrePlayPhaseEntered(PlayerChoiceContext choiceContext, Player player)
     {
         if (player != Owner || Owner?.Creature is null)
@@ -37,10 +44,10 @@ public class century_brew : ModRelicTemplate
             return;
         }
 
-        await PowerCmd.Apply<drunken_might>(
+        await PowerCmd.Apply<DrunkenMight>(
             choiceContext: choiceContext,
             target: Owner.Creature,
-            amount: 4,
+            amount: DynamicVars["drunken_might"].IntValue,
             applier: Owner.Creature,
             cardSource: null,
             silent: false);

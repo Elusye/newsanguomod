@@ -8,6 +8,7 @@ using STS2RitsuLib.Interop;
 using newsanguo.Scripts.Patches;
 using newsanguo.Scripts.Powers;
 using newsanguo.Scripts.Relics;
+using newsanguo.Scripts.Settings;
 
 namespace newsanguo.Scripts;
 
@@ -42,7 +43,7 @@ public class Entry
         ModTypeDiscoveryHub.RegisterModAssembly(ModId, assembly);
         // 先古之民遗物官方映射（由 RitsuLib 的补丁在事件/获得遗物时生效）：
         // 古老牙齿：把“仁之剑，义之剑”变化为先古卡“大奸似忠，大伪似真”
-        RitsuLibFramework.RegisterArchaicToothTranscendenceMapping<blade_of_virtue, the_truest_mask>(ModId);
+        RitsuLibFramework.RegisterArchaicToothTranscendenceMapping<BladeOfVirtue, TheTruestMask>(ModId);
         // 欧洛巴斯之触：把初始遗物“沛国佳酿”升级为先古遗物“百年佳酿”
         RitsuLibFramework.RegisterTouchOfOrobasRefinementMapping<fine_brew_of_pei, century_brew>(ModId);
         // 音频已全部迁移到 Godot 资源播放，不再注册 FMOD bank / GUIDs 映射（删除 newsanguo.bank 以减小体积）。
@@ -50,6 +51,8 @@ public class Entry
         // （角色选人 / 死亡）由 EngineSfxRedirectPatch 在 NAudioManager.PlayOneShot 入口
         // 截获并转交 NewsanguoSfx 播放同名音频资源，同样不再经过 FMOD。
         SubscribeAudioRestore();
+        // RitsuLib Mod 设置页：注册本 mod 卡牌/能力音效倍率滑杆（与 newsanguo_sfx_volume 控制台命令共用真值源）
+        NewsanguoSfxVolumeSettings.Register();
     }
 
     private static void ApplyPatch(Harmony harmony, Type patchType)
@@ -86,12 +89,12 @@ public class Entry
             {
                 // SL 保存并退出回到主菜单：恢复音量 + 打断“关羽之歌”
                 HearingVolumeController.RestoreFullVolume();
-                release_power.StopSongOfGuanyu();
+                ReleasePower.StopSongOfGuanyu();
             }
             else if (evt is RoomEnteredEvent)
             {
                 // 进入下一个房间（下一场战斗/事件/休息/商店等）时打断“关羽之歌”
-                release_power.StopSongOfGuanyu();
+                ReleasePower.StopSongOfGuanyu();
             }
         }, replayCurrentState: false);
     }

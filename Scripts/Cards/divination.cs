@@ -18,18 +18,8 @@ namespace newsanguo.Scripts;
 
 // 注册卡牌到新三国专属卡池
 [RegisterCard(typeof(NewsanguoCardPool))]
-public class divination : NewsanguoCardTemplate
+public class Divination : NewsanguoCardTemplate
 {
-    // 基础耗能：1
-    private const int energyCost = 1;
-    // 卡牌类型：技能
-    private const CardType type = CardType.Skill;
-    // 卡牌稀有度：普通
-    private const CardRarity rarity = CardRarity.Common;
-    // 目标类型（Self 表示对自己/玩家）
-    private const TargetType targetType = TargetType.Self;
-    // 是否在卡牌图鉴中显示
-    private const bool shouldShowInCardLibrary = true;
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
@@ -38,17 +28,17 @@ public class divination : NewsanguoCardTemplate
 
     // 卡牌基础数值：获得 2 点天意之力，抽 2 张牌
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<heavens_force>("heavens_force", 2),
+        new PowerVar<HeavensForce>("heavens_force", 2),
         new CardsVar(2)
     ];
 
     // 鼠标悬停时显示天意之力与天意侵蚀提示
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<heavens_force>(),
-        HoverTipFactory.FromPower<heavens_decay_power>()
+        HoverTipFactory.FromPower<HeavensForce>(),
+        HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
-    public divination() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
+    public Divination() : base(1, CardType.Skill, CardRarity.Common, TargetType.Self)
     {
     }
 
@@ -63,7 +53,7 @@ public class divination : NewsanguoCardTemplate
 
         // 获得天意之力
         int heavensForceAmount = DynamicVars["heavens_force"].IntValue;
-        await PowerCmd.Apply<heavens_force>(
+        await PowerCmd.Apply<HeavensForce>(
             choiceContext,
             base.Owner.Creature,
             heavensForceAmount,

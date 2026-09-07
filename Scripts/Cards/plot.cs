@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -18,18 +18,8 @@ namespace newsanguo.Scripts;
 
 // 注册卡牌到新三国专属卡池
 [RegisterCard(typeof(NewsanguoCardPool))]
-public class plot : NewsanguoCardTemplate
+public class Plot : NewsanguoCardTemplate
 {
-    // 基础耗能：0
-    private const int energyCost = 0;
-    // 卡牌类型：攻击
-    private const CardType type = CardType.Attack;
-    // 卡牌稀有度：普通
-    private const CardRarity rarity = CardRarity.Common;
-    // 目标类型：任意敌人
-    private const TargetType targetType = TargetType.AnyEnemy;
-    // 是否在卡牌图鉴中显示
-    private const bool shouldShowInCardLibrary = true;
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
@@ -46,25 +36,21 @@ public class plot : NewsanguoCardTemplate
     protected override bool ShouldGlowGoldInternal =>
         PileType.Hand.GetPile(base.Owner).Cards.Count == 3;
 
-    public plot() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
+    public Plot() : base(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
     }
 
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        Player? owner = base.Owner;
-        Creature? target = cardPlay.Target;
-        if (owner is null || target is null)
-        {
-            return;
-        }
+        ArgumentNullException.ThrowIfNull(cardPlay.Target, "cardPlay.Target");
+        Creature target = cardPlay.Target;
 
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/plot");
 
         // 播放角色攻击动画
-        await CreatureCmd.TriggerAnim(owner.Creature, "Attack", owner.Character.CastAnimDelay);
+        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);
 
         // 造成 6 点伤害
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
@@ -74,9 +60,9 @@ public class plot : NewsanguoCardTemplate
 
         // 若打出这张牌后手牌数为 2，则额外抽 1 张牌
         // （打出时这张牌已离开手牌，此时的手牌数即为“打出后”的手牌数）
-        if (PileType.Hand.GetPile(owner).Cards.Count == 2)
+        if (PileType.Hand.GetPile(base.Owner).Cards.Count == 2)
         {
-            await CardPileCmd.Draw(choiceContext, DynamicVars["Cards"].IntValue, owner);
+            await CardPileCmd.Draw(choiceContext, DynamicVars["Cards"].IntValue, base.Owner);
         }
     }
 

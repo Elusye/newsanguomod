@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://chg2duqkl0ysw"
-path="res://.godot/imported/retire.png-ece020bfd1288e22f9bf71404bff2b3e.ctex"
+uid="uid://bhs8y24lw175d"
+path="res://.godot/imported/Retire.png-4b59e1b484eebc8ba7c92d0d0ab010b1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/cards/retire.png"
-dest_files=["res://.godot/imported/retire.png-ece020bfd1288e22f9bf71404bff2b3e.ctex"]
+source_file="res://newsanguo/images/cards/Retire.png"
+dest_files=["res://.godot/imported/Retire.png-4b59e1b484eebc8ba7c92d0d0ab010b1.ctex"]
 
 [params]
 

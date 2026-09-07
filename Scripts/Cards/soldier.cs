@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -15,22 +15,12 @@ using STS2RitsuLib.Scaffolding.Content;
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 
-namespace newsanguo.Scripts;
+﻿namespace newsanguo.Scripts;
 
-// 注册卡牌到无色卡池（衍生牌，可通过人体炼成术等生成）
-[RegisterCard(typeof(ColorlessCardPool))]
-public class soldier : NewsanguoCardTemplate
+// 注册卡牌到衍生卡池（衍生牌，可通过人体炼成术等生成）
+[RegisterCard(typeof(TokenCardPool))]
+public class Soldier : NewsanguoCardTemplate
 {
-    // 基础耗能：0
-    private const int energyCost = 0;
-    // 卡牌类型：攻击
-    private const CardType type = CardType.Attack;
-    // 卡牌稀有度：衍生
-    private const CardRarity rarity = CardRarity.Token;
-    // 目标类型：任意敌人
-    private const TargetType targetType = TargetType.AnyEnemy;
-    // 在卡牌图鉴中显示
-    private const bool shouldShowInCardLibrary = true;
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
@@ -45,20 +35,14 @@ public class soldier : NewsanguoCardTemplate
     // 卡牌自带“消耗”关键词
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-    // 衍生牌不应出现在无色牌随机生成（无色药水、类星体、光谱偏移等）中
-    public override bool CanBeGeneratedInCombat => false;
-
-    public soldier() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
+    public Soldier() : base(0, CardType.Attack, CardRarity.Token, TargetType.AnyEnemy)
     {
     }
 
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        if (cardPlay.Target is null)
-        {
-            return;
-        }
+        ArgumentNullException.ThrowIfNull(cardPlay.Target, "cardPlay.Target");
 
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/soldier");

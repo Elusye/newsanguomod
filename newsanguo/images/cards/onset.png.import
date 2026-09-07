@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c0g18wur8xmfr"
-path="res://.godot/imported/onset.png-0d5a0c31170aadfdaa767876f1d4c3a4.ctex"
+uid="uid://bio7jvkcjq70h"
+path="res://.godot/imported/Onset.png-d404c7502231686ae5e65f25bd26a516.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/cards/onset.png"
-dest_files=["res://.godot/imported/onset.png-0d5a0c31170aadfdaa767876f1d4c3a4.ctex"]
+source_file="res://newsanguo/images/cards/Onset.png"
+dest_files=["res://.godot/imported/Onset.png-d404c7502231686ae5e65f25bd26a516.ctex"]
 
 [params]
 

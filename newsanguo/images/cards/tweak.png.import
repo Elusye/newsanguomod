@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dva1raeuvjh0q"
-path="res://.godot/imported/tweak.png-686291799cf833b8a0bd9bb8fae8fe9f.ctex"
+uid="uid://dilidpdmu7ttc"
+path="res://.godot/imported/Tweak.png-60baaf7519ec5e3e7a0bb883c096b4f2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/cards/tweak.png"
-dest_files=["res://.godot/imported/tweak.png-686291799cf833b8a0bd9bb8fae8fe9f.ctex"]
+source_file="res://newsanguo/images/cards/Tweak.png"
+dest_files=["res://.godot/imported/Tweak.png-60baaf7519ec5e3e7a0bb883c096b4f2.ctex"]
 
 [params]
 

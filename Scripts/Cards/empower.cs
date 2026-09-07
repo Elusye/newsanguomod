@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.CardSelection;
@@ -19,47 +19,31 @@ namespace newsanguo.Scripts;
 
 // 注册卡牌到新三国专属卡池
 [RegisterCard(typeof(NewsanguoCardPool))]
-public class empower : NewsanguoCardTemplate
+public class Empower : NewsanguoCardTemplate
 {
-    // 基础耗能：1（常驻一费，升级不改变耗能）
-    private const int energyCost = 1;
-    // 卡牌类型：能力
-    private const CardType type = CardType.Power;
-    // 卡牌稀有度：稀有
-    private const CardRarity rarity = CardRarity.Rare;
-    // 目标类型：自身
-    private const TargetType targetType = TargetType.Self;
-    // 是否在卡牌图鉴中显示
-    private const bool shouldShowInCardLibrary = true;
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    public empower() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
+    public Empower() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self)
     {
     }
 
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        Player? owner = base.Owner;
-        if (owner is null)
-        {
-            return;
-        }
-
         NewsanguoSfx.Play("event:/newsanguo/sfx/empower");
 
         // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
+        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 选择一张手牌记录（只能选不带“消耗”关键词的攻击牌或技能牌）
         List<CardModel> selected = (await CardSelectCmd.FromHand(
             prefs: new CardSelectorPrefs(SelectionScreenPrompt, 1),
             context: choiceContext,
-            player: owner,
+            player: base.Owner,
             filter: card => (card.Type == CardType.Attack || card.Type == CardType.Skill)
                 && !card.Keywords.Contains(CardKeyword.Exhaust),
             source: this)).ToList();
@@ -70,11 +54,11 @@ public class empower : NewsanguoCardTemplate
         }
 
         // 附加“赋值”能力并记录所选牌
-        empower_power? power = await PowerCmd.Apply<empower_power>(
+        EmpowerPower? power = await PowerCmd.Apply<EmpowerPower>(
             choiceContext,
-            owner.Creature,
+            base.Owner.Creature,
             1,
-            owner.Creature,
+            base.Owner.Creature,
             this,
             silent: false);
         power?.SetSelectedCard(recordedCard);

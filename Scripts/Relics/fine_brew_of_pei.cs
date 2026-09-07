@@ -3,11 +3,13 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
-using newsanguo.Scripts.Characters;
-using newsanguo.Scripts.Powers;
+using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Relics;
 
@@ -23,8 +25,13 @@ public class fine_brew_of_pei : ModRelicTemplate
 
     public override RelicRarity Rarity => RelicRarity.Starter;
 
+    // 描述中的 {drunken_might}：每场战斗开始时获得的酒力层数
+    protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new PowerVar<DrunkenMight>("drunken_might", 3)
+    ];
+
     // 悬停提示：展示“酒力”能力说明
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<drunken_might>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMight>()];
 
     public override bool ShouldReceiveCombatHooks => true;
 
@@ -32,10 +39,10 @@ public class fine_brew_of_pei : ModRelicTemplate
     {
         if (Owner?.Creature is null) return;
 
-        await PowerCmd.Apply<drunken_might>(
+        await PowerCmd.Apply<DrunkenMight>(
             choiceContext: null!,
             target: Owner.Creature,
-            amount: 4,
+            amount: DynamicVars["drunken_might"].IntValue,
             applier: Owner.Creature,
             cardSource: null,
             silent: false);

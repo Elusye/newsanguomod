@@ -78,7 +78,7 @@ public static class CommanderArrivesGlowPatch
         {
             return;
         }
-        if (__instance.CardNode?.Model is commander_arrives)
+        if (__instance.CardNode?.Model is CommanderArrives)
         {
             __result = true;
         }

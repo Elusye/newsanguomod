@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -19,18 +19,8 @@ namespace newsanguo.Scripts;
 
 // 注册卡牌到新三国专属卡池
 [RegisterCard(typeof(NewsanguoCardPool))]
-public class onset : NewsanguoCardTemplate
+public class Onset : NewsanguoCardTemplate
 {
-    // 基础耗能：0
-    private const int energyCost = 0;
-    // 卡牌类型：技能
-    private const CardType type = CardType.Skill;
-    // 卡牌稀有度：罕见
-    private const CardRarity rarity = CardRarity.Uncommon;
-    // 目标类型：自身
-    private const TargetType targetType = TargetType.Self;
-    // 是否在卡牌图鉴中显示
-    private const bool shouldShowInCardLibrary = true;
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
@@ -39,46 +29,40 @@ public class onset : NewsanguoCardTemplate
 
     // 卡牌基础数值：失去的天意之力（变量用正值，打出时取负）、获得的能量（升级后 2）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<heavens_force>("heavens_force", 3),
+        new PowerVar<HeavensForce>("heavens_force", 3),
         new EnergyVar(1)
     ];
 
     // 鼠标悬停时显示天意之力与天意侵蚀提示
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<heavens_force>(),
-        HoverTipFactory.FromPower<heavens_decay_power>()
+        HoverTipFactory.FromPower<HeavensForce>(),
+        HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
-    public onset() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
+    public Onset() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
     {
     }
 
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        Player? owner = base.Owner;
-        if (owner is null)
-        {
-            return;
-        }
-
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/onset");
 
         // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(owner.Creature, "Cast", owner.Character.CastAnimDelay);
+        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 失去 3 点天意之力（升级后 2 点）
-        await PowerCmd.Apply<heavens_force>(
+        await PowerCmd.Apply<HeavensForce>(
             choiceContext,
-            owner.Creature,
+            base.Owner.Creature,
             -DynamicVars["heavens_force"].IntValue,
-            owner.Creature,
+            base.Owner.Creature,
             this,
             silent: false);
 
         // 获得能量
-        await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, owner);
+        await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, base.Owner);
     }
 
     // 升级：获得的能量 1 → 2，失去的天意之力 3 → 2

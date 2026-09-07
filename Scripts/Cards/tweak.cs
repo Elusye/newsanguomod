@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.CardSelection;
@@ -23,18 +23,8 @@ namespace newsanguo.Scripts;
 
 // 注册卡牌到新三国专属卡池
 [RegisterCard(typeof(NewsanguoCardPool))]
-public class tweak : NewsanguoCardTemplate
+public class Tweak : NewsanguoCardTemplate
 {
-    // 基础耗能：1
-    private const int energyCost = 1;
-    // 卡牌类型：攻击
-    private const CardType type = CardType.Attack;
-    // 卡牌稀有度：普通
-    private const CardRarity rarity = CardRarity.Common;
-    // 目标类型：任意敌人
-    private const TargetType targetType = TargetType.AnyEnemy;
-    // 是否在卡牌图鉴中显示
-    private const bool shouldShowInCardLibrary = true;
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
@@ -46,25 +36,21 @@ public class tweak : NewsanguoCardTemplate
         new DamageVar(6m, ValueProp.Move)
     ];
 
-    public tweak() : base(energyCost, type, rarity, targetType, shouldShowInCardLibrary)
+    public Tweak() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
     }
 
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        Player? owner = base.Owner;
-        Creature? target = cardPlay.Target;
-        if (owner is null || target is null)
-        {
-            return;
-        }
+        ArgumentNullException.ThrowIfNull(cardPlay.Target, "cardPlay.Target");
+        Creature target = cardPlay.Target;
 
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/tweak");
 
         // 播放角色攻击动画
-        await CreatureCmd.TriggerAnim(owner.Creature, "Attack", owner.Character.CastAnimDelay);
+        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);
 
         // 造成伤害
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
@@ -77,9 +63,9 @@ public class tweak : NewsanguoCardTemplate
         if (IsUpgraded)
         {
             // 升级：为所有未附魔的手牌添加随机附魔
-            foreach (CardModel hand in PileType.Hand.GetPile(owner).Cards.Where(c => c.Enchantment is null).ToArray())
+            foreach (CardModel hand in PileType.Hand.GetPile(base.Owner).Cards.Where(c => c.Enchantment is null).ToArray())
             {
-                EnchantHelper.ApplyRandomEnchant(hand, owner);
+                EnchantHelper.ApplyRandomEnchant(hand, base.Owner);
             }
         }
         else
@@ -88,14 +74,14 @@ public class tweak : NewsanguoCardTemplate
             CardModel? selected = (await CardSelectCmd.FromHand(
                 prefs: new CardSelectorPrefs(CardSelectorPrefs.EnchantSelectionPrompt, 1),
                 context: choiceContext,
-                player: owner,
+                player: base.Owner,
                 filter: card => card.Enchantment is null,
                 source: this)).FirstOrDefault();
             if (selected is null)
             {
                 return;
             }
-            EnchantHelper.ApplyRandomEnchant(selected, owner);
+            EnchantHelper.ApplyRandomEnchant(selected, base.Owner);
         }
     }
 

@@ -68,7 +68,7 @@ public static class AlwaysMineDiscardGlowPatch
         {
             return;
         }
-        if (__instance.CardNode?.Model is always_mine)
+        if (__instance.CardNode?.Model is AlwaysMine)
         {
             __result = true;
         }

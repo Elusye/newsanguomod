@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://blx4nsdp5yenb"
-path="res://.godot/imported/plot.png-f313003fd30ea1e284f315eca1d3db6b.ctex"
+uid="uid://diavei6dfpx2v"
+path="res://.godot/imported/Plot.png-b09bfc086f362935834db5ead9ec79d2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/cards/plot.png"
-dest_files=["res://.godot/imported/plot.png-f313003fd30ea1e284f315eca1d3db6b.ctex"]
+source_file="res://newsanguo/images/cards/Plot.png"
+dest_files=["res://.godot/imported/Plot.png-b09bfc086f362935834db5ead9ec79d2.ctex"]
 
 [params]
 

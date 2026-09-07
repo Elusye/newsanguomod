@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dbgindpdc01al"
-path="res://.godot/imported/unstoppable.png-8c6d08481d1f67bbb1103e2c00cced0c.ctex"
+uid="uid://do41ndwq1lfch"
+path="res://.godot/imported/Unstoppable.png-b2c85dd8dbd8e1a30f75e5d6a9f11092.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/cards/unstoppable.png"
-dest_files=["res://.godot/imported/unstoppable.png-8c6d08481d1f67bbb1103e2c00cced0c.ctex"]
+source_file="res://newsanguo/images/cards/Unstoppable.png"
+dest_files=["res://.godot/imported/Unstoppable.png-b2c85dd8dbd8e1a30f75e5d6a9f11092.ctex"]
 
 [params]
 

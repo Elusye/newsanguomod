@@ -38,7 +38,7 @@ public class new_three_kingdoms_way : ModEventTemplate
         return
         [
             portalOption,
-            new EventOption(this, GoToAncient, InitialOptionKey("GO_TO_ANCIENT"), HoverTipFactory.FromCardWithCardHoverTips<heavens_decay>())
+            new EventOption(this, GoToAncient, InitialOptionKey("GO_TO_ANCIENT"), HoverTipFactory.FromCardWithCardHoverTips<HeavensDecay>())
         ];
     }
 
@@ -56,7 +56,7 @@ public class new_three_kingdoms_way : ModEventTemplate
         if (LocalContext.IsMe(Owner))
         {
             // 获得诅咒「天意侵蚀」并加入牌组
-            CardModel curse = runState.CreateCard<heavens_decay>(Owner!);
+            CardModel curse = runState.CreateCard<HeavensDecay>(Owner!);
             CardCmd.PreviewCardPileAdd(await CardPileCmd.Add(curse, PileType.Deck));
         }
         // 先标记事件结束，让玩家离开当前事件房间时一切正常
