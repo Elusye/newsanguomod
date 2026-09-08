@@ -30,6 +30,9 @@ public class WhyPickThatUp : NewsanguoCardTemplate
     // 自带“奇巧”（Sly）与“消耗”关键词
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Sly, CardKeyword.Exhaust];
 
+    // 仅多人模式可用（每人各选的交互在单人下没有意义）
+    public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
+
     // 每名玩家最多可从弃牌堆拿回手牌的张数（升级不变，费用 3 → 2）
     private const int MaxCardsPerPlayer = 10;
 
