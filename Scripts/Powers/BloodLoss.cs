@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -24,10 +25,21 @@ public class BloodLoss : ModPowerTemplate
     // 每打出一张攻击牌失去的生命（初始为 0，由“自刎归天”打出时通过 AddHpCost 累加设定）
     private int hpCostPerCard = 0;
 
+    // 描述变量：每打出一张攻击牌失去的生命（供 powers.json 描述中的 {HpCost} 使用；
+    // 默认 3 与“自刎归天”卡牌一致，叠加后随 AddHpCost 实时更新）
+    protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new IntVar("HpCost", 3)
+    ];
+
     // 每次打出“自刎归天”叠加的掉血数值（可多次叠加，同一实例内累加）
     public void AddHpCost(int cost)
     {
         hpCostPerCard += cost;
+        // 同步描述变量，让 {HpCost} 随叠加层数动态显示
+        if (DynamicVars.TryGetValue("HpCost", out DynamicVar hpCostVar))
+        {
+            hpCostVar.BaseValue = hpCostPerCard;
+        }
         // 直接修改字段绕过了 ModifyAmount，需主动通知 UI 刷新图标层数（DisplayAmount）
         InvokeDisplayAmountChanged();
     }

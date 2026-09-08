@@ -27,11 +27,11 @@ public class fine_brew_of_pei : ModRelicTemplate
 
     // 描述中的 {drunken_might}：每场战斗开始时获得的酒力层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DrunkenMight>("drunken_might", 3)
+        new PowerVar<DrunkenMightPower>("drunken_might", 3)
     ];
 
     // 悬停提示：展示“酒力”能力说明
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMight>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMightPower>()];
 
     public override bool ShouldReceiveCombatHooks => true;
 
@@ -39,7 +39,7 @@ public class fine_brew_of_pei : ModRelicTemplate
     {
         if (Owner?.Creature is null) return;
 
-        await PowerCmd.Apply<DrunkenMight>(
+        await PowerCmd.Apply<DrunkenMightPower>(
             choiceContext: null!,
             target: Owner.Creature,
             amount: DynamicVars["drunken_might"].IntValue,

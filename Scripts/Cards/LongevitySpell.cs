@@ -1,14 +1,14 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models.Cards;
-using MegaCrit.Sts2.Core.Models.Powers;
-using STS2RitsuLib.Cards.DynamicVars;
+using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Enchantments;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -22,10 +22,6 @@ namespace newsanguo.Scripts;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class LongevitySpell : NewsanguoCardTemplate
 {
-
-    // 不可通过战斗内的变化/随机生成获得（如“稍作修改”的变化）
-    public override bool CanBeGeneratedInCombat => false;
-
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
@@ -34,58 +30,61 @@ public class LongevitySpell : NewsanguoCardTemplate
     // 卡牌自带“消耗”关键词
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-    // 卡牌基础数值：失去 5 点天意之力（变量用正值，打出时取负）、获得 5 层再生
-    protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForce>("heavens_force", 5),
-        new PowerVar<RegenPower>("RegenPower", 5)
-    ];
+    // 卡牌基础数值：失去 5 点天意之力（升级后 4）
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new ("ForceLoss", 5m)];
 
-    // 鼠标悬停时显示再生、天意之力与天意侵蚀提示
+    // 鼠标悬停时显示天意之力、灵魂附魔与消耗关键词说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<RegenPower>(),
         HoverTipFactory.FromPower<HeavensForce>(),
-        HoverTipFactory.FromPower<HeavensDecayPower>()
+        ..HoverTipFactory.FromEnchantment<SoulsPower>(),
+        HoverTipFactory.FromKeyword(CardKeyword.Exhaust)
     ];
 
-    public LongevitySpell() : base(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
+    public LongevitySpell() :
+        base(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {
     }
 
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // 播放出牌音效
+        // 播放出牌音效（FMOD 事件由 mod 维护者自行创建）
         NewsanguoSfx.Play("event:/newsanguo/sfx/longevity_spell");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 失去天意之力
-        int lostAmount = DynamicVars["heavens_force"].IntValue;
         await PowerCmd.Apply<HeavensForce>(
             choiceContext,
             base.Owner.Creature,
-            -lostAmount,
+            -DynamicVars["ForceLoss"].BaseValue,
             base.Owner.Creature,
-            this,
-            silent: false);
+            this);
 
-        // 获得再生
-        int regenAmount = DynamicVars["RegenPower"].IntValue;
-        await PowerCmd.Apply<RegenPower>(
-            choiceContext,
-            base.Owner.Creature,
-            regenAmount,
-            base.Owner.Creature,
-            this,
-            silent: false);
+        // 选择一张手牌中无附魔、自带“消耗”关键词的牌，附加“灵魂”附魔（移除其消耗）
+        CardModel? selected = (await CardSelectCmd.FromHand(
+            prefs: new CardSelectorPrefs(SelectionScreenPrompt, 1),
+            context: choiceContext,
+            player: base.Owner,
+            filter: card => card.Enchantment is null && card.Keywords.Contains(CardKeyword.Exhaust),
+            source: this)).FirstOrDefault();
+        if (selected is not null)
+        {
+            CardCmd.Enchant<SoulsPower>(selected, 1m);
+        }
     }
 
-    // 升级后的效果逻辑
+    // 升级后的效果逻辑：失去的天意之力 5 → 4，并获得“保留”
     protected override void OnUpgrade()
     {
-        // 失去的天意之力从 5 减少到 4，再生从 5 提高到 6
-        DynamicVars["heavens_force"].UpgradeValueBy(-1);
-        DynamicVars["RegenPower"].UpgradeValueBy(1);
+        AddKeyword(CardKeyword.Retain);
+        DynamicVars["ForceLoss"].UpgradeValueBy(-1m);
+    }
+
+    // 降级后的效果逻辑（升级被移除或回退时调用）
+    protected override void AfterDowngraded()
+    {
+        RemoveKeyword(CardKeyword.Retain);
     }
 }

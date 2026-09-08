@@ -4,12 +4,8 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.CardPools;
-using MegaCrit.Sts2.Core.Models.Cards;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -22,14 +18,10 @@ namespace newsanguo.Scripts;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class JustKidding : NewsanguoCardTemplate
 {
-
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
-
-    // 消耗（升级后移除）
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     public JustKidding() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
     {
@@ -42,32 +34,28 @@ public class JustKidding : NewsanguoCardTemplate
         NewsanguoSfx.Play("event:/newsanguo/sfx/just_kidding");
 
         // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
+        await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
 
-        // 从弃牌堆中选择一张牌
-        CardPile discard = PileType.Discard.GetPile(base.Owner);
-        if (discard.Cards.Count == 0)
+        // 从手牌中选择任意一张牌（可放弃选择）
+        var cardModel = (
+            await CardSelectCmd.FromHand(
+                prefs: new CardSelectorPrefs(SelectionScreenPrompt, 1),
+                context: choiceContext,
+                player: Owner,
+                filter: null,
+                source: this
+            )
+        ).FirstOrDefault();
+
+        if (cardModel != null)
         {
-            return;
+            // 放到抽牌堆顶部，且在该牌被打出之前其耗能变为 0
+            await CardPileCmd.Add(cardModel, PileType.Draw, CardPilePosition.Top);
+            cardModel.EnergyCost.SetUntilPlayed(0);
         }
-
-        CardModel? selected = (await CardSelectCmd.FromCombatPile(
-            context: choiceContext,
-            pile: discard,
-            player: base.Owner,
-            prefs: new CardSelectorPrefs(new LocString("cards", "NEWSANGUO_CARD_SELECT_ONE_FROM_DISCARD"), 1, 1))).FirstOrDefault();
-        if (selected is null)
-        {
-            return;
-        }
-
-        // 将选中牌放入手牌，并设为本回合内免费打出
-        // 注意：必须先设置免费再入牌堆（与原版 Discovery/MadScience 一致）
-        selected.SetToFreeThisTurn();
-        await CardPileCmd.Add(selected, PileType.Hand);
     }
 
-    // 升级：费用 1 → 0（保留“消耗”）
+    // 升级：费用 1 → 0
     protected override void OnUpgrade()
     {
         EnergyCost.UpgradeBy(-1);

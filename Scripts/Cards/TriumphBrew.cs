@@ -28,7 +28,7 @@ public class TriumphBrew : NewsanguoCardTemplate
     );
 
     // 悬停提示：展示“酒力”说明
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMight>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMightPower>()];
 
     public TriumphBrew() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self)
     {

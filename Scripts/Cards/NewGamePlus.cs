@@ -38,7 +38,7 @@ public class NewGamePlus : NewsanguoCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DynamicVar("ScryAmount", 5m),
         new PowerVar<HeavensForce>("heavens_force", 2),
-        new PowerVar<DrunkenMight>("drunken_might", 3),
+        new PowerVar<DrunkenMightPower>("drunken_might", 3),
         new CardsVar(1)
     ];
 
@@ -46,7 +46,7 @@ public class NewGamePlus : NewsanguoCardTemplate
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<HeavensForce>(),
         HoverTipFactory.FromPower<HeavensDecayPower>(),
-        HoverTipFactory.FromPower<DrunkenMight>()
+        HoverTipFactory.FromPower<DrunkenMightPower>()
     ];
 
     public NewGamePlus() : base(0, CardType.Skill, CardRarity.Rare, TargetType.Self)
@@ -75,7 +75,7 @@ public class NewGamePlus : NewsanguoCardTemplate
             silent: false);
 
         // 获得酒力
-        await PowerCmd.Apply<DrunkenMight>(
+        await PowerCmd.Apply<DrunkenMightPower>(
             choiceContext,
             base.Owner.Creature,
             DynamicVars["drunken_might"].IntValue,

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djh6acq4qmyvj"
-path="res://.godot/imported/FateUnknown.png-1507a30b99553c35012fc0f468168a79.ctex"
+uid="uid://s1ehn2nxl1rr"
+path="res://.godot/imported/DrunkenMightPower.png-51a292e40a9025a5f2362351d03fea26.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/cards/FateUnknown.png"
-dest_files=["res://.godot/imported/FateUnknown.png-1507a30b99553c35012fc0f468168a79.ctex"]
+source_file="res://newsanguo/images/powers/DrunkenMightPower.png"
+dest_files=["res://.godot/imported/DrunkenMightPower.png-51a292e40a9025a5f2362351d03fea26.ctex"]
 
 [params]
 

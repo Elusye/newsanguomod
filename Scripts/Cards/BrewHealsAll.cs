@@ -2,13 +2,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.Cards;
-using STS2RitsuLib.Cards.DynamicVars;
+using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -22,49 +19,50 @@ namespace newsanguo.Scripts;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class BrewHealsAll : NewsanguoCardTemplate
 {
-
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：5 点酒力、3 点天意之力
+    // 酒力足以支付消耗（未升级 ≥6、升级后 ≥4）时金色高亮
+    protected override bool ShouldGlowGoldInternal => IsUpgraded
+        ? Owner.Creature.GetPowerAmount<DrunkenMightPower>() > 3
+        : Owner.Creature.GetPowerAmount<DrunkenMightPower>() > 5;
+
+    // 卡牌基础数值：消耗的酒力（升级后 4）、获得的再生层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DrunkenMight>("drunken_might", 5),
-        new PowerVar<HeavensForce>("heavens_force", 3)
+        new PowerVar<DrunkenMightPower>("DrunkenMight", 6),
+        new PowerVar<RegenPower>("RegenPower", 5)
     ];
 
-    // 悬停提示：展示“酒力”、“天意之力”、“天意侵蚀”说明
+    // 悬停提示：展示“酒力”与“再生”关键词说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<DrunkenMight>(),
-        HoverTipFactory.FromPower<HeavensForce>(),
-        HoverTipFactory.FromPower<HeavensDecayPower>()
+        HoverTipFactory.FromPower<DrunkenMightPower>(),
+        HoverTipFactory.FromPower<RegenPower>()
     ];
 
-    public BrewHealsAll() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+    public BrewHealsAll() :
+        base(1, CardType.Power, CardRarity.Rare, TargetType.Self)
     {
     }
 
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // 播放出牌音效
+        // 酒力不足以支付卡面消耗（未升级 6、升级后 4）则本次打出无效果
+        if (Owner.Creature.GetPowerAmount<DrunkenMightPower>() < DynamicVars["DrunkenMight"].IntValue) return;
+
+        // 播放出牌语音
         NewsanguoSfx.Play("event:/newsanguo/sfx/brew_heals_all");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
-        // 获得酒力与天意之力
-        int drunkenMightAmount = DynamicVars["drunken_might"].IntValue;
-        int heavensForceAmount = DynamicVars["heavens_force"].IntValue;
-        await PowerCmd.Apply<DrunkenMight>(choiceContext, base.Owner.Creature, drunkenMightAmount, base.Owner.Creature, this, silent: false);
-        await PowerCmd.Apply<HeavensForce>(choiceContext, base.Owner.Creature, heavensForceAmount, base.Owner.Creature, this, silent: false);
+        // 消耗酒力并回复（获得再生）
+        await PowerCmd.Apply<DrunkenMightPower>(choiceContext, Owner.Creature, -DynamicVars["DrunkenMight"].BaseValue, Owner.Creature, this);
+        await PowerCmd.Apply<RegenPower>(choiceContext, Owner.Creature, DynamicVars["RegenPower"].BaseValue, Owner.Creature, this);
     }
 
-    // 升级：酒力 5 → 6，天意之力 4 → 5
+    // 升级：消耗的酒力 6 → 4
     protected override void OnUpgrade()
     {
-        DynamicVars["drunken_might"].UpgradeValueBy(1);
-        DynamicVars["heavens_force"].UpgradeValueBy(1);
+        DynamicVars["DrunkenMight"].UpgradeValueBy(-2m);
     }
 }

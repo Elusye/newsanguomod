@@ -36,7 +36,7 @@ public class FeelNoAcid : ModPowerTemplate
     public override Task BeforePowerAmountChanged(PowerModel power, decimal amount, Creature target, Creature? applier, CardModel? cardSource)
     {
         if (Owner is null) return Task.CompletedTask;
-        if (power is DrunkenMight && target == Owner)
+        if (power is DrunkenMightPower && target == Owner)
         {
             _drunkenMightAmountBeforeChange = power.Amount;
         }
@@ -47,7 +47,7 @@ public class FeelNoAcid : ModPowerTemplate
     public override async Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
     {
         if (Owner is null) return;
-        if (power is not DrunkenMight || power.Owner != Owner) return;
+        if (power is not DrunkenMightPower || power.Owner != Owner) return;
 
         int lost = _drunkenMightAmountBeforeChange - power.Amount;
         if (lost <= 0) return;
@@ -56,6 +56,6 @@ public class FeelNoAcid : ModPowerTemplate
         NewsanguoSfx.Play("event:/newsanguo/sfx/feel_no_acid_power");
 
         // 获得 Amount 点酒力（gain 不会再触发本钩子，避免死循环）
-        await PowerCmd.Apply<DrunkenMight>(choiceContext, Owner, base.Amount, Owner, null, silent: true);
+        await PowerCmd.Apply<DrunkenMightPower>(choiceContext, Owner, base.Amount, Owner, null, silent: true);
     }
 }

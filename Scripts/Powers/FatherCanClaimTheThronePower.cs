@@ -34,7 +34,7 @@ public class FatherCanClaimTheThronePower : ModPowerTemplate
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.ForEnergy(this)];
 
-    public override decimal ModifyEnergyGain(Player player, decimal amount)
+    public override decimal ModifyMaxEnergy(Player player, decimal amount)
     {
         if(player != Owner.Player)
         {
@@ -52,7 +52,7 @@ public class FatherCanClaimTheThronePower : ModPowerTemplate
         return count + Amount;
     }
 
-    // 数值效果由上面的 ModifyEnergyGain / ModifyHandDraw 被动修正完成，没有显式触发点；
+    // 数值效果由上面的 ModifyMaxEnergy / ModifyHandDraw 被动修正完成，没有显式触发点；
     // 因此音效放在回合开始的表现钩子里：图标闪一下并播放“称帝”音效，提示本回合加成已生效。
     // 对应 FMOD 事件 event:/newsanguo/sfx/father_can_claim_the_throne_power
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)

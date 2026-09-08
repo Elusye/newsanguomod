@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dbqojxp1nq6w6"
-path="res://.godot/imported/DrunkenMight_big.png-07c55eb9d3f31f70ffcce6d22d5a13ed.ctex"
+uid="uid://b0du5gq3qfihj"
+path="res://.godot/imported/TraitorTyrannyPower.png-4a099fd7536bde2ca1a60b82fbd6ef16.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/DrunkenMight_big.png"
-dest_files=["res://.godot/imported/DrunkenMight_big.png-07c55eb9d3f31f70ffcce6d22d5a13ed.ctex"]
+source_file="res://newsanguo/images/powers/TraitorTyrannyPower.png"
+dest_files=["res://.godot/imported/TraitorTyrannyPower.png-4a099fd7536bde2ca1a60b82fbd6ef16.ctex"]
 
 [params]
 

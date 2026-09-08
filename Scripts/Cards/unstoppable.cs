@@ -68,16 +68,9 @@ public class Unstoppable : NewsanguoCardTemplate
         await PowerCmd.Apply<HeavensForce>(choiceContext, base.Owner.Creature, -lostAmount, base.Owner.Creature, this, silent: false);
     }
 
-    // 升级：移除“虚无”，失去的天意之力 5 → 4
+    // 升级：失去的天意之力 5 → 4（虚无关键词升级后保留）
     protected override void OnUpgrade()
     {
-        RemoveKeyword(CardKeyword.Ethereal);
         DynamicVars["heavens_force"].UpgradeValueBy(-1);
-    }
-
-    // 降级：恢复“虚无”
-    protected override void AfterDowngraded()
-    {
-        AddKeyword(CardKeyword.Ethereal);
     }
 }

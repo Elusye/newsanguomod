@@ -1,24 +1,25 @@
-using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
-// 注册能力到游戏
+// “国贼”（国贼董卓嘛！施加）：目标身上的易伤无法被减少。
+// 阻断一切施加到目标身上的负向易伤变化（包括回合结束时的自然衰减与净化类移除）。
 [RegisterPower]
-public class ToABiggerGoblet : ModPowerTemplate
+public class TraitorTyrannyPower : ModPowerTemplate
 {
-    // 能力类型：正面 Buff
-    public override PowerType Type => PowerType.Buff;
-    // 叠加方式：计数器，Amount 表示层数
-    public override PowerStackType StackType => PowerStackType.Counter;
-    // 不允许负数
+    // 负面效果
+    public override PowerType Type => PowerType.Debuff;
+
+    // 不可叠加，不显示层数
+    public override PowerStackType StackType => PowerStackType.Single;
+
     public override bool AllowNegative => false;
-    // 允许接收战斗钩子
+
     public override bool ShouldReceiveCombatHooks => true;
 
     // 能力图标资源
@@ -27,14 +28,12 @@ public class ToABiggerGoblet : ModPowerTemplate
         BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}_big.png"
     );
 
-    // 当你获得酒力时，额外获得等同于换大盏层数的酒力
+    // 阻断目标受到的易伤减少
     public override bool TryModifyPowerAmountReceived(PowerModel canonicalPower, Creature target, decimal amount, Creature? applier, out decimal modifiedAmount)
     {
-        if (Owner is not null && target == Owner && canonicalPower is DrunkenMightPower && amount > 0)
+        if (target == Owner && canonicalPower is VulnerablePower && amount < 0)
         {
-            // 换大盏增强酒力获得触发音效
-            NewsanguoSfx.Play("event:/newsanguo/sfx/to_a_bigger_goblet_power");
-            modifiedAmount = amount + Amount;
+            modifiedAmount = 0;
             return true;
         }
 

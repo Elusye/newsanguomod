@@ -31,11 +31,11 @@ public class AGrandToast : NewsanguoCardTemplate
 
     // 卡牌基础数值：酒力层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DrunkenMight>("drunken_might", 3)
+        new PowerVar<DrunkenMightPower>("drunken_might", 3)
     ];
 
     // 鼠标悬停时显示酒力提示
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMight>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMightPower>()];
 
     public AGrandToast() : base(1, CardType.Skill, CardRarity.Basic, TargetType.Self)
     {
@@ -52,7 +52,7 @@ public class AGrandToast : NewsanguoCardTemplate
 
         // 获得酒力
         int drunkenMightAmount = DynamicVars["drunken_might"].IntValue;
-        await PowerCmd.Apply<DrunkenMight>(
+        await PowerCmd.Apply<DrunkenMightPower>(
             choiceContext,
             base.Owner.Creature,
             drunkenMightAmount,

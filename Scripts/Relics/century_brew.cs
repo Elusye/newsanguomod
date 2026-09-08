@@ -28,11 +28,11 @@ public class century_brew : ModRelicTemplate
 
     // 描述中的 {drunken_might}：每个回合开始时获得的酒力层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DrunkenMight>("drunken_might", 3)
+        new PowerVar<DrunkenMightPower>("drunken_might", 3)
     ];
 
     // 悬停提示：展示“酒力”能力说明
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMight>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMightPower>()];
 
     public override bool ShouldReceiveCombatHooks => true;
 
@@ -44,7 +44,7 @@ public class century_brew : ModRelicTemplate
             return;
         }
 
-        await PowerCmd.Apply<DrunkenMight>(
+        await PowerCmd.Apply<DrunkenMightPower>(
             choiceContext: choiceContext,
             target: Owner.Creature,
             amount: DynamicVars["drunken_might"].IntValue,

@@ -63,8 +63,8 @@ public class DongZhuoTheTraitor : NewsanguoCardTemplate
         int vulnerable = DynamicVars["VulnerablePower"].IntValue;
         await PowerCmd.Apply<VulnerablePower>(choiceContext, cardPlay.Target, vulnerable, base.Owner.Creature, this, silent: false);
 
-        // 给予目标“国贼”能力：每个敌方回合结束时补充 1 层易伤
-        await PowerCmd.Apply<TraitorTyranny>(choiceContext, cardPlay.Target, 1, base.Owner.Creature, this, silent: false);
+        // 给予目标“国贼”能力：使其身上的易伤不再减少（含回合结束的自然衰减）
+        await PowerCmd.Apply<TraitorTyrannyPower>(choiceContext, cardPlay.Target, 1, base.Owner.Creature, this, silent: false);
     }
 
     // 升级后的效果逻辑：费用 1 → 0

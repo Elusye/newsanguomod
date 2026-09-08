@@ -41,7 +41,7 @@ public class TriumphBrewPower : ModPowerTemplate
     public override Task BeforePowerAmountChanged(PowerModel power, decimal amount, Creature target, Creature? applier, CardModel? cardSource)
     {
         if (Owner is null) return Task.CompletedTask;
-        if (power is DrunkenMight && target == Owner)
+        if (power is DrunkenMightPower && target == Owner)
         {
             _drunkenMightAmountBeforeChange = power.Amount;
         }
@@ -52,7 +52,7 @@ public class TriumphBrewPower : ModPowerTemplate
     public override async Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
     {
         if (Owner is null) return;
-        if (power is not DrunkenMight || power.Owner != Owner) return;
+        if (power is not DrunkenMightPower || power.Owner != Owner) return;
         if (_isPropagating) return; // 这份酒力正来自其他盟友的“痛饮庆功酒”，不再继续传播
 
         int gainedAmount = power.Amount - _drunkenMightAmountBeforeChange;
@@ -72,7 +72,7 @@ public class TriumphBrewPower : ModPowerTemplate
         {
             foreach (Creature ally in allies)
             {
-                await PowerCmd.Apply<DrunkenMight>(choiceContext, ally, gainedAmount, Owner, null, silent: true);
+                await PowerCmd.Apply<DrunkenMightPower>(choiceContext, ally, gainedAmount, Owner, null, silent: true);
             }
         }
         finally

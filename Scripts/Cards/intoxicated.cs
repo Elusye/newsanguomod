@@ -33,13 +33,13 @@ public class Intoxicated : NewsanguoCardTemplate
 
     // 卡牌基础数值：获得 2 点酒力；若上一张打出的是技能牌，额外获得 2 点酒力
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DrunkenMight>("drunken_might", 2),
-        new PowerVar<DrunkenMight>("intoxicated_bonus", 2)
+        new PowerVar<DrunkenMightPower>("drunken_might", 2),
+        new PowerVar<DrunkenMightPower>("intoxicated_bonus", 2)
     ];
 
     // 悬停提示：展示“酒力”说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<DrunkenMight>()
+        HoverTipFactory.FromPower<DrunkenMightPower>()
     ];
 
     // 上一张打出的牌是技能牌时金色高亮（提示会获得额外酒力）
@@ -80,7 +80,7 @@ public class Intoxicated : NewsanguoCardTemplate
             wineAmount += DynamicVars["intoxicated_bonus"].IntValue;
         }
 
-        await PowerCmd.Apply<DrunkenMight>(
+        await PowerCmd.Apply<DrunkenMightPower>(
             choiceContext,
             base.Owner.Creature,
             wineAmount,

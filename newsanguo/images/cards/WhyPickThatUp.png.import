@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b0du5gq3qfihj"
-path="res://.godot/imported/TraitorTyranny.png-e03761b6e96c96f8f76d1902d2ac3a4c.ctex"
+uid="uid://byno1nqtctbjm"
+path="res://.godot/imported/WhyPickThatUp.png-eec46da2145cdee4b423d4101d5303d2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/TraitorTyranny.png"
-dest_files=["res://.godot/imported/TraitorTyranny.png-e03761b6e96c96f8f76d1902d2ac3a4c.ctex"]
+source_file="res://newsanguo/images/cards/WhyPickThatUp.png"
+dest_files=["res://.godot/imported/WhyPickThatUp.png-eec46da2145cdee4b423d4101d5303d2.ctex"]
 
 [params]
 

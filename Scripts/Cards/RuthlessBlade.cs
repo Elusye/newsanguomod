@@ -31,18 +31,18 @@ public class RuthlessBlade : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：每次打击伤害、打击次数、目标虚弱层数、自身虚弱层数
+    // 卡牌基础数值：每次打击伤害、给予目标的易伤层数、给予自身的脆弱层数
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(5m, ValueProp.Move),
-        new RepeatVar(2),
-        new PowerVar<WeakPower>("WeakPower", 1),
-        new PowerVar<WeakPower>("SelfWeakPower", 1)
+        new PowerVar<VulnerablePower>("VulnerablePower", 1),
+        new PowerVar<FrailPower>("SelfFrailPower", 1)
     ];
 
-    // 悬停提示：展示“虚弱”关键词说明
+    // 悬停提示：展示“易伤”与“脆弱”关键词说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<WeakPower>()
+        HoverTipFactory.FromPower<VulnerablePower>(),
+        HoverTipFactory.FromPower<FrailPower>()
     ];
 
     public RuthlessBlade() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
@@ -54,36 +54,33 @@ public class RuthlessBlade : NewsanguoCardTemplate
     {
         ArgumentNullException.ThrowIfNull(cardPlay.Target, "cardPlay.Target");
 
-        // 播放出牌音效
+        // 播放出牌语音
         NewsanguoSfx.Play("event:/newsanguo/sfx/ruthless_blade");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
-        // 造成 8（10） 点伤害 2 次
+        // 造成 5（6）点伤害 2 次
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
-            .WithHitCount(DynamicVars.Repeat.IntValue)
+            .WithHitCount(2)
+            .WithHitFx("vfx/vfx_attack_slash", null, "heavy_attack.mp3")
             .Execute(choiceContext);
 
-        // 给予目标 1 层虚弱，给予自身 1 层虚弱
-        await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, DynamicVars["WeakPower"].IntValue, base.Owner.Creature, this);
-        await PowerCmd.Apply<WeakPower>(choiceContext, base.Owner.Creature, DynamicVars["SelfWeakPower"].IntValue, base.Owner.Creature, this);
+        // 给予目标 1 层易伤，给予自身 1 层脆弱
+        await PowerCmd.Apply<VulnerablePower>(choiceContext, cardPlay.Target, DynamicVars.Vulnerable.BaseValue, base.Owner.Creature, this);
+        var frailInstance = await PowerCmd.Apply<FrailPower>(choiceContext, base.Owner.Creature, DynamicVars["SelfFrailPower"].IntValue, base.Owner.Creature, this);
 
         // 原版规则：给玩家施加的 Debuff 首次衰减会被跳过（SkipNextDurationTick = true），
-        // 导致自身虚弱比敌方多持续一轮。这里显式取消跳过，使自身虚弱与敌方一样在下一个敌方回合结束正常衰减。
-        WeakPower? selfWeak = base.Owner.Creature.GetPower<WeakPower>();
-        if (selfWeak is not null)
+        // 导致自身脆弱比敌方易伤多持续一轮。这里显式取消跳过，使自身脆弱在下一个敌方回合正常衰减。
+        if (frailInstance != null)
         {
-            selfWeak.SkipNextDurationTick = false;
+            frailInstance.SkipNextDurationTick = false;
         }
     }
 
-    // 升级：每次打击伤害 5 → 6
+    // 升级：每次打击伤害 5 → 6，给予目标易伤 1 → 2
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(1m);
-        DynamicVars["WeakPower"].UpgradeValueBy(1m);
+        DynamicVars.Vulnerable.UpgradeValueBy(1m);
     }
 }

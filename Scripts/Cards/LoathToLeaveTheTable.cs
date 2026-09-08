@@ -35,18 +35,15 @@ public class LoathToLeaveTheTable : NewsanguoCardTemplate
         new IntVar("wine_threshold", 10)
     ];
 
-    // 消耗
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-
     // 悬停提示：展示“酒力”说明
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMight>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMightPower>()];
 
     // 酒力超过阈值时金色高亮（提示击晕与弃牌效果会触发）
     protected override bool ShouldGlowGoldInternal
     {
         get
         {
-            DrunkenMight? wine = base.Owner.Creature.GetPower<DrunkenMight>();
+            DrunkenMightPower? wine = base.Owner.Creature.GetPower<DrunkenMightPower>();
             return wine is not null && wine.Amount >= DynamicVars["wine_threshold"].IntValue;
         }
     }
@@ -66,7 +63,7 @@ public class LoathToLeaveTheTable : NewsanguoCardTemplate
 
         // 打出此牌时快照酒力：判定必须在打出攻击牌后的酒力减半（AfterCardPlayed）之前，
         // 且不受伤害执行期间任何酒力变动的影响，因此先取快照再执行伤害。
-        int wineAmount = base.Owner.Creature.GetPower<DrunkenMight>()?.Amount ?? 0;
+        int wineAmount = base.Owner.Creature.GetPower<DrunkenMightPower>()?.Amount ?? 0;
 
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/loath_to_leave_the_table");

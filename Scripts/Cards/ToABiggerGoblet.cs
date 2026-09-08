@@ -35,7 +35,7 @@ public class ToABiggerGoblet : NewsanguoCardTemplate
     ];
 
     // 鼠标悬停时显示酒力提示
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMight>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMightPower>()];
 
     public ToABiggerGoblet() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
     {

@@ -42,7 +42,6 @@ dragon_omen
 empower
 empower_power
 fate_control
-fate_unknown
 father_can_claim_the_throne
 father_can_claim_the_throne_power
 feel_no_acid
@@ -121,6 +120,7 @@ what_to_eat
 where_s_wine
 where_s_wine_power
 who_rules
+why_pick_that_up
 wind_of_tiger
 wind_of_tiger_power
 wine_cut

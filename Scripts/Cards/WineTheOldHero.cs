@@ -37,7 +37,7 @@ public class WineTheOldHero : NewsanguoCardTemplate
     // 鼠标悬停时显示格挡与酒力提示
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.Static(StaticHoverTip.Block),
-        HoverTipFactory.FromPower<DrunkenMight>()
+        HoverTipFactory.FromPower<DrunkenMightPower>()
     ];
     
     // 鼠标悬停时显示格挡提示

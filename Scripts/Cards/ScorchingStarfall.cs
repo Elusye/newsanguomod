@@ -41,7 +41,7 @@ public class ScorchingStarfall : NewsanguoCardTemplate
         new CalculationExtraVar(1m),
         new CalculatedVar("CalculatedHits").WithMultiplier(static (card, _) =>
         {
-            decimal wine = card.Owner?.Creature.GetPower<DrunkenMight>()?.Amount ?? 0m;
+            decimal wine = card.Owner?.Creature.GetPower<DrunkenMightPower>()?.Amount ?? 0m;
             int per = card is ScorchingStarfall s ? s.DynamicVars["wine_threshold"].IntValue : 3;
             return per > 0 ? Math.Floor(wine / per) : 0m;
         })
@@ -49,7 +49,7 @@ public class ScorchingStarfall : NewsanguoCardTemplate
 
     // 鼠标悬停时显示“酒力”“天意之力”与“天意侵蚀”关键词说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<DrunkenMight>(),
+        HoverTipFactory.FromPower<DrunkenMightPower>(),
         HoverTipFactory.FromPower<HeavensForce>(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
@@ -67,7 +67,7 @@ public class ScorchingStarfall : NewsanguoCardTemplate
         ICombatState combatState = base.CombatState!;
 
         // 获取当前酒力层数（打出时、失去天意之前的快照，决定攻击段数）
-        int wineAmount = base.Owner.Creature.GetPower<DrunkenMight>()?.Amount ?? 0;
+        int wineAmount = base.Owner.Creature.GetPower<DrunkenMightPower>()?.Amount ?? 0;
         int threshold = DynamicVars["wine_threshold"].IntValue;
         int hits = threshold > 0 ? wineAmount / threshold : 0;
 

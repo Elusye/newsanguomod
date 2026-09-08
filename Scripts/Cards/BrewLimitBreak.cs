@@ -30,7 +30,7 @@ public class BrewLimitBreak : NewsanguoCardTemplate
     );
 
     // 鼠标悬停时显示酒力提示
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMight>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMightPower>()];
 
     public BrewLimitBreak() : base(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {
@@ -46,7 +46,7 @@ public class BrewLimitBreak : NewsanguoCardTemplate
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 将酒力翻倍（没有酒力时无效果）
-        if (base.Owner.Creature.GetPower<DrunkenMight>() is { } wine && wine.Amount > 0)
+        if (base.Owner.Creature.GetPower<DrunkenMightPower>() is { } wine && wine.Amount > 0)
         {
             await PowerCmd.ModifyAmount(choiceContext, wine, wine.Amount, base.Owner.Creature, this, silent: false);
         }

@@ -31,11 +31,11 @@ public class WineCut : NewsanguoCardTemplate
     // 卡牌基础数值：造成 7 点伤害（升级 9）；获得 2 点酒力（升级 3）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(7m, ValueProp.Move),
-        new PowerVar<DrunkenMight>("drunken_might", 2)
+        new PowerVar<DrunkenMightPower>("drunken_might", 2)
     ];
 
     // 悬停提示：展示“酒力”说明
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMight>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMightPower>()];
 
     public WineCut() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
@@ -60,14 +60,14 @@ public class WineCut : NewsanguoCardTemplate
             .Execute(choiceContext);
 
         // 酒力效果：打出攻击牌后酒力减半（失去酒力）
-        DrunkenMight? drunkenMight = base.Owner.Creature.GetPower<DrunkenMight>();
+        DrunkenMightPower? drunkenMight = base.Owner.Creature.GetPower<DrunkenMightPower>();
         if (drunkenMight is not null)
         {
             await drunkenMight.HalfForCard(choiceContext, this);
         }
 
         // 获得酒力（卡牌效果）
-        await PowerCmd.Apply<DrunkenMight>(
+        await PowerCmd.Apply<DrunkenMightPower>(
             choiceContext,
             base.Owner.Creature,
             DynamicVars["drunken_might"].IntValue,
