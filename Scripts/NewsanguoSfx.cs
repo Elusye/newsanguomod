@@ -104,6 +104,7 @@ public static class NewsanguoSfx
         ["heavens_force_decay"] = 2f,
         ["human_transmutation_spell"] = -3f,
         ["im_getting_drunk"] = 1.5f,
+        ["im_getting_drunk_power"] = 1.5f,
         ["intoxicated"] = 7f,
         ["invincible"] = -1.5f,
         ["invoke_heaven"] = -3.5f,

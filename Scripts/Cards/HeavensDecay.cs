@@ -17,22 +17,12 @@ namespace newsanguo.Scripts;
 
 // 注册到诅咒卡池（与其他诅咒牌一起，可供诅咒奖励/事件获取）
 [RegisterCard(typeof(CurseCardPool))]
-public class HeavensDecay : NewsanguoCardTemplate
+public class HeavensDecay : NewsanguoCurseTemplate
 {
-
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
-
-    // 诅咒牌不能升级
-    public override int MaxUpgradeLevel => 0;
-
-    // 诅咒牌不参与 modifiers（事件/遗物等）随机生成
-    public override bool CanBeGeneratedByModifiers => false;
-
-    // 不参与战斗内随机生成（避免污染发现类效果）
-    public override bool CanBeGeneratedInCombat => false;
 
     // 关键词：永恒（描述后自动追加“永恒。”）；可打出，不再有“不可打出”词条
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Eternal];
@@ -40,7 +30,7 @@ public class HeavensDecay : NewsanguoCardTemplate
     // 回合结束时若这张牌在手牌中，引擎会调用 OnTurnEndInHand
     public override bool HasTurnEndInHandEffect => true;
 
-    public HeavensDecay() : base(2, CardType.Curse, CardRarity.Curse, TargetType.None)
+    public HeavensDecay() : base(2)
     {
     }
 

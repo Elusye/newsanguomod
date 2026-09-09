@@ -29,8 +29,8 @@ public class ImGettingDrunkPower : ModPowerTemplate
 
     // 能力图标资源：暂复用“酒力”图标（待生效的是酒力与禁攻），如需专属图标替换这两处路径即可
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://newsanguo/images/powers/DrunkenMightPower.png",
-        BigIconPath: "res://newsanguo/images/powers/DrunkenMightPower_big.png"
+        IconPath: "res://newsanguo/images/powers/ImGettingDrunkPower.png",
+        BigIconPath: "res://newsanguo/images/powers/ImGettingDrunkPower_big.png"
     );
 
     // 玩家回合开始：发放酒力、施加“止戈”，随后移除自身
@@ -40,6 +40,9 @@ public class ImGettingDrunkPower : ModPowerTemplate
         {
             return;
         }
+
+        // 触发音效
+        NewsanguoSfx.Play("event:/newsanguo/sfx/im_getting_drunk_power");
 
         // 发放酒力
         await PowerCmd.Apply<DrunkenMightPower>(

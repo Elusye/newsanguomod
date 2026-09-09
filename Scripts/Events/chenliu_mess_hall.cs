@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -18,7 +18,7 @@ namespace newsanguo.Scripts.Events;
 /// 陈留大食堂（第一幕事件）：
 /// 选项1：回复最大生命值的1/3（描述中用动态变量显示具体数值）；
 /// 选项2：最大生命值+5；
-/// 选项3：将一张原版诅咒「悔恨」加入牌组，并获得一件随机遗物。
+/// 选项3：将一张诅咒「饥饿」加入牌组，并获得一件随机遗物。
 /// </summary>
 // 任意一幕均可遇到：第一幕可能是 Underdocks 或 Overgrowth，第二幕 Hive，第三幕 Glory
 [RegisterActEvent(typeof(Underdocks))]
@@ -56,7 +56,7 @@ public class chenliu_mess_hall : ModEventTemplate
         [
             new EventOption(this, HealThird, InitialOptionKey("HEAL_THIRD")),
             new EventOption(this, GainMaxHp, InitialOptionKey("GAIN_MAX_HP")),
-            new EventOption(this, RegretAndRelic, InitialOptionKey("REGRET_RELIC"), HoverTipFactory.FromCardWithCardHoverTips<Regret>())
+            new EventOption(this, HungryAndRelic, InitialOptionKey("HUNGRY_RELIC"), HoverTipFactory.FromCardWithCardHoverTips<Hungry>())
         ];
     }
 
@@ -76,16 +76,16 @@ public class chenliu_mess_hall : ModEventTemplate
         SetEventFinished(PageDescription("GAIN_MAX_HP"));
     }
 
-    private async Task RegretAndRelic()
+    private async Task HungryAndRelic()
     {
         // 对应 FMOD 事件 event:/newsanguo/sfx/chenliu_mess_hall_relic
         NewsanguoSfx.Play("event:/newsanguo/sfx/chenliu_mess_hall_relic");
-        // 将一张原版诅咒「悔恨」加入牌组
-        CardModel regret = Owner!.RunState.CreateCard<Regret>(Owner);
-        CardCmd.PreviewCardPileAdd(await CardPileCmd.Add(regret, PileType.Deck));
+        // 将一张诅咒「饥饿」加入牌组
+        CardModel hungry = Owner!.RunState.CreateCard<Hungry>(Owner);
+        CardCmd.PreviewCardPileAdd(await CardPileCmd.Add(hungry, PileType.Deck));
         // 获得一件随机遗物：按标准稀有度概率抽取，本局不会重复出现同一件
         RelicModel relic = RelicFactory.PullNextRelicFromFront(Owner).ToMutable();
         await RelicCmd.Obtain(relic, Owner);
-        SetEventFinished(PageDescription("REGRET_RELIC"));
+        SetEventFinished(PageDescription("HUNGRY_RELIC"));
     }
 }
