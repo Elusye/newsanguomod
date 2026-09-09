@@ -29,7 +29,7 @@ public class DesecrateHeaven : NewsanguoCardTemplate
 
     // 卡牌基础数值：获得的天意之力、下个回合结束获得的天意侵蚀层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForce>("heavens_force", 15),
+        new PowerVar<HeavensForcePower>("heavens_force", 15),
         new DynamicVar("DecayAmount", 15m)
     ];
 
@@ -44,7 +44,7 @@ public class DesecrateHeaven : NewsanguoCardTemplate
         {
             List<IHoverTip> tips =
             [
-                HoverTipFactory.FromPower<HeavensForce>(),
+                HoverTipFactory.FromPower<HeavensForcePower>(),
                 HoverTipFactory.FromPower<HeavensDecayPower>()
             ];
 
@@ -72,7 +72,7 @@ public class DesecrateHeaven : NewsanguoCardTemplate
 
         // 获得天意之力
         int heavensForceAmount = DynamicVars["heavens_force"].IntValue;
-        await PowerCmd.Apply<HeavensForce>(
+        await PowerCmd.Apply<HeavensForcePower>(
             choiceContext,
             base.Owner.Creature,
             heavensForceAmount,
@@ -84,7 +84,7 @@ public class DesecrateHeaven : NewsanguoCardTemplate
         await PowerCmd.Apply<RetainHandPower>(choiceContext, base.Owner.Creature, 1m, base.Owner.Creature, this);
 
         // 下个回合结束时获得15层天意侵蚀（延迟标记能力，数值由变量传入）
-        BlasphemyDebt? debt = await PowerCmd.Apply<BlasphemyDebt>(choiceContext, base.Owner.Creature, 2, base.Owner.Creature, this);
+        BlasphemyDebtPower? debt = await PowerCmd.Apply<BlasphemyDebtPower>(choiceContext, base.Owner.Creature, 2, base.Owner.Creature, this);
         debt?.SetDecayAmount(DynamicVars["DecayAmount"].IntValue);
     }
 

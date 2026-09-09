@@ -10,8 +10,6 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts;
-// 与 Powers 命名空间内的能力类 dragon_omen 区分，别名指向卡牌类
-using dragon_omen_card = newsanguo.Scripts.DragonOmen;
 
 namespace newsanguo.Scripts.Powers;
 
@@ -57,7 +55,7 @@ public class WindOfTigerPlusPower : ModPowerTemplate
         for (int i = 0; i < Amount; i++)
         {
             CardModel tiger = combatState.CreateCard<SmilingTiger>(player);
-            CardModel dragon = combatState.CreateCard<dragon_omen_card>(player);
+            CardModel dragon = combatState.CreateCard<DragonOmen>(player);
             CardCmd.Upgrade(tiger);
             CardCmd.Upgrade(dragon);
             await CardPileCmd.AddGeneratedCardToCombat(tiger, PileType.Hand, player, CardPilePosition.Random);

@@ -17,9 +17,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
-
-// 别名指向“帝王之征”能力类，避免与同名卡牌类冲突
-using dragon_omen_power = newsanguo.Scripts.Powers.DragonOmen;
+using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
 
@@ -35,12 +33,12 @@ public class DragonOmen : NewsanguoCardTemplate
 
     // 卡牌基础数值：给予的帝王之征层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<dragon_omen_power>("dragon_omen", 4)
+        new PowerVar<DragonOmenPower>("dragon_omen", 4)
     ];
 
     // 悬停提示：展示“帝王之征”说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<dragon_omen_power>()
+        HoverTipFactory.FromPower<DragonOmenPower>()
     ];
 
     public DragonOmen() : base(0, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)
@@ -59,7 +57,7 @@ public class DragonOmen : NewsanguoCardTemplate
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 给予目标敌人 4（6）层帝王之征（单体给予）
-        await PowerCmd.Apply<dragon_omen_power>(
+        await PowerCmd.Apply<DragonOmenPower>(
             choiceContext,
             cardPlay.Target,
             DynamicVars["dragon_omen"].IntValue,
@@ -70,7 +68,7 @@ public class DragonOmen : NewsanguoCardTemplate
         // 所有拥有帝王之征的敌人失去与层数相等的生命（群体触发，不可格挡、不受力量等伤害修饰）
         foreach (var enemy in base.CombatState!.HittableEnemies)
         {
-            dragon_omen_power? omen = enemy.GetPower<dragon_omen_power>();
+            DragonOmenPower? omen = enemy.GetPower<DragonOmenPower>();
             if (omen is not null && omen.Amount > 0)
             {
                 await CreatureCmd.Damage(

@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Powers;
@@ -33,6 +34,12 @@ public class TheTruestMask : NewsanguoCardTemplate
         new RepeatVar(2),
         new PowerVar<WeakPower>("WeakPower", 2),
         new PowerVar<VulnerablePower>("VulnerablePower", 2)
+    ];
+
+    // 悬停提示：展示“虚弱”与“易伤”的说明
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
+        HoverTipFactory.FromPower<WeakPower>(),
+        HoverTipFactory.FromPower<VulnerablePower>()
     ];
 
     public TheTruestMask() : base(1, CardType.Attack, CardRarity.Ancient, TargetType.AllEnemies)

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c1wj0hld6ac7t"
-path="res://.godot/imported/DragonOmen.png-275651cb4864001a6057c01af9968f2e.ctex"
+uid="uid://by5oit3ijsp75"
+path="res://.godot/imported/BlasphemyDebtPower_big.png-e058062c79dc46c77f5aa8992619d059.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/DragonOmen.png"
-dest_files=["res://.godot/imported/DragonOmen.png-275651cb4864001a6057c01af9968f2e.ctex"]
+source_file="res://newsanguo/images/powers/BlasphemyDebtPower_big.png"
+dest_files=["res://.godot/imported/BlasphemyDebtPower_big.png-e058062c79dc46c77f5aa8992619d059.ctex"]
 
 [params]
 

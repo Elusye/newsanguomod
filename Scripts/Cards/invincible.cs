@@ -30,7 +30,7 @@ public class Invincible : NewsanguoCardTemplate
 
     // 卡牌基础数值：对符合条件的敌人造成伤害增加 25%；打出时失去 3 点天意之力（升级后 2 点）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForce>("heavens_force", 3),
+        new PowerVar<HeavensForcePower>("heavens_force", 3),
         new IntVar("bonus_percent", 25)
     ];
 
@@ -44,7 +44,7 @@ public class Invincible : NewsanguoCardTemplate
         HoverTipFactory.FromPower<FlightPower>(),
         HoverTipFactory.FromPower<FlutterPower>(),
         HoverTipFactory.FromPower<SoarPower>(),
-        HoverTipFactory.FromPower<HeavensForce>(),
+        HoverTipFactory.FromPower<HeavensForcePower>(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -58,7 +58,7 @@ public class Invincible : NewsanguoCardTemplate
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 打出时失去 3 点天意之力（升级后 2 点）
-        await PowerCmd.Apply<HeavensForce>(choiceContext, base.Owner.Creature, -DynamicVars["heavens_force"].IntValue, base.Owner.Creature, this);
+        await PowerCmd.Apply<HeavensForcePower>(choiceContext, base.Owner.Creature, -DynamicVars["heavens_force"].IntValue, base.Owner.Creature, this);
 
         // 附加“天下无敌”能力：对没有振翅和翱翔的敌人造成伤害增加 25%
         // 效果可叠加：每次打出都会叠加对应百分比的增伤

@@ -12,8 +12,6 @@ using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using newsanguo.Scripts.Powers;
-using wine_the_old_hero_power = newsanguo.Scripts.Powers.WineTheOldHero;
-
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Cards;
 
@@ -31,7 +29,7 @@ public class WineTheOldHero : NewsanguoCardTemplate
 
     // 卡牌基础数值：每失去 1 点酒力获得的格挡（升级后 2）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<wine_the_old_hero_power>("wine_the_old_hero", 1)
+        new PowerVar<WineTheOldHeroPower>("wine_the_old_hero", 1)
     ];
 
     // 鼠标悬停时显示格挡与酒力提示
@@ -58,7 +56,7 @@ public class WineTheOldHero : NewsanguoCardTemplate
 
         // 获得酒是老英雄能力
         int powerAmount = DynamicVars["wine_the_old_hero"].IntValue;
-        await PowerCmd.Apply<wine_the_old_hero_power>(
+        await PowerCmd.Apply<WineTheOldHeroPower>(
             choiceContext,
             base.Owner.Creature,
             powerAmount,

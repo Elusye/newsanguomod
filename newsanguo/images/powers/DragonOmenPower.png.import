@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5jntvs5axmmy"
-path="res://.godot/imported/FeelNoAcid.png-668c5a9d14fa74b2aa14c17a1d2b50ea.ctex"
+uid="uid://c1wj0hld6ac7t"
+path="res://.godot/imported/DragonOmenPower.png-63e6b10e5a4259fbd7a1f5533ed828b8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/FeelNoAcid.png"
-dest_files=["res://.godot/imported/FeelNoAcid.png-668c5a9d14fa74b2aa14c17a1d2b50ea.ctex"]
+source_file="res://newsanguo/images/powers/DragonOmenPower.png"
+dest_files=["res://.godot/imported/DragonOmenPower.png-63e6b10e5a4259fbd7a1f5533ed828b8.ctex"]
 
 [params]
 

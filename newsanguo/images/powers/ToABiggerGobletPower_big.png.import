@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d3w11oai8ie5j"
-path="res://.godot/imported/BlasphemyDebt.png-7b536eef4c4e81e822f6c73659b9bf10.ctex"
+uid="uid://cp72qfdwcwcoc"
+path="res://.godot/imported/ToABiggerGobletPower_big.png-cafdcc018116d77e8613184c3fb0d6c0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/BlasphemyDebt.png"
-dest_files=["res://.godot/imported/BlasphemyDebt.png-7b536eef4c4e81e822f6c73659b9bf10.ctex"]
+source_file="res://newsanguo/images/powers/ToABiggerGobletPower_big.png"
+dest_files=["res://.godot/imported/ToABiggerGobletPower_big.png-cafdcc018116d77e8613184c3fb0d6c0.ctex"]
 
 [params]
 

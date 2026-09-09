@@ -38,7 +38,7 @@ public class FatherCanClaimTheThrone : NewsanguoCardTemplate
 
     // 鼠标悬停时显示天意之力与天意侵蚀提示
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForce>(),
+        HoverTipFactory.FromPower<HeavensForcePower>(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 

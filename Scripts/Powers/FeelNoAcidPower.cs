@@ -12,7 +12,7 @@ namespace newsanguo.Scripts.Powers;
 
 // 注册能力到游戏
 [RegisterPower]
-public class FeelNoAcid : ModPowerTemplate
+public class FeelNoAcidPower : ModPowerTemplate
 {
     // 能力类型：正面 Buff
     public override PowerType Type => PowerType.Buff;

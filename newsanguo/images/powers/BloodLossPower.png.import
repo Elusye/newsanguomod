@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cbcd72vvm8uw2"
-path="res://.godot/imported/WineTheOldHero_big.png-5e1a9edec78d328f766c9493b0968a8f.ctex"
+uid="uid://c1g1xcjvtimy7"
+path="res://.godot/imported/BloodLossPower.png-22f3e8950e12756c285acf386b8c5e06.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/WineTheOldHero_big.png"
-dest_files=["res://.godot/imported/WineTheOldHero_big.png-5e1a9edec78d328f766c9493b0968a8f.ctex"]
+source_file="res://newsanguo/images/powers/BloodLossPower.png"
+dest_files=["res://.godot/imported/BloodLossPower.png-22f3e8950e12756c285acf386b8c5e06.ctex"]
 
 [params]
 

@@ -28,12 +28,12 @@ public class InvokeHeaven : NewsanguoCardTemplate
 
     // 卡牌基础数值：获得 5 点天意之力（升级后 7 点）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForce>("heavens_force", 5)
+        new PowerVar<HeavensForcePower>("heavens_force", 5)
     ];
 
     // 悬停提示：展示“天意之力”和“天意侵蚀”两个说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForce>(),
+        HoverTipFactory.FromPower<HeavensForcePower>(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -51,7 +51,7 @@ public class InvokeHeaven : NewsanguoCardTemplate
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 获得天意之力
-        await PowerCmd.Apply<HeavensForce>(
+        await PowerCmd.Apply<HeavensForcePower>(
             choiceContext,
             base.Owner.Creature,
             DynamicVars["heavens_force"].IntValue,

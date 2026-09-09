@@ -12,8 +12,6 @@ using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using newsanguo.Scripts.Powers;
-using to_a_bigger_goblet_power = newsanguo.Scripts.Powers.ToABiggerGoblet;
-
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Cards;
 
@@ -31,7 +29,7 @@ public class ToABiggerGoblet : NewsanguoCardTemplate
 
     // 卡牌基础数值：换大盏层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<to_a_bigger_goblet_power>("to_a_bigger_goblet", 1)
+        new PowerVar<ToABiggerGobletPower>("to_a_bigger_goblet", 2)
     ];
 
     // 鼠标悬停时显示酒力提示
@@ -52,7 +50,7 @@ public class ToABiggerGoblet : NewsanguoCardTemplate
 
         // 获得换大盏能力
         int powerAmount = DynamicVars["to_a_bigger_goblet"].IntValue;
-        await PowerCmd.Apply<to_a_bigger_goblet_power>(
+        await PowerCmd.Apply<ToABiggerGobletPower>(
             choiceContext,
             base.Owner.Creature,
             powerAmount,
@@ -64,7 +62,7 @@ public class ToABiggerGoblet : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 换大盏层数从 1 提高到 2 (1+1)
+        // 换大盏层数从 2 提高到 3 (2+1)
         DynamicVars["to_a_bigger_goblet"].UpgradeValueBy(1);
     }
 }

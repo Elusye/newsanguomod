@@ -62,11 +62,11 @@ public class SelfFall : NewsanguoCardTemplate
         // 同一回合多次打出会叠加每次掉血数值（如两张为每牌失去 6 点），但不会延长持续时间；
         // 记录来源卡牌，保证打出“自刎归天”本身不掉血。
         int hpCost = DynamicVars["HpCostPerCard"].IntValue;
-        BloodLoss? power = base.Owner.Creature.GetPowerInstances<BloodLoss>().FirstOrDefault();
+        BloodLossPower? power = base.Owner.Creature.GetPowerInstances<BloodLossPower>().FirstOrDefault();
         if (power is null)
         {
-            power = await PowerCmd.Apply<BloodLoss>(choiceContext, base.Owner.Creature, 1, base.Owner.Creature, this)
-                ?? throw new InvalidOperationException("PowerCmd.Apply<BloodLoss> unexpectedly returned null.");
+            power = await PowerCmd.Apply<BloodLossPower>(choiceContext, base.Owner.Creature, 1, base.Owner.Creature, this)
+                ?? throw new InvalidOperationException("PowerCmd.Apply<BloodLossPower> unexpectedly returned null.");
         }
         power.AddHpCost(hpCost);
         power.SetSourceCard(this);

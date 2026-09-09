@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bsf8x8o8jddmy"
-path="res://.godot/imported/ToABiggerGoblet.png-283a23b5e01b120c46d5ee7954672066.ctex"
+uid="uid://dg6s7e6bpij6m"
+path="res://.godot/imported/BloodLossPower_big.png-5bb697808e0e17999f78886ce56f3a16.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/ToABiggerGoblet.png"
-dest_files=["res://.godot/imported/ToABiggerGoblet.png-283a23b5e01b120c46d5ee7954672066.ctex"]
+source_file="res://newsanguo/images/powers/BloodLossPower_big.png"
+dest_files=["res://.godot/imported/BloodLossPower_big.png-5bb697808e0e17999f78886ce56f3a16.ctex"]
 
 [params]
 

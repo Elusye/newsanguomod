@@ -31,13 +31,13 @@ public class HeavenAndEarth : NewsanguoCardTemplate
 
     // 卡牌基础数值：失去的天意之力、获得的飞行层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForce>("heavens_force", 3),
+        new PowerVar<HeavensForcePower>("heavens_force", 3),
         new PowerVar<FlightPower>("flight_power", 3)
     ];
 
     // 悬停提示：展示“天意之力”、“天意侵蚀”、“飞行”说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForce>(),
+        HoverTipFactory.FromPower<HeavensForcePower>(),
         HoverTipFactory.FromPower<HeavensDecayPower>(),
         HoverTipFactory.FromPower<FlightPower>()
     ];
@@ -57,7 +57,7 @@ public class HeavenAndEarth : NewsanguoCardTemplate
 
         // 失去 3 点天意之力
         int heavensLoss = DynamicVars["heavens_force"].IntValue;
-        await PowerCmd.Apply<HeavensForce>(choiceContext, base.Owner.Creature, -heavensLoss, base.Owner.Creature, this);
+        await PowerCmd.Apply<HeavensForcePower>(choiceContext, base.Owner.Creature, -heavensLoss, base.Owner.Creature, this);
 
         // 获得 3 层飞行
         int flightAmount = DynamicVars["flight_power"].IntValue;

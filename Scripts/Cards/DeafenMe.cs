@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
@@ -17,9 +18,6 @@ using STS2RitsuLib.Scaffolding.Content;
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Powers;
-
-// 别名指向“帝王之征”能力类，避免与同名卡牌类冲突
-using dragon_omen_power = newsanguo.Scripts.Powers.DragonOmen;
 
 namespace newsanguo.Scripts;
 
@@ -35,8 +33,13 @@ public class DeafenMe : NewsanguoCardTemplate
 
     // 卡牌基础数值：给予自己的帝王之征层数、造成的伤害
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<dragon_omen_power>("dragon_omen", 3),
+        new PowerVar<DragonOmenPower>("dragon_omen", 3),
         new DamageVar(15m, ValueProp.Move)
+    ];
+
+    // 悬停提示：展示“帝王之征”说明
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
+        HoverTipFactory.FromPower<DragonOmenPower>()
     ];
 
     public DeafenMe() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
@@ -56,7 +59,7 @@ public class DeafenMe : NewsanguoCardTemplate
 
         // 1. 给予自己若干层帝王之征（自我枷锁）
         int omenAmount = DynamicVars["dragon_omen"].IntValue;
-        await PowerCmd.Apply<dragon_omen_power>(choiceContext, base.Owner.Creature, omenAmount, base.Owner.Creature, this, silent: false);
+        await PowerCmd.Apply<DragonOmenPower>(choiceContext, base.Owner.Creature, omenAmount, base.Owner.Creature, this, silent: false);
 
         // 2. 造成伤害
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)

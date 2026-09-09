@@ -28,13 +28,13 @@ public class Divination : NewsanguoCardTemplate
 
     // 卡牌基础数值：获得 2 点天意之力，抽 2 张牌
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForce>("heavens_force", 2),
+        new PowerVar<HeavensForcePower>("heavens_force", 2),
         new CardsVar(2)
     ];
 
     // 鼠标悬停时显示天意之力与天意侵蚀提示
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForce>(),
+        HoverTipFactory.FromPower<HeavensForcePower>(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -53,7 +53,7 @@ public class Divination : NewsanguoCardTemplate
 
         // 获得天意之力
         int heavensForceAmount = DynamicVars["heavens_force"].IntValue;
-        await PowerCmd.Apply<HeavensForce>(
+        await PowerCmd.Apply<HeavensForcePower>(
             choiceContext,
             base.Owner.Creature,
             heavensForceAmount,

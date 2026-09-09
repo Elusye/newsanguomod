@@ -42,15 +42,15 @@ public class HeavenRevision : NewsanguoCardTemplate
             (card, _) => CombatManager.Instance.History.Entries
                 .OfType<PowerReceivedEntry>()
                 .Where(entry => entry.Actor == card.Owner.Creature
-                    && entry.Power is HeavensForce
+                    && entry.Power is HeavensForcePower
                     && entry.Amount < 0)
                 .Sum(entry => -entry.Amount)),
-        new PowerVar<HeavensForce>("heavens_force", 3)
+        new PowerVar<HeavensForcePower>("heavens_force", 3)
     ];
 
     // 悬停提示：展示“天意之力”与”天意侵蚀”说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForce>(),
+        HoverTipFactory.FromPower<HeavensForcePower>(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -76,7 +76,7 @@ public class HeavenRevision : NewsanguoCardTemplate
             .Execute(choiceContext);
 
         // 消耗天意之力（基础 3 点，升级后 2 点）
-        await PowerCmd.Apply<HeavensForce>(choiceContext, base.Owner.Creature, -DynamicVars["heavens_force"].IntValue, base.Owner.Creature, this, silent: false);
+        await PowerCmd.Apply<HeavensForcePower>(choiceContext, base.Owner.Creature, -DynamicVars["heavens_force"].IntValue, base.Owner.Creature, this, silent: false);
     }
 
     // 升级后的效果逻辑

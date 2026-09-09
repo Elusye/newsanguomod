@@ -13,7 +13,7 @@ namespace newsanguo.Scripts.Powers;
 
 // 注册能力到游戏
 [RegisterPower]
-public class WineTheOldHero : ModPowerTemplate
+public class WineTheOldHeroPower : ModPowerTemplate
 {
     // 能力类型：正面 Buff
     public override PowerType Type => PowerType.Buff;

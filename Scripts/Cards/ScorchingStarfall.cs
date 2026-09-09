@@ -36,7 +36,7 @@ public class ScorchingStarfall : NewsanguoCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(2, ValueProp.Move),
         new IntVar("wine_threshold", 3),
-        new PowerVar<HeavensForce>("heavens_force", 5),
+        new PowerVar<HeavensForcePower>("heavens_force", 5),
         new CalculationBaseVar(0m),
         new CalculationExtraVar(1m),
         new CalculatedVar("CalculatedHits").WithMultiplier(static (card, _) =>
@@ -50,11 +50,11 @@ public class ScorchingStarfall : NewsanguoCardTemplate
     // 鼠标悬停时显示“酒力”“天意之力”与“天意侵蚀”关键词说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<DrunkenMightPower>(),
-        HoverTipFactory.FromPower<HeavensForce>(),
+        HoverTipFactory.FromPower<HeavensForcePower>(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
-    public ScorchingStarfall() : base(4, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies)
+    public ScorchingStarfall() : base(3, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies)
     {
     }
 
@@ -82,7 +82,7 @@ public class ScorchingStarfall : NewsanguoCardTemplate
         }
 
         // 失去 5 点天意之力（升级后 4 点）
-        await PowerCmd.Apply<HeavensForce>(
+        await PowerCmd.Apply<HeavensForcePower>(
             choiceContext,
             base.Owner.Creature,
             -DynamicVars["heavens_force"].IntValue,

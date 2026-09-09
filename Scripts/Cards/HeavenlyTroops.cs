@@ -36,7 +36,7 @@ public class HeavenlyTroops : NewsanguoCardTemplate
     // 卡牌基础数值：经过 2 个回合结束后发放 5 张士兵（turn_delay 需与 heavenly_troops_power 的倒计时保持同步）；
     // 打出时失去 3 点天意之力（升级后 2 点）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForce>("heavens_force", 3),
+        new PowerVar<HeavensForcePower>("heavens_force", 3),
         new IntVar("soldier_count", 5),
         new IntVar("turn_delay", 2)
     ];
@@ -61,7 +61,7 @@ public class HeavenlyTroops : NewsanguoCardTemplate
 
         // 失去天意之力
         int lostAmount = DynamicVars["heavens_force"].IntValue;
-        await PowerCmd.Apply<HeavensForce>(
+        await PowerCmd.Apply<HeavensForcePower>(
             choiceContext,
             base.Owner.Creature,
             -lostAmount,

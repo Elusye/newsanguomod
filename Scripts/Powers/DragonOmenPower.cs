@@ -9,7 +9,7 @@ namespace newsanguo.Scripts.Powers;
 /// 打出“龙可是帝王之征啊”时，拥有此能力的敌人失去与层数相等的生命。
 /// </summary>
 [RegisterPower]
-public class DragonOmen : ModPowerTemplate
+public class DragonOmenPower : ModPowerTemplate
 {
     // 负面效果
     public override PowerType Type => PowerType.Debuff;

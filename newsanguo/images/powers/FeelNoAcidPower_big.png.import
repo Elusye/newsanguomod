@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c1g1xcjvtimy7"
-path="res://.godot/imported/BloodLoss.png-2b3bd84733f31bb3db7bf07226ce8ff6.ctex"
+uid="uid://dh555ax12574y"
+path="res://.godot/imported/FeelNoAcidPower_big.png-8f989cd7e815e173f8ca2690fd43f5ec.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/BloodLoss.png"
-dest_files=["res://.godot/imported/BloodLoss.png-2b3bd84733f31bb3db7bf07226ce8ff6.ctex"]
+source_file="res://newsanguo/images/powers/FeelNoAcidPower_big.png"
+dest_files=["res://.godot/imported/FeelNoAcidPower_big.png-8f989cd7e815e173f8ca2690fd43f5ec.ctex"]
 
 [params]
 

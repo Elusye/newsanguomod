@@ -35,7 +35,7 @@ public class LongevitySpell : NewsanguoCardTemplate
 
     // 鼠标悬停时显示天意之力、灵魂附魔与消耗关键词说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForce>(),
+        HoverTipFactory.FromPower<HeavensForcePower>(),
         ..HoverTipFactory.FromEnchantment<SoulsPower>(),
         HoverTipFactory.FromKeyword(CardKeyword.Exhaust)
     ];
@@ -55,7 +55,7 @@ public class LongevitySpell : NewsanguoCardTemplate
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 失去天意之力
-        await PowerCmd.Apply<HeavensForce>(
+        await PowerCmd.Apply<HeavensForcePower>(
             choiceContext,
             base.Owner.Creature,
             -DynamicVars["ForceLoss"].BaseValue,

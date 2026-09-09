@@ -33,14 +33,14 @@ public class Unstoppable : NewsanguoCardTemplate
 
     // 卡牌基础数值：失去的天意之力、获得的无实体层数（变量用正值，打出时取负）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForce>("heavens_force", 5),
+        new PowerVar<HeavensForcePower>("heavens_force", 5),
         new DynamicVar("IntangibleAmount", 1m)
     ];
 
     // 悬停提示：展示“无实体”、“天意之力”与“天意侵蚀”的说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<IntangiblePower>(),
-        HoverTipFactory.FromPower<HeavensForce>(),
+        HoverTipFactory.FromPower<HeavensForcePower>(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -65,7 +65,7 @@ public class Unstoppable : NewsanguoCardTemplate
 
         // 失去 6 点天意之力
         int lostAmount = DynamicVars["heavens_force"].IntValue;
-        await PowerCmd.Apply<HeavensForce>(choiceContext, base.Owner.Creature, -lostAmount, base.Owner.Creature, this, silent: false);
+        await PowerCmd.Apply<HeavensForcePower>(choiceContext, base.Owner.Creature, -lostAmount, base.Owner.Creature, this, silent: false);
     }
 
     // 升级：失去的天意之力 5 → 4（虚无关键词升级后保留）

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dh555ax12574y"
-path="res://.godot/imported/FeelNoAcid_big.png-538fae9af421b1c8f7b34b6646567917.ctex"
+uid="uid://5jntvs5axmmy"
+path="res://.godot/imported/FeelNoAcidPower.png-9f1a7bc751cb5583f0e68f45af249228.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/FeelNoAcid_big.png"
-dest_files=["res://.godot/imported/FeelNoAcid_big.png-538fae9af421b1c8f7b34b6646567917.ctex"]
+source_file="res://newsanguo/images/powers/FeelNoAcidPower.png"
+dest_files=["res://.godot/imported/FeelNoAcidPower.png-9f1a7bc751cb5583f0e68f45af249228.ctex"]
 
 [params]
 

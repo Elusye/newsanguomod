@@ -40,13 +40,13 @@ public class SkywardBlade : NewsanguoCardTemplate
 
     // 悬停提示：展示“天意之力”与“天意侵蚀”的说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForce>(),
+        HoverTipFactory.FromPower<HeavensForcePower>(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
     // 天意之力为负时金色高亮（提示会触发额外伤害）
     protected override bool ShouldGlowGoldInternal =>
-        base.Owner.Creature.GetPower<HeavensForce>() is { } force && force.Amount < 0;
+        base.Owner.Creature.GetPower<HeavensForcePower>() is { } force && force.Amount < 0;
 
     public SkywardBlade() : base(1, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
     {
@@ -65,7 +65,7 @@ public class SkywardBlade : NewsanguoCardTemplate
 
         // 若天意之力点数小于 0，则在单次伤害上额外增加伤害值（不增加攻击次数）
         decimal damage = DynamicVars.Damage.BaseValue;
-        HeavensForce? force = base.Owner.Creature.GetPower<HeavensForce>();
+        HeavensForcePower? force = base.Owner.Creature.GetPower<HeavensForcePower>();
         if (force is not null && force.Amount < 0)
         {
             damage += DynamicVars.ExtraDamage.BaseValue;

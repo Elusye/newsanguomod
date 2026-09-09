@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b86rdwt6757w1"
-path="res://.godot/imported/HeavensForce.png-ed6b393d9ffcc9c18e62c0e8f4aa33cd.ctex"
+uid="uid://bsf8x8o8jddmy"
+path="res://.godot/imported/ToABiggerGobletPower.png-f83f8c7d56704a9df9e28f0b7706da3b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/HeavensForce.png"
-dest_files=["res://.godot/imported/HeavensForce.png-ed6b393d9ffcc9c18e62c0e8f4aa33cd.ctex"]
+source_file="res://newsanguo/images/powers/ToABiggerGobletPower.png"
+dest_files=["res://.godot/imported/ToABiggerGobletPower.png-f83f8c7d56704a9df9e28f0b7706da3b.ctex"]
 
 [params]
 

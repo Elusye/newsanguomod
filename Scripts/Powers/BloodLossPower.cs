@@ -20,7 +20,7 @@ namespace newsanguo.Scripts.Powers;
 /// 打出“自刎归天”后附加，回合结束时自动移除。
 /// </summary>
 [RegisterPower]
-public class BloodLoss : ModPowerTemplate
+public class BloodLossPower : ModPowerTemplate
 {
     // 每打出一张攻击牌失去的生命（初始为 0，由“自刎归天”打出时通过 AddHpCost 累加设定）
     private int hpCostPerCard = 0;

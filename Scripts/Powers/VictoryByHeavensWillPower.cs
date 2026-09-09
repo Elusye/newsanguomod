@@ -52,6 +52,6 @@ public class VictoryByHeavensWillPower : ModPowerTemplate
             NewsanguoSfx.Play("event:/newsanguo/sfx/heavens_force_decay");
         }
 
-        await PowerCmd.Apply<HeavensForce>(choiceContext, Owner, Amount, Owner, null, silent: false);
+        await PowerCmd.Apply<HeavensForcePower>(choiceContext, Owner, Amount, Owner, null, silent: false);
     }
 }

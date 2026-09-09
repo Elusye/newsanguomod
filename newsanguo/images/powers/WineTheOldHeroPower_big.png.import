@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bih4u6vmiw7tf"
-path="res://.godot/imported/HeavensForce_big.png-2d76d1d5c5b67c31fb9dd709c1fba9f1.ctex"
+uid="uid://cbcd72vvm8uw2"
+path="res://.godot/imported/WineTheOldHeroPower_big.png-a83411facacd123baf7d6757fe8dbe78.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/HeavensForce_big.png"
-dest_files=["res://.godot/imported/HeavensForce_big.png-2d76d1d5c5b67c31fb9dd709c1fba9f1.ctex"]
+source_file="res://newsanguo/images/powers/WineTheOldHeroPower_big.png"
+dest_files=["res://.godot/imported/WineTheOldHeroPower_big.png-a83411facacd123baf7d6757fe8dbe78.ctex"]
 
 [params]
 

@@ -18,7 +18,7 @@ namespace newsanguo.Scripts.Powers;
 /// 减到0时（即下个回合结束时）获得15层天意侵蚀并移除自身。
 /// </summary>
 [RegisterPower]
-public class BlasphemyDebt : ModPowerTemplate
+public class BlasphemyDebtPower : ModPowerTemplate
 {
     // 负面标记
     public override PowerType Type => PowerType.Debuff;

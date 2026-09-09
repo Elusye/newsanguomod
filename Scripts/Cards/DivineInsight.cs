@@ -30,7 +30,7 @@ public class DivineInsight : NewsanguoCardTemplate
 
     // 悬停提示：展示“天意之力”与“天意侵蚀”的说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForce>(),
+        HoverTipFactory.FromPower<HeavensForcePower>(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -52,8 +52,8 @@ public class DivineInsight : NewsanguoCardTemplate
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
-        // 先失去 7 点天意之力（HeavensForce 允许负值，可透支/结余为负）
-        await PowerCmd.Apply<HeavensForce>(
+        // 先失去 7 点天意之力（HeavensForcePower 允许负值，可透支/结余为负）
+        await PowerCmd.Apply<HeavensForcePower>(
             choiceContext,
             base.Owner.Creature,
             -DynamicVars["heavens_lost"].IntValue,

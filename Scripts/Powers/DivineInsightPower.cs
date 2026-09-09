@@ -61,6 +61,6 @@ public class DivineInsightPower : ModPowerTemplate
         // 触发“参悟天意”音效（对应 FMOD 事件 event:/newsanguo/sfx/divine_insight_power）
         NewsanguoSfx.Play("event:/newsanguo/sfx/divine_insight_power");
         
-        await PowerCmd.Apply<HeavensForce>(choiceContext, Owner, Amount, Owner, cardPlay.Card, silent: false);
+        await PowerCmd.Apply<HeavensForcePower>(choiceContext, Owner, Amount, Owner, cardPlay.Card, silent: false);
     }
 }

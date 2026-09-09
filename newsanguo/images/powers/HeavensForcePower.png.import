@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://by5oit3ijsp75"
-path="res://.godot/imported/BlasphemyDebt_big.png-fb3a2d23a8b2f785de855fa8a23ecc74.ctex"
+uid="uid://b86rdwt6757w1"
+path="res://.godot/imported/HeavensForcePower.png-83a9cc443c1f5e48508abddd14b62bcb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/BlasphemyDebt_big.png"
-dest_files=["res://.godot/imported/BlasphemyDebt_big.png-fb3a2d23a8b2f785de855fa8a23ecc74.ctex"]
+source_file="res://newsanguo/images/powers/HeavensForcePower.png"
+dest_files=["res://.godot/imported/HeavensForcePower.png-83a9cc443c1f5e48508abddd14b62bcb.ctex"]
 
 [params]
 

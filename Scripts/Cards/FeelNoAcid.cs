@@ -11,9 +11,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
-
-// 别名指向能力类，避免与同名卡牌类冲突
-using feel_no_acid_power = newsanguo.Scripts.Powers.FeelNoAcid;
+using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
 
@@ -29,7 +27,7 @@ public class FeelNoAcid : NewsanguoCardTemplate
 
     // 卡牌基础数值：每当你失去酒力时，获得 1 点酒力（调整此处的 1 即可联动卡面描述）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<feel_no_acid_power>("feel_no_acid_power", 1)
+        new PowerVar<FeelNoAcidPower>("feel_no_acid_power", 1)
     ];
 
     public FeelNoAcid() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self)
@@ -47,7 +45,7 @@ public class FeelNoAcid : NewsanguoCardTemplate
 
         // 附加咱家不怕酸能力，层数＝每次失去酒力时补偿的酒力数
         int compensate = DynamicVars["feel_no_acid_power"].IntValue;
-        await PowerCmd.Apply<feel_no_acid_power>(
+        await PowerCmd.Apply<FeelNoAcidPower>(
             choiceContext,
             base.Owner.Creature,
             compensate,

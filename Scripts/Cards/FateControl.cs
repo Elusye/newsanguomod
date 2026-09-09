@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Cards;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -26,7 +27,13 @@ public class FateControl : NewsanguoCardTemplate
 
     // 卡牌基础数值：打出时失去 5 点天意之力（升级后 4 点）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForce>("heavens_force", 5)
+        new PowerVar<HeavensForcePower>("heavens_force", 5)
+    ];
+
+    // 悬停提示：展示“天意之力”与“天意侵蚀”的说明
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
+        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
     public FateControl() : base(0, CardType.Power, CardRarity.Rare, TargetType.Self)
@@ -42,7 +49,7 @@ public class FateControl : NewsanguoCardTemplate
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 打出时失去 5 点天意之力（升级后 4 点）
-        await PowerCmd.Apply<HeavensForce>(choiceContext, base.Owner.Creature, -DynamicVars["heavens_force"].IntValue, base.Owner.Creature, this);
+        await PowerCmd.Apply<HeavensForcePower>(choiceContext, base.Owner.Creature, -DynamicVars["heavens_force"].IntValue, base.Owner.Creature, this);
 
         // 附加“天意操控”能力：所有在战斗中临时增加的牌将被升级
         await PowerCmd.Apply<FateControlPower>(

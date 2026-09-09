@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dg6s7e6bpij6m"
-path="res://.godot/imported/BloodLoss_big.png-b5622e9192d0567ab69928fdccfdfcb3.ctex"
+uid="uid://6csvvglsacbm"
+path="res://.godot/imported/DragonOmenPower_big.png-3bbfd825be6ff2f00ff29d86a88a8268.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/BloodLoss_big.png"
-dest_files=["res://.godot/imported/BloodLoss_big.png-b5622e9192d0567ab69928fdccfdfcb3.ctex"]
+source_file="res://newsanguo/images/powers/DragonOmenPower_big.png"
+dest_files=["res://.godot/imported/DragonOmenPower_big.png-3bbfd825be6ff2f00ff29d86a88a8268.ctex"]
 
 [params]
 

@@ -33,12 +33,12 @@ public class GreatEvil : NewsanguoCardTemplate
     // 卡牌基础数值：对所有敌人造成 14 点伤害；获得 2 点天意之力
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(14, ValueProp.Move),
-        new PowerVar<HeavensForce>("heavens_force", 2)
+        new PowerVar<HeavensForcePower>("heavens_force", 2)
     ];
 
     // 悬停提示：展示“天意之力”与”天意侵蚀”说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForce>(),
+        HoverTipFactory.FromPower<HeavensForcePower>(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -64,7 +64,7 @@ public class GreatEvil : NewsanguoCardTemplate
             .Execute(choiceContext);
 
         // 获得 2 点天意之力
-        await PowerCmd.Apply<HeavensForce>(
+        await PowerCmd.Apply<HeavensForcePower>(
             choiceContext,
             base.Owner.Creature,
             DynamicVars["heavens_force"].IntValue,

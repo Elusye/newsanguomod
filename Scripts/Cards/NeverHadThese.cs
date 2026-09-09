@@ -34,13 +34,13 @@ public class NeverHadThese : NewsanguoCardTemplate
     // 卡牌基础数值：获得 8（11）点格挡；每消耗一张非攻击牌获得 1 点天意之力
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new BlockVar(8, ValueProp.Move),
-        new PowerVar<HeavensForce>("heavens_force", 1)
+        new PowerVar<HeavensForcePower>("heavens_force", 1)
     ];
 
     // 悬停提示：展示“格挡”、“天意之力”和“天意侵蚀”说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.Static(StaticHoverTip.Block),
-        HoverTipFactory.FromPower<HeavensForce>(),
+        HoverTipFactory.FromPower<HeavensForcePower>(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -80,7 +80,7 @@ public class NeverHadThese : NewsanguoCardTemplate
             await CardCmd.Exhaust(choiceContext, card);
         }
 
-        await PowerCmd.Apply<HeavensForce>(
+        await PowerCmd.Apply<HeavensForcePower>(
             choiceContext,
             base.Owner.Creature,
             heavensForcePerCard * nonAttackCards.Count,
