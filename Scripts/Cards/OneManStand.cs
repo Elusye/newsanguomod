@@ -75,10 +75,10 @@ public class OneManStand : NewsanguoCardTemplate
             return;
         }
 
-        foreach (CardModel card in hand.Cards.Where(c => c != keepCard).ToList())
-        {
-            await CardPileCmd.Add(card, PileType.Discard);
-        }
+        // 弃置其余手牌：必须走 CardCmd.Discard 且一次传入全部（勿循环单张调 Discard），
+        // 引擎才会在其中检查并触发奇巧（Sly）——奇巧牌被弃时会自动免费打出而非进弃牌堆；
+        // 若直接用 CardPileCmd.Add 逐张移到弃牌堆会绕过 Sly 检查，导致奇巧不触发。
+        await CardCmd.Discard(choiceContext, hand.Cards.Where(c => c != keepCard).ToList());
     }
 
     // 升级后的效果逻辑

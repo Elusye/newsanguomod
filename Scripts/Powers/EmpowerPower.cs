@@ -104,19 +104,11 @@ public class EmpowerPower : ModPowerTemplate
             return;
         }
 
-        ICombatState? combatState = CombatState;
-        if (combatState is null)
-        {
-            return;
-        }
-
-        // 以记录的牌（保持升级状态）替换所选手牌
-        CardModel canonical = ModelDb.GetById<CardModel>(data.recordedCard.Id);
-        CardModel replacement = combatState.CreateCard(canonical, player);
-        if (data.recordedCard.IsUpgraded)
-        {
-            CardCmd.Upgrade(replacement);
-        }
+        // 以记录的牌替换所选手牌：与 NightmarePower 同款——直接对记录时保存的克隆
+        // 再次 CreateClone。记录的克隆完整保留了记录时刻的升级层数/附魔等状态
+        // （CreateClone 深拷贝当前全部状态），所以可无限升级的牌（如“医术高明”）
+        // 的高等级也会原样带出，无需手动重放升级。
+        CardModel replacement = data.recordedCard.CreateClone();
         await CardCmd.Transform(original, replacement);
     }
 }
