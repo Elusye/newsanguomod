@@ -30,12 +30,13 @@ public class AlwaysMine : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌自带“奇巧”关键词（打出时若正在弃牌可免费打出，不会真的消耗）
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Sly];
+    // 卡牌自带“奇巧”与“消耗”关键词（打出时若正在弃牌可免费打出，不会真的消耗）
+    // “消耗”在升级后移除（见 OnUpgrade），因此只能用关键词动态增删
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Sly, CardKeyword.Exhaust];
 
-    // 卡牌基础数值：从弃牌堆拿回手牌的张数（基础 2，升级 3）
+    // 卡牌基础数值：从弃牌堆拿回手牌的张数（固定 3，升级不改变张数）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new CardsVar(2)
+        new CardsVar(3)
     ];
 
     public AlwaysMine() : base(1, CardType.Skill, CardRarity.Common, TargetType.Self)
@@ -79,7 +80,13 @@ public class AlwaysMine : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 拿回手牌的张数从 2 提高到 3
-        DynamicVars.Cards.UpgradeValueBy(1);
+        // 升级后不再“消耗”
+        RemoveKeyword(CardKeyword.Exhaust);
+    }
+
+    // 降级回退：恢复“消耗”
+    protected override void AfterDowngraded()
+    {
+        AddKeyword(CardKeyword.Exhaust);
     }
 }

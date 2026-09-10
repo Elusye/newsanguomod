@@ -24,7 +24,7 @@ public class ImGettingDrunk : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：下个回合开始时获得的酒力（升级 8）
+    // 卡牌基础数值：立即获得的酒力（升级 8）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new PowerVar<DrunkenMightPower>("drunken_might", 6)
     ];
@@ -47,11 +47,19 @@ public class ImGettingDrunk : NewsanguoCardTemplate
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
 
-        // 附加“真的要醉了”标记：下个回合开始时获得酒力并禁攻，触发后移除
-        await PowerCmd.Apply<ImGettingDrunkPower>(
+        // 立即获得 6（8）点酒力
+        await PowerCmd.Apply<DrunkenMightPower>(
             choiceContext,
             Owner.Creature,
             DynamicVars["drunken_might"].IntValue,
+            Owner.Creature,
+            this);
+
+        // 施加“止戈”：本回合不能打出攻击牌（回合结束时自动移除）
+        await PowerCmd.Apply<NoAttacksThisTurnPower>(
+            choiceContext,
+            Owner.Creature,
+            1,
             Owner.Creature,
             this);
     }

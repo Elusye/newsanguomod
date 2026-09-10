@@ -27,7 +27,7 @@ public class fine_brew_of_pei : ModRelicTemplate
 
     // 描述中的 {drunken_might}：每场战斗开始时获得的酒力层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DrunkenMightPower>("drunken_might", 3)
+        new PowerVar<DrunkenMightPower>("drunken_might", 4)
     ];
 
     // 悬停提示：展示“酒力”能力说明

@@ -28,7 +28,7 @@ public class century_brew : ModRelicTemplate
 
     // 描述中的 {drunken_might}：每个回合开始时获得的酒力层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DrunkenMightPower>("drunken_might", 3)
+        new PowerVar<DrunkenMightPower>("drunken_might", 4)
     ];
 
     // 悬停提示：展示“酒力”能力说明
@@ -36,7 +36,7 @@ public class century_brew : ModRelicTemplate
 
     public override bool ShouldReceiveCombatHooks => true;
 
-    // 每个回合开始时：获得 3 点酒力（多人下只在 Owner 自己的回合触发）
+    // 每个回合开始时：获得 4 点酒力（多人下只在 Owner 自己的回合触发）
     public override async Task AfterAutoPrePlayPhaseEntered(PlayerChoiceContext choiceContext, Player player)
     {
         if (player != Owner || Owner?.Creature is null)

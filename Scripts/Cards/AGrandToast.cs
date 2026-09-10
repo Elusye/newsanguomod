@@ -31,7 +31,7 @@ public class AGrandToast : NewsanguoCardTemplate
 
     // 卡牌基础数值：酒力层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DrunkenMightPower>("drunken_might", 3)
+        new PowerVar<DrunkenMightPower>("drunken_might", 4)
     ];
 
     // 鼠标悬停时显示酒力提示
@@ -64,7 +64,7 @@ public class AGrandToast : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 酒力层数从 3 提高到 5 (3+2)
+        // 酒力层数从 4 提高到 6 (4+2)
         DynamicVars["drunken_might"].UpgradeValueBy(2);
     }
 }

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dycgu7gh5khkb"
-path="res://.godot/imported/ImGettingDrunkPower_big.png-a1f0a4f3b35851201aa9e592cf1f1bd6.ctex"
+uid="uid://fjbtqno2v6qm"
+path="res://.godot/imported/Lightweight.png-020d6e212081eafdd499395ea469bf16.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/ImGettingDrunkPower_big.png"
-dest_files=["res://.godot/imported/ImGettingDrunkPower_big.png-a1f0a4f3b35851201aa9e592cf1f1bd6.ctex"]
+source_file="res://newsanguo/images/cards/Lightweight.png"
+dest_files=["res://.godot/imported/Lightweight.png-020d6e212081eafdd499395ea469bf16.ctex"]
 
 [params]
 
