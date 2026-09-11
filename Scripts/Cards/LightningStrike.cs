@@ -43,6 +43,9 @@ public class LightningStrike : NewsanguoCardTemplate
     // 标签：视为“打击”，使依赖打击标签的遗物/卡牌可与之交互
     protected override HashSet<CardTag> CanonicalTags => [CardTag.Strike];
 
+    // 属于“天意”体系（涉及天意之力/天意侵蚀）
+    public override bool IsHeavensCard => true;
+
     public LightningStrike() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
     }

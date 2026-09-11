@@ -40,6 +40,9 @@ public class DivineInsight : NewsanguoCardTemplate
         new PowerVar<DivineInsightPower>("divine_insight_power", 1)
     ];
 
+    // 属于“天意”体系（涉及天意之力/天意侵蚀）
+    public override bool IsHeavensCard => true;
+
     public DivineInsight() : base(0, CardType.Power, CardRarity.Ancient, TargetType.Self)
     {
     }

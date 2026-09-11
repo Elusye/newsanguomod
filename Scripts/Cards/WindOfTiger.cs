@@ -1,10 +1,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
+using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -24,6 +28,11 @@ public class WindOfTiger : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
+    // 卡牌基础数值：给予 4（升级 6）层“风从虎，云从龙”
+    protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new PowerVar<WindOfTigerPower>("wind_of_tiger", 4)
+    ];
+
     // 悬停提示：展示“笑面虎”和“龙可是帝王之征啊”（升级后展示升级版）
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromCard<SmilingTiger>(IsUpgraded),
@@ -37,32 +46,42 @@ public class WindOfTiger : NewsanguoCardTemplate
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        ICombatState combatState = base.CombatState!;
+
         NewsanguoSfx.Play("event:/newsanguo/sfx/wind_of_tiger");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
-        // 附加能力：每回合开始时将笑面虎和龙可是帝王之征啊加入手牌。
-        // 升级版附加“风从虎，云从龙+”能力，生成升级版（笑面虎+/龙可是帝王之征啊+）。
+        // 获得 4（6）层“风从虎，云从龙”：层数即笑面虎额外获得的格挡与龙可是帝王之征啊额外给予的帝王之征层数
+        int amount = DynamicVars["wind_of_tiger"].IntValue;
+        await PowerCmd.Apply<WindOfTigerPower>(
+            choiceContext,
+            base.Owner.Creature,
+            amount,
+            base.Owner.Creature,
+            this,
+            silent: false);
+
+        // 将一张笑面虎和一张龙可是帝王之征啊加入手牌（升级后为升级版）
+        NewsanguoSfx.Play("event:/newsanguo/sfx/wind_of_tiger_power");
+
+        CardModel tiger = combatState.CreateCard<SmilingTiger>(base.Owner);
+        CardModel dragon = combatState.CreateCard<DragonOmen>(base.Owner);
         if (IsUpgraded)
         {
-            await PowerCmd.Apply<WindOfTigerPlusPower>(
-                choiceContext,
-                base.Owner.Creature,
-                1,
-                base.Owner.Creature,
-                this,
-                silent: false);
+            CardCmd.Upgrade(tiger);
+            CardCmd.Upgrade(dragon);
         }
-        else
-        {
-            await PowerCmd.Apply<WindOfTigerPower>(
-                choiceContext,
-                base.Owner.Creature,
-                1,
-                base.Owner.Creature,
-                this,
-                silent: false);
-        }
+
+        await CardPileCmd.AddGeneratedCardToCombat(tiger, PileType.Hand, base.Owner, CardPilePosition.Random);
+        await CardPileCmd.AddGeneratedCardToCombat(dragon, PileType.Hand, base.Owner, CardPilePosition.Random);
+    }
+
+    // 升级后的效果逻辑
+    protected override void OnUpgrade()
+    {
+        // 层数从 4 提高到 6
+        DynamicVars["wind_of_tiger"].UpgradeValueBy(2);
     }
 }

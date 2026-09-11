@@ -70,7 +70,7 @@ public class DrunkenMightPower : ModPowerTemplate
         if (cardPlay.Card?.Type != CardType.Attack) return;
         if (cardPlay.Card?.Owner?.Creature != Owner) return;
 
-        // 温酒斩击在攻击后获得酒力，减半在其 OnPlay 内手动完成（先减半再获得），此处跳过
+        // 「杯酒斩击」的酒力处理（先减半再翻倍）在其自身 OnPlay 内手动完成，此处跳过一次，避免重复减半
         if (cardPlay.Card is WineCut)
         {
             return;

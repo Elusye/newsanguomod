@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b5j4kxvbeoon4"
-path="res://.godot/imported/WindOfTigerPlusPower_big.png-1d84e4b622a9eaeea0fc5480a02ec93f.ctex"
+uid="uid://q41xibk60h87"
+path="res://.godot/imported/MilitaryCudgel.png-b488dd63ff58bf7de491e79b5daf1703.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/WindOfTigerPlusPower_big.png"
-dest_files=["res://.godot/imported/WindOfTigerPlusPower_big.png-1d84e4b622a9eaeea0fc5480a02ec93f.ctex"]
+source_file="res://newsanguo/images/cards/MilitaryCudgel.png"
+dest_files=["res://.godot/imported/MilitaryCudgel.png-b488dd63ff58bf7de491e79b5daf1703.ctex"]
 
 [params]
 

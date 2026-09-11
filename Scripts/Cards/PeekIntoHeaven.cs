@@ -43,6 +43,9 @@ public class PeekIntoHeaven : NewsanguoCardTemplate
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
+    // 属于“天意”体系（涉及天意之力/天意侵蚀）
+    public override bool IsHeavensCard => true;
+
     public PeekIntoHeaven() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
     {
     }

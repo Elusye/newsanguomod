@@ -30,6 +30,9 @@ public class HeavensDecay : NewsanguoCurseTemplate
     // 回合结束时若这张牌在手牌中，引擎会调用 OnTurnEndInHand
     public override bool HasTurnEndInHandEffect => true;
 
+    // 属于“天意”体系（涉及天意之力/天意侵蚀）
+    public override bool IsHeavensCard => true;
+
     public HeavensDecay() : base(2)
     {
     }

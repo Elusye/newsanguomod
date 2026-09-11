@@ -45,7 +45,10 @@ public static class ScryCmd
         CardSelectorPrefs prefs = new(new LocString("cards", "NEWSANGUO_SCRY_PROMPT"), 0, topCards.Count);
         IEnumerable<CardModel> selected = await CardSelectCmd.FromSimpleGrid(choiceContext, topCards, player, prefs);
 
-        // 选中的牌移入弃牌堆（不触发洗牌，未选中的牌仍留在抽牌堆顶部）
-        await CardPileCmd.Add(selected, PileType.Discard);
+        // 选中的牌移入弃牌堆（不触发洗牌，未选中的牌仍留在抽牌堆顶部）。
+        // 必须走 CardCmd.Discard 且一次传入全部（勿循环单张调 Discard），引擎才会在其中
+        // 检查并触发奇巧（Sly）——奇巧牌被弃时会自动免费打出而非进弃牌堆；
+        // 若直接用 CardPileCmd.Add 移到弃牌堆会绕过该检查，导致奇巧不触发（同“一人坚守！”）。
+        await CardCmd.Discard(choiceContext, selected.ToList());
     }
 }

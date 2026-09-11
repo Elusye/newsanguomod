@@ -34,6 +34,9 @@ public class Invincible : NewsanguoCardTemplate
         new IntVar("bonus_percent", 25)
     ];
 
+    // 属于“天意”体系（涉及天意之力/天意侵蚀）
+    public override bool IsHeavensCard => true;
+
     public Invincible() : base(2, CardType.Power, CardRarity.Uncommon, TargetType.Self)
     {
     }

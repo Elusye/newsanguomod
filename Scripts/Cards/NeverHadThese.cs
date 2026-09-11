@@ -47,6 +47,9 @@ public class NeverHadThese : NewsanguoCardTemplate
     // 打出后能获得格挡
     public override bool GainsBlock => true;
 
+    // 属于“天意”体系（涉及天意之力/天意侵蚀）
+    public override bool IsHeavensCard => true;
+
     public NeverHadThese() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
     {
     }

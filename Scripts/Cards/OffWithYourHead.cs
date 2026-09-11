@@ -32,7 +32,7 @@ public class OffWithYourHead : NewsanguoCardTemplate
 
     // 卡牌基础数值：伤害
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(14m, ValueProp.Move)
+        new DamageVar(16m, ValueProp.Move)
     ];
 
     // 存在意图不是攻击的敌人时金色高亮（提示会攻击两次）
@@ -76,7 +76,7 @@ public class OffWithYourHead : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 伤害从 14 提高到 20
-        DynamicVars.Damage.UpgradeValueBy(6m);
+        // 伤害从 16 提高到 20
+        DynamicVars.Damage.UpgradeValueBy(4m);
     }
 }

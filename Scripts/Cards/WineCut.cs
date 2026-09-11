@@ -28,10 +28,9 @@ public class WineCut : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 7 点伤害（升级 9）；获得 2 点酒力（升级 3）
+    // 卡牌基础数值：造成 7 点伤害（升级 9）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(7m, ValueProp.Move),
-        new PowerVar<DrunkenMightPower>("drunken_might", 2)
+        new DamageVar(7m, ValueProp.Move)
     ];
 
     // 悬停提示：展示“酒力”说明
@@ -59,28 +58,32 @@ public class WineCut : NewsanguoCardTemplate
             .Targeting(target)
             .Execute(choiceContext);
 
-        // 酒力效果：打出攻击牌后酒力减半（失去酒力）
+        // 酒力减半（打出攻击牌后消耗一半酒力，向下取整）
         DrunkenMightPower? drunkenMight = base.Owner.Creature.GetPower<DrunkenMightPower>();
         if (drunkenMight is not null)
         {
             await drunkenMight.HalfForCard(choiceContext, this);
         }
 
-        // 获得酒力（卡牌效果）
-        await PowerCmd.Apply<DrunkenMightPower>(
-            choiceContext,
-            base.Owner.Creature,
-            DynamicVars["drunken_might"].IntValue,
-            base.Owner.Creature,
-            this,
-            silent: false);
+        // 打出此牌后：将（减半后的）酒力翻倍（再获得等量酒力即翻倍）。
+        // 本卡不参与 DrunkenMightPower.AfterCardPlayed 的自动减半，减半已在上方手动完成。
+        int currentMight = drunkenMight?.Amount ?? 0;
+        if (currentMight > 0)
+        {
+            await PowerCmd.Apply<DrunkenMightPower>(
+                choiceContext,
+                base.Owner.Creature,
+                currentMight,
+                base.Owner.Creature,
+                this,
+                silent: false);
+        }
     }
 
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 伤害从 7 提高到 9，酒力从 2 提高到 3
+        // 伤害从 7 提高到 9
         DynamicVars.Damage.UpgradeValueBy(2m);
-        DynamicVars["drunken_might"].UpgradeValueBy(1);
     }
 }

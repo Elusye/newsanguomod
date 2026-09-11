@@ -47,6 +47,9 @@ public class Unstoppable : NewsanguoCardTemplate
     // 自带“虚无”关键词（升级后移除）
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Ethereal];
 
+    // 属于“天意”体系（涉及天意之力/天意侵蚀）
+    public override bool IsHeavensCard => true;
+
     public Unstoppable() : base(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {
     }

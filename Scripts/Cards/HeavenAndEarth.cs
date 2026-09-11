@@ -42,6 +42,9 @@ public class HeavenAndEarth : NewsanguoCardTemplate
         HoverTipFactory.FromPower<FlightPower>()
     ];
 
+    // 属于“天意”体系（涉及天意之力/天意侵蚀）
+    public override bool IsHeavensCard => true;
+
     public HeavenAndEarth() : base(2, CardType.Power, CardRarity.Uncommon, TargetType.Self)
     {
     }

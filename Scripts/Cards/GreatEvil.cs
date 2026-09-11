@@ -30,19 +30,21 @@ public class GreatEvil : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：对所有敌人造成 14 点伤害；获得 2 点天意之力
+    // 属于“天意”体系（涉及天意之力）
+    public override bool IsHeavensCard => true;
+
+    // 卡牌基础数值：对所有敌人造成 9（升级 13）点伤害
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(14, ValueProp.Move),
-        new PowerVar<HeavensForcePower>("heavens_force", 2)
+        new DamageVar(9m, ValueProp.Move)
     ];
 
-    // 悬停提示：展示“天意之力”与”天意侵蚀”说明
+    // 悬停提示：展示“天意之力”与“天意侵蚀”说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<HeavensForcePower>(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
-    public GreatEvil() : base(2, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
+    public GreatEvil() : base(1, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
     {
     }
 
@@ -57,28 +59,20 @@ public class GreatEvil : NewsanguoCardTemplate
         // 播放角色攻击动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);
 
-        // 对所有敌人造成 14 点伤害
+        // 失去 1 点天意之力（天意之力允许负值，可透支）
+        await PowerCmd.Apply<HeavensForcePower>(choiceContext, base.Owner.Creature, -1, base.Owner.Creature, this);
+
+        // 对所有敌人造成伤害
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .TargetingAllOpponents(combatState)
             .Execute(choiceContext);
-
-        // 获得 2 点天意之力
-        await PowerCmd.Apply<HeavensForcePower>(
-            choiceContext,
-            base.Owner.Creature,
-            DynamicVars["heavens_force"].IntValue,
-            base.Owner.Creature,
-            this,
-            silent: false);
     }
 
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 伤害从 14 提高到 18
-        DynamicVars.Damage.UpgradeValueBy(4);
-        // 天意之力从 3 提高到 4
-        DynamicVars["heavens_force"].UpgradeValueBy(1);
+        // 伤害从 9 提高到 13
+        DynamicVars.Damage.UpgradeValueBy(4m);
     }
 }

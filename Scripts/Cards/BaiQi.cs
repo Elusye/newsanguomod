@@ -26,9 +26,9 @@ public class BaiQi : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 10 点伤害
+    // 卡牌基础数值：造成 13 点伤害
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(10, ValueProp.Move)
+        new DamageVar(13, ValueProp.Move)
     ];
 
     // 卡牌自带“消耗”关键词
@@ -48,7 +48,7 @@ public class BaiQi : NewsanguoCardTemplate
         // 播放角色攻击动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);
 
-        // 造成 10 点伤害
+        // 造成 13 点伤害
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
@@ -58,7 +58,7 @@ public class BaiQi : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 伤害 10 → 13
-        DynamicVars.Damage.UpgradeValueBy(3);
+        // 伤害 13 → 16
+        DynamicVars.Damage.UpgradeValueBy(4);
     }
 }

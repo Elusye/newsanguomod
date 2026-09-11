@@ -27,9 +27,6 @@ public class Entry
         ApplyPatch(harmony, typeof(EstimateTextSizeDiagnosticPatch));
         ApplyPatch(harmony, typeof(AdjustFontSizeDiagnosticPatch));
         ApplyPatch(harmony, typeof(NewsanguoEnergyCounterPatch));
-        ApplyPatch(harmony, typeof(CommanderArrivesSelectCardsPatch));
-        ApplyPatch(harmony, typeof(CommanderArrivesSelectionEndPatch));
-        ApplyPatch(harmony, typeof(CommanderArrivesGlowPatch));
         ApplyPatch(harmony, typeof(AlwaysMineDiscardSelectPatch));
         ApplyPatch(harmony, typeof(AlwaysMineDiscardSelectionEndPatch));
         ApplyPatch(harmony, typeof(AlwaysMineDiscardGlowPatch));

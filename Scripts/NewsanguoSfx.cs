@@ -88,7 +88,6 @@ public static class NewsanguoSfx
         ["dragon_omen"] = 1.5f,
         ["empower"] = -5f,
         ["empower_power"] = -5f,
-        ["fate_control"] = 2f,
         ["father_can_claim_the_throne"] = -3f,
         ["father_can_claim_the_throne_power"] = -3f,
         ["feel_no_acid"] = -2.5f,

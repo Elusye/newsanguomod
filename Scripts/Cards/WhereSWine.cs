@@ -26,9 +26,9 @@ public class WhereSWine : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：每次获得酒力时抽 1 张牌
+    // 卡牌基础数值：每次获得酒力时抽 2 张牌
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<WhereSWinePower>("where_s_wine_power", 1)
+        new PowerVar<WhereSWinePower>("where_s_wine_power", 2)
     ];
 
     // 悬停提示：展示“酒力”说明

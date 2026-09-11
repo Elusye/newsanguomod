@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://mrvtptx2lesr"
-path="res://.godot/imported/WindOfTigerPlusPower.png-a91a105050935275ddf93a84e147d09e.ctex"
+uid="uid://be8uiq4ci1kmr"
+path="res://.godot/imported/TenThousandTransparentHoles.png-58e37481c3bf81f902e2c34698b5a1d7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/WindOfTigerPlusPower.png"
-dest_files=["res://.godot/imported/WindOfTigerPlusPower.png-a91a105050935275ddf93a84e147d09e.ctex"]
+source_file="res://newsanguo/images/cards/TenThousandTransparentHoles.png"
+dest_files=["res://.godot/imported/TenThousandTransparentHoles.png-58e37481c3bf81f902e2c34698b5a1d7.ctex"]
 
 [params]
 

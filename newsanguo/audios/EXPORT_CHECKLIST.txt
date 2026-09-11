@@ -41,7 +41,6 @@ dong_zhuo_the_traitor
 dragon_omen
 empower
 empower_power
-fate_control
 father_can_claim_the_throne
 father_can_claim_the_throne_power
 feel_no_acid

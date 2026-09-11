@@ -28,6 +28,12 @@ public abstract class NewsanguoCardTemplate : ModCardTemplate
     /// </summary>
     protected virtual bool IsScryCard => false;
 
+    /// <summary>
+    /// 是否属于“天意”体系（涉及天意之力/天意侵蚀的牌）。默认 false，需要在子类中显式重写。
+    /// 供“恨天剑法”等按天意相关牌数量结算的效果统计使用。
+    /// </summary>
+    public virtual bool IsHeavensCard => false;
+
     public override IEnumerable<CardKeyword> CanonicalKeywords
     {
         get

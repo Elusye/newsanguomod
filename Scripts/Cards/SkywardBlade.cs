@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
@@ -31,11 +31,17 @@ public class SkywardBlade : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：伤害、天意之力为负时的额外伤害
+    // 本牌属于“天意”体系（涉及天意之力，自身也计入伤害加成）
+    public override bool IsHeavensCard => true;
+
+    // 卡牌基础数值：基础伤害 6；每有一张天意相关牌额外造成 2（升级 3）点伤害
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new DamageVar(8m, ValueProp.Move),
-        new ExtraDamageVar(4m)
+        new CalculationBaseVar(6m),
+        new ExtraDamageVar(2m),
+        new CalculatedDamageVar(ValueProp.Move).WithMultiplier(
+            (card, _) => card.Owner?.PlayerCombatState?.AllCards
+                .Count(c => c is NewsanguoCardTemplate { IsHeavensCard: true }) ?? 0)
     ];
 
     // 悬停提示：展示“天意之力”与“天意侵蚀”的说明
@@ -44,44 +50,31 @@ public class SkywardBlade : NewsanguoCardTemplate
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
-    // 天意之力为负时金色高亮（提示会触发额外伤害）
-    protected override bool ShouldGlowGoldInternal =>
-        base.Owner.Creature.GetPower<HeavensForcePower>() is { } force && force.Amount < 0;
-
-    public SkywardBlade() : base(1, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
+    public SkywardBlade() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
     }
 
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        ICombatState combatState = base.CombatState!;
+        ArgumentNullException.ThrowIfNull(cardPlay.Target, "cardPlay.Target");
 
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/skyward_blade");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
+        // 播放角色攻击动画
+        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);
 
-        // 若天意之力点数小于 0，则在单次伤害上额外增加伤害值（不增加攻击次数）
-        decimal damage = DynamicVars.Damage.BaseValue;
-        HeavensForcePower? force = base.Owner.Creature.GetPower<HeavensForcePower>();
-        if (force is not null && force.Amount < 0)
-        {
-            damage += DynamicVars.ExtraDamage.BaseValue;
-        }
-
-        // 对所有敌人造成伤害
-        await DamageCmd.Attack(damage)
+        // 造成计算伤害（基础 6 + 天意相关牌数量 × 每张额外伤害）
+        await DamageCmd.Attack(DynamicVars.CalculatedDamage)
             .FromCard(this, cardPlay)
-            .TargetingAllOpponents(combatState)
+            .Targeting(cardPlay.Target)
             .Execute(choiceContext);
     }
 
-    // 升级：伤害 8 → 12，额外伤害 4 → 6
+    // 升级：每张天意相关牌的额外伤害 2 → 3
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(4m);
-        DynamicVars.ExtraDamage.UpgradeValueBy(2m);
+        DynamicVars.ExtraDamage.UpgradeValueBy(1m);
     }
 }

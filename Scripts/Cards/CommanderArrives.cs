@@ -1,17 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Cards;
-using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -19,7 +14,6 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
-using newsanguo.Scripts.Patches;
 
 namespace newsanguo.Scripts;
 
@@ -33,95 +27,50 @@ public class CommanderArrives : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 9 点伤害；被变化/消耗时获得 2 点力量
+    // 打出时获得格挡（卡面显示格挡数值）
+    public override bool GainsBlock => true;
+
+    // 卡牌基础数值：获得 6 点格挡；将 1（升级 2）张军杖加入手牌
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(9m, ValueProp.Move),
-        new PowerVar<StrengthPower>("StrengthPower", 2)
+        new BlockVar(6m, ValueProp.Move),
+        new CardsVar(1)
     ];
 
-    // 鼠标悬停时展示力量与消耗说明
+    // 悬停提示：展示军杖卡面说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<StrengthPower>(),
-        HoverTipFactory.FromKeyword(CardKeyword.Exhaust)
+        HoverTipFactory.FromCard<MilitaryCudgel>()
     ];
 
-    public CommanderArrives() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public CommanderArrives() : base(1, CardType.Skill, CardRarity.Common, TargetType.Self)
     {
     }
 
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        ArgumentNullException.ThrowIfNull(cardPlay.Target, "cardPlay.Target");
-        Creature target = cardPlay.Target;
+        ICombatState combatState = base.CombatState!;
 
+        // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/commander_arrives");
 
-        // 播放角色攻击动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);
+        // 播放角色施法动画
+        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
-        // 造成伤害
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this, cardPlay)
-            .Targeting(target)
-            .Execute(choiceContext);
-    }
+        // 获得 6 点格挡
+        await CreatureCmd.GainBlock(base.Owner.Creature, DynamicVars.Block, cardPlay, fast: false);
 
-    // 此牌被消耗时（仅战斗中）：获得力量
-    public override async Task AfterCardExhausted(PlayerChoiceContext choiceContext, CardModel card, bool causedByEthereal)
-    {
-        if (card == this && base.CombatState != null)
+        // 将 1（2）张军杖加入手牌，逐张加入并留出间隔
+        for (int i = 0; i < DynamicVars.Cards.IntValue; i++)
         {
-            await GrantStrength(choiceContext);
-        }
-    }
-
-    // 此牌被变化时（仅战斗中）：获得力量
-    // AfterTransformedFrom 是同步 void 钩子，无法 await，因此异步放飞并捕获异常
-    // 注意：变化流程会先把原卡移出牌堆，导致 base.CombatState 为 null（其依赖卡牌所在牌堆），
-    // 因此改用 Owner.Creature.CombatState 判断是否处于战斗中
-    public override void AfterTransformedFrom()
-    {
-        if (base.Owner.Creature.CombatState != null)
-        {
-            _ = GrantStrengthAsync(new ThrowingPlayerChoiceContext());
-        }
-    }
-
-    private async Task GrantStrength(PlayerChoiceContext choiceContext)
-    {
-        // 同上：用 Owner.Creature.CombatState 判断是否处于战斗中
-        if (base.Owner.Creature.CombatState is null)
-        {
-            return;
-        }
-
-        await PowerCmd.Apply<StrengthPower>(
-            choiceContext,
-            base.Owner.Creature,
-            DynamicVars["StrengthPower"].IntValue,
-            base.Owner.Creature,
-            this);
-    }
-
-    private async Task GrantStrengthAsync(PlayerChoiceContext choiceContext)
-    {
-        try
-        {
-            await GrantStrength(choiceContext);
-        }
-        catch (Exception e)
-        {
-            Diagnostics.Log($"[commander_arrives] 被变化时获得力量失败: {e}");
+            await MilitaryCudgel.CreateInHand(base.Owner, combatState);
+            await Cmd.Wait(0.25f);
         }
     }
 
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 伤害从 9 提高到 12
-        DynamicVars.Damage.UpgradeValueBy(3m);
-        // 力量从 2 提高到 3（增加数值与原版一致：+1）
-        DynamicVars["StrengthPower"].UpgradeValueBy(1);
+        // 军杖张数从 1 提高到 2
+        DynamicVars.Cards.UpgradeValueBy(1m);
     }
 }
