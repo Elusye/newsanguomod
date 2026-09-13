@@ -55,15 +55,15 @@ public class CaosArtOfWar : NewsanguoCardTemplate
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
-        // 获得“曹氏兵法”能力（可叠加：每次打出令层数 +2，触发强度随之提高）
-        var power = await PowerCmd.Apply<CaosArtOfWarPower>(
+        // 获得“曹氏兵法”能力（可叠加：每次打出令层数 +1，触发强度随之提高）。
+        // 无需记录来源卡：能力在本次出牌结算中才生效，本次出牌不在能力的账本里，自然不会触发
+        await PowerCmd.Apply<CaosArtOfWarPower>(
             choiceContext,
             base.Owner.Creature,
             1,
             base.Owner.Creature,
             this,
             silent: false);
-        power?.MarkAppliedBy(this);
     }
 
     // 升级：费用 2 → 1

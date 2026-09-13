@@ -63,16 +63,15 @@ public class DivineInsight : NewsanguoCardTemplate
             base.Owner.Creature,
             this);
 
-        // 再获得“参悟天意”能力：每打出一张牌，获得对应点数的天意之力（可叠加）
-        // 记录来源卡，打出本卡自身时不触发
-        DivineInsightPower? power = await PowerCmd.Apply<DivineInsightPower>(
+        // 再获得“参悟天意”能力：每打出一张牌，获得对应点数的天意之力（可叠加）。
+        // 无需记录来源卡：能力在本次出牌结算中才生效，本次出牌不在能力的账本里，自然不会触发
+        await PowerCmd.Apply<DivineInsightPower>(
             choiceContext,
             base.Owner.Creature,
             DynamicVars["divine_insight_power"].IntValue,
             base.Owner.Creature,
             this,
             silent: false);
-        power?.MarkAppliedBy(this);
     }
 
     // 升级后的效果逻辑：获得“固有”

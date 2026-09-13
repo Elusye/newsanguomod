@@ -30,8 +30,10 @@ public class BrewHealsAll : NewsanguoCardTemplate
         : Owner.Creature.GetPowerAmount<DrunkenMightPower>() > 5;
 
     // 卡牌基础数值：消耗的酒力（升级后 4）、获得的再生层数
+    // 消耗用的酒力用 IntVar（而非 PowerVar<DrunkenMightPower>）：它是“失去”数值，
+    // 不应参与 PowerVar 的卡面预览钩子，否则会被“换大盏”错误地加高显示
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DrunkenMightPower>("DrunkenMight", 6),
+        new IntVar("DrunkenMight", 6),
         new PowerVar<RegenPower>("RegenPower", 5)
     ];
 

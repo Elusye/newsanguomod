@@ -38,7 +38,7 @@ public class HeavensForcePower : ModPowerTemplate
     // 能力图标资源
     public override PowerAssetProfile AssetProfile => new(
         IconPath: $"res://newsanguo/images/powers/{GetType().Name}.png",
-        BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}_big.png"
+        BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png"
     );
 
     // 悬停天意之力时，同时展示天意侵蚀的效果说明，便于玩家了解负向转化

@@ -18,9 +18,9 @@ public class NearAndFarStrengthPower : TemporaryStrengthPower, IModPowerAssetOve
     // 能力图标资源（64x64 普通图标 + 256x256 大图标）
     public PowerAssetProfile AssetProfile => new(
         IconPath: $"res://newsanguo/images/powers/{GetType().Name}.png",
-        BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}_big.png"
+        BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png"
     );
 
     public string CustomIconPath => $"res://newsanguo/images/powers/{GetType().Name}.png";
-    public string CustomBigIconPath => $"res://newsanguo/images/powers/{GetType().Name}_big.png";
+    public string CustomBigIconPath => $"res://newsanguo/images/powers/{GetType().Name}Big.png";
 }

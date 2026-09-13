@@ -28,7 +28,7 @@ public class TriumphBrewPower : ModPowerTemplate
     // 能力图标资源（临时复用“换大盏”图标）
     public override PowerAssetProfile AssetProfile => new(
         IconPath: "res://newsanguo/images/powers/ToABiggerGobletPower.png",
-        BigIconPath: "res://newsanguo/images/powers/ToABiggerGobletPower_big.png"
+        BigIconPath: "res://newsanguo/images/powers/ToABiggerGobletPowerBig.png"
     );
 
     // 连锁保护：某次“传播”进行期间，阻止任何“痛饮庆功酒”再次触发，避免盟友之间来回传播形成死循环

@@ -27,7 +27,7 @@ public class DrunkenMightPower : ModPowerTemplate
     // 能力图标资源
     public override PowerAssetProfile AssetProfile => new(
         IconPath: $"res://newsanguo/images/powers/{GetType().Name}.png",
-        BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}_big.png"
+        BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png"
     );
 
     // 增加攻击牌造成的伤害（返回要叠加的数值增量）

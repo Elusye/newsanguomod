@@ -32,9 +32,11 @@ public class Intoxicated : NewsanguoCardTemplate
     );
 
     // 卡牌基础数值：获得 2 点酒力；若上一张打出的是技能牌，额外获得 2 点酒力
+    // 额外部分用 IntVar：实际结算时两部分合并为一次酒力获得，“换大盏”只加成一次，
+    // 若这里也用 PowerVar，卡面会把它算成两次加成而显示偏大
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new PowerVar<DrunkenMightPower>("drunken_might", 2),
-        new PowerVar<DrunkenMightPower>("intoxicated_bonus", 2)
+        new IntVar("intoxicated_bonus", 2)
     ];
 
     // 悬停提示：展示“酒力”说明

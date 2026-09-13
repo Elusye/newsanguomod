@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -40,8 +41,14 @@ public class BlasphemyDebtPower : ModPowerTemplate
     // 能力图标资源
     public override PowerAssetProfile AssetProfile => new(
         IconPath: $"res://newsanguo/images/powers/{GetType().Name}.png",
-        BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}_big.png"
+        BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png"
     );
+
+    // 悬停提示：说明文本中会提到“天意侵蚀”，与“天意之力”成对展示
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
+        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HoverTipFactory.FromPower<HeavensDecayPower>()
+    ];
 
     // 玩家回合结束时：层数-1，减到0时获得15层天意侵蚀（层数归0后能力自动移除）
     public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)

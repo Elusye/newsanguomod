@@ -28,9 +28,12 @@ public class HeavenlyTroops : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 悬停提示：展示“士兵”卡牌标注（升级时显示升级版士兵）
+    // 悬停提示：展示“士兵”卡牌标注（升级时显示升级版士兵）、天意之力与天意侵蚀说明
+    // （描述中会提到“天意之力”，两者须成对展示）
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromCard<Soldier>(IsUpgraded)
+        HoverTipFactory.FromCard<Soldier>(IsUpgraded),
+        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
     // 卡牌基础数值：经过 2 个回合结束后发放 5 张士兵（turn_delay 需与 heavenly_troops_power 的倒计时保持同步）；

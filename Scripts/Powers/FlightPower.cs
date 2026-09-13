@@ -33,7 +33,7 @@ public class FlightPower : ModPowerTemplate
     // 能力图标资源
     public override PowerAssetProfile AssetProfile => new(
         IconPath: $"res://newsanguo/images/powers/{GetType().Name}.png",
-        BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}_big.png"
+        BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png"
     );
 
     // 敌人对你造成的伤害降低50%（乘法修正）

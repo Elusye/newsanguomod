@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -24,21 +25,39 @@ public class ToABiggerGobletPower : ModPowerTemplate
     // 能力图标资源
     public override PowerAssetProfile AssetProfile => new(
         IconPath: $"res://newsanguo/images/powers/{GetType().Name}.png",
-        BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}_big.png"
+        BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png"
     );
 
-    // 当你获得酒力时，额外获得等同于换大盏层数的酒力
-    public override bool TryModifyPowerAmountReceived(PowerModel canonicalPower, Creature target, decimal amount, Creature? applier, out decimal modifiedAmount)
+    // 当你获得酒力时，额外获得等同于换大盏层数的酒力。
+    // 用 ModifyPowerAmountGivenAdditive（而非 TryModifyPowerAmountReceived）：
+    // 原版 PowerVar<T>.UpdateCardPreview 会调用 ModifyPowerAmountGiven，
+    // 因此手牌中的酒力数值会自动把这份加成算进卡面（打出时的实际结算同样走这条钩子）。
+    public override decimal ModifyPowerAmountGivenAdditive(PowerModel power, Creature giver, decimal amount, Creature? target, CardModel? cardSource)
     {
-        if (Owner is not null && target == Owner && canonicalPower is DrunkenMightPower && amount > 0)
+        return ShouldBoost(giver, amount, target, power) ? Amount : 0m;
+    }
+
+    // 实际结算时播放“换大盏”增强音效（卡面预览刷新不会走这里）
+    public override Task AfterModifyingPowerAmountGiven(PowerModel power)
+    {
+        if (power is DrunkenMightPower)
         {
-            // 换大盏增强酒力获得触发音效
             NewsanguoSfx.Play("event:/newsanguo/sfx/to_a_bigger_goblet_power");
-            modifiedAmount = amount + Amount;
-            return true;
         }
 
-        modifiedAmount = amount;
-        return false;
+        return Task.CompletedTask;
+    }
+
+    // 判断这次酒力获得是否应被“换大盏”增强
+    private bool ShouldBoost(Creature giver, decimal amount, Creature? target, PowerModel power)
+    {
+        if (Owner is null) return false;
+        // 只增强“获得”酒力（失去酒力时不加成）
+        if (amount <= 0m) return false;
+        if (power is not DrunkenMightPower) return false;
+        // 只增强自己给予自己（= 自己获得）的酒力
+        if (giver != Owner) return false;
+        // 卡面预览时 target 可能为空（视为自己），明确指定给别人时不加成
+        return target is null || target == Owner;
     }
 }

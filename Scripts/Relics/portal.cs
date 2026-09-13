@@ -13,7 +13,7 @@ namespace newsanguo.Scripts.Relics;
 
 // 传送门：你下 3 次选择下一层的房间时可以无视当前的路线（机制参照原版 winged_boots）
 [RegisterRelic(typeof(NewsanguoRelicPool))]
-public class portal : ModRelicTemplate
+public class Portal : ModRelicTemplate
 {
     // 可无视路线的次数上限
     private const int _roomCount = 3;
@@ -22,8 +22,8 @@ public class portal : ModRelicTemplate
 
     public override RelicAssetProfile AssetProfile => new(
         IconPath: $"res://newsanguo/images/relics/{GetType().Name}.png",
-        IconOutlinePath: $"res://newsanguo/images/relics/{GetType().Name}_outline.png",
-        BigIconPath: $"res://newsanguo/images/relics/{GetType().Name}_big.png"
+        IconOutlinePath: $"res://newsanguo/images/relics/{GetType().Name}Outline.png",
+        BigIconPath: $"res://newsanguo/images/relics/{GetType().Name}Big.png"
     );
 
     public override RelicRarity Rarity => RelicRarity.Event;

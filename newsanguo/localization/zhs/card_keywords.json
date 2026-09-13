@@ -1,4 +1,6 @@
 {
   "NEWSANGUO_KEYWORD_SCRY.title": "预见",
-  "NEWSANGUO_KEYWORD_SCRY.description": "检视你抽牌堆顶部的牌，然后选择丢弃其中的任意张。"
+  "NEWSANGUO_KEYWORD_SCRY.description": "检视你抽牌堆顶部的牌，然后选择丢弃其中的任意张。",
+  "NEWSANGUO_KEYWORD_FORBIDDEN_SPELL.title": "禁术牌",
+  "NEWSANGUO_KEYWORD_FORBIDDEN_SPELL.description": "牌名以“术”结尾的卡牌。包含“人体炼成术”、“将领延寿术”、“心灵控制术”和“亡灵复活术”。"
 }

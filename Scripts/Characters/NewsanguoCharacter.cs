@@ -26,7 +26,7 @@ public class NewsanguoCharacter : ModCharacterTemplate<
     public override CharacterAssetProfile AssetProfile => new(
         Ui: new CharacterUiAssetSet(
             IconTexturePath: "res://newsanguo/images/characters/Newsanguo/icon.png",
-            IconOutlineTexturePath: "res://newsanguo/images/characters/Newsanguo/icon_outline.png",
+            IconOutlineTexturePath: "res://newsanguo/images/characters/Newsanguo/iconOutline.png",
             IconPath: "res://newsanguo/images/characters/Newsanguo/icon.png",
             CharacterSelectBgPath: "res://newsanguo/images/characters/Newsanguo/character_select_bg.png",
             CharacterSelectIconPath: "res://newsanguo/images/characters/Newsanguo/character_select_icon.png",
@@ -73,9 +73,9 @@ public class NewsanguoCharacter : ModCharacterTemplate<
         VanillaRelicVisualOverrides:
         [
             new CharacterVanillaRelicVisualOverride("yummy_cookie", new RelicAssetProfile(
-                IconPath: "res://newsanguo/images/relics/yummy_cookie.png",
-                IconOutlinePath: "res://newsanguo/images/relics/yummy_cookie_outline.png",
-                BigIconPath: "res://newsanguo/images/relics/yummy_cookie_big.png"
+                IconPath: "res://newsanguo/images/relics/YummyCookie.png",
+                IconOutlinePath: "res://newsanguo/images/relics/YummyCookieOutline.png",
+                BigIconPath: "res://newsanguo/images/relics/YummyCookieBig.png"
             ))
         ]
     );

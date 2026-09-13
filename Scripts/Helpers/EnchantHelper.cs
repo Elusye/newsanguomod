@@ -5,11 +5,13 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Extensions;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Enchantments;
+using STS2RitsuLib.Content;
 
 namespace newsanguo.Scripts.Helpers;
 
 /// <summary>
-/// 随机附魔工具：从原版附魔中随机挑选一张卡牌可用的附魔并施加。
+/// 随机附魔工具：从原版与本 mod 的附魔中随机挑选一个卡牌可用的附魔并施加。
+/// 其他 mod 的附魔一律排除（数值强度、可附魔条件各不相同，容易出现异常）。
 /// 可配置：剔除对玩家无实际收益的机制性附魔与测试用 mock/弃用附魔；带数值的附魔使用自定义强度。
 /// </summary>
 public static class EnchantHelper
@@ -42,6 +44,7 @@ public static class EnchantHelper
         EnchantmentModel[] candidates = ModelDb.DebugEnchantments
             .Where(e => !e.IsMock
                 && e is not DeprecatedEnchantment
+                && IsFromVanillaOrThisMod(e)
                 && !ExcludedEntries.Contains(e.Id.Entry.ToLowerInvariant())
                 && e.CanEnchant(card))
             .ToArray();
@@ -62,5 +65,19 @@ public static class EnchantHelper
 
         // canonical 附魔模型 → mutable 实例并施加
         CardCmd.Enchant(chosen.ToMutable(), card, amount);
+    }
+
+    // 只允许原版附魔与本 mod 附魔参与随机附魔：
+    // 其他 mod 的附魔强度不明确、可附魔条件也可能与本 mod 的卡牌不兼容，排除后更安全
+    private static bool IsFromVanillaOrThisMod(EnchantmentModel enchantment)
+    {
+        // 没有任何 mod 注册这个类型 → 原版附魔
+        if (!ModContentRegistry.TryGetOwnerModId(enchantment.GetType(), out string ownerModId))
+        {
+            return true;
+        }
+
+        // 本 mod 注册的附魔 → 允许；其他 mod → 排除
+        return string.Equals(ownerModId, Entry.ModId, StringComparison.OrdinalIgnoreCase);
     }
 }

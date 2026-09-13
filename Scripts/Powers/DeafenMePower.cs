@@ -28,7 +28,7 @@ public class DeafenMePower : ModPowerTemplate
     // 能力图标资源
     public override PowerAssetProfile AssetProfile => new(
         IconPath: $"res://newsanguo/images/powers/{GetType().Name}.png",
-        BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}_big.png"
+        BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png"
     );
 
     // 战斗结束时：恢复本机音量（无论战斗胜负都要恢复，否则会一直停留在音量减半状态）

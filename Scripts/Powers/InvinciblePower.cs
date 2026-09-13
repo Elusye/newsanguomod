@@ -28,7 +28,7 @@ public class InvinciblePower : ModPowerTemplate
     // 能力图标资源
     public override PowerAssetProfile AssetProfile => new(
         IconPath: $"res://newsanguo/images/powers/{GetType().Name}.png",
-        BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}_big.png"
+        BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png"
     );
 
     // 伤害修正（乘法）：若你没有飞行，则对“非振翅/翱翔”敌人造成的攻击伤害 ×（100 + Amount）%

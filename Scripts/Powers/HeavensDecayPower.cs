@@ -36,10 +36,10 @@ public class HeavensDecayPower : ModPowerTemplate
         typeof(Creature).GetField("_powers", BindingFlags.Instance | BindingFlags.NonPublic)
         ?? throw new MissingFieldException(typeof(Creature).FullName, "_powers");
 
-    // 能力图标资源（图标文件保持 heavens_decay 命名，不随类名变更）
+    // 能力图标资源
     public override PowerAssetProfile AssetProfile => new(
-        IconPath: "res://newsanguo/images/powers/heavens_decay.png",
-        BigIconPath: "res://newsanguo/images/powers/heavens_decay_big.png"
+        IconPath: "res://newsanguo/images/powers/HeavensDecayPower.png",
+        BigIconPath: "res://newsanguo/images/powers/HeavensDecayPowerBig.png"
     );
 
     // 施加/层数变化时，把自己移到能力列表最左侧，确保回合开始时最优先触发

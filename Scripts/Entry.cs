@@ -42,7 +42,7 @@ public class Entry
         // 古老牙齿：把“仁之剑，义之剑”变化为先古卡“大奸似忠，大伪似真”
         RitsuLibFramework.RegisterArchaicToothTranscendenceMapping<BladeOfVirtue, TheTruestMask>(ModId);
         // 欧洛巴斯之触：把初始遗物“沛国佳酿”升级为先古遗物“百年佳酿”
-        RitsuLibFramework.RegisterTouchOfOrobasRefinementMapping<fine_brew_of_pei, century_brew>(ModId);
+        RitsuLibFramework.RegisterTouchOfOrobasRefinementMapping<FineBrewOfPei, CenturyBrew>(ModId);
         // 音频已全部迁移到 Godot 资源播放，不再注册 FMOD bank / GUIDs 映射（删除 newsanguo.bank 以减小体积）。
         // 卡牌/能力/事件音效经 NewsanguoSfx 直接播放音频文件；仅剩的两个引擎级 FMOD 事件
         // （角色选人 / 死亡）由 EngineSfxRedirectPatch 在 NAudioManager.PlayOneShot 入口

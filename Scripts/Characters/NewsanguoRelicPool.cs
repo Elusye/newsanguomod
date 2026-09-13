@@ -12,5 +12,5 @@ public class NewsanguoRelicPool : TypeListRelicPoolModel
     public override string EnergyColorName => "newsanguo";
 
     [Obsolete("基类要求保留。")]
-    protected override IEnumerable<Type> RelicTypes => [typeof(fine_brew_of_pei)];
+    protected override IEnumerable<Type> RelicTypes => [typeof(FineBrewOfPei)];
 }

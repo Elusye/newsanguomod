@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Cards;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -26,6 +27,12 @@ public class HeavensDecay : NewsanguoCurseTemplate
 
     // 关键词：永恒（描述后自动追加“永恒。”）；可打出，不再有“不可打出”词条
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Eternal];
+
+    // 悬停提示：牌名即“天意侵蚀”，而天意之力的说明文本中会出现“天意侵蚀”，两者须成对展示
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
+        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HoverTipFactory.FromPower<HeavensDecayPower>()
+    ];
 
     // 回合结束时若这张牌在手牌中，引擎会调用 OnTurnEndInHand
     public override bool HasTurnEndInHandEffect => true;

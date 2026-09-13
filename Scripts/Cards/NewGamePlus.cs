@@ -26,8 +26,8 @@ public class NewGamePlus : NewsanguoCardTemplate
     // 带“预见”关键词（悬停显示预见机制说明）
     protected override bool IsScryCard => true;
 
-    // 卡牌自带“消耗”关键词
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+    // 卡牌自带“消耗”关键词（合并 base 以保留“预见”等模板附加的模组关键词）
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
