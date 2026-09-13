@@ -45,13 +45,11 @@ public class BaiQi : NewsanguoCardTemplate
 
         NewsanguoSfx.Play("event:/newsanguo/sfx/bai_qi");
 
-        // 播放角色攻击动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);
-
         // 造成 13 点伤害
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
+            .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
     }
 

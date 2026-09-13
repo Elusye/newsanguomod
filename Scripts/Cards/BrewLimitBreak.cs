@@ -42,9 +42,6 @@ public class BrewLimitBreak : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/brew_limit_break");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 将酒力翻倍（没有酒力时无效果）
         if (base.Owner.Creature.GetPower<DrunkenMightPower>() is { } wine && wine.Amount > 0)
         {

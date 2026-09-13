@@ -51,9 +51,6 @@ public class OneManStand : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/one_man_stand");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 获得格挡
         await CreatureCmd.GainBlock(base.Owner.Creature, DynamicVars.Block, cardPlay, fast: false);
 

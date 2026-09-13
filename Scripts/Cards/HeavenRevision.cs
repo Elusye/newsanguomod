@@ -45,7 +45,7 @@ public class HeavenRevision : NewsanguoCardTemplate
                     && entry.Power is HeavensForcePower
                     && entry.Amount < 0)
                 .Sum(entry => -entry.Amount)),
-        new PowerVar<HeavensForcePower>("heavens_force", 3)
+        new PowerVar<HeavensForcePower>(3m)
     ];
 
     // 悬停提示：展示“天意之力”与”天意侵蚀”说明
@@ -69,17 +69,15 @@ public class HeavenRevision : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/heaven_revision");
 
-        // 播放角色攻击动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);
-
         // 造成计算伤害（基础 2 + 打出前累计失去天意之力点数 × 5）
         await DamageCmd.Attack(DynamicVars.CalculatedDamage)
             .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
+            .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
 
         // 消耗天意之力（基础 3 点，升级后 2 点）
-        await PowerCmd.Apply<HeavensForcePower>(choiceContext, base.Owner.Creature, -DynamicVars["heavens_force"].IntValue, base.Owner.Creature, this, silent: false);
+        await PowerCmd.Apply<HeavensForcePower>(choiceContext, base.Owner.Creature, -DynamicVars["HeavensForcePower"].IntValue, base.Owner.Creature, this, silent: false);
     }
 
     // 升级后的效果逻辑
@@ -88,6 +86,6 @@ public class HeavenRevision : NewsanguoCardTemplate
         // 基础伤害从 2 提升到 5，每点失去的天意之力额外伤害从 5 提升到 8，失去的天意之力 3 → 2
         base.DynamicVars.CalculationBase.UpgradeValueBy(3m);
         base.DynamicVars.ExtraDamage.UpgradeValueBy(3m);
-        DynamicVars["heavens_force"].UpgradeValueBy(-1);
+        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
     }
 }

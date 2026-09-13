@@ -30,7 +30,7 @@ public class WindOfTiger : NewsanguoCardTemplate
 
     // 卡牌基础数值：给予 4（升级 6）层“风从虎，云从龙”
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<WindOfTigerPower>("wind_of_tiger", 4)
+        new PowerVar<WindOfTigerPower>(4m)
     ];
 
     // 悬停提示：展示“笑面虎”和“龙可是帝王之征啊”（升级后展示升级版）
@@ -50,11 +50,8 @@ public class WindOfTiger : NewsanguoCardTemplate
 
         NewsanguoSfx.Play("event:/newsanguo/sfx/wind_of_tiger");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 获得 4（6）层“风从虎，云从龙”：层数即笑面虎额外获得的格挡与龙可是帝王之征啊额外给予的帝王之征层数
-        int amount = DynamicVars["wind_of_tiger"].IntValue;
+        int amount = DynamicVars["WindOfTigerPower"].IntValue;
         await PowerCmd.Apply<WindOfTigerPower>(
             choiceContext,
             base.Owner.Creature,
@@ -82,6 +79,6 @@ public class WindOfTiger : NewsanguoCardTemplate
     protected override void OnUpgrade()
     {
         // 层数从 4 提高到 6
-        DynamicVars["wind_of_tiger"].UpgradeValueBy(2);
+        DynamicVars["WindOfTigerPower"].UpgradeValueBy(2);
     }
 }

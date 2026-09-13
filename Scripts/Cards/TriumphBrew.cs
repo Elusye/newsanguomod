@@ -40,9 +40,6 @@ public class TriumphBrew : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/triumph_brew");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 获得“痛饮庆功酒”能力：每当你获得酒力时，其他盟友获得等量酒力
         await PowerCmd.Apply<TriumphBrewPower>(
             choiceContext,

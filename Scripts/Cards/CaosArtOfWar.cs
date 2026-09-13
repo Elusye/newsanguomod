@@ -33,7 +33,7 @@ public class CaosArtOfWar : NewsanguoCardTemplate
     // 两处数值都随打出的“曹氏兵法”数量叠加，由能力 caos_art_of_war_power 的层数体现。
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new SummonVar(1),
-        new PowerVar<StrengthPower>("StrengthPower", 1)
+        new PowerVar<StrengthPower>(1m)
     ];
 
     // 悬停提示：展示“召唤（奥斯蒂）”与“力量”的说明
@@ -51,9 +51,6 @@ public class CaosArtOfWar : NewsanguoCardTemplate
     {
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/caos_art_of_war");
-
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 获得“曹氏兵法”能力（可叠加：每次打出令层数 +1，触发强度随之提高）。
         // 无需记录来源卡：能力在本次出牌结算中才生效，本次出牌不在能力的账本里，自然不会触发

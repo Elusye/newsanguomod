@@ -35,8 +35,8 @@ public class QinJinAlliance : NewsanguoCardTemplate
     // 卡牌基础数值：你获得 10（13）点格挡；目标敌人获得固定的 5 点格挡和 1 层残影
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new BlockVar(10, ValueProp.Move),
-        new IntVar("enemy_block", 5),
-        new IntVar("blur_amount", 1)
+        new IntVar("EnemyBlock", 5),
+        new PowerVar<BlurPower>(1m)
     ];
 
     // 鼠标悬停时展示格挡与残影说明
@@ -63,10 +63,10 @@ public class QinJinAlliance : NewsanguoCardTemplate
         await CreatureCmd.GainBlock(base.Owner.Creature, DynamicVars.Block, cardPlay, fast: true);
 
         // 目标敌人获得固定的 5 点格挡（Move|Unpowered 使敏捷与脆弱不参与修正）
-        await CreatureCmd.GainBlock(cardPlay.Target, DynamicVars["enemy_block"].IntValue, ValueProp.Move | ValueProp.Unpowered, cardPlay, fast: true);
+        await CreatureCmd.GainBlock(cardPlay.Target, DynamicVars["EnemyBlock"].IntValue, ValueProp.Move | ValueProp.Unpowered, cardPlay, fast: true);
 
         // 目标敌人获得 1 层残影
-        await PowerCmd.Apply<BlurPower>(choiceContext, cardPlay.Target, DynamicVars["blur_amount"].IntValue, base.Owner.Creature, this);
+        await PowerCmd.Apply<BlurPower>(choiceContext, cardPlay.Target, DynamicVars["BlurPower"].IntValue, base.Owner.Creature, this);
     }
 
     // 升级后的效果逻辑

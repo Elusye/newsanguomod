@@ -35,7 +35,7 @@ public class StarryNight : NewsanguoCardTemplate
     // 卡牌基础数值：获得 6 点格挡，本回合 2 点敏捷
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new BlockVar(6, ValueProp.Move),
-        new PowerVar<DexterityPower>("Dexterity", 2)
+        new PowerVar<DexterityPower>(2m)
     ];
 
     // 鼠标悬停时显示格挡与敏捷提示
@@ -61,7 +61,7 @@ public class StarryNight : NewsanguoCardTemplate
         await CreatureCmd.GainBlock(base.Owner.Creature, DynamicVars.Block, cardPlay, fast: false);
 
         // 获得本回合临时敏捷
-        int dexterityAmount = DynamicVars["Dexterity"].IntValue;
+        int dexterityAmount = DynamicVars.Dexterity.IntValue;
         await PowerCmd.Apply<StarryNightDexterityPower>(
             choiceContext,
             base.Owner.Creature,
@@ -77,6 +77,6 @@ public class StarryNight : NewsanguoCardTemplate
         // 格挡从 6 提高到 8
         DynamicVars.Block.UpgradeValueBy(2);
         // 敏捷从 2 提高到 3
-        DynamicVars["Dexterity"].UpgradeValueBy(1);
+        DynamicVars.Dexterity.UpgradeValueBy(1);
     }
 }

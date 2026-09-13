@@ -36,7 +36,7 @@ public class DongZhuoTheTraitor : NewsanguoCardTemplate
 
     // 卡牌基础数值：立即给予的易伤层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<VulnerablePower>("VulnerablePower", 1)
+        new PowerVar<VulnerablePower>(1m)
     ];
 
     // 鼠标悬停时显示“易伤”能力的说明
@@ -60,7 +60,7 @@ public class DongZhuoTheTraitor : NewsanguoCardTemplate
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 立即给予易伤（层数取自卡牌变量）
-        int vulnerable = DynamicVars["VulnerablePower"].IntValue;
+        int vulnerable = DynamicVars.Vulnerable.IntValue;
         await PowerCmd.Apply<VulnerablePower>(choiceContext, cardPlay.Target, vulnerable, base.Owner.Creature, this, silent: false);
 
         // 给予目标“国贼”能力：使其身上的易伤不再减少（含回合结束的自然衰减）

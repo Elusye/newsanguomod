@@ -29,7 +29,7 @@ public class Onset : NewsanguoCardTemplate
 
     // 卡牌基础数值：失去的天意之力（变量用正值，打出时取负）、获得的能量（升级后 2）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForcePower>("heavens_force", 3),
+        new PowerVar<HeavensForcePower>(3m),
         new EnergyVar(1)
     ];
 
@@ -59,7 +59,7 @@ public class Onset : NewsanguoCardTemplate
         await PowerCmd.Apply<HeavensForcePower>(
             choiceContext,
             base.Owner.Creature,
-            -DynamicVars["heavens_force"].IntValue,
+            -DynamicVars["HeavensForcePower"].IntValue,
             base.Owner.Creature,
             this,
             silent: false);
@@ -72,6 +72,6 @@ public class Onset : NewsanguoCardTemplate
     protected override void OnUpgrade()
     {
         DynamicVars.Energy.UpgradeValueBy(1);
-        DynamicVars["heavens_force"].UpgradeValueBy(-1);
+        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
     }
 }

@@ -43,9 +43,6 @@ public class GoldenRebellion : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/golden_rebellion");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 从新三国卡池的稀有牌中生成 3 张候选（FilterForCombat 会自动排除不可战斗生成的牌），
         // 使用战斗生成 RNG 保证多人同步
         IEnumerable<CardModel> rareCards = ModelDb.CardPool<NewsanguoCardPool>().AllCards

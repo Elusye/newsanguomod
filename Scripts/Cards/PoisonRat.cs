@@ -31,7 +31,7 @@ public class PoisonRat : NewsanguoCardTemplate
 
     // 卡牌基础数值：给予 7 层中毒
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<PoisonPower>("PoisonPower", 7)
+        new PowerVar<PoisonPower>(7m)
     ];
 
     // 悬停提示：展示“中毒”说明
@@ -61,7 +61,7 @@ public class PoisonRat : NewsanguoCardTemplate
         await PowerCmd.Apply<PoisonPower>(
             choiceContext,
             cardPlay.Target,
-            DynamicVars["PoisonPower"].IntValue,
+            DynamicVars.Poison.IntValue,
             base.Owner.Creature,
             this);
     }
@@ -70,6 +70,6 @@ public class PoisonRat : NewsanguoCardTemplate
     protected override void OnUpgrade()
     {
         // 中毒从 7 提高到 10
-        DynamicVars["PoisonPower"].UpgradeValueBy(3);
+        DynamicVars.Poison.UpgradeValueBy(3);
     }
 }

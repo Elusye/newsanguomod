@@ -6,9 +6,12 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Cards;
+using MegaCrit.Sts2.Core.Nodes.Rooms;
+using MegaCrit.Sts2.Core.Nodes.Vfx;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -32,7 +35,7 @@ public class LoathToLeaveTheTable : NewsanguoCardTemplate
     // 卡牌基础数值：对所有敌人造成 25 点伤害；酒力阈值 10（升级后 8）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(25, ValueProp.Move),
-        new IntVar("wine_threshold", 10)
+        new IntVar("WineThreshold", 10)
     ];
 
     // 悬停提示：展示“酒力”说明
@@ -44,13 +47,14 @@ public class LoathToLeaveTheTable : NewsanguoCardTemplate
         get
         {
             DrunkenMightPower? wine = base.Owner.Creature.GetPower<DrunkenMightPower>();
-            return wine is not null && wine.Amount >= DynamicVars["wine_threshold"].IntValue;
+            return wine is not null && wine.Amount >= DynamicVars["WineThreshold"].IntValue;
         }
     }
 
-    // 出牌语音完整时长（秒），取自 audios/loath_to_leave_the_table.wav（2.2s）。
-    // 酒力充足触发“掀桌”特效前先等语音播完；替换语音文件后需同步校准本值。
-    private const float VoiceLineDurationSeconds = 2.2f;
+    // 出牌语音时长 2.2s（audios/loath_to_leave_the_table.wav）；聚光灯蓄势时长 1.625s。
+    // 语音先播 0.6s 起头，再启动聚光灯，两者并行：0.6 + 1.625 ≈ 2.2s，冲击落下时语音刚好播完。
+    // 替换语音文件或调整蓄势时长后需同步校准本值。
+    private const float SpotlightLeadInSeconds = 0.6f;
 
     public LoathToLeaveTheTable() : base(3, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies)
     {
@@ -68,30 +72,45 @@ public class LoathToLeaveTheTable : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/loath_to_leave_the_table");
 
-        // 播放角色施法动画（与出牌语音并行）
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
-        // 对所有敌人造成 25 点伤害
-        async Task DealDamage()
+        // 对所有敌人造成 25 点伤害；掀桌分支使用“华丽终幕”同款冲击特效与钝击音效
+        async Task DealDamage(bool grandFinale)
         {
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+            var attack = DamageCmd.Attack(DynamicVars.Damage.BaseValue)
                 .FromCard(this, cardPlay)
-                .TargetingAllOpponents(combatState)
-                .Execute(choiceContext);
+                .TargetingAllOpponents(combatState);
+
+            if (grandFinale)
+            {
+                attack.WithHitVfxNode(NGrandFinaleImpactVfx.Create)
+                    .WithHitFx(null, null, "blunt_attack.mp3");
+            }
+            else
+            {
+                attack.WithHitFx("vfx/vfx_attack_slash");
+            }
+
+            await attack.Execute(choiceContext);
         }
 
         // 若你的酒力不小于阈值（基础 10，升级 8）：
-        int wineThreshold = DynamicVars["wine_threshold"].IntValue;
+        int wineThreshold = DynamicVars["WineThreshold"].IntValue;
         if (wineAmount >= wineThreshold)
         {
-            // 先等出牌语音播完（语音 2.2s，施法动画已先行消耗 CastAnimDelay），
-            // 再播放掀桌音效、造成伤害并击晕，避免特效盖过语音。
-            await Cmd.Wait(VoiceLineDurationSeconds - base.Owner.Character.CastAnimDelay);
+            // 语音播 0.6s 起头后启动聚光灯，不等语音播完（两者并行）。
+            await Cmd.Wait(SpotlightLeadInSeconds);
+
+            // 聚光灯蓄势特效（同原版“华丽终幕”），蓄势结束时语音刚好播完，随即落下伤害。
+            NGrandFinaleVfx? grandFinaleVfx = NGrandFinaleVfx.Create(base.Owner.Creature);
+            if (grandFinaleVfx != null)
+            {
+                NCombatRoom.Instance?.CombatVfxContainer.AddChildSafely(grandFinaleVfx);
+                await Cmd.Wait(NGrandFinaleVfx.totalAnticipationDuration);
+            }
 
             // 播放掀桌音效
             NewsanguoSfx.Play("event:/newsanguo/sfx/loath_to_leave_the_table_damage");
 
-            await DealDamage();
+            await DealDamage(grandFinale: true);
 
             // 击晕所有敌人
             foreach (Creature enemy in combatState.GetOpponentsOf(base.Owner.Creature).Where(c => c.IsAlive))
@@ -108,7 +127,7 @@ public class LoathToLeaveTheTable : NewsanguoCardTemplate
         else
         {
             // 酒力不足：立即造成伤害（伤害与出牌音效同时进行）
-            await DealDamage();
+            await DealDamage(grandFinale: false);
         }
     }
 
@@ -116,6 +135,6 @@ public class LoathToLeaveTheTable : NewsanguoCardTemplate
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(10);
-        DynamicVars["wine_threshold"].UpgradeValueBy(-2);
+        DynamicVars["WineThreshold"].UpgradeValueBy(-2);
     }
 }

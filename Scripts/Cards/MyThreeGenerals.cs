@@ -47,9 +47,6 @@ public class MyThreeGenerals : NewsanguoCardTemplate
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/my_three_generals");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 1. 选择并消耗一张手牌（手牌为空时跳过，仍可执行选择）
         var hand = PileType.Hand.GetPile(base.Owner);
         if (hand.Cards.Count > 0)

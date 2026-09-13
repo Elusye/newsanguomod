@@ -54,9 +54,6 @@ public class OldDirge : NewsanguoCardTemplate
     {
         ICombatState combatState = base.CombatState!;
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // X = 本回合为打出此牌花费的能量
         int x = ResolveEnergyXValue();
 

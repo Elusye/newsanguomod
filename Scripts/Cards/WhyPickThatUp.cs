@@ -46,9 +46,6 @@ public class WhyPickThatUp : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/why_pick_that_up");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-
         ICombatState combatState = CombatState!;
 
         // 所有存活的玩家每人各选至多 10 张自己弃牌堆中的牌加入自己的手牌

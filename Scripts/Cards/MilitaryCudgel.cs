@@ -50,14 +50,12 @@ public class MilitaryCudgel : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/military_cudgel");
 
-        // 播放角色攻击动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);
-
         // 造成 2（3）点伤害 2 次
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
             .WithHitCount(2)
+            .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
     }
 

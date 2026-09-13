@@ -33,9 +33,6 @@ public class JustKidding : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/just_kidding");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
-
         // 从手牌中选择任意一张牌（可放弃选择）
         var cardModel = (
             await CardSelectCmd.FromHand(

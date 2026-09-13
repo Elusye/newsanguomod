@@ -62,13 +62,11 @@ public class SkywardBlade : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/skyward_blade");
 
-        // 播放角色攻击动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);
-
         // 造成计算伤害（基础 6 + 天意相关牌数量 × 每张额外伤害）
         await DamageCmd.Attack(DynamicVars.CalculatedDamage)
             .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
+            .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
     }
 

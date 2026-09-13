@@ -36,12 +36,12 @@ public class HeavenlyTroops : NewsanguoCardTemplate
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
-    // 卡牌基础数值：经过 2 个回合结束后发放 5 张士兵（turn_delay 需与 heavenly_troops_power 的倒计时保持同步）；
+    // 卡牌基础数值：经过 2 个回合结束后发放 5 张士兵（TurnDelay 需与 heavenly_troops_power 的倒计时保持同步）；
     // 打出时失去 3 点天意之力（升级后 2 点）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForcePower>("heavens_force", 3),
-        new IntVar("soldier_count", 5),
-        new IntVar("turn_delay", 2)
+        new PowerVar<HeavensForcePower>(3m),
+        new IntVar("SoldierCount", 5),
+        new IntVar("TurnDelay", 2)
     ];
 
     // 属于“天意”体系（涉及天意之力/天意侵蚀）
@@ -54,7 +54,7 @@ public class HeavenlyTroops : NewsanguoCardTemplate
     // 升级效果：失去的天意之力从 3 减少到 2
     protected override void OnUpgrade()
     {
-        DynamicVars["heavens_force"].UpgradeValueBy(-1);
+        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
     }
 
     // 打出时的效果逻辑
@@ -66,7 +66,7 @@ public class HeavenlyTroops : NewsanguoCardTemplate
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 失去天意之力
-        int lostAmount = DynamicVars["heavens_force"].IntValue;
+        int lostAmount = DynamicVars["HeavensForcePower"].IntValue;
         await PowerCmd.Apply<HeavensForcePower>(
             choiceContext,
             base.Owner.Creature,
@@ -78,7 +78,7 @@ public class HeavenlyTroops : NewsanguoCardTemplate
         // 附加“天降雄兵”能力：经过 2 次玩家回合结束后，将对应数量的士兵加入手牌。
         // 升级后改为“天降雄兵+”，发放升级版“士兵+”。
         // 同一回合内打出多次会叠加士兵数量并重置倒计时；不同回合打出的各自独立倒计时。
-        int soldierCount = DynamicVars["soldier_count"].IntValue;
+        int soldierCount = DynamicVars["SoldierCount"].IntValue;
         int turnNumber = base.Owner.PlayerCombatState!.TurnNumber;
         if (IsUpgraded)
         {

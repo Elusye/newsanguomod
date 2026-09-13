@@ -31,7 +31,7 @@ public class CricketForm : NewsanguoCardTemplate
 
     // 卡牌基础数值：每次打出将难以杀灭层数设为此值（2；升级后 1）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DynamicVar("HardToKillAmount", 2m)
+        new PowerVar<HardToKillPower>(2m)
     ];
 
     public CricketForm() : base(3, CardType.Power, CardRarity.Rare, TargetType.Self)
@@ -47,12 +47,9 @@ public class CricketForm : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/cricket_form");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 每次打出都将“难以杀灭”层数设为卡面数值（基础 2；升级后 1），
         // 让再打出的蛐蛐形态“刷新”护盾，而不是把层数越叠越高
-        int target = DynamicVars["HardToKillAmount"].IntValue;
+        int target = DynamicVars["HardToKillPower"].IntValue;
         HardToKillPower? hardToKill = base.Owner.Creature.GetPower<HardToKillPower>();
         if (hardToKill is null)
         {
@@ -79,6 +76,6 @@ public class CricketForm : NewsanguoCardTemplate
     // 升级：将难以杀灭设为目标值 -1（2 → 1）
     protected override void OnUpgrade()
     {
-        DynamicVars["HardToKillAmount"].UpgradeValueBy(-1);
+        DynamicVars["HardToKillPower"].UpgradeValueBy(-1);
     }
 }

@@ -32,7 +32,7 @@ public class LongevitySpell : NewsanguoCardTemplate
 
     // 卡牌基础数值：失去 5 点天意之力（升级后 4）
     // HeavensForceVar：被“魔法禁术目录”标记的回合内，卡面显示 0 点
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new HeavensForceVar("ForceLoss", 5m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new HeavensForceVar(5m)];
 
     // 鼠标悬停时显示天意之力、天意侵蚀、灵魂附魔与消耗关键词说明
     // （天意之力的说明文本中会出现“天意侵蚀”，两者须成对展示）
@@ -67,7 +67,7 @@ public class LongevitySpell : NewsanguoCardTemplate
         await PowerCmd.Apply<HeavensForcePower>(
             choiceContext,
             base.Owner.Creature,
-            -DynamicVars["ForceLoss"].BaseValue,
+            -DynamicVars["HeavensForcePower"].BaseValue,
             base.Owner.Creature,
             this);
 
@@ -88,7 +88,7 @@ public class LongevitySpell : NewsanguoCardTemplate
     protected override void OnUpgrade()
     {
         AddKeyword(CardKeyword.Retain);
-        DynamicVars["ForceLoss"].UpgradeValueBy(-1m);
+        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1m);
     }
 
     // 降级后的效果逻辑（升级被移除或回退时调用）

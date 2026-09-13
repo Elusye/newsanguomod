@@ -56,9 +56,6 @@ public class WhatToEat : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/what_to_eat");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         foreach (Creature player in players)
         {
             CardModel chowDown = combatState.CreateCard<ChowDown>(player.Player);

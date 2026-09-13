@@ -33,7 +33,7 @@ public class DragonOmen : NewsanguoCardTemplate
 
     // 卡牌基础数值：给予的帝王之征层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DragonOmenPower>("dragon_omen", 4)
+        new PowerVar<DragonOmenPower>(4m)
     ];
 
     // 悬停提示：展示“帝王之征”说明
@@ -60,7 +60,7 @@ public class DragonOmen : NewsanguoCardTemplate
         await PowerCmd.Apply<DragonOmenPower>(
             choiceContext,
             cardPlay.Target,
-            DynamicVars["dragon_omen"].IntValue,
+            DynamicVars["DragonOmenPower"].IntValue,
             base.Owner.Creature,
             this,
             silent: false);
@@ -87,6 +87,6 @@ public class DragonOmen : NewsanguoCardTemplate
     protected override void OnUpgrade()
     {
         // 帝王之征层数从 4 提高到 6
-        DynamicVars["dragon_omen"].UpgradeValueBy(2);
+        DynamicVars["DragonOmenPower"].UpgradeValueBy(2);
     }
 }

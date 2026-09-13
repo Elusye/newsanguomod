@@ -14,8 +14,8 @@ namespace newsanguo.Scripts.Cards;
 /// </summary>
 public class HeavensForceVar : PowerVar<HeavensForcePower>
 {
-    public HeavensForceVar(string name, decimal powerAmount)
-        : base(name, powerAmount)
+    public HeavensForceVar(decimal powerAmount)
+        : base(powerAmount)
     {
     }
 

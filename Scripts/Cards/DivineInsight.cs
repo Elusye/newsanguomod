@@ -35,9 +35,11 @@ public class DivineInsight : NewsanguoCardTemplate
     ];
 
     // 卡牌基础数值：打出时失去 7 点天意之力；每打出一张牌获得 1 点天意之力
+    // 失去的天意之力用 IntVar（而非 PowerVar<HeavensForcePower>）：它是“失去”数值，
+    // 不应参与 PowerVar 的卡面预览钩子，否则会被“换大盏”等加成钩子错误地加高显示
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new IntVar("heavens_lost", 7),
-        new PowerVar<DivineInsightPower>("divine_insight_power", 1)
+        new IntVar("HeavensLost", 7),
+        new PowerVar<DivineInsightPower>(1m)
     ];
 
     // 属于“天意”体系（涉及天意之力/天意侵蚀）
@@ -52,14 +54,11 @@ public class DivineInsight : NewsanguoCardTemplate
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/divine_insight");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 先失去 7 点天意之力（HeavensForcePower 允许负值，可透支/结余为负）
         await PowerCmd.Apply<HeavensForcePower>(
             choiceContext,
             base.Owner.Creature,
-            -DynamicVars["heavens_lost"].IntValue,
+            -DynamicVars["HeavensLost"].IntValue,
             base.Owner.Creature,
             this);
 
@@ -68,7 +67,7 @@ public class DivineInsight : NewsanguoCardTemplate
         await PowerCmd.Apply<DivineInsightPower>(
             choiceContext,
             base.Owner.Creature,
-            DynamicVars["divine_insight_power"].IntValue,
+            DynamicVars["DivineInsightPower"].IntValue,
             base.Owner.Creature,
             this,
             silent: false);

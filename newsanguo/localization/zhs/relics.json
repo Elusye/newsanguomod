@@ -1,9 +1,9 @@
 {
   "NEWSANGUO_RELIC_FINE_BREW_OF_PEI.title": "沛国佳酿",
-  "NEWSANGUO_RELIC_FINE_BREW_OF_PEI.description": "每场战斗开始时，获得{drunken_might}点[gold]酒力[/gold]。",
+  "NEWSANGUO_RELIC_FINE_BREW_OF_PEI.description": "每场战斗开始时，获得{DrunkenMightPower}点[gold]酒力[/gold]。",
   "NEWSANGUO_RELIC_FINE_BREW_OF_PEI.flavor": "价值百金的陈年美酒，鲜美无比，不可不尝。",
   "NEWSANGUO_RELIC_CENTURY_BREW.title": "百年佳酿",
-  "NEWSANGUO_RELIC_CENTURY_BREW.description": "在每个回合开始时，获得{drunken_might}点[gold]酒力[/gold]。",
+  "NEWSANGUO_RELIC_CENTURY_BREW.description": "在每个回合开始时，获得{DrunkenMightPower}点[gold]酒力[/gold]。",
   "NEWSANGUO_RELIC_CENTURY_BREW.flavor": "百年佳酿，恭候嘉宾。",
   "NEWSANGUO_RELIC_A_CERTAIN_FORBIDDEN_SPELL_INDEX.title": "魔法禁术目录",
   "NEWSANGUO_RELIC_A_CERTAIN_FORBIDDEN_SPELL_INDEX.description": "在你的第3、2、5个回合开始时，将一张随机[gold]禁术牌[/gold]加入你的手牌，那张牌在该回合免费打出且不花费[gold]天意之力[/gold]。",

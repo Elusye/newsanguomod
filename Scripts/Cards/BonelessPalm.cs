@@ -35,7 +35,7 @@ public class BonelessPalm : NewsanguoCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(8m, ValueProp.Move),
-        new PowerVar<StrengthPower>("StrengthPower", 1)
+        new PowerVar<StrengthPower>(1m)
     ];
 
     // 悬停提示：展示“力量”关键词说明
@@ -58,14 +58,11 @@ public class BonelessPalm : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/boneless_palm");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 造成伤害
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).Targeting(cardPlay.Target).Execute(choiceContext);
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).Targeting(cardPlay.Target).WithHitFx("vfx/vfx_attack_slash").Execute(choiceContext);
 
         // 使目标失去力量（参考原版卡牌“萎靡”Malaise 的负值施加）
-        int strengthLoss = DynamicVars["StrengthPower"].IntValue;
+        int strengthLoss = DynamicVars.Strength.IntValue;
         await PowerCmd.Apply<StrengthPower>(choiceContext, cardPlay.Target, -strengthLoss, base.Owner.Creature, this);
     }
 
@@ -73,6 +70,6 @@ public class BonelessPalm : NewsanguoCardTemplate
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(3m);
-        DynamicVars["StrengthPower"].UpgradeValueBy(1);
+        DynamicVars.Strength.UpgradeValueBy(1);
     }
 }

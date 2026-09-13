@@ -40,9 +40,6 @@ public class CheckThePremiere : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/check_the_premiere");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 从五张“0.99 版本后被削弱”的原始版本卡牌（不含燃料）中随机选出一张，
         // 使用战斗生成 RNG 保证多人同步（与 Splash 一致）
         CardModel[] templates =

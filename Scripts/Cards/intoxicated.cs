@@ -35,8 +35,8 @@ public class Intoxicated : NewsanguoCardTemplate
     // 额外部分用 IntVar：实际结算时两部分合并为一次酒力获得，“换大盏”只加成一次，
     // 若这里也用 PowerVar，卡面会把它算成两次加成而显示偏大
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DrunkenMightPower>("drunken_might", 2),
-        new IntVar("intoxicated_bonus", 2)
+        new PowerVar<DrunkenMightPower>(2m),
+        new IntVar("IntoxicatedBonus", 2)
     ];
 
     // 悬停提示：展示“酒力”说明
@@ -76,10 +76,10 @@ public class Intoxicated : NewsanguoCardTemplate
             .LastOrDefault(entry => entry.CardPlay?.Card?.Owner == base.Owner);
         bool lastWasSkill = lastPlay is not null && lastPlay.CardPlay.Card.Type == CardType.Skill;
 
-        int wineAmount = DynamicVars["drunken_might"].IntValue;
+        int wineAmount = DynamicVars["DrunkenMightPower"].IntValue;
         if (lastWasSkill)
         {
-            wineAmount += DynamicVars["intoxicated_bonus"].IntValue;
+            wineAmount += DynamicVars["IntoxicatedBonus"].IntValue;
         }
 
         await PowerCmd.Apply<DrunkenMightPower>(
@@ -95,8 +95,8 @@ public class Intoxicated : NewsanguoCardTemplate
     protected override void OnUpgrade()
     {
         // 基础酒力 2 → 3
-        DynamicVars["drunken_might"].UpgradeValueBy(1);
+        DynamicVars["DrunkenMightPower"].UpgradeValueBy(1);
         // 额外酒力 2 → 3
-        DynamicVars["intoxicated_bonus"].UpgradeValueBy(1);
+        DynamicVars["IntoxicatedBonus"].UpgradeValueBy(1);
     }
 }

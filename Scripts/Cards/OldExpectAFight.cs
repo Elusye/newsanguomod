@@ -49,9 +49,6 @@ public class OldExpectAFight : NewsanguoCardTemplate
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 手牌中每有一张攻击牌，就获得 1 点能量
         int attackCount = CardPile.Get(PileType.Hand, base.Owner)!.Cards.Count(c => c.Type == CardType.Attack);
         if (attackCount > 0)

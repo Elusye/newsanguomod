@@ -49,13 +49,11 @@ public class Plot : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/plot");
 
-        // 播放角色攻击动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);
-
         // 造成 6 点伤害
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .Targeting(target)
+            .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
 
         // 若打出这张牌后手牌数为 2，则额外抽 1 张牌

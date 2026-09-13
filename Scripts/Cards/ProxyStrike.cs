@@ -49,13 +49,11 @@ public class ProxyStrike : NewsanguoCardTemplate
 
         NewsanguoSfx.Play("event:/newsanguo/sfx/proxy_strike");
 
-        // 播放角色攻击动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);
-
         // 造成伤害
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .Targeting(target)
+            .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
 
         // 选择一张手牌中的攻击牌，将该牌的两张复制品加入手牌（参考原版“双重施放”DualWield）

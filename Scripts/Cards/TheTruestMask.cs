@@ -32,8 +32,8 @@ public class TheTruestMask : NewsanguoCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(7m, ValueProp.Move),
         new RepeatVar(2),
-        new PowerVar<WeakPower>("WeakPower", 2),
-        new PowerVar<VulnerablePower>("VulnerablePower", 2)
+        new PowerVar<WeakPower>(2m),
+        new PowerVar<VulnerablePower>(2m)
     ];
 
     // 悬停提示：展示“虚弱”与“易伤”的说明
@@ -54,21 +54,19 @@ public class TheTruestMask : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/the_truest_mask");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 对所有敌人造成 7 点伤害 2 次
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .TargetingAllOpponents(combatState)
             .WithHitCount(DynamicVars.Repeat.IntValue)
+            .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
 
         // 给予所有敌人虚弱
         await PowerCmd.Apply<WeakPower>(
             choiceContext,
             combatState.HittableEnemies,
-            DynamicVars["WeakPower"].IntValue,
+            DynamicVars.Weak.IntValue,
             base.Owner.Creature,
             this,
             silent: false);
@@ -77,7 +75,7 @@ public class TheTruestMask : NewsanguoCardTemplate
         await PowerCmd.Apply<VulnerablePower>(
             choiceContext,
             combatState.HittableEnemies,
-            DynamicVars["VulnerablePower"].IntValue,
+            DynamicVars.Vulnerable.IntValue,
             base.Owner.Creature,
             this,
             silent: false);

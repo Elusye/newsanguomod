@@ -38,9 +38,6 @@ public class SeaChange : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/sea_change");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         CardPile hand = PileType.Hand.GetPile(base.Owner);
         if (hand.Cards.Count == 0)
         {

@@ -38,9 +38,6 @@ public class RatPoison : NewsanguoCardTemplate
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/rat_poison");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 附加能力：每回合开始时将一张毒鼠加入手牌。
         // 升级版附加“毒鼠计+”能力，生成升级版（毒鼠+）。
         if (IsUpgraded)

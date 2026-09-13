@@ -31,8 +31,8 @@ public class HeavenAndEarth : NewsanguoCardTemplate
 
     // 卡牌基础数值：失去的天意之力、获得的飞行层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForcePower>("heavens_force", 3),
-        new PowerVar<FlightPower>("flight_power", 3)
+        new PowerVar<HeavensForcePower>(3m),
+        new PowerVar<FlightPower>(3m)
     ];
 
     // 悬停提示：展示“天意之力”、“天意侵蚀”、“飞行”说明
@@ -55,15 +55,12 @@ public class HeavenAndEarth : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/heaven_and_earth");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 失去 3 点天意之力
-        int heavensLoss = DynamicVars["heavens_force"].IntValue;
+        int heavensLoss = DynamicVars["HeavensForcePower"].IntValue;
         await PowerCmd.Apply<HeavensForcePower>(choiceContext, base.Owner.Creature, -heavensLoss, base.Owner.Creature, this);
 
         // 获得 3 层飞行
-        int flightAmount = DynamicVars["flight_power"].IntValue;
+        int flightAmount = DynamicVars["FlightPower"].IntValue;
         await PowerCmd.Apply<FlightPower>(choiceContext, base.Owner.Creature, flightAmount, base.Owner.Creature, this);
     }
 
@@ -71,6 +68,6 @@ public class HeavenAndEarth : NewsanguoCardTemplate
     protected override void OnUpgrade()
     {
         EnergyCost.UpgradeBy(-1);
-        DynamicVars["heavens_force"].UpgradeValueBy(-1);
+        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
     }
 }

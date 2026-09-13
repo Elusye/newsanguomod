@@ -29,7 +29,7 @@ public class WineTheOldHero : NewsanguoCardTemplate
 
     // 卡牌基础数值：每失去 1 点酒力获得的格挡（升级后 2）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<WineTheOldHeroPower>("wine_the_old_hero", 1)
+        new PowerVar<WineTheOldHeroPower>(1m)
     ];
 
     // 鼠标悬停时显示格挡与酒力提示
@@ -51,11 +51,8 @@ public class WineTheOldHero : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/wine_the_old_hero");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 获得酒是老英雄能力
-        int powerAmount = DynamicVars["wine_the_old_hero"].IntValue;
+        int powerAmount = DynamicVars["WineTheOldHeroPower"].IntValue;
         await PowerCmd.Apply<WineTheOldHeroPower>(
             choiceContext,
             base.Owner.Creature,
@@ -69,6 +66,6 @@ public class WineTheOldHero : NewsanguoCardTemplate
     protected override void OnUpgrade()
     {
         // 每失去 1 点酒力获得的格挡从 1 提高到 2 (1+1)
-        DynamicVars["wine_the_old_hero"].UpgradeValueBy(1);
+        DynamicVars["WineTheOldHeroPower"].UpgradeValueBy(1);
     }
 }

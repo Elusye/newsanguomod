@@ -27,7 +27,7 @@ public class FineBrewOfPei : ModRelicTemplate
 
     // 描述中的 {drunken_might}：每场战斗开始时获得的酒力层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DrunkenMightPower>("drunken_might", 4)
+        new PowerVar<DrunkenMightPower>(4m)
     ];
 
     // 悬停提示：展示“酒力”能力说明
@@ -42,7 +42,7 @@ public class FineBrewOfPei : ModRelicTemplate
         await PowerCmd.Apply<DrunkenMightPower>(
             choiceContext: null!,
             target: Owner.Creature,
-            amount: DynamicVars["drunken_might"].IntValue,
+            amount: DynamicVars["DrunkenMightPower"].IntValue,
             applier: Owner.Creature,
             cardSource: null,
             silent: false);

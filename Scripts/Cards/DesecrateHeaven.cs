@@ -29,7 +29,7 @@ public class DesecrateHeaven : NewsanguoCardTemplate
 
     // 卡牌基础数值：获得的天意之力、下个回合结束获得的天意侵蚀层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForcePower>("heavens_force", 15),
+        new PowerVar<HeavensForcePower>(15m),
         new DynamicVar("DecayAmount", 15m)
     ];
 
@@ -74,7 +74,7 @@ public class DesecrateHeaven : NewsanguoCardTemplate
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 获得天意之力
-        int heavensForceAmount = DynamicVars["heavens_force"].IntValue;
+        int heavensForceAmount = DynamicVars["HeavensForcePower"].IntValue;
         await PowerCmd.Apply<HeavensForcePower>(
             choiceContext,
             base.Owner.Creature,

@@ -34,7 +34,7 @@ public class PeekIntoHeaven : NewsanguoCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DynamicVar("ScryAmount", 7m),
         new CardsVar(3),
-        new PowerVar<HeavensForcePower>("heavens_force", 3)
+        new PowerVar<HeavensForcePower>(3m)
     ];
 
     // 鼠标悬停时显示天意之力与天意侵蚀提示
@@ -66,7 +66,7 @@ public class PeekIntoHeaven : NewsanguoCardTemplate
         await CardPileCmd.Draw(choiceContext, DynamicVars["Cards"].IntValue, base.Owner);
 
         // 失去天意之力
-        int lostAmount = DynamicVars["heavens_force"].IntValue;
+        int lostAmount = DynamicVars["HeavensForcePower"].IntValue;
         await PowerCmd.Apply<HeavensForcePower>(
             choiceContext,
             base.Owner.Creature,
@@ -82,6 +82,6 @@ public class PeekIntoHeaven : NewsanguoCardTemplate
         // 抽牌数从 3 增加到 4
         DynamicVars["Cards"].UpgradeValueBy(1);
         // 失去的天意之力从 3 减少到 2
-        DynamicVars["heavens_force"].UpgradeValueBy(-1);
+        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
     }
 }

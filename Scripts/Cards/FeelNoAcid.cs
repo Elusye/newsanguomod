@@ -27,7 +27,7 @@ public class FeelNoAcid : NewsanguoCardTemplate
 
     // 卡牌基础数值：每当你失去酒力时，获得 2 点酒力（调整此处的 2 即可联动卡面描述）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<FeelNoAcidPower>("feel_no_acid_power", 2)
+        new PowerVar<FeelNoAcidPower>(2m)
     ];
 
     public FeelNoAcid() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self)
@@ -40,11 +40,8 @@ public class FeelNoAcid : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/feel_no_acid");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 附加咱家不怕酸能力，层数＝每次失去酒力时补偿的酒力数
-        int compensate = DynamicVars["feel_no_acid_power"].IntValue;
+        int compensate = DynamicVars["FeelNoAcidPower"].IntValue;
         await PowerCmd.Apply<FeelNoAcidPower>(
             choiceContext,
             base.Owner.Creature,
@@ -58,6 +55,6 @@ public class FeelNoAcid : NewsanguoCardTemplate
     protected override void OnUpgrade()
     {
         // 补偿酒力 2 → 3
-        DynamicVars["feel_no_acid_power"].UpgradeValueBy(1);
+        DynamicVars["FeelNoAcidPower"].UpgradeValueBy(1);
     }
 }

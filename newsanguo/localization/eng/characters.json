@@ -1,0 +1,17 @@
+{
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.title": "New Three Kingdoms",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.titleObject": "New Three Kingdoms",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.description": "A world being eroded by Heaven's Decay.",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.pronounObject": "him",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.possessiveAdjective": "his",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.pronounPossessive": "his",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.pronounSubject": "he",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.cardsModifierTitle": "New Three Kingdoms Cards",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.cardsModifierDescription": "New Three Kingdoms cards will now appear in rewards and shops.",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.eventDeathPrevention": "My time has not yet come!",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.unlockText": "This character is available from the start.",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.aromaPrinciple": "[sine]...This scent—like aged wine, and like freshly spilled blood. The Mandate of Heaven is about to change.[/sine]",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.goldMonologue": "[sine]This heap of gold... enough to trade for a city's worth of wine, enough to drink until the three kingdoms become one.[/sine]",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.banter.alive.endTurnPing": "Hold on! Let me raise a grand toast first, then we go again!",
+  "NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.banter.dead.endTurnPing": "I'll lie here a while. You all keep fighting."
+}

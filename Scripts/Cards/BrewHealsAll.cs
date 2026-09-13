@@ -34,7 +34,7 @@ public class BrewHealsAll : NewsanguoCardTemplate
     // 不应参与 PowerVar 的卡面预览钩子，否则会被“换大盏”错误地加高显示
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new IntVar("DrunkenMight", 6),
-        new PowerVar<RegenPower>("RegenPower", 5)
+        new PowerVar<RegenPower>(5m)
     ];
 
     // 悬停提示：展示“酒力”与“再生”关键词说明

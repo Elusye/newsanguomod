@@ -49,9 +49,6 @@ public class AlwaysMine : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/always_mine");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 从弃牌堆中选择至多 N 张牌放入手牌
         CardPile discard = PileType.Discard.GetPile(base.Owner);
         if (discard.Cards.Count == 0)

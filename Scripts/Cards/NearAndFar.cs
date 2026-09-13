@@ -30,7 +30,7 @@ public class NearAndFar : NewsanguoCardTemplate
 
     // 卡牌基础数值：本回合获得的力量、以及交替回合每次获得的量（升级后 4）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<NearAndFarPower>("near_and_far_power", 3)
+        new PowerVar<NearAndFarPower>(3m)
     ];
 
     // 鼠标悬停时显示力量与敏捷提示
@@ -49,10 +49,7 @@ public class NearAndFar : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/near_and_far");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
-        int amount = DynamicVars["near_and_far_power"].IntValue;
+        int amount = DynamicVars["NearAndFarPower"].IntValue;
 
         // 本回合内获得临时力量
         await PowerCmd.Apply<NearAndFarStrengthPower>(
@@ -76,6 +73,6 @@ public class NearAndFar : NewsanguoCardTemplate
     // 升级：获得的力量/敏捷 3 → 4
     protected override void OnUpgrade()
     {
-        DynamicVars["near_and_far_power"].UpgradeValueBy(1);
+        DynamicVars["NearAndFarPower"].UpgradeValueBy(1);
     }
 }

@@ -26,9 +26,9 @@ public class InvokeHeaven : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：获得 5 点天意之力（升级后 7 点）
+    // 卡牌基础数值：获得 5 点天意之力（升级不再提升此数值）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForcePower>("heavens_force", 5)
+        new PowerVar<HeavensForcePower>(5m)
     ];
 
     // 悬停提示：展示“天意之力”和“天意侵蚀”两个说明
@@ -57,15 +57,21 @@ public class InvokeHeaven : NewsanguoCardTemplate
         await PowerCmd.Apply<HeavensForcePower>(
             choiceContext,
             base.Owner.Creature,
-            DynamicVars["heavens_force"].IntValue,
+            DynamicVars["HeavensForcePower"].IntValue,
             base.Owner.Creature,
             this,
             silent: false);
     }
 
-    // 升级后的效果逻辑：天意之力 5 → 6
+    // 升级后的效果逻辑：不再增加天意之力，改为获得“保留”
     protected override void OnUpgrade()
     {
-        DynamicVars["heavens_force"].UpgradeValueBy(1);
+        AddKeyword(CardKeyword.Retain);
+    }
+
+    // 降级后的效果逻辑（升级被移除或回退时调用）：移除“保留”
+    protected override void AfterDowngraded()
+    {
+        RemoveKeyword(CardKeyword.Retain);
     }
 }

@@ -46,14 +46,12 @@ public class ThreeBlades : NewsanguoCardTemplate
 
         NewsanguoSfx.Play("event:/newsanguo/sfx/three_blades");
 
-        // 播放角色攻击动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);
-
         // 造成 11 点伤害 3 次；若此牌未击杀敌人，你失去 2 点生命（斩杀判定参考原版 KnockoutBlow）
         bool killedEnemy = (await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
             .WithHitCount(DynamicVars.Repeat.IntValue)
+            .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext))
             .Results.SelectMany(results => results).Any(result => result.WasTargetKilled);
         if (!killedEnemy)

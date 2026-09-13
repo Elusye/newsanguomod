@@ -33,8 +33,8 @@ public class Unstoppable : NewsanguoCardTemplate
 
     // 卡牌基础数值：失去的天意之力、获得的无实体层数（变量用正值，打出时取负）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForcePower>("heavens_force", 5),
-        new DynamicVar("IntangibleAmount", 1m)
+        new PowerVar<HeavensForcePower>(5m),
+        new PowerVar<IntangiblePower>(1m)
     ];
 
     // 悬停提示：展示“无实体”、“天意之力”与“天意侵蚀”的说明
@@ -64,16 +64,16 @@ public class Unstoppable : NewsanguoCardTemplate
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 获得 1 层无实体
-        await PowerCmd.Apply<IntangiblePower>(choiceContext, base.Owner.Creature, DynamicVars["IntangibleAmount"].IntValue, base.Owner.Creature, this);
+        await PowerCmd.Apply<IntangiblePower>(choiceContext, base.Owner.Creature, DynamicVars["IntangiblePower"].IntValue, base.Owner.Creature, this);
 
         // 失去 6 点天意之力
-        int lostAmount = DynamicVars["heavens_force"].IntValue;
+        int lostAmount = DynamicVars["HeavensForcePower"].IntValue;
         await PowerCmd.Apply<HeavensForcePower>(choiceContext, base.Owner.Creature, -lostAmount, base.Owner.Creature, this, silent: false);
     }
 
     // 升级：失去的天意之力 5 → 4（虚无关键词升级后保留）
     protected override void OnUpgrade()
     {
-        DynamicVars["heavens_force"].UpgradeValueBy(-1);
+        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
     }
 }

@@ -29,7 +29,7 @@ public class ToABiggerGoblet : NewsanguoCardTemplate
 
     // 卡牌基础数值：换大盏层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<ToABiggerGobletPower>("to_a_bigger_goblet", 2)
+        new PowerVar<ToABiggerGobletPower>(2m)
     ];
 
     // 鼠标悬停时显示酒力提示
@@ -45,11 +45,8 @@ public class ToABiggerGoblet : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/to_a_bigger_goblet");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 获得换大盏能力
-        int powerAmount = DynamicVars["to_a_bigger_goblet"].IntValue;
+        int powerAmount = DynamicVars["ToABiggerGobletPower"].IntValue;
         await PowerCmd.Apply<ToABiggerGobletPower>(
             choiceContext,
             base.Owner.Creature,
@@ -63,6 +60,6 @@ public class ToABiggerGoblet : NewsanguoCardTemplate
     protected override void OnUpgrade()
     {
         // 换大盏层数从 2 提高到 3 (2+1)
-        DynamicVars["to_a_bigger_goblet"].UpgradeValueBy(1);
+        DynamicVars["ToABiggerGobletPower"].UpgradeValueBy(1);
     }
 }

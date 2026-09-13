@@ -30,7 +30,7 @@ public class Retire : NewsanguoCardTemplate
 
     // 卡牌基础数值：获得的无实体层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DynamicVar("IntangibleAmount", 1m)
+        new PowerVar<IntangiblePower>(1m)
     ];
 
     // 虚无 + 消耗（升级后仅移除虚无，保留消耗）
@@ -53,7 +53,7 @@ public class Retire : NewsanguoCardTemplate
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 获得无实体层数
-        await PowerCmd.Apply<IntangiblePower>(choiceContext, base.Owner.Creature, DynamicVars["IntangibleAmount"].IntValue, base.Owner.Creature, this);
+        await PowerCmd.Apply<IntangiblePower>(choiceContext, base.Owner.Creature, DynamicVars["IntangiblePower"].IntValue, base.Owner.Creature, this);
 
         // 结束你的回合（同原版 VoidForm）
         PlayerCmd.EndTurn(base.Owner, false, null);

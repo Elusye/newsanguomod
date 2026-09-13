@@ -33,7 +33,7 @@ public class DeafenMe : NewsanguoCardTemplate
 
     // 卡牌基础数值：给予自己的帝王之征层数、造成的伤害
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DragonOmenPower>("dragon_omen", 3),
+        new PowerVar<DragonOmenPower>(3m),
         new DamageVar(15m, ValueProp.Move)
     ];
 
@@ -54,17 +54,15 @@ public class DeafenMe : NewsanguoCardTemplate
         // 播放出牌音效（静音前的最后一声）
         NewsanguoSfx.Play("event:/newsanguo/sfx/deafen_me");
 
-        // 播放角色攻击动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);
-
         // 1. 给予自己若干层帝王之征（自我枷锁）
-        int omenAmount = DynamicVars["dragon_omen"].IntValue;
+        int omenAmount = DynamicVars["DragonOmenPower"].IntValue;
         await PowerCmd.Apply<DragonOmenPower>(choiceContext, base.Owner.Creature, omenAmount, base.Owner.Creature, this, silent: false);
 
         // 2. 造成伤害
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
+            .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
 
         // 3. 附加“听觉受损”能力，标记本场战斗音量降低状态（战斗结束由能力恢复音量）

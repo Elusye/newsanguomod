@@ -31,8 +31,8 @@ public class BladeOfVirtue : NewsanguoCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(3, ValueProp.Move),
         new RepeatVar(2),
-        new PowerVar<WeakPower>("WeakPower", 1),
-        new PowerVar<VulnerablePower>("VulnerablePower", 1)
+        new PowerVar<WeakPower>(1m),
+        new PowerVar<VulnerablePower>(1m)
     ];
 
     public BladeOfVirtue() : base(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
@@ -58,13 +58,14 @@ public class BladeOfVirtue : NewsanguoCardTemplate
             .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
             .WithHitCount(DynamicVars.Repeat.IntValue)
+            .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
 
         // 给予目标虚弱
-        await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, DynamicVars["WeakPower"].IntValue, base.Owner.Creature, this, silent: false);
+        await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, DynamicVars.Weak.IntValue, base.Owner.Creature, this, silent: false);
 
         // 给予目标易伤
-        await PowerCmd.Apply<VulnerablePower>(choiceContext, cardPlay.Target, DynamicVars["VulnerablePower"].IntValue, base.Owner.Creature, this, silent: false);
+        await PowerCmd.Apply<VulnerablePower>(choiceContext, cardPlay.Target, DynamicVars.Vulnerable.IntValue, base.Owner.Creature, this, silent: false);
     }
 
     // 升级后的效果逻辑

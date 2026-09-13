@@ -27,14 +27,14 @@ public class ScorchingStarfall : NewsanguoCardTemplate
 
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(2m, ValueProp.Move),
-        new ("wine_threshold", 3m),
-        new ("heavens_force", 5m),
+        new ("WineThreshold", 3m),
+        new PowerVar<HeavensForcePower>(5m),
         new CalculationBaseVar(0m),
         new CalculationExtraVar(1m),
         new CalculatedVar("CalculatedHits").WithMultiplier(static (card, _) =>
         {
             var wine = card.Owner.Creature.GetPower<DrunkenMightPower>()?.Amount ?? 0m;
-            var per = card is ScorchingStarfall s ? s.DynamicVars["wine_threshold"].IntValue : 3;
+            var per = card is ScorchingStarfall s ? s.DynamicVars["WineThreshold"].IntValue : 3;
             return per > 0 ? Math.Floor(wine / per) : 0m;
         })
     ];
@@ -59,7 +59,7 @@ public class ScorchingStarfall : NewsanguoCardTemplate
         var combatState = CombatState!;
 
         var wineAmount = Owner.Creature.GetPower<DrunkenMightPower>()?.Amount ?? 0;
-        var threshold = DynamicVars["wine_threshold"].IntValue;
+        var threshold = DynamicVars["WineThreshold"].IntValue;
         var hits = threshold > 0 ? wineAmount / threshold : 0;
 
         if (hits > 0)
@@ -94,13 +94,13 @@ public class ScorchingStarfall : NewsanguoCardTemplate
             }
         }
 
-        await PowerCmd.Apply<HeavensForcePower>(choiceContext, Owner.Creature, -DynamicVars["heavens_force"].IntValue, Owner.Creature, this);
+        await PowerCmd.Apply<HeavensForcePower>(choiceContext, Owner.Creature, -DynamicVars["HeavensForcePower"].IntValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(1m);
-        DynamicVars["wine_threshold"].UpgradeValueBy(-1);
-        DynamicVars["heavens_force"].UpgradeValueBy(-1);
+        DynamicVars["WineThreshold"].UpgradeValueBy(-1);
+        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
     }
 }

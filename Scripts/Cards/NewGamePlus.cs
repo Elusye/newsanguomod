@@ -37,8 +37,8 @@ public class NewGamePlus : NewsanguoCardTemplate
     // 卡牌基础数值：预见数量、天意之力、酒力、抽牌数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DynamicVar("ScryAmount", 5m),
-        new PowerVar<HeavensForcePower>("heavens_force", 2),
-        new PowerVar<DrunkenMightPower>("drunken_might", 3),
+        new PowerVar<HeavensForcePower>(2m),
+        new PowerVar<DrunkenMightPower>(3m),
         new CardsVar(1)
     ];
 
@@ -72,7 +72,7 @@ public class NewGamePlus : NewsanguoCardTemplate
         await PowerCmd.Apply<HeavensForcePower>(
             choiceContext,
             base.Owner.Creature,
-            DynamicVars["heavens_force"].IntValue,
+            DynamicVars["HeavensForcePower"].IntValue,
             base.Owner.Creature,
             this,
             silent: false);
@@ -81,7 +81,7 @@ public class NewGamePlus : NewsanguoCardTemplate
         await PowerCmd.Apply<DrunkenMightPower>(
             choiceContext,
             base.Owner.Creature,
-            DynamicVars["drunken_might"].IntValue,
+            DynamicVars["DrunkenMightPower"].IntValue,
             base.Owner.Creature,
             this,
             silent: false);

@@ -52,9 +52,6 @@ public class WolfVsDog : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/wolf_vs_dog");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 若敌人生命值高于你，则攻击两次
         int hitCount = 1;
         if (cardPlay.Target.CurrentHp > base.Owner.Creature.CurrentHp)

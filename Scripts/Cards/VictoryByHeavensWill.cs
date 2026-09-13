@@ -29,7 +29,7 @@ public class VictoryByHeavensWill : NewsanguoCardTemplate
 
     // 卡牌基础数值：每回合开始时获得 2 点天意之力（升级不改变数值，改为获得“固有”）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<VictoryByHeavensWillPower>("victory_by_heavens_will_power", 2)
+        new PowerVar<VictoryByHeavensWillPower>(2m)
     ];
 
     // 鼠标悬停时显示天意之力与天意侵蚀提示
@@ -51,11 +51,8 @@ public class VictoryByHeavensWill : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/victory_by_heavens_will");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 获得“天意致胜”能力：每回合开始时获得天意之力
-        int amount = DynamicVars["victory_by_heavens_will_power"].IntValue;
+        int amount = DynamicVars["VictoryByHeavensWillPower"].IntValue;
         await PowerCmd.Apply<VictoryByHeavensWillPower>(
             choiceContext,
             base.Owner.Creature,

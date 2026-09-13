@@ -30,7 +30,7 @@ public class Release : NewsanguoCardTemplate
 
     // 卡牌基础数值：战斗结束时回复 7 点生命（升级后 10）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new IntVar("heal_amount", 7)
+        new IntVar("HealAmount", 7)
     ];
 
     public Release() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
@@ -43,17 +43,14 @@ public class Release : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/release");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 附加“释怀”能力：战斗结束时回复对应生命并播放「关羽之歌」
-        int healAmount = DynamicVars["heal_amount"].IntValue;
+        int healAmount = DynamicVars["HealAmount"].IntValue;
         await PowerCmd.Apply<ReleasePower>(choiceContext, base.Owner.Creature, healAmount, base.Owner.Creature, this);
     }
 
     // 升级后的效果逻辑：回复量 7 → 10
     protected override void OnUpgrade()
     {
-        DynamicVars["heal_amount"].UpgradeValueBy(3);
+        DynamicVars["HealAmount"].UpgradeValueBy(3);
     }
 }

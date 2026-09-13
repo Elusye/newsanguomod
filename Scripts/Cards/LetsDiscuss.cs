@@ -39,9 +39,6 @@ public class LetsDiscuss : NewsanguoCardTemplate
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/lets_discuss");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 抽牌直到抽满手牌（Draw 内部会按手牌上限自动截断）
         List<CardModel> drawn = (await CardPileCmd.Draw(choiceContext, 999, base.Owner)).ToList();
         if (drawn.Count == 0)

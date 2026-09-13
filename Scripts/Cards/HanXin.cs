@@ -43,9 +43,6 @@ public class HanXin : NewsanguoCardTemplate
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/han_xin");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 抽 2（升级后 3）张牌
         await CardPileCmd.Draw(choiceContext, DynamicVars.Cards.BaseValue, base.Owner);
     }

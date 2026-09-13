@@ -34,7 +34,7 @@ public class OldBorrowedTime : NewsanguoCardTemplate
     // 卡牌基础数值：获得的能量、给予自身的灾厄层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new EnergyVar(1),
-        new PowerVar<DoomPower>("DoomPower", 3)
+        new PowerVar<DoomPower>(3m)
     ];
 
     // 悬停提示：展示“灾厄”关键词说明
@@ -59,7 +59,7 @@ public class OldBorrowedTime : NewsanguoCardTemplate
         await PowerCmd.Apply<DoomPower>(
             choiceContext,
             base.Owner.Creature,
-            DynamicVars["DoomPower"].IntValue,
+            DynamicVars.Doom.IntValue,
             base.Owner.Creature,
             this);
     }

@@ -55,9 +55,6 @@ public class OldCompact : NewsanguoCardTemplate
     {
         ICombatState combatState = base.CombatState!;
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 获得格挡
         await CreatureCmd.GainBlock(base.Owner.Creature, DynamicVars.Block, cardPlay, false);
 

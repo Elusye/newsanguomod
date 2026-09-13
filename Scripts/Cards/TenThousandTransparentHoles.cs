@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
@@ -10,6 +11,7 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Cards;
+using MegaCrit.Sts2.Core.Nodes.Vfx;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -56,14 +58,13 @@ public class TenThousandTransparentHoles : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/ten_thousand_transparent_holes");
 
-        // 播放角色攻击动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);
-
-        // 造成 1 点伤害 10 次；若此牌击杀了敌人，将 1（2）张此牌的复制品加入手牌（斩杀判定参考原版 KnockoutBlow）
+        // 造成 1 点伤害 10 次；命中特效套用原版“穿刺”的金色刺击（NStabVfx）；
+        // 若此牌击杀了敌人，将 1（2）张此牌的复制品加入手牌（斩杀判定参考原版 KnockoutBlow）
         bool killedEnemy = (await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
             .WithHitCount(10)
+            .WithHitVfxNode((Creature t) => NStabVfx.Create(t, facingEnemies: true, VfxColor.Gold))
             .Execute(choiceContext))
             .Results.SelectMany(results => results).Any(result => result.WasTargetKilled);
         if (!killedEnemy)

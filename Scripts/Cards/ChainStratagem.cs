@@ -36,7 +36,7 @@ public class ChainStratagem : NewsanguoCardTemplate
     // 卡牌基础数值：造成 6 点伤害（升级 8）；每次打出后本场战斗伤害 +3（升级 +4）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(6m, ValueProp.Move),
-        new IntVar("increment", 3)
+        new IntVar("Increment", 3)
     ];
 
     // 战斗内共享的打出次数计数器：
@@ -68,17 +68,15 @@ public class ChainStratagem : NewsanguoCardTemplate
             ? "event:/newsanguo/sfx/chain_stratagem1"
             : "event:/newsanguo/sfx/chain_stratagem2");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 1. 造成当前伤害（尚未包含本次加成，与“夷陵之火”一致）
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .Targeting(targetCreature)
+            .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
 
         // 2. 再增加这张牌在本场战斗中的伤害（每次打出按固定值递增，只增加自己，与“夷陵之火”的全体递增不同）
-        DynamicVars.Damage.BaseValue += DynamicVars["increment"].IntValue;
+        DynamicVars.Damage.BaseValue += DynamicVars["Increment"].IntValue;
     }
 
     // 打出后这张牌直接进入一名随机盟友的手牌（参考原版“球”TheBall 的 GetResultLocationForCardPlay 机制，
@@ -105,6 +103,6 @@ public class ChainStratagem : NewsanguoCardTemplate
     {
         // 伤害从 6 提高到 8；单次递增从 3 提高到 4
         DynamicVars.Damage.UpgradeValueBy(2m);
-        DynamicVars["increment"].UpgradeValueBy(1);
+        DynamicVars["Increment"].UpgradeValueBy(1);
     }
 }

@@ -41,9 +41,6 @@ public class Nonsense : NewsanguoCardTemplate
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/nonsense");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 抽牌
         await CardPileCmd.Draw(choiceContext, DynamicVars.Cards.BaseValue, base.Owner);
 

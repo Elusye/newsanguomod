@@ -1,0 +1,18 @@
+{
+  "NEWSANGUO_RELIC_FINE_BREW_OF_PEI.title": "Fine Brew of Pei",
+  "NEWSANGUO_RELIC_FINE_BREW_OF_PEI.description": "At the start of each combat, gain {DrunkenMightPower} [gold]Drunken Might[/gold].",
+  "NEWSANGUO_RELIC_FINE_BREW_OF_PEI.flavor": "A vintage worth a hundred gold, exquisitely delicious. You simply must try it.",
+  "NEWSANGUO_RELIC_CENTURY_BREW.title": "Century Brew",
+  "NEWSANGUO_RELIC_CENTURY_BREW.description": "At the start of each turn, gain {DrunkenMightPower} [gold]Drunken Might[/gold].",
+  "NEWSANGUO_RELIC_CENTURY_BREW.flavor": "A century-old brew, awaiting a distinguished guest.",
+  "NEWSANGUO_RELIC_A_CERTAIN_FORBIDDEN_SPELL_INDEX.title": "A Certain Forbidden Spell Index",
+  "NEWSANGUO_RELIC_A_CERTAIN_FORBIDDEN_SPELL_INDEX.description": "At the start of your 3rd, 2nd, and 5th turns, add a random [gold]Forbidden Spell[/gold] to your [gold]Hand[/gold]. That card is free to play that turn and costs no [gold]Heaven's Force[/gold].",
+  "NEWSANGUO_RELIC_A_CERTAIN_FORBIDDEN_SPELL_INDEX.flavor": "A book that meticulously records the New Three Kingdoms' unique mechanics, painstakingly compiled by scholars of the New Three Kingdoms. Reading it is of great benefit to anyone who has transmigrated into that world.",
+  "NEWSANGUO_RELIC_PORTAL.title": "Portal",
+  "NEWSANGUO_RELIC_PORTAL.description": "The next {Rooms} times you choose the next room, you may ignore your current route.",
+  "NEWSANGUO_RELIC_PORTAL.flavor": "What lies beyond the door? Perhaps only Heaven knows.",
+  "NEWSANGUO_RELIC_EMPTY_CITY_STRATAGEM.title": "Empty City Stratagem",
+  "NEWSANGUO_RELIC_EMPTY_CITY_STRATAGEM.description": "If you have no cards in your [gold]Hand[/gold] at the end of your turn, you take 50% less damage from enemies this turn.",
+  "NEWSANGUO_RELIC_EMPTY_CITY_STRATAGEM.flavor": "(A lilting melody of the qin.)",
+  "SEA_GLASS.NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.title": "Wine Glass"
+}

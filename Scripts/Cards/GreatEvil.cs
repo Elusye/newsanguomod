@@ -33,9 +33,10 @@ public class GreatEvil : NewsanguoCardTemplate
     // 属于“天意”体系（涉及天意之力）
     public override bool IsHeavensCard => true;
 
-    // 卡牌基础数值：对所有敌人造成 9（升级 13）点伤害
+    // 卡牌基础数值：对所有敌人造成 8（升级 12）点伤害；天意之力不大于 0 时获得 3 点天意之力
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(9m, ValueProp.Move)
+        new DamageVar(8m, ValueProp.Move),
+        new PowerVar<HeavensForcePower>(3m)
     ];
 
     // 悬停提示：展示“天意之力”与“天意侵蚀”说明
@@ -56,23 +57,30 @@ public class GreatEvil : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/great_evil");
 
-        // 播放角色攻击动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);
-
-        // 失去 1 点天意之力（天意之力允许负值，可透支）
-        await PowerCmd.Apply<HeavensForcePower>(choiceContext, base.Owner.Creature, -1, base.Owner.Creature, this);
-
         // 对所有敌人造成伤害
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .TargetingAllOpponents(combatState)
+            .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
+
+        // 天意之力不大于 0 时，获得 3 点天意之力
+        var heavensForce = base.Owner.Creature.GetPower<HeavensForcePower>()?.Amount ?? 0m;
+        if (heavensForce <= 0m)
+        {
+            await PowerCmd.Apply<HeavensForcePower>(
+                choiceContext,
+                base.Owner.Creature,
+                DynamicVars["HeavensForcePower"].BaseValue,
+                base.Owner.Creature,
+                this);
+        }
     }
 
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 伤害从 9 提高到 13
+        // 伤害从 8 提高到 12
         DynamicVars.Damage.UpgradeValueBy(4m);
     }
 }

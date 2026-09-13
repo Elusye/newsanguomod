@@ -63,13 +63,11 @@ public class OffWithYourHead : NewsanguoCardTemplate
             NewsanguoSfx.Play("event:/newsanguo/sfx/off_with_your_head_double");
         }
 
-        // 播放角色攻击动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
             .WithHitCount(hitCount)
+            .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
     }
 

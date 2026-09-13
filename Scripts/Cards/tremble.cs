@@ -32,8 +32,8 @@ public class Tremble : NewsanguoCardTemplate
     // 卡牌基础数值：对所有敌人施加的虚弱与易伤层数
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new PowerVar<WeakPower>("WeakPower", 1),
-        new PowerVar<VulnerablePower>("VulnerablePower", 1)
+        new PowerVar<WeakPower>(1m),
+        new PowerVar<VulnerablePower>(1m)
     ];
 
     // 固有 + 消耗
@@ -62,8 +62,8 @@ public class Tremble : NewsanguoCardTemplate
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 给予所有敌人虚弱和易伤
-        int weak = DynamicVars["WeakPower"].IntValue;
-        int vulnerable = DynamicVars["VulnerablePower"].IntValue;
+        int weak = DynamicVars.Weak.IntValue;
+        int vulnerable = DynamicVars.Vulnerable.IntValue;
         foreach (Creature enemy in combatState.GetOpponentsOf(base.Owner.Creature).Where(c => c.IsAlive))
         {
             await PowerCmd.Apply<WeakPower>(choiceContext, enemy, weak, base.Owner.Creature, this);
@@ -74,7 +74,7 @@ public class Tremble : NewsanguoCardTemplate
     // 升级：虚弱与易伤 1 → 2
     protected override void OnUpgrade()
     {
-        DynamicVars["WeakPower"].UpgradeValueBy(1m);
-        DynamicVars["VulnerablePower"].UpgradeValueBy(1m);
+        DynamicVars.Weak.UpgradeValueBy(1m);
+        DynamicVars.Vulnerable.UpgradeValueBy(1m);
     }
 }

@@ -62,9 +62,6 @@ public class OldForgottenRitual : NewsanguoCardTemplate
     {
         ICombatState combatState = base.CombatState!;
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 若本回合消耗过卡牌，则获得能量
         bool wasExhausted = CombatManager.Instance.History.Entries
             .OfType<CardExhaustedEntry>()

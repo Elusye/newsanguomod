@@ -26,7 +26,7 @@ public class ImGettingDrunk : NewsanguoCardTemplate
 
     // 卡牌基础数值：立即获得的酒力（升级 8）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DrunkenMightPower>("drunken_might", 6)
+        new PowerVar<DrunkenMightPower>(6m)
     ];
 
     // 悬停提示：展示“酒力”说明
@@ -51,7 +51,7 @@ public class ImGettingDrunk : NewsanguoCardTemplate
         await PowerCmd.Apply<DrunkenMightPower>(
             choiceContext,
             Owner.Creature,
-            DynamicVars["drunken_might"].IntValue,
+            DynamicVars["DrunkenMightPower"].IntValue,
             Owner.Creature,
             this);
 
@@ -67,6 +67,6 @@ public class ImGettingDrunk : NewsanguoCardTemplate
     // 升级：酒力 6 → 8
     protected override void OnUpgrade()
     {
-        DynamicVars["drunken_might"].UpgradeValueBy(2);
+        DynamicVars["DrunkenMightPower"].UpgradeValueBy(2);
     }
 }

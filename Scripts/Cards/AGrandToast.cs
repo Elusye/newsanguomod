@@ -31,7 +31,7 @@ public class AGrandToast : NewsanguoCardTemplate
 
     // 卡牌基础数值：酒力层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DrunkenMightPower>("drunken_might", 4)
+        new PowerVar<DrunkenMightPower>(4m)
     ];
 
     // 鼠标悬停时显示酒力提示
@@ -51,7 +51,7 @@ public class AGrandToast : NewsanguoCardTemplate
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 获得酒力
-        int drunkenMightAmount = DynamicVars["drunken_might"].IntValue;
+        int drunkenMightAmount = DynamicVars["DrunkenMightPower"].IntValue;
         await PowerCmd.Apply<DrunkenMightPower>(
             choiceContext,
             base.Owner.Creature,
@@ -65,6 +65,6 @@ public class AGrandToast : NewsanguoCardTemplate
     protected override void OnUpgrade()
     {
         // 酒力层数从 4 提高到 6 (4+2)
-        DynamicVars["drunken_might"].UpgradeValueBy(2);
+        DynamicVars["DrunkenMightPower"].UpgradeValueBy(2);
     }
 }

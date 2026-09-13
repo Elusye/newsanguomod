@@ -36,7 +36,7 @@ public class WhoRules : NewsanguoCardTemplate
 
     // 卡牌基础数值：灾厄层数 7；获得能量 2（升级 +1）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DoomPower>("Doom", 7),
+        new PowerVar<DoomPower>(7m),
         new EnergyVar(2)
     ];
 
@@ -60,7 +60,7 @@ public class WhoRules : NewsanguoCardTemplate
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 给予目标玩家 7 层灾厄
-        await PowerCmd.Apply<DoomPower>(choiceContext, targetCreature, DynamicVars["Doom"].IntValue, base.Owner.Creature, this, silent: false);
+        await PowerCmd.Apply<DoomPower>(choiceContext, targetCreature, DynamicVars.Doom.IntValue, base.Owner.Creature, this, silent: false);
 
         // 你获得 2（3）点能量
         await PlayerCmd.GainEnergy(DynamicVars.Energy.IntValue, base.Owner);

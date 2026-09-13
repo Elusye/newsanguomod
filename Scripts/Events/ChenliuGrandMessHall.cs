@@ -25,7 +25,7 @@ namespace newsanguo.Scripts.Events;
 [RegisterActEvent(typeof(Overgrowth))]
 [RegisterActEvent(typeof(Hive))]
 [RegisterActEvent(typeof(Glory))]
-public class ChenliuMessHall : ModEventTemplate
+public class ChenliuGrandMessHall : ModEventTemplate
 {
     public override EventAssetProfile AssetProfile => new(
         InitialPortraitPath: $"res://newsanguo/images/events/{GetType().Name}.png"

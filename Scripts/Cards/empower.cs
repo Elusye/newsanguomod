@@ -36,9 +36,6 @@ public class Empower : NewsanguoCardTemplate
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/empower");
 
-        // 播放角色施法动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
         // 选择一张手牌记录（只能选不带“消耗”关键词的攻击牌或技能牌）
         List<CardModel> selected = (await CardSelectCmd.FromHand(
             prefs: new CardSelectorPrefs(SelectionScreenPrompt, 1),

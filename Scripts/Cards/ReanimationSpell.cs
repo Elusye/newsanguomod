@@ -36,7 +36,7 @@ public class ReanimationSpell : NewsanguoCardTemplate
 
     // 卡牌基础数值：失去 5 点天意之力（变量用正值，打出时取负）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new HeavensForceVar("heavens_force", 5)
+        new HeavensForceVar(5m)
     ];
 
     // 鼠标悬停时显示天意之力与天意侵蚀提示
@@ -65,7 +65,7 @@ public class ReanimationSpell : NewsanguoCardTemplate
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 失去天意之力
-        int lostAmount = DynamicVars["heavens_force"].IntValue;
+        int lostAmount = DynamicVars["HeavensForcePower"].IntValue;
         await PowerCmd.Apply<HeavensForcePower>(
             choiceContext,
             base.Owner.Creature,
@@ -98,6 +98,6 @@ public class ReanimationSpell : NewsanguoCardTemplate
     protected override void OnUpgrade()
     {
         // 失去的天意之力从 5 减少到 4
-        DynamicVars["heavens_force"].UpgradeValueBy(-1);
+        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
     }
 }

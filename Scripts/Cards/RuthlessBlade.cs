@@ -35,8 +35,8 @@ public class RuthlessBlade : NewsanguoCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(5m, ValueProp.Move),
-        new PowerVar<VulnerablePower>("VulnerablePower", 1),
-        new PowerVar<FrailPower>("SelfFrailPower", 1)
+        new PowerVar<VulnerablePower>(1m),
+        new PowerVar<FrailPower>(1m)
     ];
 
     // 悬停提示：展示“易伤”与“脆弱”关键词说明
@@ -67,7 +67,7 @@ public class RuthlessBlade : NewsanguoCardTemplate
 
         // 给予目标 1 层易伤，给予自身 1 层脆弱
         await PowerCmd.Apply<VulnerablePower>(choiceContext, cardPlay.Target, DynamicVars.Vulnerable.BaseValue, base.Owner.Creature, this);
-        var frailInstance = await PowerCmd.Apply<FrailPower>(choiceContext, base.Owner.Creature, DynamicVars["SelfFrailPower"].IntValue, base.Owner.Creature, this);
+        var frailInstance = await PowerCmd.Apply<FrailPower>(choiceContext, base.Owner.Creature, DynamicVars["FrailPower"].IntValue, base.Owner.Creature, this);
 
         // 原版规则：给玩家施加的 Debuff 首次衰减会被跳过（SkipNextDurationTick = true），
         // 导致自身脆弱比敌方易伤多持续一轮。这里显式取消跳过，使自身脆弱在下一个敌方回合正常衰减。

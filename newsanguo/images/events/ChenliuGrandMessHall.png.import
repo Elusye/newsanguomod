@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bqa0puuc2h4mr"
-path="res://.godot/imported/WildNeutralAmbush.png-661bf7f4cbdd6d1d3e06bb47a04726a0.ctex"
+uid="uid://cu8uf2lcylnxp"
+path="res://.godot/imported/ChenliuGrandMessHall.png-fc7944da4972fd801e1e4d8ee1309615.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/events/WildNeutralAmbush.png"
-dest_files=["res://.godot/imported/WildNeutralAmbush.png-661bf7f4cbdd6d1d3e06bb47a04726a0.ctex"]
+source_file="res://newsanguo/images/events/ChenliuGrandMessHall.png"
+dest_files=["res://.godot/imported/ChenliuGrandMessHall.png-fc7944da4972fd801e1e4d8ee1309615.ctex"]
 
 [params]
 

@@ -23,7 +23,7 @@ namespace newsanguo.Scripts.Events;
 /// 战斗结束直接进入下一地图点。
 /// </summary>
 [RegisterActEvent(typeof(Hive))]
-public class WildNeutralAmbush : ModEventTemplate
+public class WildNeutralAmbushers : ModEventTemplate
 {
     public override EventAssetProfile AssetProfile => new(
         InitialPortraitPath: $"res://newsanguo/images/events/{GetType().Name}.png"

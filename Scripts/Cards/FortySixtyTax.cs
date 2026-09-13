@@ -38,7 +38,7 @@ public class FortySixtyTax : NewsanguoCardTemplate
     // 卡牌基础数值：对目标造成 18 点伤害；获得目标当前血量 40% 的金币
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(18m, ValueProp.Move),
-        new IntVar("tax_percent", 40)
+        new IntVar("TaxPercent", 40)
     ];
 
     // 悬停提示：展示“消耗”关键词说明
@@ -60,12 +60,9 @@ public class FortySixtyTax : NewsanguoCardTemplate
 
         NewsanguoSfx.Play("event:/newsanguo/sfx/forty_sixty_tax");
 
-        // 播放角色攻击动画
-        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Attack", base.Owner.Character.CastAnimDelay);
-
-        // 按伤害前血量计算：获得目标当前血量 tax_percent% 的金币，除以游戏人数（向下取整）
+        // 按伤害前血量计算：获得目标当前血量 TaxPercent% 的金币，除以游戏人数（向下取整）
         int playerCount = combatState.Players.Count > 0 ? combatState.Players.Count : 1;
-        int gold = target.CurrentHp * DynamicVars["tax_percent"].IntValue / 100 / playerCount;
+        int gold = target.CurrentHp * DynamicVars["TaxPercent"].IntValue / 100 / playerCount;
 
         // 对目标造成 18 点伤害
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
