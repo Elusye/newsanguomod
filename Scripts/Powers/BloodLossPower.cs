@@ -4,9 +4,9 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -16,50 +16,32 @@ using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>
-/// “自刎”：本回合内每打出一张攻击牌，就失去 3 点生命。
-/// 打出“自刎归天”后附加，回合结束时自动移除。
+/// “自刎”：本回合内每打出一张攻击牌，就对自己造成 Amount 点伤害（不受力量等伤害修饰）。
+/// 打出“自刎归天”后附加，回合结束时自动移除。Amount 即每张攻击牌的自伤数值。
 /// </summary>
 [RegisterPower]
 public class BloodLossPower : ModPowerTemplate
 {
-    // 每打出一张攻击牌失去的生命（初始为 0，由“自刎归天”打出时通过 AddHpCost 累加设定）
-    private int hpCostPerCard = 0;
-
-    // 描述变量：每打出一张攻击牌失去的生命（供 powers.json 描述中的 {HpCost} 使用；
-    // 默认 3 与“自刎归天”卡牌一致，叠加后随 AddHpCost 实时更新）
-    protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new IntVar("HpCost", 3)
-    ];
-
-    // 每次打出“自刎归天”叠加的掉血数值（可多次叠加，同一实例内累加）
-    public void AddHpCost(int cost)
-    {
-        hpCostPerCard += cost;
-        // 同步描述变量，让 {HpCost} 随叠加层数动态显示
-        if (DynamicVars.TryGetValue("HpCost", out DynamicVar hpCostVar))
-        {
-            hpCostVar.BaseValue = hpCostPerCard;
-        }
-        // 直接修改字段绕过了 ModifyAmount，需主动通知 UI 刷新图标层数（DisplayAmount）
-        InvokeDisplayAmountChanged();
-    }
-
-    // 记录附加本能力的卡牌，打出该牌本身不触发掉血
+    /// <summary>
+    /// 登记已打出、待结算的牌，及其打出瞬间的 Amount 快照（参考原版 OblivionPower）。
+    /// 附加本能力的那张牌结算时，新建实例的字典仍为空，因此不会触发自己；
+    /// 快照则保证结算用的是“打出瞬间”的数值（牌结算过程中 Amount 可能被叠加改变）。
+    /// </summary>
     private class Data
     {
-        public CardModel? sourceCard;
+        public readonly Dictionary<CardModel, int> amountsForPlayedCards = new();
     }
+
+    // 本次结算的自刎伤害是否正由奥斯提承担（仅在 Damage 调用期间为 true）
+    private bool ostyIsTakingThisDamage;
 
     // 负面效果
     public override PowerType Type => PowerType.Debuff;
-    // 叠加方式：计数器，Amount 表示剩余回合数，回合结束时 -1 归零自动移除
+    // 叠加方式：计数器，Amount 表示“每打出一张攻击牌对自己造成的伤害”
     public override PowerStackType StackType => PowerStackType.Counter;
     public override bool AllowNegative => false;
-    // 允许接收战斗钩子，否则 AfterCardPlayed / AfterSideTurnEnd 不会被调用
+    // 允许接收战斗钩子，否则 BeforeCardPlayed / AfterCardPlayed / AfterSideTurnEnd 不会被调用
     public override bool ShouldReceiveCombatHooks => true;
-
-    // 图标上显示每次打牌失去的生命（而非剩余回合数）
-    public override int DisplayAmount => hpCostPerCard;
 
     // 能力图标资源
     public override PowerAssetProfile AssetProfile => new(
@@ -72,36 +54,66 @@ public class BloodLossPower : ModPowerTemplate
         return new Data();
     }
 
-    // 记录附加本能力的卡牌（由“自刎归天”在打出时设置）
-    public void SetSourceCard(CardModel card)
+    // 打出前登记：只登记自己打出的攻击牌（含打出瞬间的 Amount 快照）
+    public override Task BeforeCardPlayed(CardPlay cardPlay)
     {
-        GetInternalData<Data>().sourceCard = card;
-    }
-
-    // 每打出一张攻击牌（附加本能力的卡牌本身除外），失去 hpCostPerCard 点生命（不可格挡、不受力量等伤害修饰）
-    public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
-    {
-        if (cardPlay.Card.Owner?.Creature != Owner || !Owner.IsAlive)
+        if (cardPlay.Card.Owner?.Creature != Owner)
         {
-            return;
+            return Task.CompletedTask;
         }
-
-        // 只有攻击牌触发掉血
         if (cardPlay.Card.Type != CardType.Attack)
         {
+            return Task.CompletedTask;
+        }
+        GetInternalData<Data>().amountsForPlayedCards.Add(cardPlay.Card, Amount);
+        return Task.CompletedTask;
+    }
+
+    // 打出后核销并结算：对自己造成 hpCost 点伤害（不可受力量等修饰，但仍可被格挡）
+    public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    {
+        // 在册才触发，顺带清理字典（未登记的牌：非攻击牌、其他玩家的牌、附加本能力的牌）
+        if (!GetInternalData<Data>().amountsForPlayedCards.Remove(cardPlay.Card, out int hpCost))
+        {
             return;
         }
-
-        // 打出“自刎归天”本身不触发掉血
-        if (cardPlay.Card == GetInternalData<Data>().sourceCard)
+        if (!Owner.IsAlive || hpCost <= 0)
         {
             return;
         }
 
-        // 自刎掉血触发音效（对应 FMOD 事件 event:/newsanguo/sfx/blood_loss）
+        // 自刎伤害触发音效（对应 FMOD 事件 event:/newsanguo/sfx/blood_loss）
         NewsanguoSfx.Play("event:/newsanguo/sfx/blood_loss");
 
-        await CreatureCmd.Damage(choiceContext, Owner, hpCostPerCard, ValueProp.Unblockable | ValueProp.Unpowered, dealer: null, cardSource: null, cardPlay: cardPlay);
+        // ValueProp.Unpowered：来自能力造成的伤害，不受力量等伤害修饰（仍可被格挡）。
+        // 若场上有存活的奥斯提，则由它承担这次自刎伤害（见 ModifyUnblockedDamageTarget）。
+        ostyIsTakingThisDamage = true;
+        try
+        {
+            await CreatureCmd.Damage(choiceContext, Owner, hpCost, ValueProp.Unpowered, dealer: Owner, cardSource: null, cardPlay: null);
+        }
+        finally
+        {
+            ostyIsTakingThisDamage = false;
+        }
+    }
+
+    /// <summary>
+    /// 把这次自刎的未被格挡伤害转给奥斯提承担。走引擎自带的伤害转移通道，
+    /// 因此格挡、溢出伤害（奥斯提被打死时多出的部分回到你身上）、死亡结算都与原版奥斯提“替你去死”一致。
+    /// </summary>
+    public override Creature ModifyUnblockedDamageTarget(Creature target, decimal amount, ValueProp props, Creature? dealer)
+    {
+        if (!ostyIsTakingThisDamage || target != Owner)
+        {
+            return target;
+        }
+        Player? player = Owner.Player;
+        if (player is null || !player.IsOstyAlive)
+        {
+            return target;
+        }
+        return player.Osty!;
     }
 
     // 回合结束时移除本能力
@@ -109,7 +121,7 @@ public class BloodLossPower : ModPowerTemplate
     {
         if (participants.Contains(Owner))
         {
-            await PowerCmd.Decrement(this);
+            await PowerCmd.Remove(this);
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
@@ -11,7 +12,6 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
-using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -27,10 +27,9 @@ public class BladeOfVirtue : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 3 点伤害，攻击 2 次；给予目标 1 层虚弱、1 层易伤
+    // 卡牌基础数值：分两段各造成 6 点伤害；给予目标 1 层虚弱、1 层易伤
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(3, ValueProp.Move),
-        new RepeatVar(2),
+        new DamageVar(6, ValueProp.Move),
         new PowerVar<WeakPower>(1m),
         new PowerVar<VulnerablePower>(1m)
     ];
@@ -45,27 +44,36 @@ public class BladeOfVirtue : NewsanguoCardTemplate
         HoverTipFactory.FromPower<VulnerablePower>()
     ];
 
-    // 打出时的效果逻辑
+    // 打出时的效果逻辑：分两段结算，第一段音效播完后才进入第二段（参考“马氏四连”的分段卡点节奏）
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         ArgumentNullException.ThrowIfNull(cardPlay.Target, "cardPlay.Target");
+        Creature target = cardPlay.Target;
 
-        // 播放出牌音效
-        NewsanguoSfx.Play("event:/newsanguo/sfx/blade_of_virtue");
+        // 第一段：播放音效 → 造成伤害 → 给予虚弱
+        var firstVoice = NewsanguoSfx.Play("event:/newsanguo/sfx/blade_of_virtue_1");
 
-        // 对目标造成 4 点伤害 2 次
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
-            .Targeting(cardPlay.Target)
-            .WithHitCount(DynamicVars.Repeat.IntValue)
+            .Targeting(target)
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
 
-        // 给予目标虚弱
-        await PowerCmd.Apply<WeakPower>(choiceContext, cardPlay.Target, DynamicVars.Weak.IntValue, base.Owner.Creature, this, silent: false);
+        await PowerCmd.Apply<WeakPower>(choiceContext, target, DynamicVars.Weak.IntValue, base.Owner.Creature, this, silent: false);
 
-        // 给予目标易伤
-        await PowerCmd.Apply<VulnerablePower>(choiceContext, cardPlay.Target, DynamicVars.Vulnerable.IntValue, base.Owner.Creature, this, silent: false);
+        // 等第一段音效自然播完，避免两段语音重叠
+        await NewsanguoSfx.WaitFinishedAsync(firstVoice);
+
+        // 第二段：播放音效 → 造成伤害 → 给予易伤
+        NewsanguoSfx.Play("event:/newsanguo/sfx/blade_of_virtue_2");
+
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+            .FromCard(this, cardPlay)
+            .Targeting(target)
+            .WithHitFx("vfx/vfx_attack_slash")
+            .Execute(choiceContext);
+
+        await PowerCmd.Apply<VulnerablePower>(choiceContext, target, DynamicVars.Vulnerable.IntValue, base.Owner.Creature, this, silent: false);
     }
 
     // 升级后的效果逻辑

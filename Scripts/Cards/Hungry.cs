@@ -37,9 +37,6 @@ public class Hungry : NewsanguoCurseTemplate
     // 回合结束时：这张牌若在手牌中，你下个回合少抽1张牌
     protected override async Task OnTurnEndInHand(PlayerChoiceContext choiceContext)
     {
-        // 播放出牌音效
-        NewsanguoSfx.Play("event:/newsanguo/sfx/hungry");
-        
         // 原版“下回合抽牌”能力支持负层数：-1 即下回合少抽1张（随后因“虚无”自行消耗）
         await PowerCmd.Apply<DrawCardsNextTurnPower>(choiceContext, base.Owner.Creature, -1, base.Owner.Creature, this);
     }

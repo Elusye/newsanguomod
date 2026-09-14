@@ -11,7 +11,6 @@ using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Cards;
-using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -31,12 +30,12 @@ public class Intoxicated : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：获得 2 点酒力；若上一张打出的是技能牌，额外获得 2 点酒力
-    // 额外部分用 IntVar：实际结算时两部分合并为一次酒力获得，“换大盏”只加成一次，
-    // 若这里也用 PowerVar，卡面会把它算成两次加成而显示偏大
+    // 卡牌基础数值：获得 2 点酒力；若上一张打出的是技能牌，额外再获得 2 点酒力
+    // 两段都用 PowerVar<DrunkenMightPower>：卡面两行数字都会把“换大盏”等酒力加成算进去，
+    // 与 OnPlay 里分两次结算（= 两次“获得酒力”）的实际结果保持一一对应
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new PowerVar<DrunkenMightPower>(2m),
-        new IntVar("IntoxicatedBonus", 2)
+        new PowerVar<DrunkenMightPower>("IntoxicatedBonus", 2m)
     ];
 
     // 悬停提示：展示“酒力”说明
@@ -76,19 +75,26 @@ public class Intoxicated : NewsanguoCardTemplate
             .LastOrDefault(entry => entry.CardPlay?.Card?.Owner == base.Owner);
         bool lastWasSkill = lastPlay is not null && lastPlay.CardPlay.Card.Type == CardType.Skill;
 
-        int wineAmount = DynamicVars["DrunkenMightPower"].IntValue;
-        if (lastWasSkill)
-        {
-            wineAmount += DynamicVars["IntoxicatedBonus"].IntValue;
-        }
-
+        // 两段酒力分两次结算：换大盏等“每当你获得酒力时额外获得”的加成会各生效一次，
+        // 与卡面两个数字各自显示加成后的值一一对应
         await PowerCmd.Apply<DrunkenMightPower>(
             choiceContext,
             base.Owner.Creature,
-            wineAmount,
+            DynamicVars["DrunkenMightPower"].IntValue,
             base.Owner.Creature,
             this,
             silent: false);
+
+        if (lastWasSkill)
+        {
+            await PowerCmd.Apply<DrunkenMightPower>(
+                choiceContext,
+                base.Owner.Creature,
+                DynamicVars["IntoxicatedBonus"].IntValue,
+                base.Owner.Creature,
+                this,
+                silent: false);
+        }
     }
 
     // 升级后的效果逻辑

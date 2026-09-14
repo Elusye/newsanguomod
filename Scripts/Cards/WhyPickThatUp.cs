@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Localization;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -15,6 +14,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
 
@@ -33,14 +33,17 @@ public class WhyPickThatUp : NewsanguoCardTemplate
     // 仅多人模式可用（每人各选的交互在单人下没有意义）
     public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
 
-    // 每名玩家最多可从弃牌堆拿回手牌的张数（升级不变，费用 3 → 2）
-    private const int MaxCardsPerPlayer = 10;
+    // 从弃牌堆拿回手牌的张数：基础 2，升级后 3
+    protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new DynamicVar("ReturnCount", 2m)
+    ];
 
     public WhyPickThatUp() : base(3, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
     {
     }
 
-    // 打出时的效果逻辑
+    // 打出时的效果逻辑：给所有存活玩家附加能力，各自在下个回合开始时从弃牌堆取牌
+    // （选择时机放在回合开始而非打出瞬间，否则在“额外回合”中打出会卡死战斗流程）
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         // 播放出牌音效
@@ -48,39 +51,16 @@ public class WhyPickThatUp : NewsanguoCardTemplate
 
         ICombatState combatState = CombatState!;
 
-        // 所有存活的玩家每人各选至多 10 张自己弃牌堆中的牌加入自己的手牌
-        // 打出者优先，其余队友随后（顺序进行选择）
-        IEnumerable<Player> targets = combatState.Players
-            .Where(p => p.Creature is { IsAlive: true })
-            .OrderByDescending(p => p == Owner);
-
-        foreach (Player player in targets)
+        // 所有存活的玩家各获得一层能力，各自在下个回合开始时从自己的弃牌堆中选至多 ReturnCount 张牌
+        foreach (Player player in combatState.Players.Where(p => p.Creature is { IsAlive: true }))
         {
-            CardPile discard = PileType.Discard.GetPile(player);
-            if (discard.Cards.Count == 0)
-            {
-                continue;
-            }
-
-            int maxCount = discard.Cards.Count < MaxCardsPerPlayer ? discard.Cards.Count : MaxCardsPerPlayer;
-
-            List<CardModel> selected = (await CardSelectCmd.FromCombatPile(
-                context: choiceContext,
-                pile: discard,
-                player: player,
-                prefs: new CardSelectorPrefs(new LocString("cards", "NEWSANGUO_CARD_SELECT_FROM_DISCARD"), 0, maxCount))).ToList();
-
-            foreach (CardModel card in selected)
-            {
-                // 牌属于该玩家，按牌主解析对应手牌堆
-                await CardPileCmd.Add(card, PileType.Hand);
-            }
+            await PowerCmd.Apply<WhyPickThatUpPower>(choiceContext, player.Creature, DynamicVars["ReturnCount"].BaseValue, Owner.Creature, this);
         }
     }
 
-    // 升级：费用 3 → 2
+    // 升级：张数 2 → 3
     protected override void OnUpgrade()
     {
-        EnergyCost.UpgradeBy(-1);
+        DynamicVars["ReturnCount"].UpgradeValueBy(1m);
     }
 }

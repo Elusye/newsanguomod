@@ -34,7 +34,7 @@ public class RuthlessBlade : NewsanguoCardTemplate
     // 卡牌基础数值：每次打击伤害、给予目标的易伤层数、给予自身的脆弱层数
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new DamageVar(5m, ValueProp.Move),
+        new DamageVar(6m, ValueProp.Move),
         new PowerVar<VulnerablePower>(1m),
         new PowerVar<FrailPower>(1m)
     ];
@@ -57,7 +57,7 @@ public class RuthlessBlade : NewsanguoCardTemplate
         // 播放出牌语音
         NewsanguoSfx.Play("event:/newsanguo/sfx/ruthless_blade");
 
-        // 造成 5（6）点伤害 2 次
+        // 造成 6点伤害 2 次
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
@@ -77,7 +77,7 @@ public class RuthlessBlade : NewsanguoCardTemplate
         }
     }
 
-    // 升级：每次打击伤害 5 → 6，给予目标易伤 1 → 2
+    // 升级：每次打击伤害 6 → 7，给予目标易伤 1 → 2
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(1m);

@@ -31,7 +31,7 @@ public class SelfFall : NewsanguoCardTemplate
 
     // 卡牌基础数值：每打出一张牌失去的生命
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DynamicVar("HpCostPerCard", 3m)
+        new DynamicVar("HpCostPerCard", 1m)
     ];
 
     public SelfFall() : base(3, CardType.Skill, CardRarity.Rare, TargetType.Self)
@@ -58,18 +58,10 @@ public class SelfFall : NewsanguoCardTemplate
             await CardPileCmd.Add(card, PileType.Hand);
         }
 
-        // 附加“自刎”能力：本回合内每打出一张攻击牌，失去 HpCostPerCard 点生命（仅持续本回合）。
-        // 同一回合多次打出会叠加每次掉血数值（如两张为每牌失去 6 点），但不会延长持续时间；
-        // 记录来源卡牌，保证打出“自刎归天”本身不掉血。
-        int hpCost = DynamicVars["HpCostPerCard"].IntValue;
-        BloodLossPower? power = base.Owner.Creature.GetPowerInstances<BloodLossPower>().FirstOrDefault();
-        if (power is null)
-        {
-            power = await PowerCmd.Apply<BloodLossPower>(choiceContext, base.Owner.Creature, 1, base.Owner.Creature, this)
-                ?? throw new InvalidOperationException("PowerCmd.Apply<BloodLossPower> unexpectedly returned null.");
-        }
-        power.AddHpCost(hpCost);
-        power.SetSourceCard(this);
+        // 附加“自刎”能力：本回合内每打出一张攻击牌，对自己造成 HpCostPerCard 点伤害（仅持续本回合）。
+        // 同一回合多次打出会叠加能力 Amount（如两张为每张 2 点），但不会延长持续时间；
+        // 能力内部会在“打出前登记、打出后核销”，因此附加它的这张牌本身不会触发。
+        await PowerCmd.Apply<BloodLossPower>(choiceContext, base.Owner.Creature, DynamicVars["HpCostPerCard"].IntValue, base.Owner.Creature, this);
     }
 
     // 升级后的效果逻辑

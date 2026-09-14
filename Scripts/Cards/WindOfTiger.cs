@@ -61,8 +61,6 @@ public class WindOfTiger : NewsanguoCardTemplate
             silent: false);
 
         // 将一张笑面虎和一张龙可是帝王之征啊加入手牌（升级后为升级版）
-        NewsanguoSfx.Play("event:/newsanguo/sfx/wind_of_tiger_power");
-
         CardModel tiger = combatState.CreateCard<SmilingTiger>(base.Owner);
         CardModel dragon = combatState.CreateCard<DragonOmen>(base.Owner);
         if (IsUpgraded)

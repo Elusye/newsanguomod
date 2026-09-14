@@ -65,8 +65,8 @@ public class ChainStratagem : NewsanguoCardTemplate
         counter.Value++;
         bool isOddPlay = (counter.Value & 1) == 1;
         NewsanguoSfx.Play(isOddPlay
-            ? "event:/newsanguo/sfx/chain_stratagem1"
-            : "event:/newsanguo/sfx/chain_stratagem2");
+            ? "event:/newsanguo/sfx/chain_stratagem_1"
+            : "event:/newsanguo/sfx/chain_stratagem_2");
 
         // 1. 造成当前伤害（尚未包含本次加成，与“夷陵之火”一致）
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)

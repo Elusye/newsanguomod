@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
@@ -29,9 +30,10 @@ public class ImGettingDrunk : NewsanguoCardTemplate
         new PowerVar<DrunkenMightPower>(6m)
     ];
 
-    // 悬停提示：展示“酒力”说明
+    // 悬停提示：展示“酒力”说明 + “不胜酒力”卡面说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<DrunkenMightPower>()
+        HoverTipFactory.FromPower<DrunkenMightPower>(),
+        HoverTipFactory.FromCard<Lightweight>()
     ];
 
     public ImGettingDrunk() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
@@ -55,13 +57,8 @@ public class ImGettingDrunk : NewsanguoCardTemplate
             Owner.Creature,
             this);
 
-        // 施加“止戈”：本回合不能打出攻击牌（回合结束时自动移除）
-        await PowerCmd.Apply<NoAttacksThisTurnPower>(
-            choiceContext,
-            Owner.Creature,
-            1,
-            Owner.Creature,
-            this);
+        // 负面效果：将一张“不胜酒力”加入你的弃牌堆
+        await Lightweight.CreateInDiscard(Owner, CombatState!);
     }
 
     // 升级：酒力 6 → 8
