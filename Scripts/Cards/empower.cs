@@ -36,13 +36,12 @@ public class Empower : NewsanguoCardTemplate
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/empower");
 
-        // 选择一张手牌记录（只能选不带“消耗”关键词的攻击牌或技能牌）
+        // 选择一张手牌记录（攻击牌或技能牌，不再限制是否带“消耗”）
         List<CardModel> selected = (await CardSelectCmd.FromHand(
             prefs: new CardSelectorPrefs(SelectionScreenPrompt, 1),
             context: choiceContext,
             player: base.Owner,
-            filter: card => (card.Type == CardType.Attack || card.Type == CardType.Skill)
-                && !card.Keywords.Contains(CardKeyword.Exhaust),
+            filter: card => card.Type == CardType.Attack || card.Type == CardType.Skill,
             source: this)).ToList();
         CardModel? recordedCard = selected.FirstOrDefault();
         if (recordedCard is null)

@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.CardPools;
@@ -35,6 +36,11 @@ public class OldForgottenRitual : NewsanguoCardTemplate
     // 卡牌基础数值：获得的能量
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new EnergyVar(3)
+    ];
+
+    // 悬停提示：展示“消耗”关键词的说明（卡牌以本回合是否消耗过牌为条件，自身不消耗）
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
+        HoverTipFactory.FromKeyword(CardKeyword.Exhaust)
     ];
 
     // 本回合消耗过卡牌时金色高亮（提示会获得能量）

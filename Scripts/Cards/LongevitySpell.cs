@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Enchantments;
+using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -30,9 +31,12 @@ public class LongevitySpell : NewsanguoCardTemplate
     // 卡牌自带“消耗”关键词（合并 base 以保留模板附加的模组关键词）
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
-    // 卡牌基础数值：失去 5 点天意之力（升级后 4）
+    // 卡牌基础数值：失去 5 点天意之力（升级后 4）；抽 3 张牌（升级后 5）
     // HeavensForceVar：被“魔法禁术目录”标记的回合内，卡面显示 0 点
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new HeavensForceVar(5m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new HeavensForceVar(5m),
+        new CardsVar(3)
+    ];
 
     // 鼠标悬停时显示天意之力、天意侵蚀、灵魂附魔与消耗关键词说明
     // （天意之力的说明文本中会出现“天意侵蚀”，两者须成对展示）
@@ -71,29 +75,34 @@ public class LongevitySpell : NewsanguoCardTemplate
             base.Owner.Creature,
             this);
 
-        // 选择一张手牌中无附魔、自带“消耗”关键词的牌，附加“灵魂”附魔（移除其消耗）
-        CardModel? selected = (await CardSelectCmd.FromHand(
-            prefs: new CardSelectorPrefs(SelectionScreenPrompt, 1),
+        // 失去天意之力后抽牌
+        await CardPileCmd.Draw(choiceContext, DynamicVars["Cards"].IntValue, base.Owner);
+
+        // 选择任意张手牌中无附魔、自带“消耗”关键词的牌，附加“灵魂”附魔（移除其消耗）
+        List<CardModel> selectableCards = PileType.Hand.GetPile(base.Owner).Cards
+            .Where(card => card.Enchantment is null && card.Keywords.Contains(CardKeyword.Exhaust))
+            .ToList();
+        if (selectableCards.Count == 0)
+        {
+            return;
+        }
+
+        List<CardModel> selected = (await CardSelectCmd.FromHand(
+            prefs: new CardSelectorPrefs(SelectionScreenPrompt, 0, selectableCards.Count),
             context: choiceContext,
             player: base.Owner,
-            filter: card => card.Enchantment is null && card.Keywords.Contains(CardKeyword.Exhaust),
-            source: this)).FirstOrDefault();
-        if (selected is not null)
+            filter: selectableCards.Contains,
+            source: this)).ToList();
+        foreach (CardModel card in selected)
         {
-            CardCmd.Enchant<SoulsPower>(selected, 1m);
+            CardCmd.Enchant<SoulsPower>(card, 1m);
         }
     }
 
-    // 升级后的效果逻辑：失去的天意之力 5 → 4，并获得“保留”
+    // 升级后的效果逻辑：失去的天意之力 5 → 4、抽牌数 3 → 5
     protected override void OnUpgrade()
     {
-        AddKeyword(CardKeyword.Retain);
         DynamicVars["HeavensForcePower"].UpgradeValueBy(-1m);
-    }
-
-    // 降级后的效果逻辑（升级被移除或回退时调用）
-    protected override void AfterDowngraded()
-    {
-        RemoveKeyword(CardKeyword.Retain);
+        DynamicVars["Cards"].UpgradeValueBy(2m);
     }
 }

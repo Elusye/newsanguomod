@@ -31,11 +31,13 @@ public class MyThreeGenerals : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 鼠标悬停时展示三张可选将领（升级时展示对应升级版）
+    // 鼠标悬停时展示三张可选将领（升级时展示对应升级版）；
+    // 卡牌效果会消耗一张手牌，但卡牌自身不消耗，故需补“消耗”关键词说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromCard<HanXin>(IsUpgraded),
         HoverTipFactory.FromCard<BaiQi>(IsUpgraded),
-        HoverTipFactory.FromCard<ZhouYafu>(IsUpgraded)
+        HoverTipFactory.FromCard<ZhouYafu>(IsUpgraded),
+        HoverTipFactory.FromKeyword(CardKeyword.Exhaust)
     ];
 
     public MyThreeGenerals() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)

@@ -113,7 +113,7 @@
   "NEWSANGUO_CARD_RETIRE.title": "Retire",
   "NEWSANGUO_CARD_RETIRE.description": "Gain {IntangiblePower} [gold]Intangible[/gold].\nEnd your turn.",
   "NEWSANGUO_CARD_BREW_HEALS_ALL.title": "Brew Heals All",
-  "NEWSANGUO_CARD_BREW_HEALS_ALL.description": "If your [gold]Drunken Might[/gold] is at least {DrunkenMight:diff()}: lose an equal amount of [gold]Drunken Might[/gold], gain {RegenPower:diff()} [gold]Regen[/gold].",
+  "NEWSANGUO_CARD_BREW_HEALS_ALL.description": "If your [gold]Drunken Might[/gold] is at least {DrunkenMight:diff()}: lose an equal amount of [gold]Drunken Might[/gold], remove all your [gold]debuffs[/gold].",
   "NEWSANGUO_CARD_SELECT_ONE_FROM_DISCARD": "Choose a card to return to your hand",
   "NEWSANGUO_CARD_SELECT_FROM_DISCARD": "Choose cards to return to your hand (multiple allowed)",
   "NEWSANGUO_CARD_SELECT_ONE_TO_KEEP": "Choose a card to keep in your hand",
@@ -144,8 +144,8 @@
   "NEWSANGUO_CARD_REANIMATION_SPELL.title": "Reanimation Spell",
   "NEWSANGUO_CARD_REANIMATION_SPELL.description": "Lose {HeavensForcePower:inverseDiff()} [gold]Heaven's Force[/gold].\nChoose any number of cards from your [gold]Exhaust Pile[/gold] and put them into your hand.",
   "NEWSANGUO_CARD_LONGEVITY_SPELL.title": "Longevity Spell",
-  "NEWSANGUO_CARD_LONGEVITY_SPELL.description": "Lose {HeavensForcePower:inverseDiff()} [gold]Heaven's Force[/gold].\n[purple]Enchant[/purple] a card in your [gold]Hand[/gold] that has [gold]Exhaust[/gold] and no [gold]Enchant[/gold], with [gold]Soul Power[/gold].",
-  "NEWSANGUO_CARD_LONGEVITY_SPELL.selectionScreenPrompt": "Choose a card to [purple]Enchant[/purple].",
+  "NEWSANGUO_CARD_LONGEVITY_SPELL.description": "Lose {HeavensForcePower:inverseDiff()} [gold]Heaven's Force[/gold].\nDraw {Cards:diff()} cards.\n[purple]Enchant[/purple] any number of cards in your [gold]Hand[/gold] that have [gold]Exhaust[/gold] and no [gold]Enchant[/gold], with [gold]Soul Power[/gold].",
+  "NEWSANGUO_CARD_LONGEVITY_SPELL.selectionScreenPrompt": "Choose any number of cards to [purple]Enchant[/purple].",
   "NEWSANGUO_CARD_FATHER_CAN_CLAIM_THE_THRONE.title": "Father Can Claim the Throne",
   "NEWSANGUO_CARD_FATHER_CAN_CLAIM_THE_THRONE.description": "At the start of your turn, lose {VictoryByHeavensWillPower:diff()} [gold]Heaven's Force[/gold], gain {Energy:energyIcons()}, and draw {DrawCount} additional cards.",
   "NEWSANGUO_CARD_NEW_GAME_PLUS.title": "New Game Plus",
@@ -195,7 +195,7 @@
   "NEWSANGUO_CARD_MY_THREE_GENERALS.title": "My Three Generals",
   "NEWSANGUO_CARD_MY_THREE_GENERALS.description": "[gold]Exhaust[/gold] a card in your [gold]Hand[/gold].\nChoose [gold]{IfUpgraded:show:Han Xin+|Han Xin}[/gold], [gold]{IfUpgraded:show:Bai Qi+|Bai Qi}[/gold], or [gold]{IfUpgraded:show:Zhou Yafu+|Zhou Yafu}[/gold] and add it to your hand.",
   "NEWSANGUO_CARD_EMPOWER.title": "Empower",
-  "NEWSANGUO_CARD_EMPOWER.description": "Choose a non-Exhaust Attack or Skill card in your hand to record.\nAt the start of your turn, choose a [gold]Hand[/gold] card to [gold]Transform[/gold] into the recorded card.",
+  "NEWSANGUO_CARD_EMPOWER.description": "Choose an Attack or Skill card in your hand to record.\nAt the start of your turn, choose a [gold]Hand[/gold] card to [gold]Transform[/gold] into the recorded card.",
   "NEWSANGUO_CARD_EMPOWER.selectionScreenPrompt": "Choose a card to record.",
   "NEWSANGUO_CARD_WHERE_S_WINE.title": "Where's Wine",
   "NEWSANGUO_CARD_WHERE_S_WINE.description": "Whenever you gain [gold]Drunken Might[/gold], draw {WhereSWinePower:diff()} cards.",
@@ -224,5 +224,5 @@
   "NEWSANGUO_CARD_HUNGRY.title": "Hungry",
   "NEWSANGUO_CARD_HUNGRY.description": "At the end of your turn, if this card is in your hand, you draw 1 fewer card next turn.",
   "NEWSANGUO_CARD_LIGHTWEIGHT.title": "Lightweight",
-  "NEWSANGUO_CARD_LIGHTWEIGHT.description": "If this card is in your hand, you can no longer gain any [gold]Drunken Might[/gold]."
+  "NEWSANGUO_CARD_LIGHTWEIGHT.description": "If this card is in your hand, you can no longer gain any [gold]Drunken Might[/gold], and you cannot play Attack cards."
 }

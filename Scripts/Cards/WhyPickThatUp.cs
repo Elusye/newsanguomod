@@ -27,8 +27,8 @@ public class WhyPickThatUp : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 自带“奇巧”（Sly）与“消耗”关键词
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Sly, CardKeyword.Exhaust];
+    // 自带“奇巧”（Sly）关键词
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Sly];
 
     // 仅多人模式可用（每人各选的交互在单人下没有意义）
     public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
@@ -38,7 +38,7 @@ public class WhyPickThatUp : NewsanguoCardTemplate
         new DynamicVar("ReturnCount", 2m)
     ];
 
-    public WhyPickThatUp() : base(3, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+    public WhyPickThatUp() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
     {
     }
 

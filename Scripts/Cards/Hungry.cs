@@ -6,12 +6,12 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Cards;
-using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
 
@@ -37,7 +37,7 @@ public class Hungry : NewsanguoCurseTemplate
     // 回合结束时：这张牌若在手牌中，你下个回合少抽1张牌
     protected override async Task OnTurnEndInHand(PlayerChoiceContext choiceContext)
     {
-        // 原版“下回合抽牌”能力支持负层数：-1 即下回合少抽1张（随后因“虚无”自行消耗）
-        await PowerCmd.Apply<DrawCardsNextTurnPower>(choiceContext, base.Owner.Creature, -1, base.Owner.Creature, this);
+        // 施加“抽牌变少”：下回合少抽1张
+        await PowerCmd.Apply<DrawReductionPower>(choiceContext, base.Owner.Creature, 1, base.Owner.Creature, this);
     }
 }

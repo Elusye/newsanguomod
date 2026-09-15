@@ -37,9 +37,11 @@ public class NeverHadThese : NewsanguoCardTemplate
         new PowerVar<HeavensForcePower>(1m)
     ];
 
-    // 悬停提示：展示“格挡”、“天意之力”和“天意侵蚀”说明
+    // 悬停提示：展示“格挡”、“天意之力”和“天意侵蚀”说明；
+    // 卡牌效果会消耗手牌中的所有非攻击牌，但卡牌自身不消耗，故需补“消耗”关键词说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.Static(StaticHoverTip.Block),
+        HoverTipFactory.FromKeyword(CardKeyword.Exhaust),
         HoverTipFactory.FromPower<HeavensForcePower>(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];

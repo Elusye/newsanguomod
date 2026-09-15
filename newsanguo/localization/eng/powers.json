@@ -94,5 +94,8 @@
   "NEWSANGUO_POWER_CAOS_ART_OF_WAR_POWER.smartDescription": "Whenever you play a card, Summon [blue]{Amount}[/blue].\nWhenever any creature dies, you gain [blue]{Amount}[/blue] [gold]Strength[/gold].",
   "NEWSANGUO_POWER_OLD_DIAMOND_DIADEM_POWER.title": "Old Diamond Diadem",
   "NEWSANGUO_POWER_OLD_DIAMOND_DIADEM_POWER.description": "The damage you take from enemies this turn is halved.",
-  "NEWSANGUO_POWER_OLD_DIAMOND_DIADEM_POWER.smartDescription": "The damage you take from enemies this turn is halved."
+  "NEWSANGUO_POWER_OLD_DIAMOND_DIADEM_POWER.smartDescription": "The damage you take from enemies this turn is halved.",
+  "NEWSANGUO_POWER_DRAW_REDUCTION_POWER.title": "Draw Reduction",
+  "NEWSANGUO_POWER_DRAW_REDUCTION_POWER.description": "Draw [blue]1[/blue] fewer card next turn.",
+  "NEWSANGUO_POWER_DRAW_REDUCTION_POWER.smartDescription": "Draw [blue]{Amount}[/blue] fewer {Amount:plural:card|cards} next turn."
 }
