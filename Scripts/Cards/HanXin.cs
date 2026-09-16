@@ -16,8 +16,8 @@ using newsanguo.Scripts.Characters;
 
 namespace newsanguo.Scripts;
 
-// 注册卡牌到无色卡池（衍生牌，可由特定效果生成）
-[RegisterCard(typeof(ColorlessCardPool))]
+// 注册卡牌到衍生卡池（衍生牌，可由特定效果生成）
+[RegisterCard(typeof(TokenCardPool))]
 public class HanXin : NewsanguoCardTemplate
 {
 

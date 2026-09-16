@@ -18,8 +18,8 @@ using newsanguo.Scripts.Cards;
 
 namespace newsanguo.Scripts;
 
-// 注册卡牌到无色卡池（原版狂宴 Feed 的变体，额外添加“虚无”）
-[RegisterCard(typeof(ColorlessCardPool))]
+// 注册卡牌到衍生卡池（原版狂宴 Feed 的变体，额外添加“虚无”）
+[RegisterCard(typeof(TokenCardPool))]
 public class ChowDown : NewsanguoCardTemplate
 {
 
