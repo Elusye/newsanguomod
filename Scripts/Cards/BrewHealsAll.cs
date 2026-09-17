@@ -73,6 +73,16 @@ public class BrewHealsAll : NewsanguoCardTemplate
         {
             await PowerCmd.Remove(debuff);
         }
+
+        // 清除自己所有牌上的“标记”（折磨）：折磨不会自动过期，原版由各自能力在回合末自行清理，
+        // 因此只移除能力会让标记在本场战斗中永久残留（被标记的牌再也打不出去）
+        foreach (CardModel card in Owner.PlayerCombatState.AllCards)
+        {
+            if (card.Affliction != null)
+            {
+                CardCmd.ClearAffliction(card);
+            }
+        }
     }
 
     // 升级：消耗的酒力 6 → 4

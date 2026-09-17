@@ -113,7 +113,7 @@
   "NEWSANGUO_CARD_RETIRE.title": "Retire",
   "NEWSANGUO_CARD_RETIRE.description": "Gain {IntangiblePower} [gold]Intangible[/gold].\nEnd your turn.",
   "NEWSANGUO_CARD_BREW_HEALS_ALL.title": "Brew Heals All",
-  "NEWSANGUO_CARD_BREW_HEALS_ALL.description": "If your [gold]Drunken Might[/gold] is at least {DrunkenMight:diff()}: lose an equal amount of [gold]Drunken Might[/gold], remove all your [gold]debuffs[/gold].",
+  "NEWSANGUO_CARD_BREW_HEALS_ALL.description": "If your [gold]Drunken Might[/gold] is at least {DrunkenMight:diff()}: lose an equal amount of [gold]Drunken Might[/gold], remove all your [gold]debuffs[/gold] and clear all [gold]marks[/gold] on your cards.",
   "NEWSANGUO_CARD_SELECT_ONE_FROM_DISCARD": "Choose a card to return to your hand",
   "NEWSANGUO_CARD_SELECT_FROM_DISCARD": "Choose cards to return to your hand (multiple allowed)",
   "NEWSANGUO_CARD_SELECT_ONE_TO_KEEP": "Choose a card to keep in your hand",

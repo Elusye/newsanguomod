@@ -113,7 +113,7 @@
   "NEWSANGUO_CARD_RETIRE.title": "告老还乡",
   "NEWSANGUO_CARD_RETIRE.description": "获得{IntangiblePower}层[gold]无实体[/gold]。\n结束你的回合。",
   "NEWSANGUO_CARD_BREW_HEALS_ALL.title": "酒治百病",
-  "NEWSANGUO_CARD_BREW_HEALS_ALL.description": "若你的[gold]酒力[/gold]不小于{DrunkenMight:diff()}点：失去等量[gold]酒力[/gold]，移除你身上的所有[gold]负面效果[/gold]。",
+  "NEWSANGUO_CARD_BREW_HEALS_ALL.description": "若你的[gold]酒力[/gold]不小于{DrunkenMight:diff()}点：失去等量[gold]酒力[/gold]，移除你身上的所有[gold]负面效果[/gold]，并清除你所有牌上的[gold]标记[/gold]。",
   "NEWSANGUO_CARD_SELECT_ONE_FROM_DISCARD": "选择一张要拿回手牌的牌",
   "NEWSANGUO_CARD_SELECT_FROM_DISCARD": "选择要拿回手牌的牌（可选多张）",
   "NEWSANGUO_CARD_SELECT_ONE_TO_KEEP": "选择一张要保留在手牌中的牌",
