@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dxtgqt446c6cb"
-path="res://.godot/imported/RatPoisonPlusPower.png-c164fd7a436b785e6ea6b3ad8f210b58.ctex"
+uid="uid://bphgcnq53e57y"
+path="res://.godot/imported/HeavensForce.png-18e5b8018df9b6bd8ef5896172f6df67.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/RatPoisonPlusPower.png"
-dest_files=["res://.godot/imported/RatPoisonPlusPower.png-c164fd7a436b785e6ea6b3ad8f210b58.ctex"]
+source_file="res://newsanguo/images/secondary_resource/HeavensForce.png"
+dest_files=["res://.godot/imported/HeavensForce.png-18e5b8018df9b6bd8ef5896172f6df67.ctex"]
 
 [params]
 

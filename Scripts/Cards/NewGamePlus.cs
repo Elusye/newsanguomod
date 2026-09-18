@@ -37,14 +37,14 @@ public class NewGamePlus : NewsanguoCardTemplate
     // 卡牌基础数值：预见数量、天意之力、酒力、抽牌数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DynamicVar("ScryAmount", 5m),
-        new PowerVar<HeavensForcePower>(2m),
+        new HeavensForceVar(2m),
         new PowerVar<DrunkenMightPower>(3m),
         new CardsVar(1)
     ];
 
     // 鼠标悬停时显示天意之力、天意侵蚀与酒力提示
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>(),
         HoverTipFactory.FromPower<DrunkenMightPower>()
     ];
@@ -69,13 +69,7 @@ public class NewGamePlus : NewsanguoCardTemplate
         await ScryCmd.Scry(choiceContext, base.Owner, DynamicVars["ScryAmount"].IntValue);
 
         // 获得天意之力
-        await PowerCmd.Apply<HeavensForcePower>(
-            choiceContext,
-            base.Owner.Creature,
-            DynamicVars["HeavensForcePower"].IntValue,
-            base.Owner.Creature,
-            this,
-            silent: false);
+        await HeavensForce.Add(choiceContext, base.Owner, DynamicVars["HeavensForcePower"].IntValue, this);
 
         // 获得酒力
         await PowerCmd.Apply<DrunkenMightPower>(

@@ -17,6 +17,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
@@ -41,7 +42,7 @@ public class ReanimationSpell : NewsanguoCardTemplate
 
     // 鼠标悬停时显示天意之力与天意侵蚀提示
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -66,13 +67,7 @@ public class ReanimationSpell : NewsanguoCardTemplate
 
         // 失去天意之力
         int lostAmount = DynamicVars["HeavensForcePower"].IntValue;
-        await PowerCmd.Apply<HeavensForcePower>(
-            choiceContext,
-            base.Owner.Creature,
-            -lostAmount,
-            base.Owner.Creature,
-            this,
-            silent: false);
+        await HeavensForce.Add(choiceContext, base.Owner, -lostAmount, this);
 
         // 从消耗牌堆中选择任意张牌放入手牌（不能选择消耗堆中另一张“亡灵复活术”，避免无限复活循环）
         CardPile exhaust = PileType.Exhaust.GetPile(base.Owner);

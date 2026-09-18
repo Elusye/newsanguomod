@@ -72,7 +72,7 @@ public class ProxyStrike : NewsanguoCardTemplate
         for (int i = 0; i < 2; i++)
         {
             CardModel copy = sourceCard.CreateClone();
-            await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Hand, base.Owner, CardPilePosition.Random);
+            await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Hand, base.Owner);
         }
     }
 

@@ -12,6 +12,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Cards;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
@@ -36,7 +37,7 @@ public class MindControlSpell : NewsanguoCardTemplate
 
     // 鼠标悬停时显示天意之力与天意侵蚀提示
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -62,18 +63,21 @@ public class MindControlSpell : NewsanguoCardTemplate
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
+        // 全屏特效：对每名队友玩家各播放一次（多人模式下两端表现一致）
+        foreach (var player in CombatState!.GetTeammatesOf(base.Owner.Creature).Where(c => c is { IsPlayer: true }))
+        {
+            if (player.Player != null)
+            {
+                VfxCmd.PlayFullScreenInCombat("vfx/vfx_adrenaline", player);
+            }
+        }
+
         // 击晕目标敌人（参考原版卡牌“口哨”Whistle）
         await CreatureCmd.Stun(cardPlay.Target);
 
         // 失去天意之力
         int lostAmount = DynamicVars["HeavensForcePower"].IntValue;
-        await PowerCmd.Apply<HeavensForcePower>(
-            choiceContext,
-            base.Owner.Creature,
-            -lostAmount,
-            base.Owner.Creature,
-            this,
-            silent: false);
+        await HeavensForce.Add(choiceContext, base.Owner, -lostAmount, this);
     }
 
     // 升级后的效果逻辑

@@ -13,6 +13,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
@@ -32,13 +33,12 @@ public class FatherCanClaimTheThrone : NewsanguoCardTemplate
     // VictoryByHeavensWillPower 变量仅作描述展示：表示施加给“天意致胜”的负层数大小（升级 5 → 4）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new PowerVar<VictoryByHeavensWillPower>(5m),
-        new EnergyVar(1),
         new IntVar("DrawCount", 1)
     ];
 
     // 鼠标悬停时显示天意之力与天意侵蚀提示
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 

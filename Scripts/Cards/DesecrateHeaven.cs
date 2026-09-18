@@ -13,6 +13,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
@@ -29,7 +30,7 @@ public class DesecrateHeaven : NewsanguoCardTemplate
 
     // 卡牌基础数值：获得的天意之力、下个回合结束获得的天意侵蚀层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForcePower>(15m),
+        new HeavensForceVar(15m),
         new DynamicVar("DecayAmount", 15m)
     ];
 
@@ -44,7 +45,7 @@ public class DesecrateHeaven : NewsanguoCardTemplate
         {
             List<IHoverTip> tips =
             [
-                HoverTipFactory.FromPower<HeavensForcePower>(),
+                HeavensForce.HoverTip(),
                 HoverTipFactory.FromPower<HeavensDecayPower>()
             ];
 
@@ -75,13 +76,7 @@ public class DesecrateHeaven : NewsanguoCardTemplate
 
         // 获得天意之力
         int heavensForceAmount = DynamicVars["HeavensForcePower"].IntValue;
-        await PowerCmd.Apply<HeavensForcePower>(
-            choiceContext,
-            base.Owner.Creature,
-            heavensForceAmount,
-            base.Owner.Creature,
-            this,
-            silent: false);
+        await HeavensForce.Add(choiceContext, base.Owner, heavensForceAmount, this);
 
         // 在本回合保留手牌（原版“保留手牌”能力）
         await PowerCmd.Apply<RetainHandPower>(choiceContext, base.Owner.Creature, 1m, base.Owner.Creature, this);

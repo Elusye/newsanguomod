@@ -57,6 +57,10 @@ public class PoisonRat : NewsanguoCardTemplate
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
+        // 在目标身上播放中毒命中特效
+        var child = NPoisonImpactVfx.Create(cardPlay.Target);
+        NCombatRoom.Instance?.CombatVfxContainer.AddChildSafely(child);
+
         // 给予目标 7（10）层中毒
         await PowerCmd.Apply<PoisonPower>(
             choiceContext,

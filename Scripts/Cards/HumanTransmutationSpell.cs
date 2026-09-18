@@ -18,6 +18,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
@@ -44,7 +45,7 @@ public class HumanTransmutationSpell : NewsanguoCardTemplate
     // 鼠标悬停时显示“士兵”卡牌标注（升级时显示升级版士兵）、天意之力与天意侵蚀提示
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromCard<Soldier>(IsUpgraded),
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -69,13 +70,7 @@ public class HumanTransmutationSpell : NewsanguoCardTemplate
 
         // 失去天意之力
         int lostAmount = DynamicVars["HeavensForcePower"].IntValue;
-        await PowerCmd.Apply<HeavensForcePower>(
-            choiceContext,
-            base.Owner.Creature,
-            -lostAmount,
-            base.Owner.Creature,
-            this,
-            silent: false);
+        await HeavensForce.Add(choiceContext, base.Owner, -lostAmount, this);
 
         CardPile hand = PileType.Hand.GetPile(base.Owner);
         if (hand.Cards.Count == 0)

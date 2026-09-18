@@ -144,7 +144,7 @@ public class HeavenlyTroopsPlusPower : ModPowerTemplate, IHasSecondAmount
         {
             CardModel soldierCard = combatState.CreateCard<Soldier>(player);
             CardCmd.Upgrade(soldierCard);
-            await CardPileCmd.AddGeneratedCardToCombat(soldierCard, PileType.Hand, player, CardPilePosition.Random);
+            await CardPileCmd.AddGeneratedCardToCombat(soldierCard, PileType.Hand, player);
         }
     }
 }

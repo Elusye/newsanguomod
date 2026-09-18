@@ -15,6 +15,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
@@ -41,7 +42,7 @@ public class LongevitySpell : NewsanguoCardTemplate
     // 鼠标悬停时显示天意之力、天意侵蚀、灵魂附魔与消耗关键词说明
     // （天意之力的说明文本中会出现“天意侵蚀”，两者须成对展示）
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>(),
         ..HoverTipFactory.FromEnchantment<SoulsPower>(),
         HoverTipFactory.FromKeyword(CardKeyword.Exhaust)
@@ -68,12 +69,7 @@ public class LongevitySpell : NewsanguoCardTemplate
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 失去天意之力
-        await PowerCmd.Apply<HeavensForcePower>(
-            choiceContext,
-            base.Owner.Creature,
-            -DynamicVars["HeavensForcePower"].BaseValue,
-            base.Owner.Creature,
-            this);
+        await HeavensForce.Add(choiceContext, base.Owner, -DynamicVars["HeavensForcePower"].IntValue, this);
 
         // 失去天意之力后抽牌
         await CardPileCmd.Draw(choiceContext, DynamicVars["Cards"].IntValue, base.Owner);

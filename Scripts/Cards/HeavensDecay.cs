@@ -12,6 +12,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
@@ -30,7 +31,7 @@ public class HeavensDecay : NewsanguoCurseTemplate
 
     // 悬停提示：牌名即“天意侵蚀”，而天意之力的说明文本中会出现“天意侵蚀”，两者须成对展示
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 

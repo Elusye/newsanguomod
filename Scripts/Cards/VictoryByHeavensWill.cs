@@ -13,6 +13,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Cards;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
@@ -34,7 +35,7 @@ public class VictoryByHeavensWill : NewsanguoCardTemplate
 
     // 鼠标悬停时显示天意之力与天意侵蚀提示
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 

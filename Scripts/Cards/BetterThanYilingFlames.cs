@@ -66,7 +66,7 @@ public class BetterThanYilingFlames : NewsanguoCardTemplate
         // 与原版 Anger 一致：AddGeneratedCardToCombat 本身不会更新弃牌堆 UI 计数，
         // 需配合 PreviewCardPileAdd 生成飞行预览，动画结束时触发 InvokeCardAddFinished 使弃牌堆计数 +1
         CardModel copy = CreateClone();
-        CardCmd.PreviewCardPileAdd(await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Discard, base.Owner, CardPilePosition.Top), 2.2f);
+        CardCmd.PreviewCardPileAdd(await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Discard, base.Owner), 2.2f);
 
         // 本场战斗中所有此牌卡牌的伤害增加（含刚加入弃牌堆的复制品）
         decimal increase = base.DynamicVars["Increase"].BaseValue;

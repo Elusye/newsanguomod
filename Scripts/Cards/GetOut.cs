@@ -7,7 +7,6 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
-using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.CardPools;
@@ -71,7 +70,7 @@ public class GetOut : NewsanguoCardTemplate
         CardModel? cardToExhaust = (await CardSelectCmd.FromHand(
             context: choiceContext,
             player: base.Owner,
-            prefs: new CardSelectorPrefs(new LocString("cards", "NEWSANGUO_CARD_SELECT_ONE_TO_EXHAUST"), 1, 1),
+            prefs: new CardSelectorPrefs(CardSelectorPrefs.ExhaustSelectionPrompt, 1, 1),
             filter: null,
             source: this)).FirstOrDefault();
         if (cardToExhaust != null)

@@ -14,6 +14,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Cards;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
@@ -28,7 +29,7 @@ public class ScorchingStarfall : NewsanguoCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(2m, ValueProp.Move),
         new ("WineThreshold", 3m),
-        new PowerVar<HeavensForcePower>(5m),
+        new HeavensForceVar(5m),
         new CalculationBaseVar(0m),
         new CalculationExtraVar(1m),
         new CalculatedVar("CalculatedHits").WithMultiplier(static (card, _) =>
@@ -41,7 +42,7 @@ public class ScorchingStarfall : NewsanguoCardTemplate
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<DrunkenMightPower>(),
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -94,7 +95,7 @@ public class ScorchingStarfall : NewsanguoCardTemplate
             }
         }
 
-        await PowerCmd.Apply<HeavensForcePower>(choiceContext, Owner.Creature, -DynamicVars["HeavensForcePower"].IntValue, Owner.Creature, this);
+        await HeavensForce.Add(choiceContext, Owner, -DynamicVars["HeavensForcePower"].IntValue, this);
     }
 
     protected override void OnUpgrade()

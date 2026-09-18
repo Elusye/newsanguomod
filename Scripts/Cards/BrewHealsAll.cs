@@ -13,6 +13,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
@@ -29,10 +30,10 @@ public class BrewHealsAll : NewsanguoCardTemplate
     // 消耗词条
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-    // 酒力足以支付消耗（未升级 ≥6、升级后 ≥4）时金色高亮
-    protected override bool ShouldGlowGoldInternal => IsUpgraded
-        ? Owner.Creature.GetPowerAmount<DrunkenMightPower>() > 3
-        : Owner.Creature.GetPowerAmount<DrunkenMightPower>() > 5;
+    // 酒力不足以支付消耗（未升级 ≤5、升级后 ≤3）时红色高亮，提示本次打出不会产生任何效果
+    protected override bool ShouldGlowRedInternal => IsUpgraded
+        ? Owner.Creature.GetPowerAmount<DrunkenMightPower>() <= 3
+        : Owner.Creature.GetPowerAmount<DrunkenMightPower>() <= 5;
 
     // 卡牌基础数值：消耗的酒力（升级后 4）
     // 用 IntVar（而非 PowerVar<DrunkenMightPower>）：它是“失去”数值，
@@ -64,7 +65,7 @@ public class BrewHealsAll : NewsanguoCardTemplate
         await PowerCmd.Apply<DrunkenMightPower>(choiceContext, Owner.Creature, -DynamicVars["DrunkenMight"].BaseValue, Owner.Creature, this);
 
         // 移除自身的所有负面效果：声明为 Debuff 的能力，以及为负值的可负计数能力
-        // （力量、灵巧、天意之力等 AllowNegative 能力为负时即负面效果）
+        // （力量、灵巧等 AllowNegative 能力为负时即负面效果）
         // 先快照再逐个移除，避免遍历途中集合变化
         List<PowerModel> debuffs = Owner.Creature.Powers
             .Where(p => p.TypeForCurrentAmount == PowerType.Debuff)
@@ -72,6 +73,12 @@ public class BrewHealsAll : NewsanguoCardTemplate
         foreach (PowerModel debuff in debuffs)
         {
             await PowerCmd.Remove(debuff);
+        }
+
+        // 天意之力已改为副资源（不再是可被移除的能力），负值时在此单独归零
+        if (HeavensForce.Get(Owner) < 0)
+        {
+            await HeavensForce.Set(choiceContext, Owner, 0);
         }
 
         // 清除自己所有牌上的“标记”（折磨）：折磨不会自动过期，原版由各自能力在回合末自行清理，

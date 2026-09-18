@@ -73,8 +73,8 @@ public class SlamTheBowl : NewsanguoCardTemplate
         // 3. 将一张此牌的复制品加入弃牌堆
         // 与原版 Anger 一致：AddGeneratedCardToCombat 本身不会更新弃牌堆 UI 计数，
         // 需配合 PreviewCardPileAdd 生成飞行预览，动画结束时触发 InvokeCardAddFinished 使弃牌堆计数 +1
-        CardModel copy = CreateDupe(base.Owner);
-        CardCmd.PreviewCardPileAdd(await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Discard, base.Owner, CardPilePosition.Top), 2.2f);
+        CardModel copy = CreateClone();
+        CardCmd.PreviewCardPileAdd(await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Discard, base.Owner), 2.2f);
     }
 
     // 升级后的效果逻辑

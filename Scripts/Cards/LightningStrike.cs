@@ -12,6 +12,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
@@ -26,7 +27,7 @@ public class LightningStrike : NewsanguoCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(5m, ValueProp.Move),
         new ("PlayMax", 3m),
-        new PowerVar<HeavensForcePower>(2m)
+        new HeavensForceVar(2m)
     ];
 
     protected override bool ShouldGlowGoldInternal => CanObtainForce;
@@ -42,7 +43,7 @@ public class LightningStrike : NewsanguoCardTemplate
     }
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -68,8 +69,7 @@ public class LightningStrike : NewsanguoCardTemplate
                 .Targeting(cardPlay.Target)
                 .WithHitFx("vfx/vfx_attack_lightning", null, "lightning_orb_evoke.mp3")
                 .Execute(choiceContext);
-            await PowerCmd.Apply<HeavensForcePower>(choiceContext, Owner.Creature,
-                DynamicVars["HeavensForcePower"].BaseValue, Owner.Creature, this);
+            await HeavensForce.Add(choiceContext, Owner, DynamicVars["HeavensForcePower"].IntValue, this);
         }
         else
         {

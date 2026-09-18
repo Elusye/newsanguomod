@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Context;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -57,17 +58,31 @@ public class WhyPickThatUpPower : ModPowerTemplate
         {
             int maxCount = Math.Min((int)Amount, discard.Cards.Count);
 
-            // 触发“你拾它作甚！”能力音效（对应 FMOD 事件 event:/newsanguo/sfx/why_pick_that_up_power）
-            NewsanguoSfx.Play("event:/newsanguo/sfx/why_pick_that_up_power");
-
-            foreach (CardModel card in await CardSelectCmd.FromCombatPile(
-                context: choiceContext,
-                pile: discard,
-                player: player,
-                prefs: new CardSelectorPrefs(Prompt, 0, maxCount)))
+            // 上限同时受手牌空位约束：手牌满 10 张时多出的牌会被引擎静默转入弃牌堆（见 CardPileCmd.Add）
+            int handSpace = CardPile.MaxCardsInHand - PileType.Hand.GetPile(player).Cards.Count;
+            if (handSpace < maxCount)
             {
-                // 牌属于该玩家，按牌主解析对应手牌堆
-                await CardPileCmd.Add(card, PileType.Hand);
+                maxCount = handSpace;
+            }
+
+            // 触发“你拾它作甚！”能力音效（对应 FMOD 事件 event:/newsanguo/sfx/why_pick_that_up_power）
+            // 本能力由卡牌施加到所有玩家身上，而多人游戏中各玩家的回合开始是并行的（每人各触发一次），
+            // 若每次都播放会出现同一音效多份同时响起，故只在本机玩家自己的回合开始时播放
+            if (LocalContext.IsMe(player))
+            {
+                NewsanguoSfx.Play("event:/newsanguo/sfx/why_pick_that_up_power");
+            }
+
+            // 手牌已满（maxCount 为 0）时不再开启空的选择界面
+            if (maxCount > 0)
+            {
+                await CardPileCmd.Add(
+                    await CardSelectCmd.FromCombatPile(
+                        context: choiceContext,
+                        pile: discard,
+                        player: player,
+                        prefs: new CardSelectorPrefs(Prompt, 0, maxCount)),
+                    PileType.Hand);
             }
         }
 

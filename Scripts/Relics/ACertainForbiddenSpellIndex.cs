@@ -16,6 +16,7 @@ using STS2RitsuLib.Keywords;
 using STS2RitsuLib.Scaffolding.Content;
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Relics;
@@ -61,7 +62,7 @@ public class ACertainForbiddenSpellIndex : ModRelicTemplate
     // 悬停时展示“天意之力”“天意侵蚀”能力与“禁术牌”关键词说明
     // （天意之力的说明文本中会出现“天意侵蚀”，两者须成对展示）
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>(),
         ModKeywordRegistry.CreateHoverTip(ForbiddenSpellKeywordId)
     ];
@@ -106,22 +107,5 @@ public class ACertainForbiddenSpellIndex : ModRelicTemplate
         }
 
         await CardPileCmd.AddGeneratedCardToCombat(card, PileType.Hand, player);
-    }
-
-    // 抵消被标记禁术牌的天意之力消耗（只对遗物持有者自己打出的那张牌生效）
-    public override decimal ModifyPowerAmountGivenAdditive(PowerModel power, Creature giver, decimal amount,
-        Creature? target, CardModel? cardSource)
-    {
-        if (giver != Owner.Creature || amount >= 0m || power is not HeavensForcePower)
-        {
-            return 0m;
-        }
-
-        if (cardSource is NewsanguoCardTemplate { IsFreeHeavensForceThisTurn: true })
-        {
-            return -amount;
-        }
-
-        return 0m;
     }
 }

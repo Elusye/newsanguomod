@@ -11,6 +11,7 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts;
+using newsanguo.Scripts.Combat;
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>
@@ -46,7 +47,7 @@ public class BlasphemyDebtPower : ModPowerTemplate
 
     // 悬停提示：说明文本中会提到“天意侵蚀”，与“天意之力”成对展示
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 

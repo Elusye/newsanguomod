@@ -74,7 +74,7 @@ public class TenThousandTransparentHoles : NewsanguoCardTemplate
 
         for (int i = 0; i < DynamicVars.Cards.IntValue; i++)
         {
-            CardModel copy = CreateDupe(base.Owner);
+            CardModel copy = CreateClone();
             await CardPileCmd.AddGeneratedCardsToCombat([copy], PileType.Hand, base.Owner);
         }
     }

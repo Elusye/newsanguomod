@@ -2,7 +2,9 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
+using STS2RitsuLib.Combat.SecondaryResources;
 
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
@@ -11,11 +13,12 @@ namespace newsanguo.Scripts.Cards;
 /// “天意之力”消耗变量。实际消耗值（<see cref="DynamicVar.BaseValue"/>）始终不变，
 /// 但当卡牌被“魔法禁术目录”遗物标记为本回合免消耗时，卡面显示值（<see cref="DynamicVar.PreviewValue"/>）改为 0。
 /// 卡面描述需用 <c>inverseDiff()</c> 格式化该变量（而非 <c>diff()</c>），数值变低时才会显示为绿色。
+/// 变量名沿用能力名，卡面文案中的 <c>{HeavensForcePower:diff()}</c> 无需改动。
 /// </summary>
-public class HeavensForceVar : PowerVar<HeavensForcePower>
+public class HeavensForceVar : SecondaryResourceVar
 {
-    public HeavensForceVar(decimal powerAmount)
-        : base(powerAmount)
+    public HeavensForceVar(decimal amount)
+        : base(nameof(HeavensForcePower), HeavensForce.Id, amount)
     {
     }
 

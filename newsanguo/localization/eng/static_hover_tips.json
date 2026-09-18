@@ -1,0 +1,5 @@
+{
+  "NEWSANGUO_SECONDARY_RESOURCE_HEAVENS_FORCE.title": "Heaven's Force",
+  "NEWSANGUO_SECONDARY_RESOURCE_HEAVENS_FORCE.description": "At the end of your turn, if you have a great deal of [gold]Heaven's Force[/gold], you receive [gold]Heaven[/gold]'s aid. Otherwise, you suffer [gold]Heaven's Decay[/gold].",
+  "NEWSANGUO_SECONDARY_RESOURCE_HEAVENS_FORCE.smartDescription": "At the end of your turn, if your points are at least [blue]10[/blue], spend 10 [gold]Heaven's Force[/gold] to gain 1 extra turn that deals double damage. If your points are at most [blue]-10[/blue], you suffer [gold]Heaven's Decay[/gold] and restore 10 [gold]Heaven's Force[/gold]."
+}

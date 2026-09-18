@@ -30,11 +30,6 @@ public class BetterEachDay : NewsanguoCardTemplate
     // X 费牌（同原版旋风斩/天际钻头）：打出时自动花费全部剩余能量
     protected override bool HasEnergyCostX => true;
 
-    // 能量图标显示用（与“他过江我也过江”一致：{Energy:energyIcons()}）
-    protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new EnergyVar(1)
-    ];
-
     // 消耗（升级后移除）
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 

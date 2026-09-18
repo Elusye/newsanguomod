@@ -66,7 +66,7 @@ public class CheckThePremiere : NewsanguoCardTemplate
         }
 
         // 将获得的卡牌加入手牌
-        var result = await CardPileCmd.AddGeneratedCardToCombat(selected, PileType.Hand, base.Owner, CardPilePosition.Random);
+        var result = await CardPileCmd.AddGeneratedCardToCombat(selected, PileType.Hand, base.Owner);
         CardCmd.PreviewCardPileAdd(result, 1.2f);
     }
 }

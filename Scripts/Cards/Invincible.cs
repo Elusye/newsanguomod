@@ -14,6 +14,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
@@ -28,16 +29,16 @@ public class Invincible : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：对符合条件的敌人造成伤害增加 25%；打出时失去 3 点天意之力（升级后 2 点）
+    // 卡牌基础数值：对符合条件的敌人造成伤害增加 25%（升级后 50%）；打出时失去 3 点天意之力（升级后 2 点）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForcePower>(3m),
+        new HeavensForceVar(3m),
         new IntVar("BonusPercent", 25)
     ];
 
     // 属于“天意”体系（涉及天意之力/天意侵蚀）
     public override bool IsHeavensCard => true;
 
-    public Invincible() : base(2, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+    public Invincible() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
     {
     }
 
@@ -47,7 +48,7 @@ public class Invincible : NewsanguoCardTemplate
         HoverTipFactory.FromPower<FlightPower>(),
         HoverTipFactory.FromPower<FlutterPower>(),
         HoverTipFactory.FromPower<SoarPower>(),
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -58,18 +59,18 @@ public class Invincible : NewsanguoCardTemplate
         NewsanguoSfx.Play("event:/newsanguo/sfx/invincible");
 
         // 打出时失去 3 点天意之力（升级后 2 点）
-        await PowerCmd.Apply<HeavensForcePower>(choiceContext, base.Owner.Creature, -DynamicVars["HeavensForcePower"].IntValue, base.Owner.Creature, this);
+        await HeavensForce.Add(choiceContext, base.Owner, -DynamicVars["HeavensForcePower"].IntValue, this);
 
-        // 附加“天下无敌”能力：对没有振翅和翱翔的敌人造成伤害增加 25%
+        // 附加“天下无敌”能力：对没有振翅和翱翔的敌人造成伤害增加 BonusPercent%（基础 25%，升级 50%）
         // 效果可叠加：每次打出都会叠加对应百分比的增伤
         int bonusPercent = DynamicVars["BonusPercent"].IntValue;
         await PowerCmd.Apply<InvinciblePower>(choiceContext, base.Owner.Creature, bonusPercent, base.Owner.Creature, this);
     }
 
-    // 升级后的效果逻辑：费用 2 → 1，失去的天意之力从 3 减少到 2
+    // 升级后的效果逻辑：失去的天意之力从 3 减少到 2，增伤层数 25% → 50%
     protected override void OnUpgrade()
     {
-        EnergyCost.UpgradeBy(-1);
         DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
+        DynamicVars["BonusPercent"].UpgradeValueBy(25);
     }
 }

@@ -12,6 +12,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Cards;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
@@ -28,13 +29,13 @@ public class Divination : NewsanguoCardTemplate
 
     // 卡牌基础数值：获得 2 点天意之力，抽 2 张牌
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForcePower>(2m),
+        new HeavensForceVar(2m),
         new CardsVar(2)
     ];
 
     // 鼠标悬停时显示天意之力与天意侵蚀提示
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -56,13 +57,7 @@ public class Divination : NewsanguoCardTemplate
 
         // 获得天意之力
         int heavensForceAmount = DynamicVars["HeavensForcePower"].IntValue;
-        await PowerCmd.Apply<HeavensForcePower>(
-            choiceContext,
-            base.Owner.Creature,
-            heavensForceAmount,
-            base.Owner.Creature,
-            this,
-            silent: false);
+        await HeavensForce.Add(choiceContext, base.Owner, heavensForceAmount, this);
 
         // 抽两张牌
         await CardPileCmd.Draw(choiceContext, DynamicVars["Cards"].IntValue, base.Owner);

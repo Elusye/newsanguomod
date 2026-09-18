@@ -15,7 +15,6 @@ namespace newsanguo.Scripts.Powers;
 
 /// <summary>
 /// “毒鼠计”：每回合开始时，将 Amount 张“毒鼠”加入手牌。
-/// 升级版由“毒鼠计+”能力（rat_poison_plus_power）处理，生成升级版（毒鼠+）。
 /// </summary>
 [RegisterPower]
 public class RatPoisonPower : ModPowerTemplate
@@ -55,7 +54,7 @@ public class RatPoisonPower : ModPowerTemplate
         for (int i = 0; i < Amount; i++)
         {
             CardModel rat = combatState.CreateCard<PoisonRat>(player);
-            await CardPileCmd.AddGeneratedCardToCombat(rat, PileType.Hand, player, CardPilePosition.Random);
+            await CardPileCmd.AddGeneratedCardToCombat(rat, PileType.Hand, player);
         }
     }
 }

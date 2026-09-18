@@ -66,7 +66,7 @@ public class GoldenRebellion : NewsanguoCardTemplate
         }
 
         selected.SetToFreeThisTurn();
-        var result = await CardPileCmd.AddGeneratedCardToCombat(selected, PileType.Hand, base.Owner, CardPilePosition.Random);
+        var result = await CardPileCmd.AddGeneratedCardToCombat(selected, PileType.Hand, base.Owner);
         CardCmd.PreviewCardPileAdd(result, 1.2f);
     }
 }

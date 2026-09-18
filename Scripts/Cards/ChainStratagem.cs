@@ -93,7 +93,6 @@ public class ChainStratagem : NewsanguoCardTemplate
             // 用战斗同步 RNG 随机选盟友，保证多人两端结果一致（同 TheBall）
             location.player = Owner.RunState.Rng.CombatTargets.NextItem(allies).Player!; // 已按 IsPlayer 过滤，Player 必非空
             location.pileType = PileType.Hand;
-            location.position = CardPilePosition.Random;
         }
         return location;
     }

@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Modding;
 using STS2RitsuLib;
 using STS2RitsuLib.Interop;
 
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Patches;
 using newsanguo.Scripts.Powers;
 using newsanguo.Scripts.Relics;
@@ -34,8 +35,11 @@ public class Entry
         ApplyPatch(harmony, typeof(PlayerHurtSfxPatch));
         ApplyPatch(harmony, typeof(EngineSfxRedirectPatch));
         ApplyPatch(harmony, typeof(SecondAmountLabelPatch));
+        ApplyPatch(harmony, typeof(HeavensForceHoverTipPatch));
         var assembly = Assembly.GetExecutingAssembly();
         RitsuLibFramework.EnsureGodotScriptsRegistered(assembly, Logger);
+        // 注册“天意之力”次级资源（必须在内容注册之前：卡牌动态变量与战斗 UI 都要用到它的完整 id）
+        HeavensForce.Register();
         // 自动注册内容
         ModTypeDiscoveryHub.RegisterModAssembly(ModId, assembly);
         // 先古之民遗物官方映射（由 RitsuLib 的补丁在事件/获得遗物时生效）：

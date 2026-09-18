@@ -1,0 +1,5 @@
+{
+  "NEWSANGUO_SECONDARY_RESOURCE_HEAVENS_FORCE.title": "天意之力",
+  "NEWSANGUO_SECONDARY_RESOURCE_HEAVENS_FORCE.description": "回合结束时，若你拥有大量[gold]天意之力[/gold]，则会获得[gold]天意[/gold]的帮助，反之则会被[gold]天意侵蚀[/gold]。",
+  "NEWSANGUO_SECONDARY_RESOURCE_HEAVENS_FORCE.smartDescription": "回合结束时，若点数≥[blue]10[/blue]，消耗10点[gold]天意之力[/gold]获得1个造成双倍伤害的额外回合；若点数≤[blue]-10[/blue]，则会被[gold]天意侵蚀[/gold]并恢复10点[gold]天意之力[/gold]。"
+}

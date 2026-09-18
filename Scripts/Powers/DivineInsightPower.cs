@@ -12,6 +12,7 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts;
+using newsanguo.Scripts.Combat;
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>
@@ -50,7 +51,7 @@ public class DivineInsightPower : ModPowerTemplate
 
     // 悬停提示：说明文本中会提到“天意之力”，与“天意侵蚀”成对展示
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -86,6 +87,6 @@ public class DivineInsightPower : ModPowerTemplate
         // 触发“参悟天意”音效（对应 FMOD 事件 event:/newsanguo/sfx/divine_insight_power）
         NewsanguoSfx.Play("event:/newsanguo/sfx/divine_insight_power");
 
-        await PowerCmd.Apply<HeavensForcePower>(choiceContext, Owner, amount, Owner, cardPlay.Card, silent: false);
+        await HeavensForce.Add(choiceContext, Owner.Player, amount, cardPlay.Card);
     }
 }

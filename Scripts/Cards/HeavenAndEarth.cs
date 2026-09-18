@@ -15,6 +15,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
@@ -31,13 +32,13 @@ public class HeavenAndEarth : NewsanguoCardTemplate
 
     // 卡牌基础数值：失去的天意之力、获得的飞行层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForcePower>(3m),
+        new HeavensForceVar(3m),
         new PowerVar<FlightPower>(3m)
     ];
 
     // 悬停提示：展示“天意之力”、“天意侵蚀”、“飞行”说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>(),
         HoverTipFactory.FromPower<FlightPower>()
     ];
@@ -57,7 +58,7 @@ public class HeavenAndEarth : NewsanguoCardTemplate
 
         // 失去 3 点天意之力
         int heavensLoss = DynamicVars["HeavensForcePower"].IntValue;
-        await PowerCmd.Apply<HeavensForcePower>(choiceContext, base.Owner.Creature, -heavensLoss, base.Owner.Creature, this);
+        await HeavensForce.Add(choiceContext, base.Owner, -heavensLoss, this);
 
         // 获得 3 层飞行
         int flightAmount = DynamicVars["FlightPower"].IntValue;

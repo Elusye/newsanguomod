@@ -65,7 +65,7 @@ public class WhatToEat : NewsanguoCardTemplate
                 chowDown.FinalizeUpgradeInternal();
             }
 
-            await CardPileCmd.AddGeneratedCardToCombat(chowDown, PileType.Hand, base.Owner, CardPilePosition.Random);
+            await CardPileCmd.AddGeneratedCardToCombat(chowDown, PileType.Hand, base.Owner);
         }
     }
 }

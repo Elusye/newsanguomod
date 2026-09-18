@@ -59,6 +59,9 @@ public class WhoRules : NewsanguoCardTemplate
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
+        // 全屏特效：以“获得灾厄的一方”（目标玩家）为播放者
+        VfxCmd.PlayFullScreenInCombat("vfx/vfx_adrenaline", targetCreature);
+
         // 给予目标玩家 7 层灾厄
         await PowerCmd.Apply<DoomPower>(choiceContext, targetCreature, DynamicVars.Doom.IntValue, base.Owner.Creature, this, silent: false);
 

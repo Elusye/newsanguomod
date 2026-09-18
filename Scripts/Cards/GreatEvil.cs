@@ -16,6 +16,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
@@ -36,12 +37,12 @@ public class GreatEvil : NewsanguoCardTemplate
     // 卡牌基础数值：对所有敌人造成 8（升级 12）点伤害；天意之力不大于 0 时获得 3 点天意之力
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(8m, ValueProp.Move),
-        new PowerVar<HeavensForcePower>(3m)
+        new HeavensForceVar(3m)
     ];
 
     // 悬停提示：展示“天意之力”与“天意侵蚀”说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -65,15 +66,9 @@ public class GreatEvil : NewsanguoCardTemplate
             .Execute(choiceContext);
 
         // 天意之力不大于 0 时，获得 3 点天意之力
-        var heavensForce = base.Owner.Creature.GetPower<HeavensForcePower>()?.Amount ?? 0m;
-        if (heavensForce <= 0m)
+        if (HeavensForce.Get(base.Owner) <= 0)
         {
-            await PowerCmd.Apply<HeavensForcePower>(
-                choiceContext,
-                base.Owner.Creature,
-                DynamicVars["HeavensForcePower"].BaseValue,
-                base.Owner.Creature,
-                this);
+            await HeavensForce.Add(choiceContext, base.Owner, DynamicVars["HeavensForcePower"].IntValue, this);
         }
     }
 

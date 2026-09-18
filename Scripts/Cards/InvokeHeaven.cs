@@ -12,6 +12,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
@@ -28,12 +29,12 @@ public class InvokeHeaven : NewsanguoCardTemplate
 
     // 卡牌基础数值：获得 5 点天意之力（升级不再提升此数值）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForcePower>(5m)
+        new HeavensForceVar(5m)
     ];
 
     // 悬停提示：展示“天意之力”和“天意侵蚀”两个说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -54,13 +55,7 @@ public class InvokeHeaven : NewsanguoCardTemplate
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 获得天意之力
-        await PowerCmd.Apply<HeavensForcePower>(
-            choiceContext,
-            base.Owner.Creature,
-            DynamicVars["HeavensForcePower"].IntValue,
-            base.Owner.Creature,
-            this,
-            silent: false);
+        await HeavensForce.Add(choiceContext, base.Owner, DynamicVars["HeavensForcePower"].IntValue, this);
     }
 
     // 升级后的效果逻辑：不再增加天意之力，改为获得“保留”

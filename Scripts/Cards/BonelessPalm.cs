@@ -35,7 +35,7 @@ public class BonelessPalm : NewsanguoCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(8m, ValueProp.Move),
-        new PowerVar<StrengthPower>(1m)
+        new PowerVar<StrengthPower>(2m)
     ];
 
     // 悬停提示：展示“力量”关键词说明
@@ -66,7 +66,7 @@ public class BonelessPalm : NewsanguoCardTemplate
         await PowerCmd.Apply<StrengthPower>(choiceContext, cardPlay.Target, -strengthLoss, base.Owner.Creature, this);
     }
 
-    // 升级：伤害 8 → 11，失去的力量 1 → 2
+    // 升级：伤害 8 → 11，失去的力量 2 → 3
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(3m);

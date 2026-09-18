@@ -29,12 +29,10 @@ public class UnclesAndAunts : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：每次获得 3 点格挡、每次造成 4 点伤害（次数 = X，升级后 X+1）；
-    // 另声明 1 点能量变量供卡面“获得{Energy:energyIcons()}”行渲染（返还 1 点能量）
+    // 卡牌基础数值：每次获得 3 点格挡、每次造成 4 点伤害（次数 = X，升级后 X+1）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new BlockVar(3m, ValueProp.Move),
-        new DamageVar(4m, ValueProp.Move),
-        new EnergyVar(1)
+        new DamageVar(4m, ValueProp.Move)
     ];
 
     // 升级前后都带“保留”关键词（升级后次数 X → X+1）

@@ -14,6 +14,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
@@ -32,14 +33,14 @@ public class HeavenlyTroops : NewsanguoCardTemplate
     // （描述中会提到“天意之力”，两者须成对展示）
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromCard<Soldier>(IsUpgraded),
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
     // 卡牌基础数值：经过 2 个回合结束后发放 5 张士兵（TurnDelay 需与 heavenly_troops_power 的倒计时保持同步）；
     // 打出时失去 3 点天意之力（升级后 2 点）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HeavensForcePower>(3m),
+        new HeavensForceVar(3m),
         new IntVar("SoldierCount", 5),
         new IntVar("TurnDelay", 2)
     ];
@@ -67,13 +68,7 @@ public class HeavenlyTroops : NewsanguoCardTemplate
 
         // 失去天意之力
         int lostAmount = DynamicVars["HeavensForcePower"].IntValue;
-        await PowerCmd.Apply<HeavensForcePower>(
-            choiceContext,
-            base.Owner.Creature,
-            -lostAmount,
-            base.Owner.Creature,
-            this,
-            silent: false);
+        await HeavensForce.Add(choiceContext, base.Owner, -lostAmount, this);
 
         // 附加“天降雄兵”能力：经过 2 次玩家回合结束后，将对应数量的士兵加入手牌。
         // 升级后改为“天降雄兵+”，发放升级版“士兵+”。

@@ -17,6 +17,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
@@ -31,10 +32,10 @@ public class NeverHadThese : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：获得 8（11）点格挡；每消耗一张非攻击牌获得 1 点天意之力
+    // 卡牌基础数值：获得 8（11）点格挡；每消耗一张非攻击牌获得 1（升级 2）点天意之力
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new BlockVar(8, ValueProp.Move),
-        new PowerVar<HeavensForcePower>(1m)
+        new HeavensForceVar(1m)
     ];
 
     // 悬停提示：展示“格挡”、“天意之力”和“天意侵蚀”说明；
@@ -42,7 +43,7 @@ public class NeverHadThese : NewsanguoCardTemplate
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.Static(StaticHoverTip.Block),
         HoverTipFactory.FromKeyword(CardKeyword.Exhaust),
-        HoverTipFactory.FromPower<HeavensForcePower>(),
+        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -85,25 +86,13 @@ public class NeverHadThese : NewsanguoCardTemplate
             await CardCmd.Exhaust(choiceContext, card);
         }
 
-        await PowerCmd.Apply<HeavensForcePower>(
-            choiceContext,
-            base.Owner.Creature,
-            heavensForcePerCard * nonAttackCards.Count,
-            base.Owner.Creature,
-            this,
-            silent: false);
+        await HeavensForce.Add(choiceContext, base.Owner, heavensForcePerCard * nonAttackCards.Count, this);
     }
 
-    // 升级：格挡 8 → 11，并获得“保留”
+    // 升级：格挡 8 → 11，每张消耗的非攻击牌额外获得 1 点天意之力（1 → 2）
     protected override void OnUpgrade()
     {
         DynamicVars.Block.UpgradeValueBy(3);
-        AddKeyword(CardKeyword.Retain);
-    }
-
-    // 降级：移除“保留”
-    protected override void AfterDowngraded()
-    {
-        RemoveKeyword(CardKeyword.Retain);
+        DynamicVars["HeavensForcePower"].UpgradeValueBy(1);
     }
 }

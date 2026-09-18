@@ -28,15 +28,15 @@ public class WindOfTiger : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：给予 4（升级 6）层“风从虎，云从龙”
+    // 卡牌基础数值：给予 1 层“风从虎，云从龙”（层数即每张笑面虎/龙可是帝王之征啊触发时抽取的牌数）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<WindOfTigerPower>(4m)
+        new PowerVar<WindOfTigerPower>(1m)
     ];
 
-    // 悬停提示：展示“笑面虎”和“龙可是帝王之征啊”（升级后展示升级版）
+    // 悬停提示：展示“笑面虎”和“龙可是帝王之征啊”
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromCard<SmilingTiger>(IsUpgraded),
-        HoverTipFactory.FromCard<DragonOmen>(IsUpgraded)
+        HoverTipFactory.FromCard<SmilingTiger>(),
+        HoverTipFactory.FromCard<DragonOmen>()
     ];
     // 构造函数
     public WindOfTiger() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
@@ -50,7 +50,7 @@ public class WindOfTiger : NewsanguoCardTemplate
 
         NewsanguoSfx.Play("event:/newsanguo/sfx/wind_of_tiger");
 
-        // 获得 4（6）层“风从虎，云从龙”：层数即笑面虎额外获得的格挡与龙可是帝王之征啊额外给予的帝王之征层数
+        // 获得 1 层“风从虎，云从龙”：层数即笑面虎/龙可是帝王之征啊触发时抽取的牌数
         int amount = DynamicVars["WindOfTigerPower"].IntValue;
         await PowerCmd.Apply<WindOfTigerPower>(
             choiceContext,
@@ -60,23 +60,18 @@ public class WindOfTiger : NewsanguoCardTemplate
             this,
             silent: false);
 
-        // 将一张笑面虎和一张龙可是帝王之征啊加入手牌（升级后为升级版）
+        // 将一张笑面虎和一张龙可是帝王之征啊加入手牌
         CardModel tiger = combatState.CreateCard<SmilingTiger>(base.Owner);
         CardModel dragon = combatState.CreateCard<DragonOmen>(base.Owner);
-        if (IsUpgraded)
-        {
-            CardCmd.Upgrade(tiger);
-            CardCmd.Upgrade(dragon);
-        }
 
-        await CardPileCmd.AddGeneratedCardToCombat(tiger, PileType.Hand, base.Owner, CardPilePosition.Random);
-        await CardPileCmd.AddGeneratedCardToCombat(dragon, PileType.Hand, base.Owner, CardPilePosition.Random);
+        await CardPileCmd.AddGeneratedCardToCombat(tiger, PileType.Hand, base.Owner);
+        await CardPileCmd.AddGeneratedCardToCombat(dragon, PileType.Hand, base.Owner);
     }
 
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 层数从 4 提高到 6
-        DynamicVars["WindOfTigerPower"].UpgradeValueBy(2);
+        // 耗能从 1 降低到 0
+        EnergyCost.UpgradeBy(-1);
     }
 }

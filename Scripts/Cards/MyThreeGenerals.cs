@@ -9,7 +9,6 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
-using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Cards;
@@ -56,7 +55,7 @@ public class MyThreeGenerals : NewsanguoCardTemplate
             CardModel? cardToExhaust = (await CardSelectCmd.FromHand(
                 context: choiceContext,
                 player: base.Owner,
-                prefs: new CardSelectorPrefs(new LocString("cards", "NEWSANGUO_CARD_SELECT_ONE_TO_EXHAUST"), 1, 1),
+                prefs: new CardSelectorPrefs(CardSelectorPrefs.ExhaustSelectionPrompt, 1, 1),
                 filter: null,
                 source: this)).FirstOrDefault();
             if (cardToExhaust is not null)
@@ -89,7 +88,7 @@ public class MyThreeGenerals : NewsanguoCardTemplate
             return;
         }
 
-        await CardPileCmd.AddGeneratedCardToCombat(selected, PileType.Hand, base.Owner, CardPilePosition.Random);
+        await CardPileCmd.AddGeneratedCardToCombat(selected, PileType.Hand, base.Owner);
     }
 
     // 升级：加入的三张候选变为升级版（由 IsUpgraded 在打出时判断）
