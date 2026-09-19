@@ -16,10 +16,11 @@ namespace newsanguo.Scripts;
 ///
 /// 音量构成（按序叠加）：
 /// 1) 本 mod 总开关 SfxEnabled（关闭后不播放任何音效，已响起的即时压静音）；
-/// 2) 跟随游戏内“音效”音量滑杆（CurrentSfxOptionDb，与原生 FMOD 音效总线同一“选项²”曲线）；
-/// 3) 本 mod 专属倍率 ModVolumeMultiplier（RitsuLib Mod 设置页滑杆 或 控制台命令
+/// 2) 基础牌开关 BasicCardSfxEnabled（仅静音“打击/防御/士兵”三张牌的出牌音效）；
+/// 3) 跟随游戏内“音效”音量滑杆（CurrentSfxOptionDb，与原生 FMOD 音效总线同一“选项²”曲线）；
+/// 4) 本 mod 专属倍率 ModVolumeMultiplier（RitsuLib Mod 设置页滑杆 或 控制台命令
 ///    newsanguo_sfx_volume 调整，持久化保存）；
-/// 4) “扎聋我自己的耳朵！”（deafen_me）的听觉受损门（音量降至 1/4），只作用于本播放器，
+/// 5) “扎聋我自己的耳朵！”（deafen_me）的听觉受损门（音量降至 1/4），只作用于本播放器，
 ///    原版 FMOD 事件由 HearingVolumeController 另行降为 1/4。
 /// </summary>
 public static class NewsanguoSfx
@@ -164,7 +165,6 @@ public static class NewsanguoSfx
         ["why_pick_that_up_power"] = -5f,
         ["wind_of_tiger"] = -1.5f,
         ["wine_the_old_hero"] = 9f,
-        ["wine_the_old_hero_power"] = 5.5f,
         ["zhou_yafu"] = 7.5f,
     };
 
@@ -188,15 +188,18 @@ public static class NewsanguoSfx
 
     private static string VolumeConfigPath => System.IO.Path.Combine(OS.GetUserDataDir(), VolumeConfigFileName);
 
-    // 配置文件字段：mod_volume（独立倍率，默认 1.0）+ sfx_enabled（总开关，默认开）。
-    // 仅做一次磁盘读取，供下面两个静态字段初始化共用。
-    private static readonly (float Multiplier, bool Enabled) _loadedConfig = LoadConfig();
+    // 配置文件字段：mod_volume（独立倍率，默认 1.0）+ sfx_enabled（总开关，默认开）
+    // + basic_card_sfx_enabled（“打击/防御/士兵”三张基础牌的出牌音效开关，默认开）。
+    // 仅做一次磁盘读取，供下面几个静态字段初始化共用。
+    private static readonly (float Multiplier, bool Enabled, bool BasicCardSfx) _loadedConfig = LoadConfig();
 
     private static float _modVolumeMultiplier = _loadedConfig.Multiplier;
 
     private static float _modVolumeDb = ToDb(_modVolumeMultiplier);
 
     private static bool _sfxEnabled = _loadedConfig.Enabled;
+
+    private static bool _basicCardSfxEnabled = _loadedConfig.BasicCardSfx;
 
     // 当前游戏“音效”音量选项对应的 dB 补偿（选项² 作为线性增益）
     private static float CurrentSfxOptionDb()
@@ -252,19 +255,47 @@ public static class NewsanguoSfx
 
     private static float ModVolumeOffsetDb() => _modVolumeDb;
 
+    // 受 BasicCardSfxEnabled 单独控制的基础牌出牌音效（音频文件名）
+    private static readonly HashSet<string> BasicCardSfxNames =
+        ["strike_newsanguo", "defend_newsanguo", "soldier"];
+
+    /// <summary>
+    /// “打击/防御/士兵”三张基础牌的出牌音效开关（默认开启）。
+    /// 这三张牌每回合都可能打出多次、声音重复度高，可用此开关单独静音；
+    /// 其它卡牌/能力音效不受影响（总开关见 <see cref="SfxEnabled"/>）。
+    /// </summary>
+    public static bool BasicCardSfxEnabled
+    {
+        get => _basicCardSfxEnabled;
+        set
+        {
+            if (_basicCardSfxEnabled == value)
+            {
+                return;
+            }
+            _basicCardSfxEnabled = value;
+            SaveConfig();
+        }
+    }
+
+    // 该音效是否属于受基础牌开关控制的三张牌（res:// 路径不带事件名，天然不命中）
+    private static bool IsBasicCardSfx(string sfx) =>
+        GetEventName(sfx) is { } name && BasicCardSfxNames.Contains(name);
+
     private static float ToDb(float linear) => linear <= 0f ? -80f : Mathf.LinearToDb(linear);
 
-    // 读取磁盘配置（一次性）；文件缺失或损坏时退回默认（倍率 1.0、开关开）
-    private static (float Multiplier, bool Enabled) LoadConfig()
+    // 读取磁盘配置（一次性）；文件缺失或损坏时退回默认（倍率 1.0、两个开关均开）
+    private static (float Multiplier, bool Enabled, bool BasicCardSfx) LoadConfig()
     {
         float multiplier = 1f;
         bool enabled = true;
+        bool basicCardSfx = true;
         try
         {
             string path = VolumeConfigPath;
             if (!System.IO.File.Exists(path))
             {
-                return (multiplier, enabled);
+                return (multiplier, enabled, basicCardSfx);
             }
             using JsonDocument doc = JsonDocument.Parse(System.IO.File.ReadAllText(path));
             if (doc.RootElement.TryGetProperty("mod_volume", out JsonElement volumeEl)
@@ -277,12 +308,16 @@ public static class NewsanguoSfx
             {
                 enabled = enabledEl.ValueKind != JsonValueKind.False;
             }
+            if (doc.RootElement.TryGetProperty("basic_card_sfx_enabled", out JsonElement basicEl))
+            {
+                basicCardSfx = basicEl.ValueKind != JsonValueKind.False;
+            }
         }
         catch
         {
             // 配置损坏时回退默认
         }
-        return (multiplier, enabled);
+        return (multiplier, enabled, basicCardSfx);
     }
 
     // 把倍率 + 开关一起写盘（任一变化都会触发；写盘失败不影响本次会话内的音量）
@@ -292,7 +327,8 @@ public static class NewsanguoSfx
         {
             string json = "{\"mod_volume\":"
                 + _modVolumeMultiplier.ToString(System.Globalization.CultureInfo.InvariantCulture)
-                + ",\"sfx_enabled\":" + (_sfxEnabled ? "true" : "false") + "}";
+                + ",\"sfx_enabled\":" + (_sfxEnabled ? "true" : "false")
+                + ",\"basic_card_sfx_enabled\":" + (_basicCardSfxEnabled ? "true" : "false") + "}";
             System.IO.File.WriteAllText(VolumeConfigPath, json);
         }
         catch
@@ -373,6 +409,11 @@ public static class NewsanguoSfx
         }
         // 总开关关闭时不播放任何 mod 音效（已响起的声音由 SfxEnabled setter 即时压静音）
         if (!_sfxEnabled)
+        {
+            return null;
+        }
+        // “打击/防御/士兵”三张基础牌的出牌音效可单独关闭
+        if (!_basicCardSfxEnabled && IsBasicCardSfx(sfx))
         {
             return null;
         }

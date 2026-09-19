@@ -36,7 +36,7 @@ public class WhereSWine : NewsanguoCardTemplate
         HoverTipFactory.FromPower<DrunkenMightPower>()
     ];
 
-    public WhereSWine() : base(2, CardType.Power, CardRarity.Rare, TargetType.Self)
+    public WhereSWine() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self)
     {
     }
 
@@ -59,7 +59,7 @@ public class WhereSWine : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 耗能从 2 降低到 1
+        // 耗能从 1 降低到 0
         EnergyCost.UpgradeBy(-1);
     }
 }

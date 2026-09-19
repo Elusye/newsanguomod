@@ -3,12 +3,12 @@
   "name": "新三国",
   "author": "U_Light",
   "description": "一个被天意侵蚀的世界。",
-  "version": "0.2.24",
+  "version": "0.2.25",
   "min_game_version": "0.111.0", 
   "has_pck": true,
   "has_dll": true,
   "dependencies": [
-    { "id": "STS2-RitsuLib", "min_version": "0.5.20" }
+    { "id": "STS2-RitsuLib", "min_version": "0.6.2" }
   ],
   "affects_gameplay": true
 }

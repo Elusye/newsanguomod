@@ -9,6 +9,7 @@ namespace newsanguo.Scripts.Settings;
 /// 与控制台命令 newsanguo_sfx_volume 共用同一个持久化真值源（NewsanguoSfx.SfxEnabled /
 /// NewsanguoSfx.ModVolumeMultiplier）：设置页控件的 Read/Write 直接读写这些属性
 /// （Write 时属性 setter 会即时调音量并写盘），因此两处改动互相可见，不会出现各存一份的问题。
+/// “打击/防御/士兵”出牌音效开关（NewsanguoSfx.BasicCardSfxEnabled）同样持久化到该文件。
 /// </summary>
 public static class NewsanguoSfxVolumeSettings
 {
@@ -17,6 +18,8 @@ public static class NewsanguoSfxVolumeSettings
     private const string EnabledDataKey = "card_sfx_enabled";
 
     private const string VolumeDataKey = "card_sfx_volume_multiplier";
+
+    private const string BasicCardDataKey = "basic_card_sfx_enabled";
 
     public static void Register()
     {
@@ -36,6 +39,12 @@ public static class NewsanguoSfxVolumeSettings
                             binding: CreateEnabledBinding(),
                             description: ModSettingsText.Literal(
                                 "关闭后本 mod 的卡牌/能力/事件音效全部不播放（游戏其它音效不受影响）。"))
+                        .AddToggle(
+                            id: "basic_card_sfx_enabled",
+                            label: ModSettingsText.Literal("启用“打击/防御/士兵”出牌音效"),
+                            binding: CreateBasicCardBinding(),
+                            description: ModSettingsText.Literal(
+                                "关闭后“打击”“防御”“士兵”三张基础牌的出牌音效不播放，其它音效不受影响。"))
                         .AddSlider(
                             id: "card_sfx_volume_multiplier",
                             label: ModSettingsText.Literal("卡牌音效倍率"),
@@ -57,6 +66,16 @@ public static class NewsanguoSfxVolumeSettings
             EnabledDataKey,
             read: () => NewsanguoSfx.SfxEnabled,
             write: value => NewsanguoSfx.SfxEnabled = value,
+            save: () => NewsanguoSfx.SaveSfxConfig());
+    }
+
+    private static IModSettingsValueBinding<bool> CreateBasicCardBinding()
+    {
+        return ModSettingsBindings.Callback<bool>(
+            ModId,
+            BasicCardDataKey,
+            read: () => NewsanguoSfx.BasicCardSfxEnabled,
+            write: value => NewsanguoSfx.BasicCardSfxEnabled = value,
             save: () => NewsanguoSfx.SaveSfxConfig());
     }
 

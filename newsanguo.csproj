@@ -29,19 +29,21 @@
             <Private>false</Private>
         </Reference>
 
-        <!-- NuGet获取 -->
-        <PackageReference Include="STS2.RitsuLib" Version="*" />
+        <!-- NuGet获取。0.6.x 起 RitsuLib 拆成 facade + Runtime/Shared/Ui/Settings 多个程序集，
+             必须与玩家安装的运行时严格同版本（不同大版本之间二进制不兼容，会 FileLoadException）：
+             1) 用 [0.6.2] 精确锁定——写成 Version="0.6.2" 会被 NuGet 当作“最低版本”，
+                日后可能自动拉到更新的不兼容版本（此前 Version="*" 就是这样把 0.5.x 拉到 0.6.2 的）；
+             2) 0.6.2 的兼容目标是游戏 API 0.111.0，与 newsanguo.json 的 min_game_version 一致；
+             3) 框架本体不随本 mod 分发，由 mods/STS2-RitsuLib 运行时提供（见下方 Target）。 -->
+        <PackageReference Include="STS2.RitsuLib" Version="[0.6.2]" />
     </ItemGroup>
 
-    <!-- 自动复制dll、json和依赖 -->
+    <!-- 自动复制dll和json（RitsuLib 本体由 mods/STS2-RitsuLib 运行时提供，不要复制进本 mod 目录：
+         随 mod 携带的副本会按文件名抢占程序集解析，导致版本与运行时不一致（FileLoadException）。 -->
     <Target Name="Copy Mod" AfterTargets="PostBuildEvent">
         <Message Text="Copying mod to Slay the Spire 2 mods folder..." Importance="high" />
         <MakeDir Directories="$(Sts2Dir)\mods\" />
         <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(Sts2Dir)\mods\$(MSBuildProjectName)\" />
         <Copy SourceFiles="$(MSBuildProjectName).json" DestinationFolder="$(Sts2Dir)/mods/$(MSBuildProjectName)/" />
-        <ItemGroup>
-            <RitsuLibDll Include="$(NuGetPackageRoot)sts2.ritsulib\**\net9.0\STS2-RitsuLib.dll" />
-        </ItemGroup>
-        <Copy SourceFiles="%(RitsuLibDll.FullPath)" DestinationFolder="$(Sts2Dir)\mods\$(MSBuildProjectName)\" />
     </Target>
 </Project>

@@ -25,9 +25,10 @@ public class PartyOn : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：本回合获得的能量（升级 4）
+    // 卡牌基础数值：本回合获得的能量（升级 4）、抽牌数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new EnergyVar(3)
+        new EnergyVar(3),
+        new CardsVar(2)
     ];
 
     // 悬停提示：展示能量
@@ -49,6 +50,9 @@ public class PartyOn : NewsanguoCardTemplate
 
         // 获得能量（本回合立即生效）
         await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, base.Owner);
+
+        // 抽牌
+        await CardPileCmd.Draw(choiceContext, DynamicVars.Cards.BaseValue, base.Owner);
 
         // 附加“止戈”能力：本回合不能打出攻击牌
         await PowerCmd.Apply<NoAttacksThisTurnPower>(
