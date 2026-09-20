@@ -28,40 +28,23 @@ public class DesecrateHeaven : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：获得的天意之力、下个回合结束获得的天意侵蚀层数
+    // 卡牌基础数值：获得的天意之力、每回合开始时失去的天意之力
+    // （后者作为“天意致胜”的负层数施加，基础 5 层）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new HeavensForceVar(15m),
-        new DynamicVar("DecayAmount", 15m)
+        new PowerVar<VictoryByHeavensWillPower>(5m)
     ];
 
-    // 卡牌自带“消耗”关键词
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-
-    // 鼠标悬停时显示天意之力与天意侵蚀提示；
-    // 未升级时额外显示“保留”关键词说明（升级后获得保留词条会自动显示，避免重复）
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips
-    {
-        get
-        {
-            List<IHoverTip> tips =
-            [
-                HeavensForce.HoverTip(),
-                HoverTipFactory.FromPower<HeavensDecayPower>()
-            ];
-
-            if (!IsUpgraded)
-            {
-                tips.Add(HoverTipFactory.FromKeyword(CardKeyword.Retain));
-            }
-
-            return tips;
-        }
-    }
+    // 鼠标悬停时显示天意之力与天意侵蚀提示（“保留”关键词由引擎自动补充）
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
+        HeavensForce.HoverTip(),
+        HoverTipFactory.FromPower<HeavensDecayPower>()
+    ];
 
     // 属于“天意”体系（涉及天意之力/天意侵蚀）
     public override bool IsHeavensCard => true;
 
-    public DesecrateHeaven() : base(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
+    public DesecrateHeaven() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self)
     {
     }
 
@@ -81,9 +64,15 @@ public class DesecrateHeaven : NewsanguoCardTemplate
         // 在本回合保留手牌（原版“保留手牌”能力）
         await PowerCmd.Apply<RetainHandPower>(choiceContext, base.Owner.Creature, 1m, base.Owner.Creature, this);
 
-        // 下个回合结束时获得15层天意侵蚀（延迟标记能力，数值由变量传入）
-        BlasphemyDebtPower? debt = await PowerCmd.Apply<BlasphemyDebtPower>(choiceContext, base.Owner.Creature, 2, base.Owner.Creature, this);
-        debt?.SetDecayAmount(DynamicVars["DecayAmount"].IntValue);
+        // 施加 -5 层“天意致胜”：每回合开始时失去 5 点天意之力（重复打出可叠加）
+        int loss = DynamicVars["VictoryByHeavensWillPower"].IntValue;
+        await PowerCmd.Apply<VictoryByHeavensWillPower>(
+            choiceContext,
+            base.Owner.Creature,
+            -loss,
+            base.Owner.Creature,
+            this,
+            silent: false);
     }
 
     // 升级后的效果逻辑

@@ -1,14 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Extensions;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Random;
+using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -28,7 +31,12 @@ public class SeaChange : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    public SeaChange() : base(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
+    // 卡牌基础数值：选择至多 3 张手牌变化（升级后 5 张）
+    protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new CardsVar(3)
+    ];
+
+    public SeaChange() : base(0, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {
     }
 
@@ -44,18 +52,35 @@ public class SeaChange : NewsanguoCardTemplate
             return;
         }
 
-        // 逐个随机变化所有手牌（先快照列表，避免变换过程中集合变化）
-        Rng rng = base.Owner.RunState.Rng.CombatCardSelection;
-        List<CardModel> originals = hand.Cards.ToList();
+        // 从手牌中选择至多 Cards 张（最少 0 张，可以不选）；可选上限同时受手牌数限制
+        int maxCount = Math.Min(DynamicVars["Cards"].IntValue, hand.Cards.Count);
+        List<CardModel> selected = (await CardSelectCmd.FromHand(
+            context: choiceContext,
+            player: base.Owner,
+            prefs: new CardSelectorPrefs(SelectionScreenPrompt, 0, maxCount),
+            filter: null,
+            source: this)).ToList();
+        if (selected.Count == 0)
+        {
+            return;
+        }
 
-        foreach (CardModel original in originals)
+        // 逐张随机变化，并为变化出来的牌添加随机附魔
+        // （选择结果已快照成列表，避免变换过程中集合变化）
+        Rng rng = base.Owner.RunState.Rng.CombatCardSelection;
+        foreach (CardModel original in selected)
         {
             CardPileAddResult result = await CardCmd.TransformToRandom(original, rng);
-            // 升级后：为变化出来的牌施加随机附魔
-            if (IsUpgraded && result.cardAdded != null)
+            if (result.cardAdded != null)
             {
                 EnchantHelper.ApplyRandomEnchant(result.cardAdded, base.Owner);
             }
         }
+    }
+
+    // 升级后的效果逻辑：可选张数从 3 提高到 5
+    protected override void OnUpgrade()
+    {
+        DynamicVars["Cards"].UpgradeValueBy(2m);
     }
 }

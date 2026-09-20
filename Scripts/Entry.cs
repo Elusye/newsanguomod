@@ -24,18 +24,17 @@ public class Entry
     {
         // 逐个应用 Harmony 补丁：单个补丁失败不影响其它补丁与 mod 主体，并在日志中记录失败原因
         var harmony = new Harmony("newsanguo");
-        ApplyPatch(harmony, typeof(SetTextAutoSizeDiagnosticPatch));
-        ApplyPatch(harmony, typeof(EstimateTextSizeDiagnosticPatch));
-        ApplyPatch(harmony, typeof(AdjustFontSizeDiagnosticPatch));
         ApplyPatch(harmony, typeof(NewsanguoEnergyCounterPatch));
         ApplyPatch(harmony, typeof(AlwaysMineDiscardSelectPatch));
         ApplyPatch(harmony, typeof(AlwaysMineDiscardSelectionEndPatch));
         ApplyPatch(harmony, typeof(AlwaysMineDiscardGlowPatch));
         ApplyPatch(harmony, typeof(PlayerDeathSfxPatch));
-        ApplyPatch(harmony, typeof(PlayerHurtSfxPatch));
         ApplyPatch(harmony, typeof(EngineSfxRedirectPatch));
         ApplyPatch(harmony, typeof(SecondAmountLabelPatch));
         ApplyPatch(harmony, typeof(HeavensForceHoverTipPatch));
+        ApplyPatch(harmony, typeof(FatherIHaveFailedYouPowerPatch));
+        ApplyPatch(harmony, typeof(RestSiteSmithSfxPatch));
+        ApplyPatch(harmony, typeof(RestSiteHealSfxPatch));
         var assembly = Assembly.GetExecutingAssembly();
         RitsuLibFramework.EnsureGodotScriptsRegistered(assembly, Logger);
         // 注册“天意之力”次级资源（必须在内容注册之前：卡牌动态变量与战斗 UI 都要用到它的完整 id）

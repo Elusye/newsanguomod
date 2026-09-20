@@ -36,7 +36,7 @@ public class WhereSWine : NewsanguoCardTemplate
         HoverTipFactory.FromPower<DrunkenMightPower>()
     ];
 
-    public WhereSWine() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self)
+    public WhereSWine() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
     {
     }
 

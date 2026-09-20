@@ -14,5 +14,8 @@
   "NEWSANGUO_RELIC_EMPTY_CITY_STRATAGEM.title": "空城计",
   "NEWSANGUO_RELIC_EMPTY_CITY_STRATAGEM.description": "如果你在回合结束时没有任何[gold]手牌[/gold]，你在本回合受到敌人的伤害减半。",
   "NEWSANGUO_RELIC_EMPTY_CITY_STRATAGEM.flavor": "（悠扬的琴音）",
+  "NEWSANGUO_RELIC_R_KEY.title": "R键",
+  "NEWSANGUO_RELIC_R_KEY.description": "拾起时，回到这一幕的先古之民处，将一张[red]天意侵蚀[/red]加入你的[gold]牌组[/gold]。",
+  "NEWSANGUO_RELIC_R_KEY.flavor": "是时候重新开始了。",
   "SEA_GLASS.NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.title": "酒客玻璃"
 }

@@ -14,5 +14,8 @@
   "NEWSANGUO_RELIC_EMPTY_CITY_STRATAGEM.title": "Empty City Stratagem",
   "NEWSANGUO_RELIC_EMPTY_CITY_STRATAGEM.description": "If you have no cards in your [gold]Hand[/gold] at the end of your turn, you take 50% less damage from enemies this turn.",
   "NEWSANGUO_RELIC_EMPTY_CITY_STRATAGEM.flavor": "(A lilting melody of the qin.)",
+  "NEWSANGUO_RELIC_R_KEY.title": "R Key",
+  "NEWSANGUO_RELIC_R_KEY.description": "Upon pickup, return to this Act's [gold]Ancients[/gold] and add a [red]Heaven's Decay[/red] to your [gold]Deck[/gold].",
+  "NEWSANGUO_RELIC_R_KEY.flavor": "Time to start over.",
   "SEA_GLASS.NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.title": "Wine Glass"
 }

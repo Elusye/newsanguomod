@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://twnwmyydeial"
-path="res://.godot/imported/BlasphemyDebtPowerBig.png-c495c911266afece9073d8e936305b74.ctex"
+uid="uid://b34w1lqegxbuo"
+path="res://.godot/imported/RKeyBig.png-5dffc426fcf6e15fb9a746fc70e037f9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/BlasphemyDebtPowerBig.png"
-dest_files=["res://.godot/imported/BlasphemyDebtPowerBig.png-c495c911266afece9073d8e936305b74.ctex"]
+source_file="res://newsanguo/images/relics/RKeyBig.png"
+dest_files=["res://.godot/imported/RKeyBig.png-5dffc426fcf6e15fb9a746fc70e037f9.ctex"]
 
 [params]
 

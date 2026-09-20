@@ -36,10 +36,23 @@ public class FortySixtyTax : NewsanguoCardTemplate
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     // 卡牌基础数值：对目标造成 18 点伤害；获得目标当前血量 40% 的金币
+    // TaxGold 只用于卡面预览（瞄准敌人时显示“将获得多少金币”），实际结算走 ComputeGold
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(18m, ValueProp.Move),
-        new IntVar("TaxPercent", 40)
+        new IntVar("TaxPercent", 40),
+        new TaxGoldVar()
     ];
+
+    // 金币收益的唯一定义处：卡面预览（TaxGoldVar）与打出结算都调用它，避免两处口径漂移。
+    // 操作顺序与旧实现一致：先按百分比向下取整，再按游戏人数向下取整。
+    internal static int ComputeGold(Creature target, int taxPercent, int playerCount)
+    {
+        if (playerCount <= 0)
+        {
+            playerCount = 1;
+        }
+        return target.CurrentHp * taxPercent / 100 / playerCount;
+    }
 
     // 悬停提示：展示“消耗”关键词说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
@@ -61,8 +74,8 @@ public class FortySixtyTax : NewsanguoCardTemplate
         NewsanguoSfx.Play("event:/newsanguo/sfx/forty_sixty_tax");
 
         // 按伤害前血量计算：获得目标当前血量 TaxPercent% 的金币，除以游戏人数（向下取整）
-        int playerCount = combatState.Players.Count > 0 ? combatState.Players.Count : 1;
-        int gold = target.CurrentHp * DynamicVars["TaxPercent"].IntValue / 100 / playerCount;
+        int playerCount = combatState.Players.Count;
+        int gold = ComputeGold(target, DynamicVars["TaxPercent"].IntValue, playerCount);
 
         // 对目标造成 18 点伤害
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)

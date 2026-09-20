@@ -1,11 +1,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Godot;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Nodes.Combat;
+using MegaCrit.Sts2.Core.Nodes.Rooms;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -46,6 +49,28 @@ public class DrunkenMightPower : ModPowerTemplate
     protected override object InitInternalData()
     {
         return new Data();
+    }
+
+    // 酒力上限：层数会被攻击加成、换大盏、胜利倍率等反复放大，逼近 int 上限时会在
+    // 命令层的 (int) 转换处溢出，因此在此显式封顶（与 PowerModel.SetAmount 的内部钳制同值）。
+    public const int MaxAmount = 999999999;
+
+    // 获得酒力时封顶：把本次增量收缩到剩余空间内，保证总层数不超过 MaxAmount。
+    // 只处理“已经挂在拥有者身上”的这份能力，因此多个玩家各自的酒力互不影响。
+    public override bool TryModifyPowerAmountReceived(PowerModel canonicalPower, Creature target, decimal amount, Creature? applier, out decimal modifiedAmount)
+    {
+        modifiedAmount = amount;
+        if (Owner is null || target != Owner || canonicalPower is not DrunkenMightPower)
+        {
+            return false;
+        }
+        decimal room = MaxAmount - Amount;
+        if (amount <= room)
+        {
+            return false;
+        }
+        modifiedAmount = room;
+        return true;
     }
 
     // 增加攻击牌造成的伤害（返回要叠加的数值增量）
@@ -122,5 +147,62 @@ public class DrunkenMightPower : ModPowerTemplate
             Owner,
             cardSource,
             silent: false);
+    }
+
+    // —— 酒力红温：层数越高，角色整体越红（100 层为最红）——
+
+    // 达到最红所需的层数
+    private const int MaxTintAmount = 100;
+
+    // 最红时绿/蓝通道的倍率。Modulate 是乘法：只压 G/B、R 恒为 1，观感就是越喝越红。
+    private const float MinGreenBlue = 0.35f;
+
+    // 颜色过渡时长（秒）
+    private const float TintDuration = 0.25f;
+
+    private Tween? _tintTween;
+
+    // 层数变化（首次获得、加层、减半）后刷新红温。
+    // 该钩子会被全场任何能力的层数变化唤醒，因此只处理自己这一份。
+    public override Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
+    {
+        if (power == this)
+        {
+            RefreshTint(Owner, Amount);
+        }
+        return Task.CompletedTask;
+    }
+
+    // 本能力被移除（层数归零 / 战斗结束清场）时恢复原色
+    public override async Task AfterRemoved(Creature oldOwner)
+    {
+        await base.AfterRemoved(oldOwner);
+        RefreshTint(oldOwner, 0);
+    }
+
+    // 按层数刷新角色染色；取不到角色节点（非战斗场景 / TestMode / 已离场）时静默跳过
+    private void RefreshTint(Creature? creature, int amount)
+    {
+        if (creature is null)
+        {
+            return;
+        }
+        NCreatureVisuals? visuals = NCombatRoom.Instance?.GetCreatureNode(creature)?.Visuals;
+        if (visuals is null || !GodotObject.IsInstanceValid(visuals))
+        {
+            return;
+        }
+
+        float greenBlue = 1f - (1f - MinGreenBlue) * Mathf.Clamp(amount / (float)MaxTintAmount, 0f, 1f);
+        if (_tintTween is not null && _tintTween.IsValid())
+        {
+            _tintTween.Kill();
+        }
+        // 只补间 G/B 两个通道：不碰 R，也不碰 alpha（本体复活动画会在补间 modulate:a）
+        _tintTween = visuals.CreateTween();
+        _tintTween.TweenProperty(visuals, "modulate:g", greenBlue, TintDuration)
+            .SetEase(Tween.EaseType.Out).SetTrans(Tween.TransitionType.Sine);
+        _tintTween.TweenProperty(visuals, "modulate:b", greenBlue, TintDuration)
+            .SetEase(Tween.EaseType.Out).SetTrans(Tween.TransitionType.Sine);
     }
 }

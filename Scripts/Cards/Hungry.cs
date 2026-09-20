@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Cards;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -27,6 +28,11 @@ public class Hungry : NewsanguoCurseTemplate
     // 关键词：虚无（回合结束若在手牌则自行消耗）+ 不可打出（对应文本由引擎自动追加）
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Ethereal, CardKeyword.Unplayable];
 
+    // 下回合少抽的牌数；牌面描述用 {DrawReductionPower:diff()} 动态显示，调数值只需改这里
+    protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new PowerVar<DrawReductionPower>(1m)
+    ];
+
     // 回合结束时若这张牌在手牌中，引擎会调用 OnTurnEndInHand
     public override bool HasTurnEndInHandEffect => true;
 
@@ -34,10 +40,15 @@ public class Hungry : NewsanguoCurseTemplate
     {
     }
 
-    // 回合结束时：这张牌若在手牌中，你下个回合少抽1张牌
+    // 回合结束时：这张牌若在手牌中，你下个回合少抽 CanonicalVars 里设定的张数
     protected override async Task OnTurnEndInHand(PlayerChoiceContext choiceContext)
     {
-        // 施加“抽牌变少”：下回合少抽1张
-        await PowerCmd.Apply<DrawReductionPower>(choiceContext, base.Owner.Creature, 1, base.Owner.Creature, this);
+        // 施加“抽牌变少”：数值取自 CanonicalVars（与牌面描述同一真值源）
+        await PowerCmd.Apply<DrawReductionPower>(
+            choiceContext,
+            base.Owner.Creature,
+            DynamicVars["DrawReductionPower"].IntValue,
+            base.Owner.Creature,
+            this);
     }
 }

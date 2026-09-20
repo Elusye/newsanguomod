@@ -15,13 +15,18 @@ namespace newsanguo.Scripts.Powers;
 [RegisterPower]
 public class ReleasePower : ModPowerTemplate
 {
-    // 「关羽之歌」音频文件（mp3 直接由 Godot 播放）。
+    // 「关羽之歌」音频文件（mp3 经 NewsanguoSfx 统一入口用 Godot AudioStreamPlayer 播放）。
     // 说明：该音效在 FMOD 工程里被设为流式(Streaming)，构建时音频数据不会打进 newsanguo.bank，
     // 且工程从未生成配套的 .stream 文件，导致 FMOD 事件能创建实例但没有任何声音。
-    // 因此这里绕开 FMOD，用 Godot 的 AudioStreamPlayer 播放 mp3（游戏自身的 NDebugAudioManager 也是这么做的）。
+    // 因此这里绕开 FMOD，直接播 mp3（游戏自身的 NDebugAudioManager 也是这么做的）。
     private const string SongFilePath = "res://newsanguo/audios/song_of_guan_yu.mp3";
 
-    // 正在播放的 Godot 音频播放器，保留句柄以便 SL / 进入下一个房间时打断
+    // 歌曲在总线上的基准音量（dB）。长音频不走 MasterVolumeDb 那套短语音效校准，
+    // 也不叠游戏「音效」选项曲线（见 NewsanguoSfx.PlayOwnLevel），沿用早期独立播放器实测可用的 +5 dB；
+    // mod 音效总开关 / 倍率滑杆 / 听觉受损门照常生效。
+    private const float SongVolumeDb = 5f;
+
+    // 正在播放的播放器，保留句柄以便 SL / 进入下一个房间时打断
     private static AudioStreamPlayer? _songPlayer;
 
     // 打断“关羽之歌”（由 Entry 在进入主菜单 / 进入新房间时调用）
@@ -29,13 +34,7 @@ public class ReleasePower : ModPowerTemplate
     {
         AudioStreamPlayer? player = _songPlayer;
         _songPlayer = null;
-        if (player is null || !GodotObject.IsInstanceValid(player))
-        {
-            return;
-        }
-
-        player.Stop();
-        player.QueueFree();
+        NewsanguoSfx.Stop(player);
     }
 
     // 正面效果
@@ -64,40 +63,13 @@ public class ReleasePower : ModPowerTemplate
         await CreatureCmd.Heal(Owner, Amount);
     }
 
-    // 用 Godot AudioStreamPlayer 播放「关羽之歌」（挂在场景树根节点，走 SFX 总线）。
-    // 与游戏内置 NDebugAudioManager 的播放方式一致；保留句柄以便后续 stop()。
+    // 播放「关羽之歌」：统一走 NewsanguoSfx，因此受 mod 音效总开关 / 倍率滑杆 / 听觉受损门控制，
+    // 并保留歌曲自己的基准电平（PlayOwnLevel 不叠短语音效那套校准）。
+    // 循环由 NewsanguoSfx 维护，直到进入下一个房间 / 回主菜单时被 StopSongOfGuanyu() 打断。
     private static void PlaySongOfGuanyu()
     {
         // 若上一首仍未结束，先停掉，避免句柄被覆盖后无法打断
         StopSongOfGuanyu();
-
-        // 优先走 Godot 资源系统（自动处理导入/remap），失败再直接按原始文件读取
-        AudioStream? stream = ResourceLoader.Load<AudioStream>(SongFilePath) ?? AudioStreamMP3.LoadFromFile(SongFilePath);
-        if (stream is null || Engine.GetMainLoop() is not SceneTree tree)
-        {
-            return;
-        }
-
-        AudioStreamPlayer player = new AudioStreamPlayer
-        {
-            Stream = stream,
-            Bus = "SFX",
-            // 相对默认音量上调 5dB
-            VolumeDb = 5.0f
-        };
-
-        tree.Root.AddChild(player);
-        player.Play();
-        _songPlayer = player;
-
-        // 歌曲播放完正常时长后自动循环，直到进入下一个房间 / 回主菜单时被 StopSongOfGuanyu() 打断
-        player.Finished += () =>
-        {
-            if (!GodotObject.IsInstanceValid(player) || _songPlayer != player)
-            {
-                return;
-            }
-            player.Play();
-        };
+        _songPlayer = NewsanguoSfx.PlayOwnLevel(SongFilePath, SongVolumeDb, loop: true);
     }
 }

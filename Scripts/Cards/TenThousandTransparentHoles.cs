@@ -32,19 +32,14 @@ public class TenThousandTransparentHoles : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 1 点伤害 10 次；击杀时加入 1（升级 2）张复制品
+    // 卡牌基础数值：造成 1 点伤害 10 次；击杀时加入 1 张复制品
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(1m, ValueProp.Move),
         new CardsVar(1)
     ];
 
-    // 卡牌自带“消耗”关键词
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-
-    // 悬停提示：说明“击杀”的判定
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.Static(StaticHoverTip.Fatal)
-    ];
+    // 虚无 + 消耗（升级后仅移除虚无，保留消耗）
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Ethereal, CardKeyword.Exhaust];
 
     public TenThousandTransparentHoles() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
@@ -79,10 +74,15 @@ public class TenThousandTransparentHoles : NewsanguoCardTemplate
         }
     }
 
-    // 升级后的效果逻辑
+    // 升级：去除虚无，保留消耗
     protected override void OnUpgrade()
     {
-        // 复制品张数从 1 提高到 2
-        DynamicVars.Cards.UpgradeValueBy(1m);
+        RemoveKeyword(CardKeyword.Ethereal);
+    }
+
+    // 降级：恢复“虚无”
+    protected override void AfterDowngraded()
+    {
+        AddKeyword(CardKeyword.Ethereal);
     }
 }

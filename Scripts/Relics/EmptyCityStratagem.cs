@@ -25,7 +25,7 @@ public class EmptyCityStratagem : ModRelicTemplate
         BigIconPath: $"res://newsanguo/images/relics/{GetType().Name}Big.png"
     );
 
-    public override RelicRarity Rarity => RelicRarity.Rare;
+    public override RelicRarity Rarity => RelicRarity.Uncommon;
 
     // 允许接收战斗钩子，否则 BeforeSideTurnEnd 不会被调用
     public override bool ShouldReceiveCombatHooks => true;

@@ -11,7 +11,7 @@ using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>
-/// “听觉受损”：本场战斗中你听到的声音音量降低 50%。
+/// “听觉受损”：本场战斗中你听到的声音音量降低至 25%（约 -12 dB，即原来的 1/4）。
 /// 打出“扎聋我自己的耳朵！”后压低本机音量，战斗结束时自动恢复。
 /// </summary>
 [RegisterPower]

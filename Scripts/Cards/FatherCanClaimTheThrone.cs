@@ -29,10 +29,10 @@ public class FatherCanClaimTheThrone : NewsanguoCardTemplate
     );
 
     // 卡牌基础数值：施加 1 层“称帝”（每回合开始时获得 1 点能量并额外抽 1 张牌），
-    // 并施加 -5 层“天意致胜”（每回合开始时失去 5 点天意之力）。
-    // VictoryByHeavensWillPower 变量仅作描述展示：表示施加给“天意致胜”的负层数大小（升级 5 → 4）
+    // 并施加 -3 层“天意致胜”（每回合开始时失去 3 点天意之力）。
+    // VictoryByHeavensWillPower 变量仅作描述展示：表示施加给“天意致胜”的负层数大小（升级 3 → 2）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<VictoryByHeavensWillPower>(5m),
+        new PowerVar<VictoryByHeavensWillPower>(3m),
         new IntVar("DrawCount", 1)
     ];
 
@@ -45,7 +45,7 @@ public class FatherCanClaimTheThrone : NewsanguoCardTemplate
     // 属于“天意”体系（涉及天意之力/天意侵蚀）
     public override bool IsHeavensCard => true;
 
-    public FatherCanClaimTheThrone() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self)
+    public FatherCanClaimTheThrone() : base(2, CardType.Power, CardRarity.Rare, TargetType.Self)
     {
     }
 
@@ -75,7 +75,7 @@ public class FatherCanClaimTheThrone : NewsanguoCardTemplate
             silent: false);
     }
 
-    // 升级：每回合失去的天意之力减少（施加的“天意致胜”负层数 5 → 4）
+        // 升级：每回合失去的天意之力减少（施加的“天意致胜”负层数 3 → 2）
     protected override void OnUpgrade()
     {
         DynamicVars["VictoryByHeavensWillPower"].UpgradeValueBy(-1);

@@ -37,7 +37,7 @@ public class ACertainForbiddenSpellIndex : ModRelicTemplate
         BigIconPath: $"res://newsanguo/images/relics/{GetType().Name}Big.png"
     );
 
-    public override RelicRarity Rarity => RelicRarity.Uncommon;
+    public override RelicRarity Rarity => RelicRarity.Rare;
 
     public override bool ShouldReceiveCombatHooks => true;
 

@@ -16,12 +16,15 @@ namespace newsanguo.Scripts;
 ///
 /// 音量构成（按序叠加）：
 /// 1) 本 mod 总开关 SfxEnabled（关闭后不播放任何音效，已响起的即时压静音）；
-/// 2) 基础牌开关 BasicCardSfxEnabled（仅静音“打击/防御/士兵”三张牌的出牌音效）；
+/// 2) “三国杀出牌音效”开关 BasicCardSfxEnabled（仅静音“打击/防御/士兵/灵魂锁链”的出牌音效）；
 /// 3) 跟随游戏内“音效”音量滑杆（CurrentSfxOptionDb，与原生 FMOD 音效总线同一“选项²”曲线）；
 /// 4) 本 mod 专属倍率 ModVolumeMultiplier（RitsuLib Mod 设置页滑杆 或 控制台命令
 ///    newsanguo_sfx_volume 调整，持久化保存）；
 /// 5) “扎聋我自己的耳朵！”（deafen_me）的听觉受损门（音量降至 1/4），只作用于本播放器，
 ///    原版 FMOD 事件由 HearingVolumeController 另行降为 1/4。
+///
+/// 例外：长音频（「关羽之歌」，见 <see cref="PlayOwnLevel"/>）自带母带电平，只叠加第 1/2/4/5 项，
+/// 不叠加第 3 项的短语音效校准值与游戏「音效」选项曲线。
 /// </summary>
 public static class NewsanguoSfx
 {
@@ -46,26 +49,27 @@ public static class NewsanguoSfx
     private static readonly HashSet<string> MissingReported = new();
 
     // 响度均衡增益表（单位 dB，播放时叠加到 VolumeDb）。
-    // 自动生成：132 个音效，中位 RMS -23.1 dB，K=0.7（向中位靠拢），峰值余量 -3 dB。
-    // 生成脚本见 %TEMP%\gen_sfx_gains.py（替换音频文件后重跑并替换本表）。
-    // character_death / character_select / song_of_guan_yu 由引擎侧触发、不走响度测量，数值为手工保留。
+    // 自动生成：136 个音效，中位 RMS -23.1 dB，K=0.7（向中位靠拢），峰值余量 -3 dB。
+    // 口径：ffmpeg volumedetect 的 mean_volume 作 RMS，gain = 0.7×(中位-RMS)，再受“峰值+gain ≤ -3 dB”钳制，取 0.5 dB 步进。
+    // 替换音频文件后可照此重算整表。
+    // 不参与自动测量的三类：character_death / character_select（引擎侧触发，手工保留原值）、
+    // song_of_guan_yu（长音频，走 NewsanguoSfx.PlayOwnLevel 自带基准电平，不查本表）。
     private static readonly Dictionary<string, float> LoudnessGainDb = new()
     {
         ["a_grand_toast"] = 1.5f,
         ["always_mine"] = -7.5f,
-        ["bai_qi"] = 7f,
-        ["better_each_day"] = 5.5f,
-        ["better_than_yiling_flames"] = 7.5f,
+        ["bai_qi"] = 6.5f,
+        ["better_each_day"] = 5f,
+        ["better_than_yiling_flames"] = 7f,
         ["blade_of_virtue_1"] = -2.5f,
         ["blade_of_virtue_2"] = -1f,
-        ["blasphemy_debt"] = -2f,
-        ["blood_loss"] = 5.5f,
+        ["blood_loss"] = 5f,
         ["boneless_palm"] = -3f,
         ["brew_heals_all"] = 3.5f,
         ["brew_limit_break"] = -6.5f,
         ["caos_art_of_war"] = 3f,
-        ["central_bastion"] = 3f,
-        ["central_bastion_power"] = 2.5f,
+        ["central_bastion"] = 1.5f,
+        ["central_bastion_power"] = 2f,
         ["chain_stratagem_1"] = -4f,
         ["chain_stratagem_2"] = -2.5f,
         ["character_death"] = -2f,
@@ -73,47 +77,55 @@ public static class NewsanguoSfx
         ["check_the_premiere"] = -1f,
         ["chenliu_mess_hall"] = -2f,
         ["chenliu_mess_hall_heal"] = 9.5f,
+        ["chenliu_mess_hall_max_hp"] = 0.5f,
         ["chenliu_mess_hall_relic"] = 1f,
-        ["commander_arrives"] = -3f,
+        ["chow_down"] = 0f,
+        ["commander_arrives"] = -4f,
         ["cricket_form"] = 4f,
         ["cricket_form_power"] = 4f,
         ["cross_for_cross"] = 6f,
         ["darkfin_shark"] = 5f,
         ["darkfin_shark_copy"] = 5f,
         ["deafen_me"] = -6.5f,
-        ["defend_newsanguo"] = -3f,
+        ["defend_newsanguo"] = -3.5f,
         ["desecrate_heaven"] = -3.5f,
         ["divination"] = -4.5f,
-        ["divine_insight"] = 7f,
-        ["divine_insight_power"] = 6.5f,
+        ["divine_insight"] = 6.5f,
+        ["divine_insight_power"] = 6f,
         ["dong_zhuo_the_traitor"] = -3f,
         ["dragon_omen"] = 2f,
         ["empower"] = -4.5f,
         ["empower_power"] = -4.5f,
+        ["enter_combat_one_hp"] = 2f,
         ["father_can_claim_the_throne"] = -2.5f,
         ["father_can_claim_the_throne_power"] = -2.5f,
         ["feel_no_acid"] = -2.5f,
         ["feel_no_acid_power"] = -6.5f,
-        ["get_out"] = 2f,
-        ["golden_rebellion"] = -1.5f,
+        ["forty_sixty_tax"] = 0f,
+        ["get_out"] = 1.5f,
+        ["golden_rebellion"] = -2.5f,
+        ["great_evil"] = -0.5f,
         ["han_xin"] = 7f,
         ["heaven_and_earth"] = -3f,
-        ["heaven_revision"] = 2f,
+        ["heaven_revision"] = 0f,
+        ["heavenly_troops"] = 0f,
         ["heavenly_troops_power"] = 4.5f,
         ["heavens_decay"] = -4f,
         ["heavens_force"] = 9.5f,
-        ["heavens_force_decay"] = 2f,
+        ["heavens_force_decay"] = 0f,
         ["human_transmutation_spell"] = -3f,
         ["im_getting_drunk"] = 2f,
         ["intoxicated"] = 7f,
-        ["invincible"] = -1f,
-        ["invoke_heaven"] = -3f,
+        ["invincible"] = -1.5f,
+        ["invoke_heaven"] = -5.5f,
         ["just_kidding"] = -3f,
         ["lets_discuss"] = -4.5f,
         ["lightning_strike"] = -1.5f,
         ["loath_to_leave_the_table"] = -2f,
         ["loath_to_leave_the_table_damage"] = -2.5f,
         ["longevity_spell"] = -4.5f,
+        ["medical_mastery"] = -0.5f,
+        ["military_cudgel"] = -0.5f,
         ["mind_control_spell"] = -1f,
         ["my_three_generals"] = 8.5f,
         ["near_and_far"] = 3f,
@@ -125,46 +137,60 @@ public static class NewsanguoSfx
         ["off_with_your_head"] = -4.5f,
         ["off_with_your_head_double"] = -3f,
         ["one_man_stand"] = -6f,
-        ["onset"] = 3.5f,
+        ["onset"] = 3f,
         ["party_on"] = 2f,
         ["peek_into_heaven"] = -3f,
-        ["player_hurt"] = -3.5f,
+        ["player_hurt"] = -7f,
+        ["plot"] = -0.5f,
+        ["poison_rat"] = 0f,
         ["proxy_strike"] = -4f,
         ["qin_jin_alliance"] = -1f,
         ["quad_blast_1"] = 2f,
         ["quad_blast_2"] = 2.5f,
         ["quad_blast_3"] = 1.5f,
         ["quad_blast_4"] = 3.5f,
+        ["rat_poison"] = 0f,
+        ["rat_poison_power"] = 0f,
         ["reanimation_spell"] = -4.5f,
         ["release"] = 1.5f,
+        ["rest_site_rest"] = 1.5f,
+        ["rest_site_smith"] = 10f,
         ["retire"] = -1f,
         ["ruthless_blade"] = 5f,
         ["scorching_starfall"] = -3f,
-        ["sea_change"] = 6.5f,
-        ["self_fall"] = 5.5f,
+        ["sea_change"] = 5.5f,
+        ["self_fall"] = 5f,
+        ["skyward_blade"] = 0f,
         ["slam_the_bowl"] = -5.5f,
         ["slam_the_bowl_damage"] = -2.5f,
         ["smiling_tiger"] = 4f,
         ["smiling_tiger_copy"] = 3.5f,
-        ["soldier"] = -2f,
+        ["soldier"] = -3f,
+        ["soul_shackles"] = 1f,
         ["starry_night"] = -2f,
-        ["strike_newsanguo"] = -2f,
+        ["strike_newsanguo"] = -3f,
+        ["ten_thousand_transparent_holes"] = 0.5f,
+        ["the_truest_mask"] = 0f,
         ["three_blades"] = 4f,
         ["to_a_bigger_goblet"] = 6f,
+        ["to_a_bigger_goblet_power"] = 0f,
         ["tremble"] = 6.5f,
         ["triumph_brew"] = 10f,
         ["tweak"] = 10f,
         ["uncles_and_aunts"] = 4.5f,
+        ["unstoppable"] = -2.5f,
         ["victory_by_heavens_will"] = 9.5f,
         ["victory_by_heavens_will_power"] = 9.5f,
         ["what_to_eat"] = -2f,
         ["where_s_wine"] = -4.5f,
         ["where_s_wine_power"] = -4.5f,
-        ["who_rules"] = 7f,
+        ["who_rules"] = 6.5f,
         ["why_pick_that_up"] = -4f,
         ["why_pick_that_up_power"] = -5f,
-        ["wind_of_tiger"] = -1.5f,
-        ["wine_the_old_hero"] = 9f,
+        ["wind_of_tiger"] = -2f,
+        ["wine_cut"] = 0f,
+        ["wine_the_old_hero"] = 7f,
+        ["wolf_vs_dog"] = -1f,
         ["zhou_yafu"] = 7.5f,
     };
 
@@ -189,7 +215,7 @@ public static class NewsanguoSfx
     private static string VolumeConfigPath => System.IO.Path.Combine(OS.GetUserDataDir(), VolumeConfigFileName);
 
     // 配置文件字段：mod_volume（独立倍率，默认 1.0）+ sfx_enabled（总开关，默认开）
-    // + basic_card_sfx_enabled（“打击/防御/士兵”三张基础牌的出牌音效开关，默认开）。
+    // + basic_card_sfx_enabled（“打击/防御/士兵/灵魂锁链”的出牌音效开关，默认开）。
     // 仅做一次磁盘读取，供下面几个静态字段初始化共用。
     private static readonly (float Multiplier, bool Enabled, bool BasicCardSfx) _loadedConfig = LoadConfig();
 
@@ -255,13 +281,13 @@ public static class NewsanguoSfx
 
     private static float ModVolumeOffsetDb() => _modVolumeDb;
 
-    // 受 BasicCardSfxEnabled 单独控制的基础牌出牌音效（音频文件名）
+    // 受 BasicCardSfxEnabled 单独控制的三国杀式语音出牌音效（音频文件名）
     private static readonly HashSet<string> BasicCardSfxNames =
-        ["strike_newsanguo", "defend_newsanguo", "soldier"];
+        ["strike_newsanguo", "defend_newsanguo", "soldier", "soul_shackles"];
 
     /// <summary>
-    /// “打击/防御/士兵”三张基础牌的出牌音效开关（默认开启）。
-    /// 这三张牌每回合都可能打出多次、声音重复度高，可用此开关单独静音；
+    /// “打击/防御/士兵/灵魂锁链”的出牌音效开关（默认开启）。
+    /// 这几张牌的语音重复度高（基础牌每回合都可能打出多次），可用此开关单独静音；
     /// 其它卡牌/能力音效不受影响（总开关见 <see cref="SfxEnabled"/>）。
     /// </summary>
     public static bool BasicCardSfxEnabled
@@ -278,7 +304,7 @@ public static class NewsanguoSfx
         }
     }
 
-    // 该音效是否属于受基础牌开关控制的三张牌（res:// 路径不带事件名，天然不命中）
+    // 该音效是否属于受该开关控制的几张牌（res:// 路径不带事件名，天然不命中）
     private static bool IsBasicCardSfx(string sfx) =>
         GetEventName(sfx) is { } name && BasicCardSfxNames.Contains(name);
 
@@ -402,6 +428,23 @@ public static class NewsanguoSfx
     /// <param name="sfx">兼容两种传参：事件路径（event:/newsanguo/sfx/xxx）或 res:// 资源路径。</param>
     /// <returns>正在播放的 AudioStreamPlayer；总开关关闭或资源缺失/解析失败时为 null（不播放）。</returns>
     public static AudioStreamPlayer? Play(string sfx, float volume = 1f, float pitch = 1f)
+        => PlayInternal(sfx, volume, pitch, ownLevelDb: null, loop: false);
+
+    /// <summary>
+    /// 播放一段“自带基准电平”的长音频（目前只有「关羽之歌」）。
+    /// 与 <see cref="Play"/> 的唯一区别：不叠加 <see cref="MasterVolumeDb"/> 与游戏「音效」选项曲线
+    /// —— 这两项是为短语音效校准的（免得被游戏总线压得听不见），而长音频有自己的母带电平，
+    /// 再叠一次会在滑杆拉低时反而比其它音效响得多。
+    /// mod 自身的控制照常生效：总开关 <see cref="SfxEnabled"/>、倍率 <see cref="ModVolumeMultiplier"/>、
+    /// 「扎聋我自己的耳朵！」的听觉受损门，以及 <see cref="Stop"/> 打断。
+    /// </summary>
+    /// <param name="sfx">事件路径（event:/newsanguo/sfx/xxx）或 res:// 资源路径。</param>
+    /// <param name="volumeDb">该音频在总线上的固定基准音量（dB）。</param>
+    /// <param name="loop">循环播放；循环的播放器不自动释放，须用 <see cref="Stop"/> 显式停止。</param>
+    public static AudioStreamPlayer? PlayOwnLevel(string sfx, float volumeDb, bool loop = false)
+        => PlayInternal(sfx, 1f, 1f, ownLevelDb: volumeDb, loop: loop);
+
+    private static AudioStreamPlayer? PlayInternal(string sfx, float volume, float pitch, float? ownLevelDb, bool loop)
     {
         if (string.IsNullOrEmpty(sfx))
         {
@@ -420,9 +463,48 @@ public static class NewsanguoSfx
 
         if (ResolveAudio(sfx, out AudioStream? stream, out string resourcePath) && stream is not null)
         {
-            return PlayStream(resourcePath, stream, volume, pitch);
+            return PlayStream(resourcePath, stream, volume, pitch, ownLevelDb, loop);
         }
         return null;
+    }
+
+    /// <summary>
+    /// 停止并释放一个由 <see cref="Play"/> / <see cref="PlayOwnLevel"/> 返回的播放器。
+    /// 循环播放的长音频必须经此停止，否则会一直响；传入 null 或已失效的播放器时无副作用。
+    /// </summary>
+    public static void Stop(AudioStreamPlayer? player)
+    {
+        if (player is null)
+        {
+            return;
+        }
+        UnregisterPlayer(player);
+        if (GodotObject.IsInstanceValid(player))
+        {
+            player.Stop();
+            player.QueueFree();
+        }
+    }
+
+    // 从“正在播放”登记表里摘掉一个播放器（按对象反查其资源路径）
+    private static void UnregisterPlayer(AudioStreamPlayer player)
+    {
+        string? emptiedKey = null;
+        foreach ((string path, List<AudioStreamPlayer> list) in ActivePlayers)
+        {
+            if (list.Remove(player))
+            {
+                if (list.Count == 0)
+                {
+                    emptiedKey = path;
+                }
+                break;
+            }
+        }
+        if (emptiedKey is not null)
+        {
+            ActivePlayers.Remove(emptiedKey);
+        }
     }
 
     /// <summary>
@@ -461,21 +543,27 @@ public static class NewsanguoSfx
         await finished.Task;
     }
 
-    private static AudioStreamPlayer? PlayStream(string resourcePath, AudioStream stream, float volume, float pitch)
+    private static AudioStreamPlayer? PlayStream(string resourcePath, AudioStream stream, float volume, float pitch,
+        float? ownLevelDb = null, bool loop = false)
     {
         if (Engine.GetMainLoop() is not SceneTree tree)
         {
             return null;
         }
 
+        // 基准电平：普通音效 = 线性音量 + mod 校准值 + 该音效的等响度补偿 + 游戏「音效」选项曲线；
+        // 自带基准电平的长音频（PlayOwnLevel）直接用调用方给定的 dB，不再叠加上面三项。
+        float levelDb = ownLevelDb ?? (volume <= 0f
+            ? -80f
+            : Mathf.LinearToDb(volume) + MasterVolumeDb + LoudnessOffsetDb(resourcePath) + CurrentSfxOptionDb());
+
         AudioStreamPlayer player = new AudioStreamPlayer
         {
             Stream = stream,
             Bus = "SFX",
             PitchScale = pitch,
-            VolumeDb = volume <= 0f ? -80f
-                : Mathf.LinearToDb(volume) + MasterVolumeDb + LoudnessOffsetDb(resourcePath)
-                    + CurrentSfxOptionDb() + ModVolumeOffsetDb() + (_volumeReduced ? -ReducedVolumeDb : 0f)
+            // mod 倍率与听觉受损门对两种播放方式一律生效
+            VolumeDb = levelDb + ModVolumeOffsetDb() + (_volumeReduced ? -ReducedVolumeDb : 0f)
         };
         tree.Root.AddChild(player);
         if (!ActivePlayers.TryGetValue(resourcePath, out var list))
@@ -486,10 +574,28 @@ public static class NewsanguoSfx
         list.Add(player);
         player.Play();
 
-        // 播放完毕自动清理
-        player.Finished += () => FinishAndFree(resourcePath, player);
+        if (loop)
+        {
+            // 循环播放：播完立刻重播，且不自动释放（由 Stop() 显式结束）
+            player.Finished += () =>
+            {
+                if (GodotObject.IsInstanceValid(player) && IsStillRegistered(resourcePath, player))
+                {
+                    player.Play();
+                }
+            };
+        }
+        else
+        {
+            // 播放完毕自动清理
+            player.Finished += () => FinishAndFree(resourcePath, player);
+        }
         return player;
     }
+
+    // 播放器是否仍在“正在播放”登记表中（被 Stop() 摘牌后不再续播）
+    private static bool IsStillRegistered(string resourcePath, AudioStreamPlayer player) =>
+        ActivePlayers.TryGetValue(resourcePath, out var list) && list.Contains(player);
 
     // 依次尝试 .mp3/.wav/.ogg；mp3 额外用原始文件读取兜底（兼容未导入的裸 mp3）
     private static bool TryLoadResource(string pathOrEvent, string originalSfx, out AudioStream? stream, out string resourcePath)
