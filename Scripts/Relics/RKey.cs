@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Context;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.Helpers;
@@ -38,18 +37,23 @@ public class RKey : ModRelicTemplate
 
     public override async Task AfterObtained()
     {
-        // 多人共享事件的选项回调会遍历所有玩家的克隆执行：加牌与传送都只在“本机玩家”
-        // 的克隆上执行一次，保证每个玩家只获得一张诅咒、房间只切换一次。
-        if (!LocalContext.IsMe(Owner))
+        IRunState runState = Owner.RunState;
+
+        // 每个玩家各自获得一张诅咒「天意侵蚀」并加入自己牌组。
+        // 注意：共享事件的选项回调在**每台机器**上都会遍历所有玩家的克隆执行（见 EventSynchronizer），
+        // 所以这里必须让每个克隆都作用于自己的 Owner，原版共享事件（如 MorphicGrove）也是这个写法。
+        // 早期版本用 LocalContext.IsMe 只让“本机玩家”的克隆执行，结果两台机器把诅咒加进了不同玩家的
+        // 牌组，状态校验和分歧、客户端掉线（与「孩儿不孝啊！」属于同一类问题）。
+        CardModel curse = runState.CreateCard<HeavensDecay>(Owner);
+        CardCmd.PreviewCardPileAdd(await CardPileCmd.Add(curse, PileType.Deck));
+
+        // 切换房间是全局操作，整体只能触发一次：交给 0 号位玩家的克隆执行。
+        // 这里同样不能用 LocalContext.IsMe（各机器结果不同），用玩家槽位才能保证
+        // 所有机器算出的“唯一执行者”是同一个人。
+        if (runState.GetPlayerSlotIndex(Owner) != 0)
         {
             return;
         }
-
-        IRunState runState = Owner.RunState;
-
-        // 获得诅咒「天意侵蚀」并加入牌组
-        CardModel curse = runState.CreateCard<HeavensDecay>(Owner);
-        CardCmd.PreviewCardPileAdd(await CardPileCmd.Add(curse, PileType.Deck));
 
         // 不能在拾起过程中直接 await 房间切换：此刻仍处于事件选项任务里，选项任务会被
         // EventSynchronizer.AwaitPendingOptionTasks 等待，而 EnterRoom 又会先 ExitCurrentRooms
