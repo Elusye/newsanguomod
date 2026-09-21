@@ -28,6 +28,20 @@ public class Portal : ModRelicTemplate
 
     public override RelicRarity Rarity => RelicRarity.Event;
 
+    // 单人限定，与原版同效果的「飞靴」一致（WingedBoots.cs:47-50 的 IsAllowed）。
+    // 多人下自由移动有两个硬伤：
+    //   1) RunManager.EnterMapPointInternal 每次进点都会重新 RollRoomTypeFor 摇房间类型（RunManager.cs:840），
+    //      于是允许「重访已走过的坐标」，同一个坐标第二次可能变成宝箱房；
+    //   2) 原版多人宝箱房的选遗物会话在“没结算就离房”时不会被清理
+    //      （TreasureRoomRelicSynchronizer.cs:302-308 只在单人跳过时 EndRelicVoting），
+    //      下一次进宝箱房 BeginRelicPicking() 会抛 InvalidOperationException，而该异常发生在
+    //      FadeOut 之后、FadeIn 与 ActionExecutor.Unpause() 之前 → 黑屏且输入队列永久暂停。
+    // 因此多人局不发放「传送门」，把这条可重访节点的路径直接掐掉。
+    public override bool IsAllowed(IRunState runState)
+    {
+        return runState.Players.Count == 1;
+    }
+
     // 剩余次数用完后遗物失效
     public override bool IsUsedUp => TimesUsed >= _roomCount;
 
