@@ -27,9 +27,9 @@ public class Soldier : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 10 点伤害
+    // 卡牌基础数值：造成 8 点伤害
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(10, ValueProp.Move)
+        new DamageVar(8, ValueProp.Move)
     ];
 
     // 卡牌自带“消耗”关键词
@@ -57,7 +57,7 @@ public class Soldier : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 伤害从 10 提高到 15
-        DynamicVars.Damage.UpgradeValueBy(5);
+        // 伤害从 8 提高到 10
+        DynamicVars.Damage.UpgradeValueBy(2);
     }
 }

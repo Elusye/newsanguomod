@@ -48,7 +48,7 @@ public class BrewHealsAll : NewsanguoCardTemplate
     ];
 
     public BrewHealsAll() :
-        base(3, CardType.Skill, CardRarity.Rare, TargetType.Self)
+        base(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {
     }
 

@@ -68,9 +68,10 @@ public class SoulShackles : NewsanguoCardTemplate
         }
     }
 
-    // 升级：失去的天意之力 3 → 2
+    // 升级：失去的天意之力 3 → 2，费用 1 → 0
     protected override void OnUpgrade()
     {
         DynamicVars["HeavensLost"].UpgradeValueBy(-1);
+        EnergyCost.UpgradeBy(-1);
     }
 }

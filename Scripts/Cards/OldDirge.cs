@@ -37,8 +37,10 @@ public class OldDirge : NewsanguoCardTemplate
         new SummonVar(3)
     ];
 
-    // 悬停提示：展示“灵魂”卡牌的说明（升级后为灵魂+）
+    // 悬停提示：召唤数值说明 + “灵魂”卡牌的说明（升级后为灵魂+）
+    // 照搬原版 Dirge 的 ExtraHoverTips：SummonDynamic 在前、Soul 在后
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
+        HoverTipFactory.Static(StaticHoverTip.SummonDynamic, DynamicVars.Summon),
         HoverTipFactory.FromCard<Soul>(IsUpgraded)
     ];
 
@@ -49,10 +51,13 @@ public class OldDirge : NewsanguoCardTemplate
     {
     }
 
-    // 打出时的效果逻辑（参考原版挽歌 Dirge）
+    // 打出时的效果逻辑（照搬原版挽歌 Dirge）
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         ICombatState combatState = base.CombatState!;
+
+        // 播放角色施法动画
+        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // X = 本回合为打出此牌花费的能量
         int x = ResolveEnergyXValue();
@@ -73,8 +78,10 @@ public class OldDirge : NewsanguoCardTemplate
             }
         }
 
-        var result = await CardPileCmd.AddGeneratedCardsToCombat(souls, PileType.Draw, base.Owner, CardPilePosition.Bottom);
-        CardCmd.PreviewCardPileAdd(result, 1.2f);
+        // 加入抽牌堆；位置照原版 Dirge 为 Random
+        // （1.2f 本就是 PreviewCardPileAdd 的默认时长，故与原版一样不再显式传入）
+        var result = await CardPileCmd.AddGeneratedCardsToCombat(souls, PileType.Draw, base.Owner, CardPilePosition.Random);
+        CardCmd.PreviewCardPileAdd(result);
     }
 
     // 升级：每次召唤的奥斯蒂数量 3 → 4

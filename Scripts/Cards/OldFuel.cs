@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Cards;
@@ -31,6 +32,11 @@ public class OldFuel : NewsanguoCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new EnergyVar(1),
         new CardsVar(1)
+    ];
+
+    // 悬停提示：能量说明（照搬原版 Fuel 的 ExtraHoverTips）
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
+        HoverTipFactory.ForEnergy(this)
     ];
 
     // 卡牌自带“消耗”关键词

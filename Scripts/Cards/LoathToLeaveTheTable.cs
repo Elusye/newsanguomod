@@ -32,10 +32,10 @@ public class LoathToLeaveTheTable : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：对所有敌人造成 25 点伤害；酒力阈值 10（升级后 8）
+    // 卡牌基础数值：对所有敌人造成 25 点伤害；酒力阈值 6（升级后 4）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(25, ValueProp.Move),
-        new IntVar("WineThreshold", 10)
+        new IntVar("WineThreshold", 6)
     ];
 
     // 悬停提示：展示“酒力”说明
@@ -92,7 +92,7 @@ public class LoathToLeaveTheTable : NewsanguoCardTemplate
             await attack.Execute(choiceContext);
         }
 
-        // 若你的酒力不小于阈值（基础 10，升级 8）：
+        // 若你的酒力不小于阈值（基础 6，升级 4）：
         int wineThreshold = DynamicVars["WineThreshold"].IntValue;
         if (wineAmount >= wineThreshold)
         {
@@ -131,7 +131,7 @@ public class LoathToLeaveTheTable : NewsanguoCardTemplate
         }
     }
 
-    // 升级后的效果逻辑：伤害 25 → 35；酒力阈值 10 → 8
+    // 升级后的效果逻辑：伤害 25 → 35；酒力阈值 6 → 4
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(10);

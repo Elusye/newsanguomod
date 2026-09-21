@@ -58,8 +58,17 @@ public class NewsanguoCharacter : ModCharacterTemplate<
             ArmScissorsTexturePath: "res://newsanguo/images/ui/hands/multiplayer_hand_scissors.png"
         ),
         // 死亡/商店/休息处形象（当前为占位图，可后续替换）
+        // 线索键用引擎的动画名（AnimState：die / idle_loop …）。
+        // RitsuLib 的非 Spine 标准状态图只有 idle（必填、循环）/ dead / hit / attack / cast / relaxed
+        // 这几个动画位，**没有 revive 位**：本体的 Revive 触发器在标准图里就是“切回 idle”。
+        // 而 RitsuLib 会拒绝进入“后端没有对应线索的状态”（记警告 + 保持当前状态不变），
+        // 所以当初只定义 die 时：死亡能进 Dead（有 die 线索），复活想回 idle 却没有 idle 线索可进，
+        // 状态机卡在 Dead —— 表现就是多人 1 血复活后形象仍是死亡形象。
+        // 因此这里给出 idle（含别名 idle_loop）对应的贴图，指回战斗形象。
         VisualCues: VisualCueSetBuilder.Create()
             .Single("die", "res://newsanguo/images/characters/Newsanguo/death_body.png")
+            .Single("idle", "res://newsanguo/images/characters/Newsanguo/combat_body.png")
+            .Single("idle_loop", "res://newsanguo/images/characters/Newsanguo/combat_body.png")
             .Build(),
         WorldProceduralVisuals: CharacterWorldProceduralVisualSetBuilder.Create()
             .Merchant(builder => builder

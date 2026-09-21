@@ -12,6 +12,7 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.Cards;
 using STS2RitsuLib;
 using STS2RitsuLib.Combat.SecondaryResources;
+using STS2RitsuLib.Scaffolding.Godot.NodeAttachments;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
@@ -119,6 +120,45 @@ public static class HeavensForce
 
         // 只在本角色下常驻显示（数值为 0 时也显示，便于玩家看到“透支”进度）
         resources.AlwaysShowInCombatUiForCharacter<NewsanguoCharacter>(LocalId);
+
+        // 多人：在每个队友的玩家状态栏（原版 NMultiplayerPlayerState）上也显示天意之力。
+        // 原版辉星就是这么显示的：队友面板里 %StarCountContainer 由 OnCombatSetUp 打开、
+        // 并在 PlayerCombatState.StarsChanged 时刷新（NMultiplayerPlayerState.OnCombatSetUp / RefreshCombatValues）。
+        // RitsuLib 为次级资源提供了同样的挂载点，这里把计数器插到队友面板的 TopInfoContainer 里、
+        // 排在辉星计数器之后，布局交给那个 HBoxContainer。
+        resources.RegisterMultiplayerPlayerStateUi(
+            $"{LocalId}_multiplayer_counter",
+            _ => NSecondaryResourceCounter.Create(
+                Definition,
+                new SecondaryResourceCounterStyle
+                {
+                    // 图标/承载盒按主界面的 75%；数字取中间值（15 与 20 的中点是 17.5，FontSize 是 int，取 17）
+                    FontSize = 17,
+                    OutlineSize = 9,
+                    AmountLabelOffset = new Vector2(1.3125f, 0),
+                    FormatAmount = (amount, _) => amount.ToString(),
+                    // 图标再缩一档（约为原来的 80%），CounterSize 与数字保持不变以免挤压数字
+                    CounterSize = new Vector2(33, 33),
+                    IconSize = new Vector2(24, 24),
+                    IconStyle = SecondaryResourceIconStyle.Default with
+                    {
+                        Size = new Vector2(26, 26),
+                        HoverTip = SecondaryResourceHoverTipStyle.Default,
+                    },
+                }
+            ),
+            ctx =>
+            {
+                ctx.Node.Bind(ctx.Player);
+                // 绑定/刷新时同步一次阈值高亮（≥10 金、≤-10 红，与本地计数器口径一致）
+                ApplyThresholdHighlight(ctx.Node, Get(ctx.Player));
+            },
+            new NodeAttachmentOptions
+            {
+                Name = "HeavensForceCounter",
+                AttachParentSelector = parent => parent.GetNodeOrNull<Control>("TopInfoContainer") ?? parent,
+                InsertAfterName = "StarCountContainer",
+            });
     }
 
     // 当前天意之力（非玩家生物或未参战时为 0）

@@ -35,6 +35,7 @@ public class Entry
         ApplyPatch(harmony, typeof(FatherIHaveFailedYouPowerPatch));
         ApplyPatch(harmony, typeof(RestSiteSmithSfxPatch));
         ApplyPatch(harmony, typeof(RestSiteHealSfxPatch));
+        ApplyPatch(harmony, typeof(ReAddCardAfterPlayerChoicePatch));
         var assembly = Assembly.GetExecutingAssembly();
         RitsuLibFramework.EnsureGodotScriptsRegistered(assembly, Logger);
         // 注册“天意之力”次级资源（必须在内容注册之前：卡牌动态变量与战斗 UI 都要用到它的完整 id）

@@ -41,26 +41,33 @@ public class OldCompact : NewsanguoCardTemplate
         new BlockVar(6, ValueProp.Move)
     ];
 
-    // 鼠标悬停时显示“燃料（旧）”卡牌标注（升级时显示升级版燃料）
+    // 鼠标悬停时显示“燃料（旧）”卡牌标注（升级时显示升级版燃料）、变化说明与能量说明
+    // 后两项照搬原版 Compact 的 ExtraHoverTips（StaticHoverTip.Transform / ForEnergy）
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromCard<OldFuel>(IsUpgraded)
+        HoverTipFactory.FromCard<OldFuel>(IsUpgraded),
+        HoverTipFactory.Static(StaticHoverTip.Transform),
+        HoverTipFactory.ForEnergy(this)
     ];
 
     public OldCompact() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
     {
     }
 
-    // 打出时的效果逻辑（参考原版压缩 Compact）
+    // 打出时的效果逻辑（照搬原版压缩 Compact：施法动画 → 获得格挡 → 变化手牌中的状态牌）
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         ICombatState combatState = base.CombatState!;
 
+        // 播放角色施法动画
+        await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
+
         // 获得格挡
-        await CreatureCmd.GainBlock(base.Owner.Creature, DynamicVars.Block, cardPlay, false);
+        await CreatureCmd.GainBlock(base.Owner.Creature, DynamicVars.Block, cardPlay);
 
         // 将手牌中所有状态牌变化为燃料（旧）（升级后为燃料（旧）+）
+        // IsTransformable 照原版：跳过不可变化的牌（如永恒牌）
         CardPile hand = PileType.Hand.GetPile(base.Owner);
-        foreach (CardModel statusCard in hand.Cards.Where(card => card.Type == CardType.Status).ToList())
+        foreach (CardModel statusCard in hand.Cards.Where(card => card != null && card.IsTransformable && card.Type == CardType.Status).ToList())
         {
             CardModel fuel = combatState.CreateCard<OldFuel>(base.Owner);
             if (IsUpgraded)
