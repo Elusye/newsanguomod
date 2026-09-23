@@ -33,29 +33,26 @@ public class NewsanguoCardPool : TypeListCardPoolModel, IModColorfulPhilosophers
 
     public override bool IsColorless => false;
 
+    // 卡牌边框材质：在这里直接构造（原版 hsv.gdshader + 本 mod 的色相/饱和/明度）。
+    //
+    // 历史：2026-09-23 这里曾被改成加载
+    // "res://materials/cards/frames/card_frame_newsanguo_mat.tres"（该路径此前写错成 res://newsanguo/…，
+    // 永远加载失败，一直由下面这段构造代码顶着）。虽然 .tres 里声明的 h/s/v 与代码完全相同，
+    // 但改用 .tres 后实际观感出现了可辨的偏色（用户反馈），因此改回"只认代码构造"这一条路径。
+    // 同一份数据仍保留在 res://materials/cards/frames/card_frame_newsanguo_mat.tres 作为记录，代码不再引用它；
+    // RitsuLib 的 CardFrameMaterialPath 回退也因此不会被用到（PoolFrameMaterial 恒为非 null）。
     private static readonly Lazy<ShaderMaterial> _frameMaterial = new(() =>
     {
-        // 注意路径：工程根就是 res://（project.godot 在工程根，pck 也按这个根导出），
-        // 所以卡框材质在 res://materials/…，而不是 res://newsanguo/materials/…。
-        // 早期这里多写了一层 newsanguo/，该路径从未存在过、加载一直失败，一直由下面的 fallback 顶着
-        // （两者内容完全等价：同一个 shaders/hsv.gdshader，同样的 h/s/v），所以外观没有差别，现修正为真实路径。
-        const string MaterialPath = "res://materials/cards/frames/card_frame_newsanguo_mat.tres";
-        if (GodotResourcePath.TryLoad<Material>(MaterialPath, out Material? loaded) && loaded is ShaderMaterial shaderMat)
-        {
-            shaderMat.ResourceLocalToScene = true;
-            return shaderMat;
-        }
-
         Shader? shader = GD.Load<Shader>("res://shaders/hsv.gdshader");
-        ShaderMaterial fallback = new()
+        ShaderMaterial material = new()
         {
             Shader = shader,
             ResourceLocalToScene = true
         };
-        fallback.SetShaderParameter("h", 0.07f);
-        fallback.SetShaderParameter("s", 0.7f);
-        fallback.SetShaderParameter("v", 0.8f);
-        return fallback;
+        material.SetShaderParameter("h", 0.07f);
+        material.SetShaderParameter("s", 0.7f);
+        material.SetShaderParameter("v", 0.8f);
+        return material;
     });
 
     public override Material? PoolFrameMaterial => _frameMaterial.Value;
