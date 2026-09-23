@@ -32,9 +32,9 @@ public class StarryNight : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：获得 6 点格挡，本回合 2 点敏捷
+    // 卡牌基础数值：获得 8 点格挡，本回合 2 点敏捷
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new BlockVar(6, ValueProp.Move),
+        new BlockVar(8, ValueProp.Move),
         new PowerVar<DexterityPower>(2m)
     ];
 
@@ -74,8 +74,8 @@ public class StarryNight : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 格挡从 6 提高到 8
-        DynamicVars.Block.UpgradeValueBy(2);
+        // 格挡从 8 提高到 11
+        DynamicVars.Block.UpgradeValueBy(3);
         // 敏捷从 2 提高到 3
         DynamicVars.Dexterity.UpgradeValueBy(1);
     }

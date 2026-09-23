@@ -23,8 +23,9 @@ namespace newsanguo.Scripts;
 /// 5) “扎聋我自己的耳朵！”（deafen_me）的听觉受损门（音量降至 1/4），只作用于本播放器，
 ///    原版 FMOD 事件由 HearingVolumeController 另行降为 1/4。
 ///
-/// 例外：长音频（「关羽之歌」，见 <see cref="PlayOwnLevel"/>）自带母带电平，只叠加第 1/2/4/5 项，
-/// 不叠加第 3 项的短语音效校准值与游戏「音效」选项曲线。
+/// 例外：长音频（「关羽之歌」系列，见 <see cref="PlayOwnLevel"/>）自带母带电平，只叠加第 1/2/4/5 项，
+/// 不叠加第 3 项的短语音效校准值与游戏「音效」选项曲线；但它会叠加自己那一档系列均衡
+/// （<see cref="SongLoudnessGainDb"/>：原曲与 sp_1~sp_4 变种互相等响）。
 /// </summary>
 public static class NewsanguoSfx
 {
@@ -52,6 +53,7 @@ public static class NewsanguoSfx
     // 自动生成：136 个音效，中位 RMS -23.1 dB，K=0.7（向中位靠拢），峰值余量 -3 dB。
     // 口径：ffmpeg volumedetect 的 mean_volume 作 RMS，gain = 0.7×(中位-RMS)，再受“峰值+gain ≤ -3 dB”钳制，取 0.5 dB 步进。
     // 替换音频文件后可照此重算整表。
+    // 后续新增的音效按同一口径、同一中位基准（-23.1 dB）单独补进表里，不入中位重算（当前共 137 个）。
     // 不参与自动测量的三类：character_death / character_select（引擎侧触发，手工保留原值）、
     // song_of_guan_yu（长音频，走 NewsanguoSfx.PlayOwnLevel 自带基准电平，不查本表）。
     private static readonly Dictionary<string, float> LoudnessGainDb = new()
@@ -166,6 +168,7 @@ public static class NewsanguoSfx
         ["smiling_tiger"] = 4f,
         ["smiling_tiger_copy"] = 3.5f,
         ["soldier"] = -3f,
+        ["son_of_heaven"] = 4.5f,
         ["soul_shackles"] = 1f,
         ["starry_night"] = -2f,
         ["strike_newsanguo"] = -3f,
@@ -199,6 +202,32 @@ public static class NewsanguoSfx
     {
         string stem = System.IO.Path.GetFileNameWithoutExtension(resourcePath);
         return LoudnessGainDb.TryGetValue(stem, out float gain) ? gain : 0f;
+    }
+
+    // 「关羽之歌」系列的相对音量均衡（dB），以原曲 song_of_guan_yu 为 0 基准。
+    //
+    // 口径与上面那 136 个短语音效不同：短音效是 0.7×(中位-RMS) 向“全体中位”靠拢（避免抹平各自的设计音量），
+    // 而这里只要求“同一首歌的几个版本听起来一样响”，所以按各文件实测 RMS 与原曲的差值做全额补偿，
+    // 再用与原表一样的“补偿后峰值仍 ≤ -3 dBFS”作上限（本次 4 个变种都没触发钳制），最后按 0.5 dB 步进取值。
+    //
+    // 数据来源：ffmpeg volumedetect，mean_volume 作 RMS（RMS / 峰值，dB）：
+    //   原曲 -28.3 / -10.6、sp_1 -29.4 / -11.7、sp_2 -25.5 / -9.4、sp_3 -27.2 / -6.5、sp_4 -26.6 / -6.3。
+    //   → 补偿量 +0 / +1.1 / -2.8 / -1.1 / -1.7，取 0.5 dB 步进后补偿到各版本 RMS 落在原曲 ±0.2 dB 内。
+    // 替换或新增变种音频后，请按同一口径重算本表。
+    private static readonly Dictionary<string, float> SongLoudnessGainDb = new()
+    {
+        ["song_of_guan_yu"] = 0f,
+        ["song_of_guan_yu_sp_1"] = 1f,
+        ["song_of_guan_yu_sp_2"] = -3f,
+        ["song_of_guan_yu_sp_3"] = -1f,
+        ["song_of_guan_yu_sp_4"] = -1.5f,
+    };
+
+    // 长音频的均衡补偿（按音频文件名取；未收录视为 0）
+    private static float SongLoudnessOffsetDb(string resourcePath)
+    {
+        string stem = System.IO.Path.GetFileNameWithoutExtension(resourcePath);
+        return SongLoudnessGainDb.TryGetValue(stem, out float gain) ? gain : 0f;
     }
 
     // —— 全局音量调节：跟随游戏“音效”音量滑杆 + 本 mod 独立倍率 ——
@@ -437,6 +466,8 @@ public static class NewsanguoSfx
     /// 再叠一次会在滑杆拉低时反而比其它音效响得多。
     /// mod 自身的控制照常生效：总开关 <see cref="SfxEnabled"/>、倍率 <see cref="ModVolumeMultiplier"/>、
     /// 「扎聋我自己的耳朵！」的听觉受损门，以及 <see cref="Stop"/> 打断。
+    /// 另外会叠加该音频在 <see cref="SongLoudnessGainDb"/> 里的系列均衡补偿（原曲与变种互相等响），
+    /// 所以变种之间不需要调用方各自去调 <paramref name="volumeDb"/>。
     /// </summary>
     /// <param name="sfx">事件路径（event:/newsanguo/sfx/xxx）或 res:// 资源路径。</param>
     /// <param name="volumeDb">该音频在总线上的固定基准音量（dB）。</param>
@@ -552,10 +583,13 @@ public static class NewsanguoSfx
         }
 
         // 基准电平：普通音效 = 线性音量 + mod 校准值 + 该音效的等响度补偿 + 游戏「音效」选项曲线；
-        // 自带基准电平的长音频（PlayOwnLevel）直接用调用方给定的 dB，不再叠加上面三项。
-        float levelDb = ownLevelDb ?? (volume <= 0f
-            ? -80f
-            : Mathf.LinearToDb(volume) + MasterVolumeDb + LoudnessOffsetDb(resourcePath) + CurrentSfxOptionDb());
+        // 自带基准电平的长音频（PlayOwnLevel）直接用调用方给定的 dB，只再叠加它自己那一档系列均衡补偿
+        // （ShortSfx 的全局校准与游戏「音效」选项曲线都不叠，原因见 PlayOwnLevel 的注释）。
+        float levelDb = ownLevelDb is { } songLevelDb
+            ? songLevelDb + SongLoudnessOffsetDb(resourcePath)
+            : (volume <= 0f
+                ? -80f
+                : Mathf.LinearToDb(volume) + MasterVolumeDb + LoudnessOffsetDb(resourcePath) + CurrentSfxOptionDb());
 
         AudioStreamPlayer player = new AudioStreamPlayer
         {

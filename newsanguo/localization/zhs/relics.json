@@ -17,5 +17,14 @@
   "NEWSANGUO_RELIC_R_KEY.title": "R键",
   "NEWSANGUO_RELIC_R_KEY.description": "拾起时，回到这一幕的先古之民处，将一张[red]天意侵蚀[/red]加入你的[gold]牌组[/gold]。",
   "NEWSANGUO_RELIC_R_KEY.flavor": "是时候重新开始了。",
+  "NEWSANGUO_RELIC_SON_OF_HEAVEN_ECONOMICS.title": "天子经济学",
+  "NEWSANGUO_RELIC_SON_OF_HEAVEN_ECONOMICS.description": "每场战斗开始时，将1张[gold]天子[/gold]加入你的手牌。",
+  "NEWSANGUO_RELIC_SON_OF_HEAVEN_ECONOMICS.flavor": "天子也是可以量产的，只要你会算这笔账。",
+  "NEWSANGUO_RELIC_XIAOPEI_SATELLITE_TOWN.title": "卫星城小沛",
+  "NEWSANGUO_RELIC_XIAOPEI_SATELLITE_TOWN.description": "每[blue]{Turns}[/blue]个回合，将一张[gold]环绕轨道[/gold]加入你的手牌，那张牌在该回合免费打出。",
+  "NEWSANGUO_RELIC_XIAOPEI_SATELLITE_TOWN.flavor": "小沛虽小，却是仰望星空的最近一站。",
+  "NEWSANGUO_RELIC_FARMER_GENERAL_YU_JIN.title": "种地将军于禁",
+  "NEWSANGUO_RELIC_FARMER_GENERAL_YU_JIN.description": "从你的[gold]牌组[/gold]中选择[blue]{Cards}[/blue]张牌。为这些牌[gold]附魔[/gold]：[purple]播种[/purple]。",
+  "NEWSANGUO_RELIC_FARMER_GENERAL_YU_JIN.flavor": "屯田之道，亦可施于牌组。",
   "SEA_GLASS.NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.title": "酒客玻璃"
 }

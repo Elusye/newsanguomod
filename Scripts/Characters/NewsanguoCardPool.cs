@@ -35,7 +35,11 @@ public class NewsanguoCardPool : TypeListCardPoolModel, IModColorfulPhilosophers
 
     private static readonly Lazy<ShaderMaterial> _frameMaterial = new(() =>
     {
-        const string MaterialPath = "res://newsanguo/materials/cards/frames/card_frame_newsanguo_mat.tres";
+        // 注意路径：工程根就是 res://（project.godot 在工程根，pck 也按这个根导出），
+        // 所以卡框材质在 res://materials/…，而不是 res://newsanguo/materials/…。
+        // 早期这里多写了一层 newsanguo/，该路径从未存在过、加载一直失败，一直由下面的 fallback 顶着
+        // （两者内容完全等价：同一个 shaders/hsv.gdshader，同样的 h/s/v），所以外观没有差别，现修正为真实路径。
+        const string MaterialPath = "res://materials/cards/frames/card_frame_newsanguo_mat.tres";
         if (GodotResourcePath.TryLoad<Material>(MaterialPath, out Material? loaded) && loaded is ShaderMaterial shaderMat)
         {
             shaderMat.ResourceLocalToScene = true;

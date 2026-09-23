@@ -25,9 +25,9 @@ public class ImGettingDrunk : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：立即获得的酒力（升级 8）
+    // 卡牌基础数值：立即获得的酒力（升级 11）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DrunkenMightPower>(6m)
+        new PowerVar<DrunkenMightPower>(8m)
     ];
 
     // 悬停提示：展示“酒力”说明 + “不胜酒力”卡面说明
@@ -49,7 +49,7 @@ public class ImGettingDrunk : NewsanguoCardTemplate
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
 
-        // 立即获得 6（8）点酒力
+        // 立即获得 8（11）点酒力
         await PowerCmd.Apply<DrunkenMightPower>(
             choiceContext,
             Owner.Creature,
@@ -61,9 +61,9 @@ public class ImGettingDrunk : NewsanguoCardTemplate
         await Lightweight.CreateInDiscard(Owner, CombatState!);
     }
 
-    // 升级：酒力 6 → 8
+    // 升级：酒力 8 → 11
     protected override void OnUpgrade()
     {
-        DynamicVars["DrunkenMightPower"].UpgradeValueBy(2);
+        DynamicVars["DrunkenMightPower"].UpgradeValueBy(3);
     }
 }

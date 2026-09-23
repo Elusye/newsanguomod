@@ -17,5 +17,14 @@
   "NEWSANGUO_RELIC_R_KEY.title": "R Key",
   "NEWSANGUO_RELIC_R_KEY.description": "Upon pickup, return to this Act's [gold]Ancients[/gold] and add a [red]Heaven's Decay[/red] to your [gold]Deck[/gold].",
   "NEWSANGUO_RELIC_R_KEY.flavor": "Time to start over.",
+  "NEWSANGUO_RELIC_SON_OF_HEAVEN_ECONOMICS.title": "Son of Heaven Economics",
+  "NEWSANGUO_RELIC_SON_OF_HEAVEN_ECONOMICS.description": "At the start of each combat, add 1 [gold]Son of Heaven[/gold] to your [gold]Hand[/gold].",
+  "NEWSANGUO_RELIC_SON_OF_HEAVEN_ECONOMICS.flavor": "Sons of Heaven can be mass-produced—if you can do the math.",
+  "NEWSANGUO_RELIC_XIAOPEI_SATELLITE_TOWN.title": "Xiaopei Satellite Town",
+  "NEWSANGUO_RELIC_XIAOPEI_SATELLITE_TOWN.description": "Every [blue]{Turns}[/blue] {Turns:plural:turn|turns}, add an [gold]Orbit[/gold] to your [gold]Hand[/gold]. That card is free to play that turn.",
+  "NEWSANGUO_RELIC_XIAOPEI_SATELLITE_TOWN.flavor": "Xiaopei is small, but it is the closest stop to the stars.",
+  "NEWSANGUO_RELIC_FARMER_GENERAL_YU_JIN.title": "Farmer General Yu Jin",
+  "NEWSANGUO_RELIC_FARMER_GENERAL_YU_JIN.description": "Choose [blue]{Cards}[/blue] cards in your [gold]Deck[/gold]. [gold]Enchant[/gold] them with [purple]Sown[/purple].",
+  "NEWSANGUO_RELIC_FARMER_GENERAL_YU_JIN.flavor": "The way of the garrison farm works on decks, too.",
   "SEA_GLASS.NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.title": "Wine Glass"
 }
