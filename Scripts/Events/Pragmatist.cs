@@ -273,8 +273,8 @@ public class Pragmatist : ModEventTemplate
     }
 
     // 战斗：与本层的精英怪交战。
-    // Combat 布局下引擎复用的是 _combatStateForCombatLayout（= 上面的 CanonicalEncounter 生成的战斗状态，
-    // 见 EventModel.cs:624），因此这里传什么遭遇都会被忽略——为清晰起见仍旧传同一份。
+    // Combat 布局下引擎复用的是 _combatStateForCombatLayout（= 上面的 CanonicalEncounter 生成的战斗状态），
+    // 所以实际出场的怪以那份为准；但传进去的遭遇仍会被引擎逐个校验（见下方注释）。
     // 战斗胜利后事件结束，直接前往下一个地图点（shouldResumeAfterCombat: false；
     // Combat 布局下也必须是 false，否则 EnterCombatWithoutExitingEvent 会抛异常，EventModel.cs:614）。
     private Task Fight()
@@ -296,7 +296,22 @@ public class Pragmatist : ModEventTemplate
             new RelicReward(ModelDb.Relic<Boulder>().ToMutable(), player)
         ];
 
-        EnterCombatWithoutExitingEvent(elite.ToMutable(), extraRewards, shouldResumeAfterCombat: false);
+        // ⚠ 这里必须传 **canonical**（ModelDb 里的单例）遭遇，不能传 elite.ToMutable()。
+        // 实机版（0.110+）的 EventCombatSynchronizer.EnterCombat() 是这样校验的：
+        //     EncounterModel canonicalEncounter = _states[0].canonicalEncounter;
+        //     for (i...) if (_states[i].canonicalEncounter != canonicalEncounter) throw ...
+        // —— 用的是**引用相等**，而消息里只打印 .Id。共享事件在每台机器上「每个玩家各有一份
+        // EventModel 克隆」，每份都会调用一次本方法；若各自 ToMutable() 造出新实例，两个引用必然不等，
+        // 于是抛 “Event for player … tried to start event combat with encounter X, but the host says
+        // it should be X!”（两边 Id 一模一样，只看日志极易误判），异常会打断事件选项任务 → 事件卡死。
+        // 单人从来不报，只是因为 _states 只有 1 项、自己和自己比。
+        // 原版 0.107 的 EventModel.EnterCombatWithoutExitingEvent<T> 自己传的是 ToMutable()，
+        // 实机版已改成传 canonical（见实机反编译：EnterCombatWithoutExitingEvent<T> → ModelDb.Encounter<T>()）；
+        // 我们 CanonicalEncounter 取到的本来就是 canonical（Hive 幕的 ModelDb.Encounter<>()，其它幕的
+        // _rooms.eliteEncounters[i]，都是 ModelDb 单例），直接传即可。
+        // 参考对比：本 mod 的「野生中立伏兵」用的是泛型重载 EnterCombatWithoutExitingEvent<T>()，
+        // 它内部就是 ModelDb.Encounter<T>()，所以那条路一直没有这个问题。
+        EnterCombatWithoutExitingEvent(elite, extraRewards, shouldResumeAfterCombat: false);
         return Task.CompletedTask;
     }
 
