@@ -17,12 +17,14 @@ using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>
-/// “止戈”：本回合内不能打出攻击牌。
+/// “缠身”（Entangled）：本回合内不能打出攻击牌。
 /// 由“接着奏乐接着舞”施加，玩家回合结束时自动移除。
 /// 通过重写 ShouldPlay 拦截本回合所有攻击牌的打出（对应原版 Normality 的 BlockedByHook 机制）。
+/// 显示名/描述在 localization/*/powers.json 的 NEWSANGUO_POWER_ENTANGLED_POWER.* 里；
+/// 内部 id 与类名保持不变（存档兼容，且能力图标路径按类名取 res://…/powers/EntangledPower.png）。
 /// </summary>
 [RegisterPower]
-public class NoAttacksThisTurnPower : ModPowerTemplate
+public class EntangledPower : ModPowerTemplate
 {
     // 负面效果：Debuff
     public override PowerType Type => PowerType.Debuff;

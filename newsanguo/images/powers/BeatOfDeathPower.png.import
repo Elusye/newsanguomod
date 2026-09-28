@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bw5phc1yn53y1"
-path="res://.godot/imported/NoAttacksThisTurnPowerBig.png-502d4bf0dcb2d6f08b09c2507739d4d3.ctex"
+uid="uid://c1g1xcjvtimy7"
+path="res://.godot/imported/BeatOfDeathPower.png-92a9b91b065bc3fa69dea7c222d1bb50.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/NoAttacksThisTurnPowerBig.png"
-dest_files=["res://.godot/imported/NoAttacksThisTurnPowerBig.png-502d4bf0dcb2d6f08b09c2507739d4d3.ctex"]
+source_file="res://newsanguo/images/powers/BeatOfDeathPower.png"
+dest_files=["res://.godot/imported/BeatOfDeathPower.png-92a9b91b065bc3fa69dea7c222d1bb50.ctex"]
 
 [params]
 

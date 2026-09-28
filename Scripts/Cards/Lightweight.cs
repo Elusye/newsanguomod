@@ -55,13 +55,25 @@ public class Lightweight : NewsanguoCardTemplate
         // 只拦截施加给本方（持有者）的“酒力”正向获得
         if (power is not DrunkenMightPower) return 1m;
         if (amount <= 0m) return 1m;
-        // 卡面预览时 target 可能为空（视为自己），明确指定给别人时不拦截
-        if (target is not null && target != base.Owner?.Creature) return 1m;
 
         // 这张牌不在本方手牌中则不拦截（抽牌堆/弃牌堆/消耗堆均放行）
         if (base.Pile?.Type != PileType.Hand) return 1m;
 
-        return 0m;
+        Creature? owner = base.Owner?.Creature;
+        if (owner is null) return 1m;
+
+        // 判定“这次是不是给本方加酒力”。原版 Hook.ModifyPowerAmountGiven 会遍历全场所有模型
+        // （对方手牌里的这张牌同样会被问到），所以这里必须把归属判干净：
+        //  · target 明确指定时以 target 为准：是别人 → 放行；是本方 → 拦截（含盟友“痛饮庆功酒”转给本方的酒力）。
+        //  · target 为空时（原版 PowerVar.UpdateCardPreview 的卡面预览路径就传 null）用 giver 兜底：
+        //    只有 giver 也是本方（= 正在预览本方的牌）才拦截。
+        // 旧写法把“target 为空”一律当成自己，于是 A 手牌里的不胜酒力会把 B 的酒力获得也乘 0
+        // （联机实测：A 手牌有不胜酒力时，B 无法获得酒力）。与 ToABiggerGobletPower.ShouldBoost 的 giver 校验一致。
+        if (target is not null)
+        {
+            return target == owner ? 0m : 1m;
+        }
+        return giver == owner ? 0m : 1m;
     }
 
     // 当这张牌在本方手牌中时，拦截本方所有攻击牌的打出（卡面置灰，UnplayableReason.BlockedByHook）。

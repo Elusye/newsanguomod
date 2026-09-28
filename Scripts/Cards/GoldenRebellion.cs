@@ -58,8 +58,12 @@ public class GoldenRebellion : NewsanguoCardTemplate
             }
         }
 
-        // 从三张稀有牌中选择一张加入手牌，本回合内免费打出（与 Splash 一致）
-        CardModel? selected = await CardSelectCmd.FromChooseACardScreen(choiceContext, options, base.Owner, canSkip: false);
+        // 从三张稀有牌中选择一张加入手牌，本回合内免费打出（与 Splash 一致）。
+        // canSkip: true —— 选择界面上会多出一个「跳过」按钮（原版 Splash 同款写法，Splash.cs:41
+        // 用的就是 canSkip: true）；跳过后返回 null，这里直接结束。
+        // 多人下「跳过」由 PlayerChoiceSynchronizer 以 -1 索引同步（CardSelectCmd.cs:247-256），
+        // 远端同样得到 null，不会出现两端分歧。
+        CardModel? selected = await CardSelectCmd.FromChooseACardScreen(choiceContext, options, base.Owner, canSkip: true);
         if (selected is null)
         {
             return;

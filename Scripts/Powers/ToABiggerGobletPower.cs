@@ -55,9 +55,17 @@ public class ToABiggerGobletPower : ModPowerTemplate
         // 只增强“获得”酒力（失去酒力时不加成）
         if (amount <= 0m) return false;
         if (power is not DrunkenMightPower) return false;
-        // 只增强自己给予自己（= 自己获得）的酒力
-        if (giver != Owner) return false;
-        // 卡面预览时 target 可能为空（视为自己），明确指定给别人时不加成
-        return target is null || target == Owner;
+
+        // 归属判定：原版 Hook.ModifyPowerAmountGiven 会遍历全场模型（对方手牌/能力也在内），
+        // 所以必须判干净，别把别人的酒力也算成自己的：
+        //  · target 明确指定时以 target 为准 —— 盟友的“痛饮庆功酒”把酒力转给本方时同样应当加成；
+        //  · target 为空时（原版 PowerVar.UpdateCardPreview 的卡面预览路径会传 null）用 giver 兜底，
+        //    只有 giver 也是本方（= 正在预览本方的牌）才加成。
+        // 与 Lightweight.ModifyPowerAmountGivenMultiplicative 的写法保持一致。
+        if (target is not null)
+        {
+            return target == Owner;
+        }
+        return giver == Owner;
     }
 }

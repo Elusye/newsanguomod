@@ -34,8 +34,8 @@ public class Unstoppable : NewsanguoCardTemplate
 
     // 卡牌基础数值：失去的天意之力、获得的无实体层数（变量用正值，打出时取负）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new HeavensForceVar(5m),
-        new PowerVar<IntangiblePower>(1m)
+        new HeavensForceVar(6m),
+        new PowerVar<IntangiblePower>(2m)
     ];
 
     // 悬停提示：展示“无实体”、“天意之力”与“天意侵蚀”的说明
@@ -45,7 +45,7 @@ public class Unstoppable : NewsanguoCardTemplate
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
-    // 自带“虚无”关键词（升级后移除）
+    // 自带“虚无”关键词（升级后仍保留）
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Ethereal];
 
     // 属于“天意”体系（涉及天意之力/天意侵蚀）
@@ -72,9 +72,9 @@ public class Unstoppable : NewsanguoCardTemplate
         await HeavensForce.Add(choiceContext, base.Owner, -lostAmount, this);
     }
 
-    // 升级：失去的天意之力 5 → 4（虚无关键词升级后保留）
+    // 升级：失去的天意之力 6 → 4，且获得的无实体层数 2
     protected override void OnUpgrade()
     {
-        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
+        DynamicVars["HeavensForcePower"].UpgradeValueBy(-2);
     }
 }

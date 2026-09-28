@@ -30,12 +30,10 @@ public class Intoxicated : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：获得 2 点酒力；若上一张打出的是技能牌，额外再获得 2 点酒力
-    // 两段都用 PowerVar<DrunkenMightPower>：卡面两行数字都会把“换大盏”等酒力加成算进去，
-    // 与 OnPlay 里分两次结算（= 两次“获得酒力”）的实际结果保持一一对应
+    // 卡牌基础数值：获得 4 点酒力（升级后 7）。
+    // 用 PowerVar<DrunkenMightPower>：卡面数字会把“换大盏”等酒力加成算进去，与实际结算一致。
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DrunkenMightPower>(2m),
-        new PowerVar<DrunkenMightPower>("IntoxicatedBonus", 2m)
+        new PowerVar<DrunkenMightPower>(4m)
     ];
 
     // 悬停提示：展示“酒力”说明
@@ -43,7 +41,7 @@ public class Intoxicated : NewsanguoCardTemplate
         HoverTipFactory.FromPower<DrunkenMightPower>()
     ];
 
-    // 上一张打出的牌是技能牌时金色高亮（提示会获得额外酒力）
+    // 上一张打出的牌是技能牌时金色高亮（提示会获得一点能量）
     protected override bool ShouldGlowGoldInternal
     {
         get
@@ -75,8 +73,7 @@ public class Intoxicated : NewsanguoCardTemplate
             .LastOrDefault(entry => entry.CardPlay?.Card?.Owner == base.Owner);
         bool lastWasSkill = lastPlay is not null && lastPlay.CardPlay.Card.Type == CardType.Skill;
 
-        // 两段酒力分两次结算：换大盏等“每当你获得酒力时额外获得”的加成会各生效一次，
-        // 与卡面两个数字各自显示加成后的值一一对应
+        // 获得酒力（基础 4，升级后 7）
         await PowerCmd.Apply<DrunkenMightPower>(
             choiceContext,
             base.Owner.Creature,
@@ -85,24 +82,17 @@ public class Intoxicated : NewsanguoCardTemplate
             this,
             silent: false);
 
+        // 若本场战斗中打出的上一张牌是技能牌，获得一点能量
         if (lastWasSkill)
         {
-            await PowerCmd.Apply<DrunkenMightPower>(
-                choiceContext,
-                base.Owner.Creature,
-                DynamicVars["IntoxicatedBonus"].IntValue,
-                base.Owner.Creature,
-                this,
-                silent: false);
+            await PlayerCmd.GainEnergy(1, base.Owner);
         }
     }
 
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 基础酒力 2 → 3
-        DynamicVars["DrunkenMightPower"].UpgradeValueBy(1);
-        // 额外酒力 2 → 3
-        DynamicVars["IntoxicatedBonus"].UpgradeValueBy(1);
+        // 基础酒力 4 → 7
+        DynamicVars["DrunkenMightPower"].UpgradeValueBy(3m);
     }
 }

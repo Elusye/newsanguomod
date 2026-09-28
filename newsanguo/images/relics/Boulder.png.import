@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://jeulcrehlrrd"
-path="res://.godot/imported/NoAttacksThisTurnPower.png-08cb47a2e6a9cd43cd1786b7da91f1b4.ctex"
+uid="uid://bwigx3gflh5tg"
+path="res://.godot/imported/Boulder.png-8c15180a4a2fa232b4d123266a72c0e9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/NoAttacksThisTurnPower.png"
-dest_files=["res://.godot/imported/NoAttacksThisTurnPower.png-08cb47a2e6a9cd43cd1786b7da91f1b4.ctex"]
+source_file="res://newsanguo/images/relics/Boulder.png"
+dest_files=["res://.godot/imported/Boulder.png-8c15180a4a2fa232b4d123266a72c0e9.ctex"]
 
 [params]
 

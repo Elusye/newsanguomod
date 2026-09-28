@@ -16,11 +16,13 @@ using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>
-/// “自刎”：本回合内每打出一张攻击牌，就对自己造成 Amount 点伤害（不受力量等伤害修饰）。
-/// 打出“自刎归天”后附加，回合结束时自动移除。Amount 即每张攻击牌的自伤数值。
+/// “本回合死亡律动”（Beat of Death）：本回合内每打出一张牌，就对自己造成 Amount 点伤害（不受力量等伤害修饰）。
+/// 由“自刎归天”附加，回合结束时自动移除。Amount 即每打出一张牌的自伤数值。
+/// 显示名/描述在 localization/*/powers.json 的 NEWSANGUO_POWER_BEAT_OF_DEATH_POWER.* 里；
+/// 内部 id 与类名保持不变（存档兼容，且能力图标路径按类名取 res://…/powers/BeatOfDeathPower.png）。
 /// </summary>
 [RegisterPower]
-public class BloodLossPower : ModPowerTemplate
+public class BeatOfDeathPower : ModPowerTemplate
 {
     /// <summary>
     /// 登记已打出、待结算的牌，及其打出瞬间的 Amount 快照（参考原版 OblivionPower）。
@@ -32,12 +34,12 @@ public class BloodLossPower : ModPowerTemplate
         public readonly Dictionary<CardModel, int> amountsForPlayedCards = new();
     }
 
-    // 本次结算的自刎伤害是否正由奥斯提承担（仅在 Damage 调用期间为 true）
+    // 本次结算的死亡律动伤害是否正由奥斯提承担（仅在 Damage 调用期间为 true）
     private bool ostyIsTakingThisDamage;
 
     // 负面效果
     public override PowerType Type => PowerType.Debuff;
-    // 叠加方式：计数器，Amount 表示“每打出一张攻击牌对自己造成的伤害”
+    // 叠加方式：计数器，Amount 表示“每打出一张牌对自己造成的伤害”
     public override PowerStackType StackType => PowerStackType.Counter;
     public override bool AllowNegative => false;
     // 允许接收战斗钩子，否则 BeforeCardPlayed / AfterCardPlayed / AfterSideTurnEnd 不会被调用
@@ -54,14 +56,10 @@ public class BloodLossPower : ModPowerTemplate
         return new Data();
     }
 
-    // 打出前登记：只登记自己打出的攻击牌（含打出瞬间的 Amount 快照）
+    // 打出前登记：登记自己打出的牌（任何类型，含打出瞬间的 Amount 快照）
     public override Task BeforeCardPlayed(CardPlay cardPlay)
     {
         if (cardPlay.Card.Owner?.Creature != Owner)
-        {
-            return Task.CompletedTask;
-        }
-        if (cardPlay.Card.Type != CardType.Attack)
         {
             return Task.CompletedTask;
         }
@@ -82,11 +80,11 @@ public class BloodLossPower : ModPowerTemplate
             return;
         }
 
-        // 自刎伤害触发音效（对应 FMOD 事件 event:/newsanguo/sfx/blood_loss）
+        // 死亡律动伤害触发音效（对应 FMOD 事件 event:/newsanguo/sfx/blood_loss）
         NewsanguoSfx.Play("event:/newsanguo/sfx/blood_loss");
 
         // ValueProp.Unpowered：来自能力造成的伤害，不受力量等伤害修饰（仍可被格挡）。
-        // 若场上有存活的奥斯提，则由它承担这次自刎伤害（见 ModifyUnblockedDamageTarget）。
+        // 若场上有存活的奥斯提，则由它承担这次死亡律动伤害（见 ModifyUnblockedDamageTarget）。
         ostyIsTakingThisDamage = true;
         try
         {
@@ -99,7 +97,7 @@ public class BloodLossPower : ModPowerTemplate
     }
 
     /// <summary>
-    /// 把这次自刎的未被格挡伤害转给奥斯提承担。走引擎自带的伤害转移通道，
+    /// 把这次死亡律动的未被格挡伤害转给奥斯提承担。走引擎自带的伤害转移通道，
     /// 因此格挡、溢出伤害（奥斯提被打死时多出的部分回到你身上）、死亡结算都与原版奥斯提“替你去死”一致。
     /// </summary>
     public override Creature ModifyUnblockedDamageTarget(Creature target, decimal amount, ValueProp props, Creature? dealer)

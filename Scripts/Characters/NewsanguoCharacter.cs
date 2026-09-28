@@ -23,6 +23,17 @@ public class NewsanguoCharacter : ModCharacterTemplate<
     // 使用 Ironclad 作为原版占位（动画、音效、场景等）
     public override string PlaceholderCharacterId => ModContentRegistry.VanillaCharacterIds.Ironclad;
 
+    // 本角色没有注册任何 *_EPOCH 模型与解锁规则（NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER2/3/4_EPOCH、
+    // UnlockEpochAfterEliteVictories / UnlockEpochAfterBossVictories / RegisterPostRunCharacterUnlockEpoch 等）。
+    // 而 RitsuLib 的 RequiresEpochAndTimeline 为 true 时，兼容补丁会保留“依赖原版 *_EPOCH 的进度路径”，
+    // 于是每次里程碑结算都会落空并刷警告（实测日志）：
+    //   [Content]    Character timeline: CHARACTER.NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER RequiresEpochAndTimeline=True
+    //   [DebugCompat] Missing epoch 'NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER2/3/4_EPOCH' ... after Act 1/2/3. Skipping
+    //   [Unlocks]    Mod character '...' has no registered elite-win / boss-win / post-run epoch rule. Skipping
+    // 即 Act1/2/3 通关、精英、Boss、通关后的解锁进度全部是空转。这里显式声明不需要（与原版孙乾 mod 一致），
+    // RitsuLib 便不再为本角色保留这些原版进度路径；若日后要做解锁时间线，改成 true 并补齐上述 epoch 与规则。
+    public override bool RequiresEpochAndTimeline => false;
+
     public override CharacterAssetProfile AssetProfile => new(
         Ui: new CharacterUiAssetSet(
             IconTexturePath: "res://newsanguo/images/characters/Newsanguo/icon.png",

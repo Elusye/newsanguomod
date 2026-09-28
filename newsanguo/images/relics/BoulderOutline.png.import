@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://jcvpm85yayy7"
-path="res://.godot/imported/BloodLossPowerBig.png-42e137512611ea80ffc52843e891fc0a.ctex"
+uid="uid://bujfu4ilunmwg"
+path="res://.godot/imported/BoulderOutline.png-6affbca1b753558129a7424ff79e3865.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/BloodLossPowerBig.png"
-dest_files=["res://.godot/imported/BloodLossPowerBig.png-42e137512611ea80ffc52843e891fc0a.ctex"]
+source_file="res://newsanguo/images/relics/BoulderOutline.png"
+dest_files=["res://.godot/imported/BoulderOutline.png-6affbca1b753558129a7424ff79e3865.ctex"]
 
 [params]
 

@@ -16,6 +16,7 @@ namespace newsanguo.Scripts.Powers;
 /// <summary>
 /// “蛐蛐形态”：每 N 个玩家回合开始时将你的难以杀灭（hard_to_kill）层数翻倍，
 /// N = 本能力层数（打出的蛐蛐形态张数，即 Amount）。
+/// 定位为<b>负面状态（Debuff）</b>：可被清除负面效果的手段移除。
 /// 采用“天降雄兵”同款双数字显示：
 /// 右下角（Amount）= N，即每经过多少个回合翻倍；
 /// 右上角（IHasSecondAmount）= 距下一次翻倍还剩多少个回合。
@@ -35,8 +36,16 @@ public class CricketFormPower : ModPowerTemplate, IHasSecondAmount
         new IntVar("TurnsLeft", 0)
     ];
 
-    // 正面效果
-    public override PowerType Type => PowerType.Buff;
+    // 负面效果（Debuff）：
+    //  · 图标与悬停提示按负面样式渲染（HoverTip.IsDebuff = Type == Debuff，HoverTip.cs:118）；
+    //  · 会被“移除自身所有负面效果”一类手段清掉——本 mod 的「破除万杯」按
+    //    TypeForCurrentAmount == PowerType.Debuff 筛选（BrewHealsAll.cs:70-76）。
+    // 注意两点（都已确认不影响本能力）：
+    //  · 原版对“玩家侧的 Debuff”会设置 SkipNextDurationTick（PowerCmd.cs:144-147），
+    //    那是给按回合递减的能力用的；本能力的剩余回合由自己的 turnsLeft 计数，不受影响。
+    //  · 原版 ArtifactPower 会拦下任何施加给自己的 Debuff（含自己给的，PowerCmd 的 applier 被判空忽略），
+    //    但 0.107 里玩家没有任何获得 Artifact 的途径（只有怪物给自己上），所以自加蛐蛐形态不会被挡。
+    public override PowerType Type => PowerType.Debuff;
     // 计数器：右下角由原版直接显示 Amount（N = 每几个回合翻倍一次）
     public override PowerStackType StackType => PowerStackType.Counter;
     public override bool AllowNegative => false;

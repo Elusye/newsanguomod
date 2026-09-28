@@ -25,9 +25,9 @@ public class PartyOn : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：本回合获得的能量（升级 4）、抽牌数
+    // 卡牌基础数值：本回合获得的能量 3、抽牌数 2（升级后能量 4、抽牌 3）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new EnergyVar(3),
+        new EnergyVar(2),
         new CardsVar(2)
     ];
 
@@ -36,7 +36,7 @@ public class PartyOn : NewsanguoCardTemplate
         HoverTipFactory.ForEnergy(this)
     ];
 
-    public PartyOn() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+    public PartyOn() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
     {
     }
 
@@ -54,8 +54,8 @@ public class PartyOn : NewsanguoCardTemplate
         // 抽牌
         await CardPileCmd.Draw(choiceContext, DynamicVars.Cards.BaseValue, base.Owner);
 
-        // 附加“止戈”能力：本回合不能打出攻击牌
-        await PowerCmd.Apply<NoAttacksThisTurnPower>(
+        // 附加“缠身（Entangled）”能力：本回合不能打出攻击牌
+        await PowerCmd.Apply<EntangledPower>(
             choiceContext,
             base.Owner.Creature,
             1,
@@ -66,7 +66,9 @@ public class PartyOn : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 能量从 3 提高到 4
+        // 能量从 2 提高到 3
         DynamicVars.Energy.UpgradeValueBy(1);
+        // 抽牌数从 2 提高到 3
+        DynamicVars.Cards.UpgradeValueBy(1);
     }
 }

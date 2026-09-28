@@ -1,0 +1,308 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Godot;
+using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.Entities.Relics;
+using MegaCrit.Sts2.Core.Events;
+using MegaCrit.Sts2.Core.Factories;
+using MegaCrit.Sts2.Core.Helpers;
+using MegaCrit.Sts2.Core.Localization;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Acts;
+using MegaCrit.Sts2.Core.Nodes.Combat;
+using MegaCrit.Sts2.Core.Nodes.Rooms;
+using MegaCrit.Sts2.Core.Rewards;
+using MegaCrit.Sts2.Core.Rooms;
+using newsanguo.Scripts.Monsters;
+using newsanguo.Scripts.Relics;
+using STS2RitsuLib.Interop.AutoRegistration;
+using STS2RitsuLib.Scaffolding.Content;
+
+namespace newsanguo.Scripts.Events;
+
+/// <summary>
+/// 实践主义者（Pragmatist）：路遇遇难冒险者的行囊，翻找战利品。
+///
+/// 流程：
+///  · 「搜索」：按 {35% / 60% / 85%}（第 1/2/3 次）判定“怪物回来了”——命中则被偷袭，只能「战斗」，
+///    与本层的精英怪交战（战斗胜利后事件结束，直接前往下一个地图点）；
+///  · 未命中则从尚未获得的奖励中随机取一种：30 金币 / 什么都没有 / 一件随机遗物（每种最多一次）；
+///    结果页给出「继续」（进入下一次搜索，概率更高）与「离开」；
+///  · 三次搜索用尽（或奖励拿完）后只能「离开」；最后一次若恰好是“什么都没有”，
+///    走「翻遍了他的所有物，什么事也没发生」这一页。
+///
+/// 会进入战斗，所以必须是共享事件（EventModel.EnterCombatWithoutExitingEvent 里强制校验 IsShared）。
+/// 布局用 Combat（无立绘，直接以当前战斗场景为背景，场上站着本层的精英怪），见下面的 LayoutType 注释。
+/// </summary>
+[RegisterActEvent(typeof(Underdocks))]
+[RegisterActEvent(typeof(Overgrowth))]
+[RegisterActEvent(typeof(Hive))]
+[RegisterActEvent(typeof(Glory))]
+public class Pragmatist : ModEventTemplate
+{
+    // 第 1/2/3 次搜索时“怪物回来”的概率（%）
+    private const int FirstAmbushPercent = 35;
+    private const int SecondAmbushPercent = 60;
+    private const int ThirdAmbushPercent = 85;
+
+    // 搜索最多进行三次（对应三档概率）
+    private const int MaxSearches = 3;
+
+    // 搜索可能获得的三种奖励（每种最多一次）
+    private enum SearchResult
+    {
+        Gold,
+        Nothing,
+        Relic
+    }
+
+    // 尚未获得的奖励
+    private readonly List<SearchResult> _remaining =
+    [
+        SearchResult.Gold,
+        SearchResult.Nothing,
+        SearchResult.Relic
+    ];
+
+    // 已经搜索过几次（0 = 一次都还没搜）
+    private int _searches;
+
+    private int Searches
+    {
+        get => _searches;
+        set
+        {
+            AssertMutable();
+            _searches = value;
+        }
+    }
+
+    // 进入战斗的事件必须是共享事件；多人下由投票决定进入（非共享会在 EnterCombatWithoutExitingEvent 里抛异常）
+    public override bool IsShared => true;
+
+    // —— 无立绘：直接用“战斗场景”当事件背景（参考原版「互殴」PunchOff.cs:33-35）——
+    // LayoutType = Combat 时，游戏用 res://scenes/events/combat_event_layout.tscn，
+    // 背景资源取 NCombatRoom.AssetPaths + 遭遇自身资源（EventModel.cs:479-484），
+    // 不会再去找 res://images/events/<id>.png 那张立绘，因此本事件不需要任何美术资源。
+    public override EventLayoutType LayoutType => EventLayoutType.Combat;
+
+    // Combat 布局必须给出展示用的遭遇：EventModel.cs:389 会直接 CanonicalEncounter.ToMutable()，
+    // 返回 null 会在进场时抛空引用。注意：事件内开战时复用的就是这份预生成的战斗状态
+    // （EventModel.cs:624），所以场上站着的和被你偷袭后打的是同一个遭遇。
+    //  · Hive 幕：固定用「盛碗虫（巨石）」BowlbugBoulder（新增怪，只在这个事件里登场，见 Monsters/BowlbugBoulder.cs）；
+    //  · 其它幕：沿用“本层的精英怪”（原版 RoomSet.NextEliteEncounter，只读索引）。
+    public override EncounterModel? CanonicalEncounter
+    {
+        get
+        {
+            if (Owner?.RunState is not { } runState)
+            {
+                return null;
+            }
+
+            return runState.Act is Hive
+                ? ModelDb.Encounter<BowlbugBoulderEncounter>()
+                : runState.Act.PullNextEncounter(RoomType.Elite);
+        }
+    }
+
+    // 无立绘：不提供任何自定义资源（Combat 布局只用战斗场景资源）
+    public override EventAssetProfile AssetProfile => EventAssetProfile.Empty;
+
+    // 选项描述里用到的数值：金币奖励与三档遇怪概率（改数值只需改这一处）
+    protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new GoldVar("Gold", 30),
+        new DynamicVar("AmbushPercent1", FirstAmbushPercent),
+        new DynamicVar("AmbushPercent2", SecondAmbushPercent),
+        new DynamicVar("AmbushPercent3", ThirdAmbushPercent)
+    ];
+
+    protected override IReadOnlyList<EventOption> GenerateInitialOptions()
+    {
+        return
+        [
+            new EventOption(this, Search, InitialOptionKey("SEARCH")),
+            new EventOption(this, Leave, InitialOptionKey("LEAVE"))
+        ];
+    }
+
+    // —— 让“怪物只在该出现时才出现”——
+    // Combat 布局进场时就会把 CanonicalEncounter 的怪生成到场景里（NCombatEventLayout.cs:56-62
+    // → NCombatRoom.Create(..., VisualOnly)），所以这里一开始就把敌人节点藏起来，
+    // 只有被偷袭（AMBUSH）时才显形——与“怪物离开了、回来时偷袭你”的设定一致。
+    // 拿到节点的方式与原版「互殴」PunchOff.cs:67 相同：NCombatRoom.Instance.GetCreatureNode(creature)；
+    // 事件里的这个 Instance 会经 NRun.CombatRoom → NEventRoom.EmbeddedCombatRoom 解析到嵌入的战斗房间
+    //（见 NRun.cs:42-51），因此事件布局下同样可用。
+    public override Task AfterEventStarted()
+    {
+        // 布局节点在进场之后才创建，这里多刷几次确保藏住（重复设置 Visible 很便宜）
+        TaskHelper.RunSafely(HideEnemiesRoutine());
+        return Task.CompletedTask;
+    }
+
+    private async Task HideEnemiesRoutine()
+    {
+        foreach (double delay in EnemyHideDelays)
+        {
+            await Cmd.Wait((float)delay);
+            SetEnemiesVisible(false);
+        }
+    }
+
+    private static readonly double[] EnemyHideDelays = [0.05, 0.15, 0.4];
+
+    // 切换布局里敌人节点的可见性（取不到节点时静默跳过：非战斗布局 / 已离场 / TestMode）。
+    // 不直接读 EventModel 的 _combatStateForCombatLayout：那是 protected 字段，实机版本里不一定还能访问，
+    // 这里改为遍历战斗房间自己的 creature 节点，按“不是玩家”筛出敌人（事件战斗布局里只有玩家与敌人两类）。
+    private void SetEnemiesVisible(bool visible)
+    {
+        NCombatRoom? room = NCombatRoom.Instance;
+        if (room is null)
+        {
+            return;
+        }
+
+        foreach (NCreature node in room.CreatureNodes)
+        {
+            if (node is null || !GodotObject.IsInstanceValid(node))
+            {
+                continue;
+            }
+            Creature? entity = node.Entity;
+            if (entity is null || entity.IsPlayer)
+            {
+                continue;
+            }
+            node.Visible = visible;
+
+            // 兜底：把「盛碗虫（巨石）」放大到 2 倍。展示用的敌人节点不经过 CombatManager，
+            // 因此不会触发 MonsterModel.AfterAddedToRoom（它只在真正开打时调用）；
+            // 这里与 Monster.SetupSkins 里的放大互为保险，避免“刚出现时是原版大小、点战斗才变大”。
+            if (entity.Monster is BowlbugBoulder)
+            {
+                BowlbugBoulder.ApplyScaleToNode(node);
+            }
+        }
+    }
+
+    // 搜索：先掷“怪物回来”的概率；未命中则从未获得的奖励里随机取一种
+    private async Task Search()
+    {
+        AssertMutable();
+
+        int ambushPercent = Searches switch
+        {
+            0 => FirstAmbushPercent,
+            1 => SecondAmbushPercent,
+            _ => ThirdAmbushPercent
+        };
+
+        if (Rng.NextDouble() * 100.0 < ambushPercent)
+        {
+            // 被偷袭：怪物回来了 → 显形，且只能选择战斗
+            SetEnemiesVisible(true);
+            SetEventState(PageDescription("AMBUSH"),
+            [
+                new EventOption(this, Fight, ModOptionKey("AMBUSH", "FIGHT"))
+            ]);
+            return;
+        }
+
+        if (_remaining.Count == 0)
+        {
+            // 奖励已全部拿过（正常三次流程下走不到这里，兜底）
+            SetEventFinished(PageDescription("SEARCHED_EVERYTHING"));
+            return;
+        }
+
+        int index = Rng.NextInt(_remaining.Count);
+        SearchResult result = _remaining[index];
+        _remaining.RemoveAt(index);
+        Searches++;
+
+        switch (result)
+        {
+            case SearchResult.Gold:
+                await PlayerCmd.GainGold(DynamicVars["Gold"].IntValue, Owner!);
+                ShowResultPage("FOUND_GOLD");
+                return;
+
+            case SearchResult.Relic:
+                // 随机遗物：按标准稀有度概率抽取，本局不会重复出现同一件（与陈留大食堂一致）
+                RelicModel relic = RelicFactory.PullNextRelicFromFront(Owner!).ToMutable();
+                await RelicCmd.Obtain(relic, Owner!);
+                ShowResultPage("FOUND_RELIC");
+                return;
+
+            default:
+                // 最后一次搜索才翻到“什么都没有”时，用“翻遍了他的所有物”这一页
+                ShowResultPage(_remaining.Count == 0 ? "SEARCHED_EVERYTHING" : "FOUND_NOTHING");
+                return;
+        }
+    }
+
+    // 展示搜索结果页：文案 + 后续选项（还能继续搜索时给出「继续」，否则只有「离开」）
+    private void ShowResultPage(string page)
+    {
+        SetEventState(PageDescription(page), BuildFollowUpOptions());
+    }
+
+    private IReadOnlyList<EventOption> BuildFollowUpOptions()
+    {
+        if (Searches >= MaxSearches || _remaining.Count == 0)
+        {
+            return [LeaveOption()];
+        }
+
+        // 「继续」的文案按第几次搜索取（概率不同）：第二次用 SEARCH_2、第三次用 SEARCH_3。
+        // 这两个“页名”并不对应真实页面，只用来拼出唯一的本地化键。
+        string page = Searches == 1 ? "SEARCH_2" : "SEARCH_3";
+        return
+        [
+            new EventOption(this, Search, ModOptionKey(page, "CONTINUE")),
+            LeaveOption()
+        ];
+    }
+
+    private EventOption LeaveOption()
+    {
+        return new EventOption(this, Leave, InitialOptionKey("LEAVE"));
+    }
+
+    // 战斗：与本层的精英怪交战。
+    // Combat 布局下引擎复用的是 _combatStateForCombatLayout（= 上面的 CanonicalEncounter 生成的战斗状态，
+    // 见 EventModel.cs:624），因此这里传什么遭遇都会被忽略——为清晰起见仍旧传同一份。
+    // 战斗胜利后事件结束，直接前往下一个地图点（shouldResumeAfterCombat: false；
+    // Combat 布局下也必须是 false，否则 EnterCombatWithoutExitingEvent 会抛异常，EventModel.cs:614）。
+    private Task Fight()
+    {
+        EncounterModel? elite = CanonicalEncounter;
+        if (elite is null)
+        {
+            // 兜底：取不到本幕精英遭遇时直接结束，避免异常
+            SetEventFinished(PageDescription("LEAVE"));
+            return Task.CompletedTask;
+        }
+
+        // 与「野生中立伏兵」（WildNeutralAmbushers.ContinueFight）同款：把「巨石」作为**额外奖励**
+        // 追加在本场战斗的标准奖励之上（金币 / 卡牌 / 随机遗物照常发放）。
+        // 登记见 EventModel.cs:631-634，追加见 RewardsSet.WithRewardsFromRoom:96-99。
+        Player player = Owner!;
+        IReadOnlyList<Reward> extraRewards =
+        [
+            new RelicReward(ModelDb.Relic<Boulder>().ToMutable(), player)
+        ];
+
+        EnterCombatWithoutExitingEvent(elite.ToMutable(), extraRewards, shouldResumeAfterCombat: false);
+        return Task.CompletedTask;
+    }
+
+    private Task Leave()
+    {
+        SetEventFinished(PageDescription("LEAVE"));
+        return Task.CompletedTask;
+    }
+}

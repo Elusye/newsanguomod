@@ -83,8 +83,7 @@ public class LightningStrike : NewsanguoCardTemplate
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(1m);
+        DynamicVars.Damage.UpgradeValueBy(3m);
         DynamicVars["PlayMax"].UpgradeValueBy(1m);
-        DynamicVars["HeavensForcePower"].UpgradeValueBy(1m);
     }
 }
