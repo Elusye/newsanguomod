@@ -228,5 +228,9 @@
   "NEWSANGUO_CARD_LIGHTWEIGHT.title": "不胜酒力",
   "NEWSANGUO_CARD_LIGHTWEIGHT.description": "如果这张牌在你的手牌中，你不能再获得任何[gold]酒力[/gold]，且不能打出攻击牌。",
   "NEWSANGUO_CARD_SOUL_SHACKLES.title": "灵魂锁链",
-  "NEWSANGUO_CARD_SOUL_SHACKLES.description": "失去{HeavensLost:inverseDiff()}点[gold]天意之力[/gold]。\n所有玩家受到的伤害减少50%，且受到未被格挡的伤害时，其他玩家失去等量生命。"
+  "NEWSANGUO_CARD_SOUL_SHACKLES.description": "失去{HeavensLost:inverseDiff()}点[gold]天意之力[/gold]。\n所有玩家受到的伤害减少50%，且受到未被格挡的伤害时，其他玩家失去等量生命。",
+  "NEWSANGUO_CARD_HEAVENS_FORCE_ACCEPT.title": "顺应天意",
+  "NEWSANGUO_CARD_HEAVENS_FORCE_ACCEPT.description": "失去{ForceCost}点[gold]天意之力[/gold]，获得1个造成[gold]双倍伤害[/gold]的[gold]额外回合[/gold]。",
+  "NEWSANGUO_CARD_HEAVENS_FORCE_DECLINE.title": "竟然不许！",
+  "NEWSANGUO_CARD_HEAVENS_FORCE_DECLINE.description": "不执行任何操作。"
 }

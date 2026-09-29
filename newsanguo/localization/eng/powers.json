@@ -9,7 +9,7 @@
   "NEWSANGUO_POWER_HEAVENS_DECAY_POWER.description": "Your next [blue]{Amount}[/blue] {Amount:plural:turn|turns} will be taken over by Lord Heaven.",
   "NEWSANGUO_POWER_HEAVENS_DECAY_POWER.smartDescription": "Your next [blue]{Amount}[/blue] {Amount:plural:turn|turns} will be taken over by Lord Heaven.",
   "NEWSANGUO_POWER_HEAVENS_FORCE_POWER.title": "Heaven's Force",
-  "NEWSANGUO_POWER_HEAVENS_FORCE_POWER.description": "At the end of your turn, if your points are at least [blue]10[/blue], spend 10 [gold]Heaven's Force[/gold] to gain 1 extra turn that deals double damage. If your points are at most [blue]-10[/blue], you suffer [gold]Heaven's Decay[/gold] and restore 10 [gold]Heaven's Force[/gold].",
+  "NEWSANGUO_POWER_HEAVENS_FORCE_POWER.description": "At the end of your turn, if your points are at least [blue]10[/blue], you may spend 10 [gold]Heaven's Force[/gold] to gain 1 [gold]extra turn[/gold] that deals double damage (you may also refuse: do nothing and keep your points). If your points are at most [blue]-10[/blue], you suffer [gold]Heaven's Decay[/gold] and restore 10 [gold]Heaven's Force[/gold].",
   "NEWSANGUO_POWER_BEAT_OF_DEATH_POWER.title": "Beat of Death (This Turn)",
   "NEWSANGUO_POWER_BEAT_OF_DEATH_POWER.description": "This turn, whenever you play a card, you take [blue]{Amount}[/blue] damage.",
   "NEWSANGUO_POWER_BEAT_OF_DEATH_POWER.smartDescription": "This turn, whenever you play a card, you take [blue]{Amount}[/blue] damage.",

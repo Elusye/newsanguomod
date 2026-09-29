@@ -9,7 +9,7 @@
   "NEWSANGUO_POWER_HEAVENS_DECAY_POWER.description": "你的下[blue]{Amount}[/blue]个回合会被天意爷接管。",
   "NEWSANGUO_POWER_HEAVENS_DECAY_POWER.smartDescription": "你的下[blue]{Amount}[/blue]个回合会被天意爷接管。",
   "NEWSANGUO_POWER_HEAVENS_FORCE_POWER.title": "天意之力",
-  "NEWSANGUO_POWER_HEAVENS_FORCE_POWER.description": "回合结束时，若点数≥[blue]10[/blue]，消耗10点[gold]天意之力[/gold]获得1个造成双倍伤害的额外回合；若点数≤[blue]-10[/blue]，则会被[gold]天意侵蚀[/gold]并恢复10点[gold]天意之力[/gold]。",
+  "NEWSANGUO_POWER_HEAVENS_FORCE_POWER.description": "回合结束时，若点数≥[blue]10[/blue]，可选择消耗10点[gold]天意之力[/gold]获得1个造成双倍伤害的[gold]额外回合[/gold]（也可以拒绝：不执行任何操作并保留点数）；若点数≤[blue]-10[/blue]，则会被[gold]天意侵蚀[/gold]并恢复10点[gold]天意之力[/gold]。",
   "NEWSANGUO_POWER_BEAT_OF_DEATH_POWER.title": "本回合死亡律动",
   "NEWSANGUO_POWER_BEAT_OF_DEATH_POWER.description": "在这个回合，你每打出一张牌，便受到[blue]{Amount}[/blue]点伤害。",
   "NEWSANGUO_POWER_BEAT_OF_DEATH_POWER.smartDescription": "在这个回合，你每打出一张牌，便受到[blue]{Amount}[/blue]点伤害。",

@@ -228,5 +228,9 @@
   "NEWSANGUO_CARD_LIGHTWEIGHT.title": "Lightweight",
   "NEWSANGUO_CARD_LIGHTWEIGHT.description": "If this card is in your hand, you can no longer gain any [gold]Drunken Might[/gold], and you cannot play Attack cards.",
   "NEWSANGUO_CARD_SOUL_SHACKLES.title": "Soul Shackles",
-  "NEWSANGUO_CARD_SOUL_SHACKLES.description": "Lose {HeavensLost:inverseDiff()} [gold]Heaven's Force[/gold].\nAll players take 50% less damage, and when they take unblocked damage, other players lose that much HP."
+  "NEWSANGUO_CARD_SOUL_SHACKLES.description": "Lose {HeavensLost:inverseDiff()} [gold]Heaven's Force[/gold].\nAll players take 50% less damage, and when they take unblocked damage, other players lose that much HP.",
+  "NEWSANGUO_CARD_HEAVENS_FORCE_ACCEPT.title": "Follow Heaven's Will",
+  "NEWSANGUO_CARD_HEAVENS_FORCE_ACCEPT.description": "Lose {ForceCost} [gold]Heaven's Force[/gold] to gain 1 [gold]extra turn[/gold] that deals double damage.",
+  "NEWSANGUO_CARD_HEAVENS_FORCE_DECLINE.title": "You Dare Refuse?!",
+  "NEWSANGUO_CARD_HEAVENS_FORCE_DECLINE.description": "Do nothing."
 }
