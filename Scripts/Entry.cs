@@ -10,6 +10,7 @@ using newsanguo.Scripts.Patches;
 using newsanguo.Scripts.Powers;
 using newsanguo.Scripts.Relics;
 using newsanguo.Scripts.Settings;
+using newsanguo.Scripts.Telemetry;
 
 namespace newsanguo.Scripts;
 
@@ -39,6 +40,8 @@ public class Entry
         // 注意：补丁是**白名单**——新建的补丁类必须在这里显式加一行，否则只会被编译进 DLL 而永不生效
         // （此前 PragmatistRewardPatch 就是这样“看起来没生效”的）。
         ApplyPatch(harmony, typeof(PragmatistRewardPatch));
+        // 天意给的额外回合不要再“吃掉”原版遗物「佩尔之眼」（PaelsEye）
+        ApplyPatch(harmony, typeof(HeavensForcePaelsEyePatch));
         var assembly = Assembly.GetExecutingAssembly();
         RitsuLibFramework.EnsureGodotScriptsRegistered(assembly, Logger);
         // 注册“天意之力”次级资源（必须在内容注册之前：卡牌动态变量与战斗 UI 都要用到它的完整 id）
@@ -57,6 +60,9 @@ public class Entry
         SubscribeAudioRestore();
         // RitsuLib Mod 设置页：注册本 mod 卡牌/能力音效倍率滑杆（与 newsanguo_sfx_volume 控制台命令共用真值源）
         NewsanguoSfxVolumeSettings.Register();
+        // 遥测（大盘层）：只申请 run_history（已结束跑局的原版 run-history，含每点的候选卡与是否被选）。
+        // 后端地址在 NewsanguoTelemetry.IngestEndpoint；留空时该方法会直接返回、不做任何注册。
+        NewsanguoTelemetry.Register();
     }
 
     private static void ApplyPatch(Harmony harmony, Type patchType)
