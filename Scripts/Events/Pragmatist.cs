@@ -34,6 +34,11 @@ namespace newsanguo.Scripts.Events;
 ///  · 三次搜索用尽（或奖励拿完）后只能「离开」；最后一次若恰好是“什么都没有”，
 ///    走「翻遍了他的所有物，什么事也没发生」这一页。
 ///
+/// 「巨石」遗物**只在击败盛碗虫（巨石）本尊**的伏击战后掉落：只有巢穴（Hive，第二幕）的伏击
+/// 才有 BowlbugChancePercent%（25%）概率碰上它，其余情况（以及其它幕）打的是本幕随机精英，
+/// 只给标准精英奖励、不掉「巨石」。
+/// 判定见 PragmatistRewardPatch（奖励替换）与 Fight() 里的 extraRewards 兜底。
+///
 /// 会进入战斗，所以必须是共享事件（EventModel.EnterCombatWithoutExitingEvent 里强制校验 IsShared）。
 /// 布局用 Combat（无立绘，直接以当前战斗场景为背景，场上站着本层的精英怪），见下面的 LayoutType 注释。
 /// </summary>
@@ -51,6 +56,15 @@ public class Pragmatist : ModEventTemplate
     // 搜索最多进行三次（对应三档概率）
     private const int MaxSearches = 3;
 
+    // 巢穴（Hive，第二幕）的伏击里，对手是「盛碗虫（巨石）」的概率（%）；未命中则打本幕随机精英。
+    // 掷骰用事件自己的 Rng：种子 = 本局种子 + 事件 id 的确定性哈希，共享事件不加玩家槽位
+    // （EventModel.cs:238），因此每台机器、每个玩家克隆的序列完全一致；配合下面的“只掷一次”缓存，
+    // 多人下所有客户端掷出的结果必然相同。
+    private const double BowlbugChancePercent = 25.0;
+
+    // 本次事件掷出的伏击遭遇（非存档字段，只是缓存：CanonicalEncounter 会被读多次）
+    private EncounterModel? _ambushEncounter;
+
     // 搜索可能获得的三种奖励（每种最多一次）
     private enum SearchResult
     {
@@ -60,7 +74,8 @@ public class Pragmatist : ModEventTemplate
     }
 
     // 尚未获得的奖励
-    private readonly List<SearchResult> _remaining =
+    // ⚠ 不能用 readonly：见下面 DeepCloneFields —— 每个克隆必须拿到**自己**的一份列表
+    private List<SearchResult> _remaining =
     [
         SearchResult.Gold,
         SearchResult.Nothing,
@@ -80,6 +95,39 @@ public class Pragmatist : ModEventTemplate
         }
     }
 
+    /// <summary>
+    /// 每次「进场」时重置本次进场的进度。
+    ///
+    /// 引擎为**每个玩家**从同一个 canonical 事件克隆一份可变事件
+    /// （EventSynchronizer.BeginEvent: canonicalEvent.ToMutable()），而克隆用的是
+    /// <c>MemberwiseClone()</c> —— **浅拷贝**：引用类型的字段会直接指向原实例的同一个对象。
+    /// 引擎的 <c>EventModel.DeepCloneFields()</c> 只重建 <c>_dynamicVars</c>，不管 mod 自己的字段。
+    ///
+    /// 不在这里重建 <c>_remaining</c> 的后果（实机已复现）：
+    ///  · 搜索消耗的奖励是从**所有克隆与 canonical 共用的那一个 List** 上扣掉的，
+    ///    于是同一个进程里之后再进这个事件，列表已经是空的 → 点一次「追杀」就直接
+    ///    <c>SetEventFinished("SEARCHED_EVERYTHING")</c> 结束，什么都没拿到
+    ///    （而且 35% 概率会先撞上伏击，所以表现为「有时候」）；
+    ///  · 多人下同一次选项会在**每个克隆**上各执行一遍 <c>Search()</c>，两个玩家就一次扣掉两个奖励。
+    /// </summary>
+    protected override void DeepCloneFields()
+    {
+        base.DeepCloneFields();
+
+        _remaining =
+        [
+            SearchResult.Gold,
+            SearchResult.Nothing,
+            SearchResult.Relic
+        ];
+        _searches = 0;
+
+        // 伏击遭遇的缓存也要清掉：克隆是从 Rng 流的第一掷决定的，
+        // 各克隆的 Rng 种子相同（BeginEvent 里按「本局种子 + 事件 id 哈希」新建，不含玩家槽位），
+        // 因此重新掷出的结果在所有克隆上必然一致。
+        _ambushEncounter = null;
+    }
+
     // 进入战斗的事件必须是共享事件；多人下由投票决定进入（非共享会在 EnterCombatWithoutExitingEvent 里抛异常）
     public override bool IsShared => true;
 
@@ -92,7 +140,8 @@ public class Pragmatist : ModEventTemplate
     // Combat 布局必须给出展示用的遭遇：EventModel.cs:389 会直接 CanonicalEncounter.ToMutable()，
     // 返回 null 会在进场时抛空引用。注意：事件内开战时复用的就是这份预生成的战斗状态
     // （EventModel.cs:624），所以场上站着的和被你偷袭后打的是同一个遭遇。
-    //  · Hive 幕：固定用「盛碗虫（巨石）」BowlbugBoulder（新增怪，只在这个事件里登场，见 Monsters/BowlbugBoulder.cs）；
+    //  · 巢穴（Hive，第二幕）：有 BowlbugChancePercent% 概率是「盛碗虫（巨石）」BowlbugBoulder
+    //    （新增怪，只在这个事件里登场，见 Monsters/BowlbugBoulder.cs），否则是本幕随机精英；
     //  · 其它幕：沿用“本层的精英怪”（原版 RoomSet.NextEliteEncounter，只读索引）。
     public override EncounterModel? CanonicalEncounter
     {
@@ -103,9 +152,22 @@ public class Pragmatist : ModEventTemplate
                 return null;
             }
 
-            return runState.Act is Hive
+            // 只掷一次并缓存：这个属性会被读多次（引擎生成事件布局、Fight() 等），
+            // 每次都掷的话各次读到的遭遇可能不同，多人下还会破坏引擎的引用相等校验（见 Fight() 注释）。
+            if (_ambushEncounter is not null)
+            {
+                return _ambushEncounter;
+            }
+
+            // Rng 尚未初始化（理论上不会发生）时按“未命中”处理，避免空引用
+            bool isBowlbug = runState.Act is Hive
+                && (Rng is null ? 100.0 : Rng.NextDouble() * 100.0) < BowlbugChancePercent;
+
+            _ambushEncounter = isBowlbug
                 ? ModelDb.Encounter<BowlbugBoulderEncounter>()
                 : runState.Act.PullNextEncounter(RoomType.Elite);
+
+            return _ambushEncounter;
         }
     }
 
@@ -287,14 +349,17 @@ public class Pragmatist : ModEventTemplate
             return Task.CompletedTask;
         }
 
-        // 与「野生中立伏兵」（WildNeutralAmbushers.ContinueFight）同款：把「巨石」作为**额外奖励**
-        // 追加在本场战斗的标准奖励之上（金币 / 卡牌 / 随机遗物照常发放）。
-        // 登记见 EventModel.cs:631-634，追加见 RewardsSet.WithRewardsFromRoom:96-99。
+        // 「巨石」只在**对手就是盛碗虫（巨石）本尊**时才作为额外奖励追加：
+        //   · 巢穴（Hive，第二幕）：CanonicalEncounter 有 25% 概率掷中 BowlbugBoulderEncounter → 掉落；
+        //   · 掷空或其它幕：伏击对手是本幕随机精英 → extraRewards 传空，只给标准精英奖励，不掉「巨石」。
+        // 与 PragmatistRewardPatch 的判定保持一致（那边负责把精英遗物奖励替换成「巨石」）。
         Player player = Owner!;
-        IReadOnlyList<Reward> extraRewards =
-        [
-            new RelicReward(ModelDb.Relic<Boulder>().ToMutable(), player)
-        ];
+        IReadOnlyList<Reward> extraRewards = elite is BowlbugBoulderEncounter
+            ?
+            [
+                new RelicReward(ModelDb.Relic<Boulder>().ToMutable(), player)
+            ]
+            : [];
 
         // ⚠ 这里必须传 **canonical**（ModelDb 里的单例）遭遇，不能传 elite.ToMutable()。
         // 实机版（0.110+）的 EventCombatSynchronizer.EnterCombat() 是这样校验的：

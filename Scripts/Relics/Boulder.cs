@@ -24,10 +24,13 @@ namespace newsanguo.Scripts.Relics;
 ///  注意抽牌堆底的排序是引擎按 Enchantment.ShouldStartAtBottomOfDrawPile 处理的，
 ///  见 CombatManager.cs:660，本 mod 不需要额外代码。）
 ///
-/// 获取方式：只通过事件「实践主义者」——击杀盛碗虫（巨石）后，作为**额外奖励**追加在该场战斗的
-/// 标准奖励之上（与「野生中立伏兵」同款，见 Pragmatist.Fight() 里传给
-/// EnterCombatWithoutExitingEvent 的 extraRewards）。
-/// 因此稀有度用 Event：不参与随机掉落，与本 mod 的「传送门」一致。
+/// 获取方式：**只在事件「实践主义者」里击败盛碗虫（巨石）本尊**时掉落。
+///  · 巢穴（Hive，第二幕）的伏击有 25% 概率对手是它（BowlbugBoulderEncounter，见 Pragmatist 的
+///    BowlbugChancePercent），战斗胜利后这场战斗的标准精英遗物奖励会被替换成「巨石」
+///    （见 PragmatistRewardPatch），Pragmatist.Fight() 另外还会用 extraRewards 追加一件作兜底；
+///  · 掷空或其它幕的伏击对手是本幕的随机精英，只发标准精英奖励，**不掉「巨石」**。
+/// 因此稀有度用 Event：不参与随机掉落（RelicGrabBag 的稀有度集合只有 Common/Uncommon/Rare/Shop），
+/// 也不会出现在商店（MerchantCost 对 Event 是 999999999）。
 /// </summary>
 [RegisterRelic(typeof(NewsanguoRelicPool))]
 public class Boulder : ModRelicTemplate
