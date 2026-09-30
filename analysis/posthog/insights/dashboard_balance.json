@@ -1,0 +1,5 @@
+{
+  "name": "新三国 · 卡牌平衡（选取率）",
+  "description": "基于 mod 遥测事件 run_history.completed 的卡牌奖励数据：候选次数、被选/跳过次数与选取率。数据源 analysis/posthog/report.md。",
+  "tags": ["newsanguo", "balance"]
+}

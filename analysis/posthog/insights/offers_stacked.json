@@ -1,0 +1,22 @@
+{
+  "name": "新三国 · 候选次数 Top 20（被选 vs 跳过）",
+  "description": "数据源 run_history.completed → card_choices。堆叠条展示每张牌「被选中」与「被跳过」的绝对次数，用于同时看样本量与取舍倾向。",
+  "tags": ["newsanguo", "balance", "card-pick-rate"],
+  "query": {
+    "kind": "DataVisualizationNode",
+    "display": "ActionsStackedBar",
+    "source": {
+      "kind": "HogQLQuery",
+      "query": "SELECT transform(card_id, ['CARD.NEWSANGUO_CARD_RUTHLESS_BLADE','CARD.NEWSANGUO_CARD_WINE_CUT','CARD.NEWSANGUO_CARD_WOLF_VS_DOG','CARD.NEWSANGUO_CARD_PLOT','CARD.NEWSANGUO_CARD_NONSENSE','CARD.NEWSANGUO_CARD_ALWAYS_MINE','CARD.NEWSANGUO_CARD_LIGHTNING_STRIKE','CARD.NEWSANGUO_CARD_GET_OUT','CARD.NEWSANGUO_CARD_SLAM_THE_BOWL','CARD.NEWSANGUO_CARD_INTOXICATED','CARD.NEWSANGUO_CARD_DRAGON_OMEN','CARD.NEWSANGUO_CARD_NEVER_HAPPENED','CARD.NEWSANGUO_CARD_STARRY_NIGHT','CARD.NEWSANGUO_CARD_DIVINATION','CARD.NEWSANGUO_CARD_CHECK_THE_PREMIERE','CARD.NEWSANGUO_CARD_GREAT_EVIL','CARD.NEWSANGUO_CARD_SKYWARD_BLADE','CARD.NEWSANGUO_CARD_COMMANDER_ARRIVES','CARD.NEWSANGUO_CARD_TWEAK','CARD.NEWSANGUO_CARD_QIN_JIN_ALLIANCE','CARD.NEWSANGUO_CARD_HEAVEN_AND_EARTH','CARD.NEWSANGUO_CARD_RELEASE','CARD.NEWSANGUO_CARD_RAT_POISON','CARD.NEWSANGUO_CARD_WIND_OF_TIGER','CARD.NEWSANGUO_CARD_INVINCIBLE'], ['无情剑法','杯酒斩击','以狼搏狗','密谋','春秋胡言乱语！','原本就是我的！','迅雷打击','叉出去！','盖饭','陶醉','龙可是帝王之征啊','万万没有此事啊！','星夜','占卜','看看首播版','做下大恶','恨天剑法','大都督到！','稍作修改','秦晋之好','天上人间','释怀','毒鼠计','风从虎，云从龙','天下无敌！'], if(card_id LIKE 'CARD.NEWSANGUO_CARD_%', substring(card_id, 21), card_id)) AS card_label, count() AS offered, countIf(picked) AS picked, countIf(NOT picked) AS skipped, round(countIf(picked) / count(), 4) AS pick_rate FROM (SELECT JSONExtractString(choice, 'card', 'id') AS card_id, JSONExtractBool(choice, 'was_picked') AS picked FROM (SELECT arrayJoin(JSONExtractArrayRaw(stats, 'card_choices')) AS choice FROM (SELECT arrayJoin(JSONExtractArrayRaw(point, 'player_stats')) AS stats FROM (SELECT arrayJoin(JSONExtractArrayRaw(act_points)) AS point FROM (SELECT arrayJoin(JSONExtractArrayRaw(JSONExtractRaw(JSONExtractString(ifNull(properties.payload, ''), 'applicant_payload'), 'run_history'), 'map_point_history')) AS act_points FROM events WHERE event = 'run_history.completed')))) WHERE card_id != '' GROUP BY card_label ORDER BY offered DESC LIMIT 20"
+    },
+    "chartSettings": {
+      "xAxis": { "column": "card_label" },
+      "yAxis": [
+        { "column": "picked", "settings": { "display": { "label": "被选" } } },
+        { "column": "skipped", "settings": { "display": { "label": "跳过" } } }
+      ],
+      "showValuesOnSeries": false,
+      "showLegend": true
+    }
+  }
+}

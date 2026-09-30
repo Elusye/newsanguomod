@@ -1,0 +1,27 @@
+{
+  "name": "新三国 · 卡牌选取率排行（候选≥300）",
+  "description": "数据源 run_history.completed → card_choices。选取率 = 被选次数 / 候选次数（0-1），只统计候选次数 ≥300 的牌以保证样本量。",
+  "tags": ["newsanguo", "balance", "card-pick-rate"],
+  "query": {
+    "kind": "DataVisualizationNode",
+    "display": "ActionsBar",
+    "source": {
+      "kind": "HogQLQuery",
+      "query": "SELECT transform(card_id, ['CARD.NEWSANGUO_CARD_NEW_GAME_PLUS','CARD.NEWSANGUO_CARD_FEEL_NO_ACID','CARD.NEWSANGUO_CARD_BREW_LIMIT_BREAK','CARD.NEWSANGUO_CARD_GOLDEN_REBELLION','CARD.NEWSANGUO_CARD_VICTORY_BY_HEAVENS_WILL','CARD.NEWSANGUO_CARD_MY_THREE_GENERALS','CARD.NEWSANGUO_CARD_CROSS_FOR_CROSS','CARD.NEWSANGUO_CARD_TEN_THOUSAND_TRANSPARENT_HOLES','CARD.NEWSANGUO_CARD_WINE_THE_OLD_HERO','CARD.NEWSANGUO_CARD_INVOKE_HEAVEN','CARD.NEWSANGUO_CARD_WHERE_S_WINE','CARD.NEWSANGUO_CARD_RETIRE','CARD.NEWSANGUO_CARD_DONG_ZHUO_THE_TRAITOR','CARD.NEWSANGUO_CARD_TO_A_BIGGER_GOBLET','CARD.NEWSANGUO_CARD_INTOXICATED','CARD.NEWSANGUO_CARD_PARTY_ON','CARD.NEWSANGUO_CARD_HEAVEN_REVISION','CARD.NEWSANGUO_CARD_CAOS_ART_OF_WAR','CARD.NEWSANGUO_CARD_RELEASE','CARD.NEWSANGUO_CARD_LETS_DISCUSS','CARD.NEWSANGUO_CARD_TREMBLE','CARD.NEWSANGUO_CARD_NEVER_HAD_THESE','CARD.NEWSANGUO_CARD_EMPOWER'], ['二周目玩家','咱家不怕酸！','突破酒限','黄金起义','天意致胜','是我的韩信，白起，周亚夫','他过江我也过江！','一万个透明窟窿！','酒是老英雄','召唤天意','哪里饮酒？','告老还乡','国贼董卓嘛！','换大盏','陶醉','接着奏乐接着舞','天意修正','曹氏兵法','释怀','议一下吧','吓汝一跳！','从来就没有这些！','赋值'], if(card_id LIKE 'CARD.NEWSANGUO_CARD_%', substring(card_id, 21), card_id)) AS card_label, count() AS offered, countIf(picked) AS picked, round(countIf(picked) / count(), 4) AS pick_rate FROM (SELECT JSONExtractString(choice, 'card', 'id') AS card_id, JSONExtractBool(choice, 'was_picked') AS picked FROM (SELECT arrayJoin(JSONExtractArrayRaw(stats, 'card_choices')) AS choice FROM (SELECT arrayJoin(JSONExtractArrayRaw(point, 'player_stats')) AS stats FROM (SELECT arrayJoin(JSONExtractArrayRaw(act_points)) AS point FROM (SELECT arrayJoin(JSONExtractArrayRaw(JSONExtractRaw(JSONExtractString(ifNull(properties.payload, ''), 'applicant_payload'), 'run_history'), 'map_point_history')) AS act_points FROM events WHERE event = 'run_history.completed')))) WHERE card_id != '' GROUP BY card_label HAVING offered >= 300 ORDER BY pick_rate DESC, offered DESC LIMIT 25"
+    },
+    "chartSettings": {
+      "xAxis": { "column": "card_label" },
+      "yAxis": [
+        {
+          "column": "pick_rate",
+          "settings": {
+            "display": { "label": "选取率" },
+            "formatting": { "style": "percent", "decimalPlaces": 1 }
+          }
+        }
+      ],
+      "showValuesOnSeries": true,
+      "showLegend": false
+    }
+  }
+}

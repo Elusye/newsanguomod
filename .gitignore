@@ -19,6 +19,15 @@ obj/
 
 # 本地反编译/临时产物
 .decomp_tmp/
+# 引擎/RitsuLib 反编译产物（体积大、且是他人代码，不要公开）
+.decompile/
 
 # TRAE IDE 本地配置
 .trae/
+
+# PostHog CLI credentials (local only, do not commit)
+.posthog-home/
+.posthog.env
+
+# PostHog 分析产物快照（查询语句 analysis/posthog/*.sql 与 tools/*.ps1 可入库，生成的表/图不入库）
+analysis/posthog/out/

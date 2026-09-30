@@ -42,6 +42,12 @@ public class Entry
         ApplyPatch(harmony, typeof(PragmatistRewardPatch));
         // 天意给的额外回合不要再“吃掉”原版遗物「佩尔之眼」（PaelsEye）
         ApplyPatch(harmony, typeof(HeavensForcePaelsEyePatch));
+        // “卡牌错位”归位清扫：出牌被取消 / 选牌结束时，把“逻辑上在手牌、画面却停在屏幕中央”的
+        // 卡牌节点搬回手牌容器（详见 StrayHandCardCleanupPatch.cs 顶部注释）
+        ApplyPatch(harmony, typeof(StrayCardQueueCancelPatch));
+        ApplyPatch(harmony, typeof(StrayCardPlayCancelPatch));
+        ApplyPatch(harmony, typeof(StrayCardSelectionEndPatch));
+        ApplyPatch(harmony, typeof(StrayCardCombatEndPatch));
         var assembly = Assembly.GetExecutingAssembly();
         RitsuLibFramework.EnsureGodotScriptsRegistered(assembly, Logger);
         // 注册“天意之力”次级资源（必须在内容注册之前：卡牌动态变量与战斗 UI 都要用到它的完整 id）

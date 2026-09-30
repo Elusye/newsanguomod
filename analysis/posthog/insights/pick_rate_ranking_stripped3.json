@@ -1,0 +1,28 @@
+{
+  "id": 12370626,
+  "name": "新三国 · 卡牌选取率排行（候选≥300）",
+  "description": "数据源 run_history.completed → card_choices。选取率 = 被选次数 / 候选次数，只统计候选次数 ≥300 的牌（Top 25）；x 轴为去掉 CARD.NEWSANGUO_CARD_ 前缀后的卡名。",
+  "tags": ["newsanguo", "balance", "card-pick-rate"],
+  "query": {
+    "kind": "DataVisualizationNode",
+    "display": "ActionsBar",
+    "source": {
+      "kind": "HogQLQuery",
+      "query": "SELECT substring(JSONExtractString(choice, 'card', 'id'), 21, 200) AS card_label, count() AS offered, countIf(JSONExtractBool(choice, 'was_picked')) AS picked, round(countIf(JSONExtractBool(choice, 'was_picked')) / count(), 4) AS pick_rate FROM (SELECT arrayJoin(JSONExtractArrayRaw(stats, 'card_choices')) AS choice FROM (SELECT arrayJoin(JSONExtractArrayRaw(point, 'player_stats')) AS stats FROM (SELECT arrayJoin(JSONExtractArrayRaw(act_points)) AS point FROM (SELECT arrayJoin(JSONExtractArrayRaw(JSONExtractRaw(JSONExtractString(ifNull(properties.payload, ''), 'applicant_payload'), 'run_history'), 'map_point_history')) AS act_points FROM events WHERE event = 'run_history.completed')))) WHERE card_label != '' GROUP BY card_label HAVING offered >= 300 ORDER BY pick_rate DESC, offered DESC LIMIT 25"
+    },
+    "chartSettings": {
+      "xAxis": { "column": "card_label" },
+      "yAxis": [
+        {
+          "column": "pick_rate",
+          "settings": {
+            "display": { "label": "选取率" },
+            "formatting": { "style": "percent", "decimalPlaces": 1 }
+          }
+        }
+      ],
+      "showValuesOnSeries": true,
+      "showLegend": false
+    }
+  }
+}

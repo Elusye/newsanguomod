@@ -1,0 +1,23 @@
+{
+  "id": 12370627,
+  "name": "新三国 · 候选次数 Top 20（被选 vs 跳过）",
+  "description": "数据源 run_history.completed → card_choices。堆叠条展示每张牌被选中与被跳过的绝对次数（同时看样本量与取舍倾向）。卡名见 analysis/posthog/report.md 的中文对照表。",
+  "tags": ["newsanguo", "balance", "card-pick-rate"],
+  "query": {
+    "kind": "DataVisualizationNode",
+    "display": "ActionsStackedBar",
+    "source": {
+      "kind": "HogQLQuery",
+      "query": "SELECT JSONExtractString(choice, 'card', 'id') AS card_id, count() AS offered, countIf(JSONExtractBool(choice, 'was_picked')) AS picked, countIf(NOT JSONExtractBool(choice, 'was_picked')) AS skipped, round(countIf(JSONExtractBool(choice, 'was_picked')) / count(), 4) AS pick_rate FROM (SELECT arrayJoin(JSONExtractArrayRaw(stats, 'card_choices')) AS choice FROM (SELECT arrayJoin(JSONExtractArrayRaw(point, 'player_stats')) AS stats FROM (SELECT arrayJoin(JSONExtractArrayRaw(act_points)) AS point FROM (SELECT arrayJoin(JSONExtractArrayRaw(JSONExtractRaw(JSONExtractString(ifNull(properties.payload, ''), 'applicant_payload'), 'run_history'), 'map_point_history')) AS act_points FROM events WHERE event = 'run_history.completed')))) WHERE card_id != '' GROUP BY card_id ORDER BY offered DESC LIMIT 20"
+    },
+    "chartSettings": {
+      "xAxis": { "column": "card_id" },
+      "yAxis": [
+        { "column": "picked", "settings": { "display": { "label": "被选" } } },
+        { "column": "skipped", "settings": { "display": { "label": "跳过" } } }
+      ],
+      "showValuesOnSeries": false,
+      "showLegend": true
+    }
+  }
+}

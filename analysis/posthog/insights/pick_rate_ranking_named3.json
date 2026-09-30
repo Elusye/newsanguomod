@@ -1,0 +1,28 @@
+{
+  "id": 12370626,
+  "name": "新三国 · 卡牌选取率排行（候选≥300）",
+  "description": "数据源 run_history.completed → card_choices。选取率 = 被选次数 / 候选次数，只统计候选次数 ≥300 的牌（Top 25），x 轴为中文卡名。",
+  "tags": ["newsanguo", "balance", "card-pick-rate"],
+  "query": {
+    "kind": "DataVisualizationNode",
+    "display": "ActionsBar",
+    "source": {
+      "kind": "HogQLQuery",
+      "query": "SELECT multiIf(card_id = 'CARD.NEWSANGUO_CARD_NEW_GAME_PLUS', '二周目玩家', card_id = 'CARD.NEWSANGUO_CARD_FEEL_NO_ACID', '咱家不怕酸！', card_id = 'CARD.NEWSANGUO_CARD_BREW_LIMIT_BREAK', '突破酒限', card_id = 'CARD.NEWSANGUO_CARD_GOLDEN_REBELLION', '黄金起义', card_id = 'CARD.NEWSANGUO_CARD_VICTORY_BY_HEAVENS_WILL', '天意致胜', card_id = 'CARD.NEWSANGUO_CARD_MY_THREE_GENERALS', '是我的韩信，白起，周亚夫', card_id = 'CARD.NEWSANGUO_CARD_CROSS_FOR_CROSS', '他过江我也过江！', card_id = 'CARD.NEWSANGUO_CARD_TEN_THOUSAND_TRANSPARENT_HOLES', '一万个透明窟窿！', card_id = 'CARD.NEWSANGUO_CARD_WINE_THE_OLD_HERO', '酒是老英雄', card_id = 'CARD.NEWSANGUO_CARD_INVOKE_HEAVEN', '召唤天意', card_id = 'CARD.NEWSANGUO_CARD_WHERE_S_WINE', '哪里饮酒？', card_id = 'CARD.NEWSANGUO_CARD_RETIRE', '告老还乡', card_id = 'CARD.NEWSANGUO_CARD_DONG_ZHUO_THE_TRAITOR', '国贼董卓嘛！', card_id = 'CARD.NEWSANGUO_CARD_TO_A_BIGGER_GOBLET', '换大盏', card_id = 'CARD.NEWSANGUO_CARD_INTOXICATED', '陶醉', card_id = 'CARD.NEWSANGUO_CARD_PARTY_ON', '接着奏乐接着舞', card_id = 'CARD.NEWSANGUO_CARD_HEAVEN_REVISION', '天意修正', card_id = 'CARD.NEWSANGUO_CARD_CAOS_ART_OF_WAR', '曹氏兵法', card_id = 'CARD.NEWSANGUO_CARD_RELEASE', '释怀', card_id = 'CARD.NEWSANGUO_CARD_LETS_DISCUSS', '议一下吧', card_id = 'CARD.NEWSANGUO_CARD_TREMBLE', '吓汝一跳！', card_id = 'CARD.NEWSANGUO_CARD_NEVER_HAD_THESE', '从来就没有这些！', card_id = 'CARD.NEWSANGUO_CARD_EMPOWER', '赋值', card_id) AS card_label, count() AS offered, countIf(picked) AS picked, round(countIf(picked) / count(), 4) AS pick_rate FROM (SELECT JSONExtractString(choice, 'card', 'id') AS card_id, JSONExtractBool(choice, 'was_picked') AS picked FROM (SELECT arrayJoin(JSONExtractArrayRaw(stats, 'card_choices')) AS choice FROM (SELECT arrayJoin(JSONExtractArrayRaw(point, 'player_stats')) AS stats FROM (SELECT arrayJoin(JSONExtractArrayRaw(act_points)) AS point FROM (SELECT arrayJoin(JSONExtractArrayRaw(JSONExtractRaw(JSONExtractString(ifNull(properties.payload, ''), 'applicant_payload'), 'run_history'), 'map_point_history')) AS act_points FROM events WHERE event = 'run_history.completed')))) WHERE card_id != '' GROUP BY card_label HAVING offered >= 300 ORDER BY pick_rate DESC, offered DESC LIMIT 25"
+    },
+    "chartSettings": {
+      "xAxis": { "column": "card_label" },
+      "yAxis": [
+        {
+          "column": "pick_rate",
+          "settings": {
+            "display": { "label": "选取率" },
+            "formatting": { "style": "percent", "decimalPlaces": 1 }
+          }
+        }
+      ],
+      "showValuesOnSeries": true,
+      "showLegend": false
+    }
+  }
+}
