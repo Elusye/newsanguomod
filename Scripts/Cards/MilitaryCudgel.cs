@@ -67,7 +67,14 @@ public class MilitaryCudgel : NewsanguoCardTemplate
     }
 
     // 生成 1 张军杖并加入手牌（供其它卡牌调用，参考原版 Shiv.CreateInHand）
-    public static async Task<CardModel?> CreateInHand(Player owner, ICombatState combatState)
+    public static Task<CardModel?> CreateInHand(Player owner, ICombatState combatState)
+    {
+        return CreateInPile(owner, combatState, PileType.Hand);
+    }
+
+    // 生成 1 张军杖并放入指定战斗牌堆。
+    // 跨 Mod 联动请走 NewsanguoPublicApi.AddTokenToHand（那里会校验去向是否合法）。
+    public static async Task<CardModel?> CreateInPile(Player owner, ICombatState combatState, PileType destination)
     {
         // 战斗已结束或正在结束时不再生成，避免收尾阶段状态错乱
         if (CombatManager.Instance.IsOverOrEnding)
@@ -76,7 +83,7 @@ public class MilitaryCudgel : NewsanguoCardTemplate
         }
 
         CardModel cudgel = combatState.CreateCard<MilitaryCudgel>(owner);
-        await CardPileCmd.AddGeneratedCardsToCombat([cudgel], PileType.Hand, owner);
+        await CardPileCmd.AddGeneratedCardsToCombat([cudgel], destination, owner);
         return cudgel;
     }
 }
