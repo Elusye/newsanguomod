@@ -117,8 +117,9 @@ public class DrunkenMightPower : ModPowerTemplate
             return;
         }
 
-        // 「杯酒斩击」的酒力处理（先翻倍再减半）在其自身 OnPlay 内手动完成，此处跳过一次，避免重复减半
-        if (card is WineCut)
+        // 「杯酒斩击」的酒力处理（先翻倍再减半）在其自身 OnPlay 内手动完成，此处跳过一次，避免重复减半；
+        // 「悍将三刀」同理（击杀则翻倍、未击杀则减半，都在 OnPlay 内结算）。
+        if (card is WineCut or ThreeBlades)
         {
             return;
         }

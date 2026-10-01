@@ -3,8 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Cards;
@@ -15,6 +17,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts;
 
@@ -22,17 +25,23 @@ namespace newsanguo.Scripts;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class ThreeBlades : NewsanguoCardTemplate
 {
+    // 击杀时获得的能量
+    private const int EnergyGain = 3;
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 11 点伤害 3 次；未击杀时失去 2 点生命
+    // 卡牌基础数值：造成 9（升级 12）点伤害 3 次
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(11, ValueProp.Move),
-        new RepeatVar(3),
-        new HpLossVar(2)
+        new DamageVar(9, ValueProp.Move),
+        new RepeatVar(3)
+    ];
+
+    // 鼠标悬停：本牌与酒力互动，补一条酒力说明（含"打出攻击牌后减半"的规则）
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
+        HoverTipFactory.FromPower<DrunkenMightPower>()
     ];
 
     public ThreeBlades() : base(3, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
@@ -46,7 +55,10 @@ public class ThreeBlades : NewsanguoCardTemplate
 
         NewsanguoSfx.Play("event:/newsanguo/sfx/three_blades");
 
-        // 造成 11 点伤害 3 次；若此牌未击杀敌人，你失去 2 点生命（斩杀判定参考原版 KnockoutBlow）
+        // 打出瞬间的酒力层数（击杀时以它翻倍，未击杀时以它减半）
+        int mightBefore = base.Owner.Creature.GetPower<DrunkenMightPower>()?.Amount ?? 0;
+
+        // 造成 9（12）点伤害 3 次；斩杀判定参考原版 KnockoutBlow
         bool killedEnemy = (await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
@@ -54,22 +66,40 @@ public class ThreeBlades : NewsanguoCardTemplate
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext))
             .Results.SelectMany(results => results).Any(result => result.WasTargetKilled);
-        if (!killedEnemy)
+
+        // 本牌不参与 DrunkenMightPower.AfterCardPlayed 的自动减半（那里的减半按"打出瞬间层数"结算，
+        // 会把这里的翻倍一并覆盖掉），所以两条分支都在此处手动完成。
+        if (killedEnemy)
         {
-            await CreatureCmd.Damage(
-                choiceContext,
-                base.Owner.Creature,
-                DynamicVars.HpLoss.BaseValue,
-                ValueProp.Unblockable | ValueProp.Unpowered | ValueProp.Move,
-                this,
-                cardPlay);
+            // 击杀：酒力翻倍（再获得等量酒力即翻倍）
+            if (mightBefore > 0)
+            {
+                await PowerCmd.Apply<DrunkenMightPower>(
+                    choiceContext,
+                    base.Owner.Creature,
+                    mightBefore,
+                    base.Owner.Creature,
+                    this,
+                    silent: false);
+            }
+
+            // 并额外获得 3 点能量
+            await PlayerCmd.GainEnergy(EnergyGain, base.Owner);
+            return;
+        }
+
+        // 未击杀：与其他攻击牌一致，按打出瞬间的层数减半（向下取整）
+        DrunkenMightPower? drunkenMight = base.Owner.Creature.GetPower<DrunkenMightPower>();
+        if (drunkenMight is not null)
+        {
+            await drunkenMight.HalfForCard(choiceContext, this);
         }
     }
 
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 伤害从 11 提高到 14
+        // 伤害从 9 提高到 12
         DynamicVars.Damage.UpgradeValueBy(3);
     }
 }

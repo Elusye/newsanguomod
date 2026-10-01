@@ -44,10 +44,17 @@ public class Entry
         ApplyPatch(harmony, typeof(HeavensForcePaelsEyePatch));
         // “卡牌错位”归位清扫：出牌被取消 / 选牌结束时，把“逻辑上在手牌、画面却停在屏幕中央”的
         // 卡牌节点搬回手牌容器（详见 StrayHandCardCleanupPatch.cs 顶部注释）
-        ApplyPatch(harmony, typeof(StrayCardQueueCancelPatch));
-        ApplyPatch(harmony, typeof(StrayCardPlayCancelPatch));
-        ApplyPatch(harmony, typeof(StrayCardSelectionEndPatch));
-        ApplyPatch(harmony, typeof(StrayCardCombatEndPatch));
+        //
+        // ⚠ 2026-10-01 已停用（0.2.38 上线 → 联机不同步 → 回退 0.2.37 恢复正常）。
+        // 版本对照把范围钉死在这里：0.2.38 相对 0.2.37 只多了这个补丁（Entry.cs +6 / 补丁 +313），
+        // 0.2.39 相对 0.2.38 只多了没人调用的公开 API，所以能造成不同步的行为改动只有它。
+        // 它挂在选牌流程的收尾（NPlayerHand.AfterCardsSelected）并带一次延迟补扫，与“三选一”类
+        // 选择界面同一条流程；多人是确定性同步，这段本地延迟动作会让两端的动作序列错位。
+        // 重新启用前必须先按“绝不在选择流程里插延迟动作 + 全程 try/catch”改写，并在联机下实测。
+        // ApplyPatch(harmony, typeof(StrayCardQueueCancelPatch));
+        // ApplyPatch(harmony, typeof(StrayCardPlayCancelPatch));
+        // ApplyPatch(harmony, typeof(StrayCardSelectionEndPatch));
+        // ApplyPatch(harmony, typeof(StrayCardCombatEndPatch));
         var assembly = Assembly.GetExecutingAssembly();
         RitsuLibFramework.EnsureGodotScriptsRegistered(assembly, Logger);
         // 注册“天意之力”次级资源（必须在内容注册之前：卡牌动态变量与战斗 UI 都要用到它的完整 id）

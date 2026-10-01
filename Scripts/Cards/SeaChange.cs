@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Extensions;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
@@ -17,6 +18,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Helpers;
 
 namespace newsanguo.Scripts;
@@ -35,6 +37,14 @@ public class SeaChange : NewsanguoCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new CardsVar(3)
     ];
+
+    // 悬停提示：本牌会给天意之力，补一条说明
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
+        HeavensForce.HoverTip()
+    ];
+
+    // 属于“天意”体系（涉及天意之力）
+    public override bool IsHeavensCard => true;
 
     public SeaChange() : base(0, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {
@@ -67,14 +77,23 @@ public class SeaChange : NewsanguoCardTemplate
 
         // 逐张随机变化，并为变化出来的牌添加随机附魔
         // （选择结果已快照成列表，避免变换过程中集合变化）
+        // 同时统计真正变化成功的张数，用于结算天意之力
         Rng rng = base.Owner.RunState.Rng.CombatCardSelection;
+        int changedCount = 0;
         foreach (CardModel original in selected)
         {
             CardPileAddResult result = await CardCmd.TransformToRandom(original, rng);
             if (result.cardAdded != null)
             {
                 EnchantHelper.ApplyRandomEnchant(result.cardAdded, base.Owner);
+                changedCount++;
             }
+        }
+
+        // 追加：每变化一张牌，获得等量（1 点/张）天意之力（2026-10-01 追加）
+        if (changedCount > 0)
+        {
+            await HeavensForce.Add(choiceContext, base.Owner, changedCount, this);
         }
     }
 

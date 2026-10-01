@@ -71,14 +71,40 @@ public class HeavenRevision : NewsanguoCardTemplate
     }
 
     /// <summary>
-    /// 每当你进入额外回合时，将这张牌放回手牌（从弃牌堆等位置回收，重新可以再打一次）。
-    /// 照抄原版「就这么办」（MakeItSo.cs:35-47）的写法：用 AfterTakingExtraTurn / 同类的
-    /// “条件满足就把自己放回手牌”钩子 + CardPileCmd.Add(this, PileType.Hand)，
-    /// 并先判断当前是否已在手牌（避免重复放入）。
+    /// 触发条件（两者任一满足即回手，从弃牌堆/抽牌堆/消耗堆等位置回收，重新可以再打一次）：
+    ///   1) 每当你进入额外回合时（<see cref="AfterTakingExtraTurn"/>）；
+    ///   2) 每当你生成牌时（<see cref="AfterCardGeneratedForCombat"/>，2026-10-01 追加）。
+    /// 写法照抄原版「就这么办」（MakeItSo.cs:35-47）：条件满足就把自己放回手牌
+    /// （CardPileCmd.Add(this, PileType.Hand)），并先判断当前是否已在手牌（避免重复放入）。
+    ///
+    /// 多人注意：这两个钩子都由引擎在两端**对称**分发（生成牌的 creator 来自动作本身），
+    /// 且只用同步状态判断，因此两端结果一致；这里**不能**加 LocalContext.IsMe 之类的本机判定。
     /// </summary>
     public override async Task AfterTakingExtraTurn(Player player)
     {
         if (player != base.Owner)
+        {
+            return;
+        }
+        if (Pile?.Type == PileType.Hand)
+        {
+            return;
+        }
+
+        await CardPileCmd.Add(this, PileType.Hand);
+    }
+
+    /// <summary>
+    /// 每当你**生成牌**时同样回手（与 <see cref="AfterTakingExtraTurn"/> 同一套写法与判定）。
+    /// 只认 <paramref name="creator"/> == 自己：别人生成的牌不触发；生成的就是这张牌本身时也不再处理。
+    /// </summary>
+    public override async Task AfterCardGeneratedForCombat(CardModel card, Player? creator)
+    {
+        if (creator != base.Owner)
+        {
+            return;
+        }
+        if (card == this)
         {
             return;
         }

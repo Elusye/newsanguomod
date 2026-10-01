@@ -8,9 +8,7 @@ using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Cards;
-using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
-using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -32,17 +30,16 @@ public class QinJinAlliance : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：你获得 10（13）点格挡；目标敌人获得固定的 5 点格挡和 1 层残影
+    // 卡牌基础数值：你获得 10（13）点格挡；目标敌人获得固定的 5 点格挡
+    // （历史：本牌曾额外给予目标 1 层残影 BlurPower，已按需求移除）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new BlockVar(10, ValueProp.Move),
-        new IntVar("EnemyBlock", 5),
-        new PowerVar<BlurPower>(1m)
+        new IntVar("EnemyBlock", 5)
     ];
 
-    // 鼠标悬停时展示格挡与残影说明
+    // 鼠标悬停时展示格挡说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.Static(StaticHoverTip.Block),
-        HoverTipFactory.FromPower<BlurPower>()
+        HoverTipFactory.Static(StaticHoverTip.Block)
     ];
 
     public QinJinAlliance() : base(1, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)
@@ -64,9 +61,6 @@ public class QinJinAlliance : NewsanguoCardTemplate
 
         // 目标敌人获得固定的 5 点格挡（Move|Unpowered 使敏捷与脆弱不参与修正）
         await CreatureCmd.GainBlock(cardPlay.Target, DynamicVars["EnemyBlock"].IntValue, ValueProp.Move | ValueProp.Unpowered, cardPlay, fast: true);
-
-        // 目标敌人获得 1 层残影
-        await PowerCmd.Apply<BlurPower>(choiceContext, cardPlay.Target, DynamicVars["BlurPower"].IntValue, base.Owner.Creature, this);
     }
 
     // 升级后的效果逻辑

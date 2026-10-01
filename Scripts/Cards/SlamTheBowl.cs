@@ -30,7 +30,7 @@ public class SlamTheBowl : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 10 点伤害
+    // 卡牌基础数值：造成 10（升级 12）点伤害
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(10, ValueProp.Move)
     ];
@@ -47,17 +47,24 @@ public class SlamTheBowl : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/slam_the_bowl");
 
-        // 1. 丢弃所有手牌（快照，避免迭代过程中集合被修改）
-        // 当前打出的这张牌通常已不在手牌中，保险起见排除自身
-
-        CardPile handPile = CardPile.Get(PileType.Hand, base.Owner)!;
-        List<CardModel> handCards = handPile.Cards
+        // 1. 随机丢弃一张手牌（历史：曾为"丢弃所有手牌"，按需求改为随机一张）
+        //    · 快照，避免迭代过程中集合被修改；当前打出的这张牌通常已不在手牌中，保险起见排除自身
+        //    · 随机数必须取引擎的同步随机流（RunState.Rng.*）：本作是确定性同步，
+        //      用本机随机数会让两台机器丢出不同的牌 → 直接导致不同步
+        //    · 必须走 CardCmd.Discard：引擎才会在其中检查并触发奇巧（Sly，弃牌时免费打出），
+        //      直接用 CardPileCmd 移牌会绕过该检查（同「窥探天意」「一人坚守！」的注释）
+        List<CardModel> handCards = CardPile.Get(PileType.Hand, base.Owner)!
+            .Cards
             .Where(c => c != this)
             .ToList();
 
         if (handCards.Count > 0)
         {
-            await CardCmd.Discard(choiceContext, handCards);
+            CardModel? randomCard = base.Owner.RunState.Rng.CombatCardSelection.NextItem(handCards);
+            if (randomCard is not null)
+            {
+                await CardCmd.Discard(choiceContext, [randomCard]);
+            }
         }
 
         // 2. 造成伤害

@@ -25,9 +25,9 @@ public class PartyOn : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：本回合获得的能量 3、抽牌数 2（升级后能量 4、抽牌 3）
+    // 卡牌基础数值：本回合获得的能量 1、抽牌数 2（升级后能量 2）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new EnergyVar(2),
+        new EnergyVar(1),
         new CardsVar(2)
     ];
 
@@ -66,9 +66,7 @@ public class PartyOn : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 能量从 2 提高到 3
+        // 能量从 1 提高到 2
         DynamicVars.Energy.UpgradeValueBy(1);
-        // 抽牌数从 2 提高到 3
-        DynamicVars.Cards.UpgradeValueBy(1);
     }
 }
