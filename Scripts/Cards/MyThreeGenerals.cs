@@ -39,7 +39,7 @@ public class MyThreeGenerals : NewsanguoCardTemplate
         HoverTipFactory.FromKeyword(CardKeyword.Exhaust)
     ];
 
-    public MyThreeGenerals() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+    public MyThreeGenerals() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
     {
     }
 

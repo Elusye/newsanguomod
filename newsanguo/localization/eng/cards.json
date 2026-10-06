@@ -87,7 +87,7 @@
   "NEWSANGUO_CARD_CENTRAL_BASTION.title": "Central Bastion",
   "NEWSANGUO_CARD_CENTRAL_BASTION.description": "Gain {Block:diff()} [gold]Block[/gold].\nIf you take no unblocked damage before your next turn, gain {NextTurnBlock:diff()} [gold]Block[/gold] at the start of your next turn.",
   "NEWSANGUO_CARD_PROXY_STRIKE.title": "Proxy Strike",
-  "NEWSANGUO_CARD_PROXY_STRIKE.description": "Deal {Damage:diff()} damage.{IsTargeting:\nThis card's damage permanently increases by {IncreaseBy:diff()}.|If the target's intent would deal more damage to you than {InitialDamage:diff()} (this is this card's base damage, which is not affected by [gold]Strength[/gold]), this card's damage permanently increases by the difference.}",
+  "NEWSANGUO_CARD_PROXY_STRIKE.description": "Deal {Damage:diff()} damage.\n{IsTargeting:\nThis card's damage permanently increases by {IncreaseBy:diff()}.|If the target's intent would deal more damage to you than {InitialDamage:diff()}, this card's damage permanently increases by the difference.}",
   "NEWSANGUO_CARD_WHO_RULES.title": "Who Rules",
   "NEWSANGUO_CARD_WHO_RULES.description": "Apply {DoomPower:diff()} [gold]Doom[/gold] to another player.\nGain {Energy:energyIcons()}.\nPut this card into that player's [gold]Draw Pile[/gold].",
   "NEWSANGUO_CARD_LOATH_TO_LEAVE_THE_TABLE.title": "Loath to Leave the Table",
@@ -117,7 +117,7 @@
   "NEWSANGUO_CARD_RETIRE.title": "Retire",
   "NEWSANGUO_CARD_RETIRE.description": "Gain {IntangiblePower} [gold]Intangible[/gold].\nEnd your turn.",
   "NEWSANGUO_CARD_BREW_HEALS_ALL.title": "Brew Heals All",
-  "NEWSANGUO_CARD_BREW_HEALS_ALL.description": "If your [gold]Drunken Might[/gold] is at least {DrunkenMight:inverseDiff()}: lose an equal amount of [gold]Drunken Might[/gold], remove all your [gold]debuffs[/gold], and Exhaust all your [gold]Curses[/gold] and [gold]Status[/gold] cards.",
+  "NEWSANGUO_CARD_BREW_HEALS_ALL.description": "Spend {DrunkenMight:inverseDiff()} [gold]Drunken Might[/gold]: remove all your [gold]debuffs[/gold], and Exhaust all your [gold]Curses[/gold] and [gold]Status[/gold] cards.",
   "NEWSANGUO_CARD_SELECT_FROM_DISCARD": "Choose up to {Amount} {Amount:plural:card|cards} to put into your [gold]Hand[/gold].",
   "NEWSANGUO_CARD_SELECT_ONE_TO_KEEP": "Choose a card to keep in your hand",
   "NEWSANGUO_CARD_CHECK_THE_PREMIERE.title": "Check the Premiere",
@@ -244,5 +244,5 @@
   "NEWSANGUO_CARD_MARSHALS_TERRACE_FEAST.title": "Marshal's Terrace Feast",
   "NEWSANGUO_CARD_MARSHALS_TERRACE_FEAST.description": "Gain {DrunkenMightPower:diff()} [gold]Drunken Might[/gold].\nDraw {Cards:diff()} {Cards:plural:card|cards}.",
   "NEWSANGUO_CARD_BOWANG_SLOPE_PARADOX.title": "Bowang Slope Paradox",
-  "NEWSANGUO_CARD_BOWANG_SLOPE_PARADOX.description": "Draw {Cards:diff()} {Cards:plural:card|cards}. Those cards gain [gold]Retain[/gold] and become unplayable this turn."
+  "NEWSANGUO_CARD_BOWANG_SLOPE_PARADOX.description": "Draw {Cards:diff()} {Cards:plural:card|cards}. \nThose cards gain [gold]Retain[/gold] and become unplayable this turn."
 }

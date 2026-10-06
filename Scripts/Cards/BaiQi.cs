@@ -34,7 +34,7 @@ public class BaiQi : NewsanguoCardTemplate
     // 卡牌自带“消耗”关键词
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, CardKeyword.Retain];
 
-    public BaiQi() : base(1, CardType.Attack, CardRarity.Token, TargetType.AnyEnemy)
+    public BaiQi() : base(0, CardType.Attack, CardRarity.Token, TargetType.AnyEnemy)
     {
     }
 

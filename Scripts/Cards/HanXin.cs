@@ -34,7 +34,7 @@ public class HanXin : NewsanguoCardTemplate
     // 卡牌自带“消耗”关键词
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, CardKeyword.Retain];
 
-    public HanXin() : base(1, CardType.Skill, CardRarity.Token, TargetType.Self)
+    public HanXin() : base(0, CardType.Skill, CardRarity.Token, TargetType.Self)
     {
     }
 
