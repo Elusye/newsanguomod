@@ -42,15 +42,27 @@ public class Entry
         ApplyPatch(harmony, typeof(PragmatistRewardPatch));
         // 天意给的额外回合不要再“吃掉”原版遗物「佩尔之眼」（PaelsEye）
         ApplyPatch(harmony, typeof(HeavensForcePaelsEyePatch));
+        // 卡牌图鉴里的“规范牌”没有 Owner，只能靠“玩家当前浏览哪个卡池”来决定卡框颜色，
+        // 否则蜀汉页的共享牌会一直用先命中的新三国池（棕色）——详见 CardLibraryPoolContext.cs
+        ApplyPatch(harmony, typeof(CardLibraryPoolFilterPatch));
+        ApplyPatch(harmony, typeof(CardLibraryPoolResetPatch));
         // “卡牌错位”归位清扫：出牌被取消 / 选牌结束时，把“逻辑上在手牌、画面却停在屏幕中央”的
         // 卡牌节点搬回手牌容器（详见 StrayHandCardCleanupPatch.cs 顶部注释）
         //
-        // ⚠ 2026-10-01 已停用（0.2.38 上线 → 联机不同步 → 回退 0.2.37 恢复正常）。
-        // 版本对照把范围钉死在这里：0.2.38 相对 0.2.37 只多了这个补丁（Entry.cs +6 / 补丁 +313），
-        // 0.2.39 相对 0.2.38 只多了没人调用的公开 API，所以能造成不同步的行为改动只有它。
-        // 它挂在选牌流程的收尾（NPlayerHand.AfterCardsSelected）并带一次延迟补扫，与“三选一”类
-        // 选择界面同一条流程；多人是确定性同步，这段本地延迟动作会让两端的动作序列错位。
-        // 重新启用前必须先按“绝不在选择流程里插延迟动作 + 全程 try/catch”改写，并在联机下实测。
+        // ⚠ 2026-10-01 曾停用（0.2.38 上线 → 联机不同步 → 回退 0.2.37 恢复正常）。
+        // 【2026-10-03 结案，此前的归因是错的，留档以免重蹈】
+        //   1) 先按版本对照怀疑到本补丁：0.2.38 相对 0.2.37 只多了它（Entry +6 / 补丁 +313），
+        //      0.2.39 只多了没人调用的公开 API。但日志证据否掉了这个推论：
+        //      .dsh-drop 里的 state divergence 发生在 0.2.26(09-20) 与 0.2.31(09-27)，
+        //      而本补丁源码 09-30 才写出——时间上不可能。
+        //   2) 本地双开测试也证明它不充分：启用本补丁仍不复现；
+        //      另一次"启用后仍不复现"的结论同样是误导——因为当时没装孙乾 0.2.0 那个问题版本。
+        //   3) 真正的元凶：孙乾宇宙（Sunqian Universe）0.2.0 改写无色卡池/无色药水内容时，
+        //      两端算出的候选不一致 → 无色药水的玩家选择动作校验分歧 → 掉线。
+        //      孙乾 0.2.1 更新后本地重测不再复现，结案。
+        //   4) 本补丁与那次不同步无关；之所以继续停用，是因为玩家反馈"卡牌悬空"不影响实际游玩，
+        //      不值得为纯视觉问题承担风险。若要恢复，请先按"不在选择流程里插延迟动作 + 全程
+        //      try/catch + 联机下默认不启用"改写，并做联机实测。
         // ApplyPatch(harmony, typeof(StrayCardQueueCancelPatch));
         // ApplyPatch(harmony, typeof(StrayCardPlayCancelPatch));
         // ApplyPatch(harmony, typeof(StrayCardSelectionEndPatch));

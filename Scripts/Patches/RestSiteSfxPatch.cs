@@ -49,7 +49,7 @@ internal static class RestSiteSfx
             {
                 continue;
             }
-            if (character.Player.Character is NewsanguoCharacter)
+            if (character.Player.Character is CaoWeiCharacter)
             {
                 NewsanguoSfx.Play(sfx);
             }

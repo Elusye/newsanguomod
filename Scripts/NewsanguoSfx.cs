@@ -56,8 +56,16 @@ public static class NewsanguoSfx
     // 后续新增的音效按同一口径、同一中位基准（-23.1 dB）单独补进表里，不入中位重算（当前共 138 个）。
     // 2026-09-29 新增 heavens_force_decline（「竟然不许！」）：ffmpeg volumedetect 实测 RMS -24.0 / 峰值 -8.2
     //   → raw = 0.7×(中位 -23.1 - (-24.0)) = +0.63，峰值上限 -3-(-8.2) = +5.2 未触发钳制，取 0.5 dB 步进 = +0.5。
-    // 不参与自动测量的三类：character_death / character_select（引擎侧触发，手工保留原值）、
+    // 不参与自动测量的：character_death / character_select（引擎侧触发，手工保留原值）、
     // song_of_guan_yu（长音频，走 NewsanguoSfx.PlayOwnLevel 自带基准电平，不查本表）。
+    //
+    // 两个角色的选人音效 character_select_caowei / character_select_shuhan 是「同一用途的两个版本」，
+    // 按下面 SongLoudnessGainDb 的口径做全额均衡（要求两者听起来一样响），而不是 0.7× 向中位靠拢。
+    // 2026-10-06 实测（ffmpeg volumedetect，RMS / 峰值，通用 character_select.mp3 已被删除）：
+    //   caowei -23.1 / -10.2、shuhan -18.6 / -0.3
+    //   → 以全体音效中位 RMS -23.1 dB 为基准全额补偿 = +0 / -4.5；
+    //     峰值检查 -10.2 / -4.8 均 ≤ -3 dBFS，未触发钳制；补偿后两者 RMS 都落在 -23.1 dB（互差 < 0.1 dB）。
+    //   替换这两个音频后请按同一口径重算。
     private static readonly Dictionary<string, float> LoudnessGainDb = new()
     {
         ["a_grand_toast"] = 1.5f,
@@ -78,6 +86,8 @@ public static class NewsanguoSfx
         ["chain_stratagem_2"] = -2.5f,
         ["character_death"] = -2f,
         ["character_select"] = 2f,
+        ["character_select_caowei"] = 0f,
+        ["character_select_shuhan"] = -4.5f,
         ["check_the_premiere"] = -1f,
         ["chenliu_mess_hall"] = -2f,
         ["chenliu_mess_hall_heal"] = 9.5f,

@@ -40,7 +40,7 @@ public static class NewsanguoPublicApi
 
     public static bool IsNewsanguoCharacter(CharacterModel? character)
     {
-        return character is NewsanguoCharacter;
+        return character is CaoWeiCharacter;
     }
 
     public static Task ApplyDrunkenMight(

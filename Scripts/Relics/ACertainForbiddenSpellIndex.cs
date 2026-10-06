@@ -26,8 +26,6 @@ namespace newsanguo.Scripts.Relics;
 [RegisterRelic(typeof(NewsanguoRelicPool))]
 public class ACertainForbiddenSpellIndex : ModRelicTemplate
 {
-    private const string ForbiddenSpellKeywordId = "NEWSANGUO_KEYWORD_FORBIDDEN_SPELL";
-
     // 触发回合：第 2/3/5 个回合开始时各触发一次
     private static readonly int[] TriggerTurns = [2, 3, 5];
 
@@ -59,12 +57,11 @@ public class ACertainForbiddenSpellIndex : ModRelicTemplate
         }
     }
 
-    // 悬停时展示“天意之力”“天意侵蚀”能力与“禁术牌”关键词说明
+    // 悬停时展示“天意之力”“天意侵蚀”能力说明
     // （天意之力的说明文本中会出现“天意侵蚀”，两者须成对展示）
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HeavensForce.HoverTip(),
-        HoverTipFactory.FromPower<HeavensDecayPower>(),
-        ModKeywordRegistry.CreateHoverTip(ForbiddenSpellKeywordId)
+        HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
     // 每个回合开始时刷新角标；第 2/3/5 个回合额外生成一张随机禁术牌加入手牌

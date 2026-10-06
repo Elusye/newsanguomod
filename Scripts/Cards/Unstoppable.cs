@@ -10,6 +10,7 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Keywords;
@@ -32,24 +33,23 @@ public class Unstoppable : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：失去的天意之力、获得的无实体层数（变量用正值，打出时取负）
+    // 卡牌基础数值：获得的格挡、获得的人工制品层数
+    // 2026-10-04：不再消耗天意之力（原为 HeavensForceVar(6m)，打出时取负扣除）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new HeavensForceVar(6m),
-        new PowerVar<IntangiblePower>(2m)
+        new BlockVar(10m, ValueProp.Move),
+        new PowerVar<ArtifactPower>(2m)
     ];
 
-    // 悬停提示：展示“无实体”、“天意之力”与“天意侵蚀”的说明
+    // 悬停提示：展示“人工制品”的说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<IntangiblePower>(),
-        HeavensForce.HoverTip(),
-        HoverTipFactory.FromPower<HeavensDecayPower>()
+        HoverTipFactory.FromPower<ArtifactPower>()
     ];
 
-    // 自带“虚无”关键词（升级后仍保留）
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Ethereal];
+    // 自带“消耗”关键词（合并 base 以保留模板附加的模组关键词）
+    // 2026-10-04：原来的“虚无”（CardKeyword.Ethereal）按要求去除
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
-    // 属于“天意”体系（涉及天意之力/天意侵蚀）
-    public override bool IsHeavensCard => true;
+    // 2026-10-04：不再消耗天意之力，按要求不计入天意牌（不再覆写 IsHeavensCard）
 
     public Unstoppable() : base(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {
@@ -64,17 +64,16 @@ public class Unstoppable : NewsanguoCardTemplate
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
-        // 获得 1 层无实体
-        await PowerCmd.Apply<IntangiblePower>(choiceContext, base.Owner.Creature, DynamicVars["IntangiblePower"].IntValue, base.Owner.Creature, this);
+        // 获得 10 点格挡（升级后 13 点）
+        await CreatureCmd.GainBlock(base.Owner.Creature, DynamicVars.Block, cardPlay, fast: false);
 
-        // 失去 6 点天意之力
-        int lostAmount = DynamicVars["HeavensForcePower"].IntValue;
-        await HeavensForce.Add(choiceContext, base.Owner, -lostAmount, this);
+        // 获得 2 层人工制品
+        await PowerCmd.Apply<ArtifactPower>(choiceContext, base.Owner.Creature, DynamicVars["ArtifactPower"].IntValue, base.Owner.Creature, this);
     }
 
-    // 升级：失去的天意之力 6 → 4，且获得的无实体层数 2
+    // 升级：获得的格挡 10 → 13
     protected override void OnUpgrade()
     {
-        DynamicVars["HeavensForcePower"].UpgradeValueBy(-2);
+        DynamicVars.Block.UpgradeValueBy(3m);
     }
 }

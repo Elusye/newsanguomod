@@ -20,7 +20,8 @@ namespace newsanguo.Scripts;
 
 // 注册卡牌到新三国专属卡池
 [RegisterCard(typeof(NewsanguoCardPool))]
-[RegisterCharacterStarterCard(typeof(NewsanguoCharacter), 1)]
+[RegisterCharacterStarterCard(typeof(CaoWeiCharacter), 1)]
+[RegisterCharacterStarterCard(typeof(ShuHanCharacter), 1)]
 public class AGrandToast : NewsanguoCardTemplate
 {
 

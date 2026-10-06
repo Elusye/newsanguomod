@@ -55,9 +55,6 @@ public class ThreeBlades : NewsanguoCardTemplate
 
         NewsanguoSfx.Play("event:/newsanguo/sfx/three_blades");
 
-        // 打出瞬间的酒力层数（击杀时以它翻倍，未击杀时以它减半）
-        int mightBefore = base.Owner.Creature.GetPower<DrunkenMightPower>()?.Amount ?? 0;
-
         // 造成 9（12）点伤害 3 次；斩杀判定参考原版 KnockoutBlow
         bool killedEnemy = (await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
@@ -67,20 +64,15 @@ public class ThreeBlades : NewsanguoCardTemplate
             .Execute(choiceContext))
             .Results.SelectMany(results => results).Any(result => result.WasTargetKilled);
 
-        // 本牌不参与 DrunkenMightPower.AfterCardPlayed 的自动减半（那里的减半按"打出瞬间层数"结算，
-        // 会把这里的翻倍一并覆盖掉），所以两条分支都在此处手动完成。
+        // 本牌不参与 DrunkenMightPower.AfterCardPlayed 的自动减半（那里的减半按"打出瞬间层数"结算），
+        // 所以两条分支都在此处手动完成。
         if (killedEnemy)
         {
-            // 击杀：酒力翻倍（再获得等量酒力即翻倍）
-            if (mightBefore > 0)
+            // 击杀：返还此牌消耗的酒力（先减半消耗、再把消耗掉的部分加回来 → 净不损失酒力）
+            DrunkenMightPower? killMight = base.Owner.Creature.GetPower<DrunkenMightPower>();
+            if (killMight is not null)
             {
-                await PowerCmd.Apply<DrunkenMightPower>(
-                    choiceContext,
-                    base.Owner.Creature,
-                    mightBefore,
-                    base.Owner.Creature,
-                    this,
-                    silent: false);
+                await killMight.ConsumeThenRefund(choiceContext, this);
             }
 
             // 并额外获得 3 点能量

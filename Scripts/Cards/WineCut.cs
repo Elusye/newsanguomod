@@ -56,25 +56,13 @@ public class WineCut : NewsanguoCardTemplate
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
 
-        // 打出此牌后：先将酒力翻倍（再获得等量酒力即翻倍）……
-        int currentMight = base.Owner.Creature.GetPower<DrunkenMightPower>()?.Amount ?? 0;
-        if (currentMight > 0)
-        {
-            await PowerCmd.Apply<DrunkenMightPower>(
-                choiceContext,
-                base.Owner.Creature,
-                currentMight,
-                base.Owner.Creature,
-                this,
-                silent: false);
-        }
-
-        // ……再减半（向下取整），与其他攻击牌打出后的减半规则一致。
-        // 本卡不参与 DrunkenMightPower.AfterCardPlayed 的自动减半，减半已在此处手动完成。
+        // 打出此牌后：先按正常规则减半（消耗），再把消耗掉的那部分酒力返还回来 ——
+        // 净效果是这张牌不损失酒力（“失去酒力/获得酒力”两类时机照常触发）。
+        // 本卡不参与 DrunkenMightPower.AfterCardPlayed 的自动减半，消耗与返还在此处手动完成。
         DrunkenMightPower? drunkenMight = base.Owner.Creature.GetPower<DrunkenMightPower>();
         if (drunkenMight is not null)
         {
-            await drunkenMight.HalfForCard(choiceContext, this);
+            await drunkenMight.ConsumeThenRefund(choiceContext, this);
         }
     }
 

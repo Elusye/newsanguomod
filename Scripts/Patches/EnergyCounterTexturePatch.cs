@@ -25,7 +25,7 @@ public static class NewsanguoEnergyCounterPatch
         try
         {
             Player? player = AccessTools.Field(typeof(NEnergyCounter), "_player").GetValue(__instance) as Player;
-            if (player?.Character is not NewsanguoCharacter)
+            if (player?.Character is not CaoWeiCharacter)
             {
                 return;
             }

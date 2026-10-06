@@ -117,8 +117,8 @@ public class DrunkenMightPower : ModPowerTemplate
             return;
         }
 
-        // 「杯酒斩击」的酒力处理（先翻倍再减半）在其自身 OnPlay 内手动完成，此处跳过一次，避免重复减半；
-        // 「悍将三刀」同理（击杀则翻倍、未击杀则减半，都在 OnPlay 内结算）。
+        // 「杯酒斩击」「悍将三刀」的酒力处理（消耗后返还）在其自身 OnPlay 内手动完成，此处跳过，
+        // 避免重复结算；其它攻击牌一律按打出瞬间的层数减半。
         if (card is WineCut or ThreeBlades)
         {
             return;
@@ -132,6 +132,35 @@ public class DrunkenMightPower : ModPowerTemplate
     public async Task HalfForCard(PlayerChoiceContext choiceContext, CardModel? cardSource)
     {
         await SetAmount(choiceContext, Amount / 2, cardSource);
+    }
+
+    // 按“打出攻击牌后减半”的规则，本次会被消耗掉的酒力：减半后剩 Amount/2（向下取整），差额即消耗量。
+    public int ConsumedByHalf => Amount - Amount / 2;
+
+    /// <summary>
+    /// “返还此牌消耗的酒力”：先按正常规则减半（消耗），再把消耗掉的那部分加回来，
+    /// 净效果是打出这张牌不损失酒力，但“失去酒力”“获得酒力”两类时机都会照常触发
+    /// （「不曾感受到酸味」「更大的酒杯」等依赖这些时机的牌因此与普通攻击牌一致）。
+    /// 供「杯酒斩击」「悍将三刀」在自身 OnPlay 内调用 —— 这两张牌被排除在 AfterCardPlayed
+    /// 的自动减半之外，消耗与返还都由它们自己结算。
+    /// </summary>
+    public async Task ConsumeThenRefund(PlayerChoiceContext choiceContext, CardModel? cardSource)
+    {
+        int consumed = ConsumedByHalf;
+        if (consumed <= 0 || Owner is null)
+        {
+            return;
+        }
+
+        await HalfForCard(choiceContext, cardSource);
+        // 减半后层数可能归零导致这份能力被移除，所以重新 Apply 而不是直接改 this
+        await PowerCmd.Apply<DrunkenMightPower>(
+            choiceContext,
+            Owner,
+            consumed,
+            Owner,
+            cardSource,
+            silent: false);
     }
 
     // 把酒力调整为指定值

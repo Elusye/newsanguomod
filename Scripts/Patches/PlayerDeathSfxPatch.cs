@@ -18,7 +18,7 @@ namespace newsanguo.Scripts.Patches;
 // 本补丁同样在 StartDeathAnim 后缀补播死亡音效，与 RitsuLib 的动画补发同一时机。
 // 音效直接走 NewsanguoSfx（Godot 播放），不再依赖 SfxCmd.PlayDeath / FMOD。
 //
-// 注意：必须精确限定为新闻三国角色本体（NewsanguoCharacter），不能用
+// 注意：必须精确限定为新闻三国角色本体（CaoWeiCharacter），不能用
 // IModCharacterAssetOverrides 判断——那会把其他同样走 RitsuLib 管线的
 // mod 角色（乃至其 PNG 角色）误判成本角色，导致别人死亡也播新三国音效。
 [HarmonyPatch(typeof(NCreature), nameof(NCreature.StartDeathAnim))]
@@ -32,7 +32,7 @@ public static class PlayerDeathSfxPatch
             return;
         }
         // 只处理新三国角色本身
-        if (player.Character is not NewsanguoCharacter)
+        if (player.Character is not CaoWeiCharacter)
         {
             return;
         }

@@ -14,7 +14,8 @@ using newsanguo.Scripts.Powers;
 namespace newsanguo.Scripts.Relics;
 
 [RegisterRelic(typeof(NewsanguoRelicPool))]
-[RegisterCharacterStarterRelic(typeof(NewsanguoCharacter))]
+[RegisterCharacterStarterRelic(typeof(CaoWeiCharacter))]
+[RegisterCharacterStarterRelic(typeof(ShuHanCharacter))]
 public class FineBrewOfPei : ModRelicTemplate
 {
     public override RelicAssetProfile AssetProfile => new(

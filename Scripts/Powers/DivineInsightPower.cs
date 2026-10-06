@@ -84,9 +84,8 @@ public class DivineInsightPower : ModPowerTemplate
             return;
         }
 
-        // 触发“参悟天意”音效（对应 FMOD 事件 event:/newsanguo/sfx/divine_insight_power）
-        NewsanguoSfx.Play("event:/newsanguo/sfx/divine_insight_power");
-
+        // 注意：这里原本会在每次结算时播放「参悟天意」的语音
+        // （FMOD 事件 event:/newsanguo/sfx/divine_insight_power），2026-10-04 按要求删除。
         await HeavensForce.Add(choiceContext, Owner.Player, amount, cardPlay.Card);
     }
 }

@@ -33,9 +33,9 @@ public class OneManStand : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：获得 13 点格挡（升级 16）
+    // 卡牌基础数值：获得 10 点格挡（升级 13）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new BlockVar(13m, ValueProp.Move)
+        new BlockVar(10m, ValueProp.Move)
     ];
 
     // 鼠标悬停时展示格挡说明
@@ -81,7 +81,7 @@ public class OneManStand : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 格挡从 13 提高到 16
+        // 格挡从 10 提高到 13
         DynamicVars.Block.UpgradeValueBy(3m);
     }
 }

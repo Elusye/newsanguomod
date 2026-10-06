@@ -27,8 +27,9 @@ public class BrewHealsAll : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 消耗词条
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+    // 词条：消耗 + 保留
+    // 保留（Retain）：回合结束时若未打出就留在手牌里，可以攒到真正需要的那一回合再用
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, CardKeyword.Retain];
 
     // 酒力不足以支付消耗（未升级 ≤5、升级后 ≤3）时红色高亮，提示本次打出不会产生任何效果
     protected override bool ShouldGlowRedInternal => IsUpgraded
@@ -79,6 +80,19 @@ public class BrewHealsAll : NewsanguoCardTemplate
         if (HeavensForce.Get(Owner) < 0)
         {
             await HeavensForce.Set(choiceContext, Owner, 0);
+        }
+
+        // 消耗自己所有的诅咒牌与状态牌
+        // 写法参考原版「火铳齐射」FlakCannon（.decompile/sts2full/sts2.decompiled.cs:140087）：
+        // 遍历这场战斗里属于你的全部牌堆（手牌/抽牌堆/弃牌堆/出牌堆），只挑诅咒与状态，已在消耗堆的跳过。
+        // 先快照再逐张消耗：消耗本身会移动牌，遍历途中集合会变
+        List<CardModel> cursesAndStatuses = Owner.PlayerCombatState.AllCards
+            .Where(card => (card.Type == CardType.Curse || card.Type == CardType.Status)
+                && card.Pile?.Type != PileType.Exhaust)
+            .ToList();
+        foreach (CardModel curseOrStatus in cursesAndStatuses)
+        {
+            await CardCmd.Exhaust(choiceContext, curseOrStatus);
         }
 
         // 清除自己所有牌上的“标记”（折磨）：折磨不会自动过期，原版由各自能力在回合末自行清理，

@@ -49,8 +49,6 @@ public class ReanimationSpell : NewsanguoCardTemplate
     // 属于“天意”体系（涉及天意之力/天意侵蚀）
     public override bool IsHeavensCard => true;
 
-    // 禁术牌：牌名以“术”结尾
-    public override bool IsForbiddenSpell => true;
 
     public ReanimationSpell() : base(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {

@@ -29,7 +29,7 @@ public static class FatherIHaveFailedYouPowerPatch
     {
         foreach (Player player in runState.Players)
         {
-            if (player.Character is not NewsanguoCharacter)
+            if (player.Character is not CaoWeiCharacter)
             {
                 continue;
             }

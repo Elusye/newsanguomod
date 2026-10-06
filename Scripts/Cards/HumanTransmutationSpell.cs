@@ -36,24 +36,16 @@ public class HumanTransmutationSpell : NewsanguoCardTemplate
     // 卡牌自带“消耗”关键词（合并 base 以保留模板附加的模组关键词）
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
-    // 卡牌基础数值：失去 5 点天意之力（变量用正值，打出时取负）
-    // HeavensForceVar：被“魔法禁术目录”标记的回合内，卡面显示 0 点
-    protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new HeavensForceVar(5m)
-    ];
+    // 无动态数值：不再消耗天意之力，金币消耗按实际变化张数直接结算（每张 1 金币）
+    protected override IEnumerable<DynamicVar> CanonicalVars => [];
 
-    // 鼠标悬停时显示“士兵”卡牌标注（升级时显示升级版士兵）、天意之力与天意侵蚀提示
+    // 鼠标悬停时显示“士兵”卡牌标注（升级时显示升级版士兵）
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromCard<Soldier>(IsUpgraded),
-        HeavensForce.HoverTip(),
-        HoverTipFactory.FromPower<HeavensDecayPower>()
+        HoverTipFactory.FromCard<Soldier>(IsUpgraded)
     ];
 
-    // 属于“天意”体系（涉及天意之力/天意侵蚀）
-    public override bool IsHeavensCard => true;
-
-    // 禁术牌：牌名以“术”结尾
-    public override bool IsForbiddenSpell => true;
+    // 2026-10-04：不再消耗天意之力，按要求不计入天意牌（不再覆写 IsHeavensCard）；
+    // “禁术牌”关键词已整体删除，因此也不再覆写 IsForbiddenSpell
 
     public HumanTransmutationSpell() : base(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {
@@ -67,10 +59,6 @@ public class HumanTransmutationSpell : NewsanguoCardTemplate
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
-        // 失去天意之力
-        int lostAmount = DynamicVars["HeavensForcePower"].IntValue;
-        await HeavensForce.Add(choiceContext, base.Owner, -lostAmount, this);
 
         CardPile hand = PileType.Hand.GetPile(base.Owner);
         if (hand.Cards.Count == 0)
@@ -89,6 +77,9 @@ public class HumanTransmutationSpell : NewsanguoCardTemplate
         // 将选中的牌逐张变化为士兵（升级后为升级版的士兵）
         ICombatState combatState = base.CombatState!;
 
+        // 成功变化的张数（变化失败时 CardCmd.Transform 返回 null，不计费）
+        int changedCount = 0;
+
         foreach (CardModel original in selectedList)
         {
             CardModel soldierCard = combatState.CreateCard<Soldier>(base.Owner);
@@ -96,14 +87,17 @@ public class HumanTransmutationSpell : NewsanguoCardTemplate
             {
                 CardCmd.Upgrade(soldierCard);
             }
-            await CardCmd.Transform(original, soldierCard);
+            CardPileAddResult? result = await CardCmd.Transform(original, soldierCard);
+            if (result != null)
+            {
+                changedCount++;
+            }
         }
-    }
 
-    // 升级后的效果逻辑
-    protected override void OnUpgrade()
-    {
-        // 失去的天意之力从 5 减少到 4
-        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
+        // 每变化一张牌失去 1 金币（金币不足时按剩余金币扣光）
+        if (changedCount > 0)
+        {
+            await PlayerCmd.LoseGold(changedCount, base.Owner);
+        }
     }
 }

@@ -30,21 +30,15 @@ public class HeavenAndEarth : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：失去的天意之力、获得的飞行层数
+    // 卡牌基础数值：获得的飞行层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new HeavensForceVar(3m),
         new PowerVar<FlightPower>(3m)
     ];
 
-    // 悬停提示：展示“天意之力”、“天意侵蚀”、“飞行”说明
+    // 悬停提示：展示“飞行”说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HeavensForce.HoverTip(),
-        HoverTipFactory.FromPower<HeavensDecayPower>(),
         HoverTipFactory.FromPower<FlightPower>()
     ];
-
-    // 属于“天意”体系（涉及天意之力/天意侵蚀）
-    public override bool IsHeavensCard => true;
 
     public HeavenAndEarth() : base(2, CardType.Power, CardRarity.Uncommon, TargetType.Self)
     {
@@ -56,19 +50,16 @@ public class HeavenAndEarth : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/heaven_and_earth");
 
-        // 失去 3 点天意之力
-        int heavensLoss = DynamicVars["HeavensForcePower"].IntValue;
-        await HeavensForce.Add(choiceContext, base.Owner, -heavensLoss, this);
+        // 本卡不属于天意体系：不失去天意之力（IsHeavensCard 保持默认 false，不计入「恨天剑法」的天意牌统计）
 
         // 获得 3 层飞行
         int flightAmount = DynamicVars["FlightPower"].IntValue;
         await PowerCmd.Apply<FlightPower>(choiceContext, base.Owner.Creature, flightAmount, base.Owner.Creature, this);
     }
 
-    // 升级后的效果逻辑：费用 2 → 1，失去的天意之力 3 → 2
+    // 升级后的效果逻辑：费用 2 → 1
     protected override void OnUpgrade()
     {
         EnergyCost.UpgradeBy(-1);
-        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
     }
 }

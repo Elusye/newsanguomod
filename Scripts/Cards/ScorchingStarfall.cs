@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.Rooms;
 using MegaCrit.Sts2.Core.Nodes.Vfx;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -30,27 +31,35 @@ public class ScorchingStarfall : NewsanguoCardTemplate
     /// </summary>
     private const int MaxHitsForVfx = 10;
 
+    /// <summary>
+    /// 出手次数的硬上限：无论酒力被叠到多高，「酒力 ÷ 阈值」都不会超过这个数。
+    /// 只是给这张牌的强度加一道天花板（正常情况下永远摸不到），同时保证循环次数与卡面
+    /// 显示的次数（<c>CalculatedHits</c>）用的是同一个上限，二者不会对不上。
+    /// </summary>
+    private const int MaxHits = 114514;
+
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
+    // 卡牌数值：每 WineThreshold 点酒力打一次 Damage 点伤害（历史：曾额外"失去 5 点天意之力"，
+    // 已按需求移除，因此不再有 HeavensForceVar，升级也不再降低消耗）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(2m, ValueProp.Move),
-        new ("WineThreshold", 3m),
-        new HeavensForceVar(5m),
+        new DamageVar(5m, ValueProp.Move),
+        new ("WineThreshold", 2m),
         new CalculationBaseVar(0m),
         new CalculationExtraVar(1m),
         new CalculatedVar("CalculatedHits").WithMultiplier(static (card, _) =>
         {
             var wine = card.Owner.Creature.GetPower<DrunkenMightPower>()?.Amount ?? 0m;
             var per = card is ScorchingStarfall s ? s.DynamicVars["WineThreshold"].IntValue : 3;
-            return per > 0 ? Math.Floor(wine / per) : 0m;
+            return per > 0 ? Math.Min(Math.Floor(wine / per), MaxHits) : 0m;
         })
     ];
 
+    // 悬停提示：本牌只与酒力互动（已不再获取/失去天意之力，故不再挂天意之力的说明）
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<DrunkenMightPower>(),
-        HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
@@ -76,8 +85,8 @@ public class ScorchingStarfall : NewsanguoCardTemplate
 
         var wineAmount = Owner.Creature.GetPower<DrunkenMightPower>()?.Amount ?? 0;
         var threshold = DynamicVars["WineThreshold"].IntValue;
-        // 出手次数完全由酒力决定，不设上限（这是这张牌的强度设计）
-        var hits = threshold > 0 ? wineAmount / threshold : 0;
+        // 出手次数由酒力决定，但一道硬上限托底（见 MaxHits：正常玩法永远摸不到）
+        var hits = threshold > 0 ? Math.Min(wineAmount / threshold, MaxHits) : 0;
 
         if (hits > 0)
         {
@@ -100,8 +109,6 @@ public class ScorchingStarfall : NewsanguoCardTemplate
                     .Execute(choiceContext);
             }
         }
-
-        await HeavensForce.Add(choiceContext, Owner, -DynamicVars["HeavensForcePower"].IntValue, this);
     }
 
     /// <summary>
@@ -138,10 +145,11 @@ public class ScorchingStarfall : NewsanguoCardTemplate
         }
     }
 
+    // 升级：每次伤害 5 → 7，并获得"保留"（Retain，回合结束时留在手牌）
+    // （历史：此前升级是"触发阈值 3 → 2"与"失去的天意之力 5 → 4"，均已按需求替换/移除）
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(1m);
-        DynamicVars["WineThreshold"].UpgradeValueBy(-1);
-        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
+        DynamicVars.Damage.UpgradeValueBy(2m);
+        AddKeyword(CardKeyword.Retain);
     }
 }

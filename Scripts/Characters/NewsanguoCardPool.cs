@@ -60,8 +60,11 @@ public class NewsanguoCardPool : TypeListCardPoolModel, IModColorfulPhilosophers
     [Obsolete("基类要求保留，请使用新的起始牌注册方式。")]
     protected override IEnumerable<Type> CardTypes =>
     [
-        typeof(StrikeNewsanguo),
-        typeof(DefendNewsanguo),
+        // 2026-10-05：原 StrikeNewsanguo/DefendNewsanguo 拆成按角色各自一张
+        // （曹魏用 StrikeCaowei/DefendCaowei、蜀汉用 StrikeShuhan/DefendShuhan），
+        // 这样基础牌的牌框颜色由各自角色卡池决定。
+        typeof(StrikeCaowei),
+        typeof(DefendCaowei),
         typeof(AGrandToast),
         typeof(CrossForCross),
         typeof(FeelNoAcid),
@@ -97,7 +100,9 @@ public class NewsanguoCardPool : TypeListCardPoolModel, IModColorfulPhilosophers
         typeof(Tweak),
         typeof(SelfFall),
         typeof(Release),
-        typeof(Invincible),
+        // 2026-10-05：「天下无敌」（Invincible）按要求移出本池（改注册到蜀汉卡池）
+        // 2026-10-05：新增「参见汉中王！」
+        typeof(HailKingOfHanzhong),
         typeof(CricketForm),
         typeof(TriumphBrew),
         typeof(WhatToEat),

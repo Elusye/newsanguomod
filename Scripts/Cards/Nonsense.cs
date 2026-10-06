@@ -32,7 +32,7 @@ public class Nonsense : NewsanguoCardTemplate
         new CardsVar(3)
     ];
 
-    public Nonsense() : base(1, CardType.Skill, CardRarity.Common, TargetType.Self)
+    public Nonsense() : base(0, CardType.Skill, CardRarity.Common, TargetType.Self)
     {
     }
 

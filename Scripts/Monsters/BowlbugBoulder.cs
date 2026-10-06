@@ -121,11 +121,16 @@ public class BowlbugBoulder : ModMonsterTemplate
         node.SetScaleAndHue(BoulderScale, 0f);
     }
 
-    // 入场时挂上失衡标记能力（时机与数值同原版：AfterAddedToRoom + 1 层），并把体型放大到 2 倍
+    // 入场时挂上失衡标记能力（时机与数值同原版：AfterAddedToRoom + 1 层）与两个“老爹”能力，并把体型放大到 2 倍
     public override async Task AfterAddedToRoom()
     {
         await base.AfterAddedToRoom();
         await PowerCmd.Apply<BowlbugBoulderImbalancedPower>(
+            new ThrowingPlayerChoiceContext(), base.Creature, 1m, base.Creature, null);
+        // 「迭死亡」（Dead Dad，1 层）与「霸无敌」（Invinci-Dad，单层标记）
+        await PowerCmd.Apply<DeadDadPower>(
+            new ThrowingPlayerChoiceContext(), base.Creature, 1m, base.Creature, null);
+        await PowerCmd.Apply<InvinciDadPower>(
             new ThrowingPlayerChoiceContext(), base.Creature, 1m, base.Creature, null);
         TaskHelper.RunSafely(ApplyBoulderScale());
     }

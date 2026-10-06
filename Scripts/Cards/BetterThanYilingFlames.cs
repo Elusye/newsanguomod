@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Commands.Builders;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Helpers;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
@@ -77,7 +79,7 @@ public class BetterThanYilingFlames : NewsanguoCardTemplate
         }
     }
 
-    // 打出时的效果逻辑：造成伤害 → 消耗所有手牌 → 每消耗一张牌永久 +Increase 点伤害
+    // 打出时的效果逻辑：造成伤害 → 消耗任意张手牌（玩家自己选，可不选） → 每消耗一张牌永久 +Increase 点伤害
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         ArgumentNullException.ThrowIfNull(cardPlay.Target, "cardPlay.Target");
@@ -95,12 +97,20 @@ public class BetterThanYilingFlames : NewsanguoCardTemplate
             .Targeting(cardPlay.Target)
             .Execute(choiceContext);
 
-        // 2) 消耗所有手牌。先快照一份：一边遍历一边把牌移出牌堆会在迭代中漏牌。
+        // 2) 从手牌中选择任意张牌消耗掉（最少 0 张，也就是可以不消耗）。
+        //    先取一份选中列表再逐张消耗：一边遍历手牌一边把牌移出牌堆会在迭代中漏牌。
         int exhaustedCount = 0;
         CardPile? hand = PileType.Hand.GetPile(base.Owner);
-        if (hand is not null)
+        if (hand is not null && hand.Cards.Count > 0)
         {
-            foreach (CardModel card in hand.Cards.ToList())
+            List<CardModel> selectedList = (await CardSelectCmd.FromHand(
+                context: choiceContext,
+                player: base.Owner,
+                prefs: new CardSelectorPrefs(new LocString("cards", "NEWSANGUO_CARD_SELECT_ANY"), 0, hand.Cards.Count),
+                filter: null,
+                source: this)).ToList();
+
+            foreach (CardModel card in selectedList)
             {
                 await CardCmd.Exhaust(choiceContext, card);
 

@@ -19,16 +19,33 @@ public static class EngineSfxRedirectPatch
     // 本 mod 的引擎级事件路径；同名音频文件在 res://newsanguo/audios/ 下
     private static readonly HashSet<string> RedirectPaths = new(StringComparer.Ordinal)
     {
+        // 通用选人音效（分角色音效缺失时的回退，见 Fallbacks）
         "event:/newsanguo/sfx/character_select",
+        // 分角色选人音效：曹魏 / 蜀汉
+        "event:/newsanguo/sfx/character_select_caowei",
+        "event:/newsanguo/sfx/character_select_shuhan",
         "event:/newsanguo/sfx/character_death"
+    };
+
+    // 分角色选人音效尚未放进 res://newsanguo/audios/ 时（character_select_caowei.mp3 /
+    // character_select_shuhan.mp3 还不存在），退回通用选人音效，避免选人时完全没声音。
+    private static readonly Dictionary<string, string> Fallbacks = new(StringComparer.Ordinal)
+    {
+        ["event:/newsanguo/sfx/character_select_caowei"] = "event:/newsanguo/sfx/character_select",
+        ["event:/newsanguo/sfx/character_select_shuhan"] = "event:/newsanguo/sfx/character_select"
     };
 
     public static bool Prefix(NAudioManager __instance, string path, Dictionary<string, float> parameters, float volume)
     {
         if (path is not null && RedirectPaths.Contains(path))
         {
-            // 已由 NewsanguoSfx 播放，跳过原生 FMOD 流程
-            NewsanguoSfx.Play(path, volume);
+            // 已由 NewsanguoSfx 播放，跳过原生 FMOD 流程。
+            // Play 返回 null = mod 音效总开关关闭或音频资源缺失，此时才尝试回退（开关关闭时回退同样无声）。
+            if (NewsanguoSfx.Play(path, volume) is null
+                && Fallbacks.TryGetValue(path, out string? fallback))
+            {
+                NewsanguoSfx.Play(fallback, volume);
+            }
             return false;
         }
         return true;

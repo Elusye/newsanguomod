@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Godot;
 using MegaCrit.Sts2.Core.Combat;
@@ -119,7 +121,7 @@ public static class HeavensForce
         );
 
         // 只在本角色下常驻显示（数值为 0 时也显示，便于玩家看到“透支”进度）
-        resources.AlwaysShowInCombatUiForCharacter<NewsanguoCharacter>(LocalId);
+        resources.AlwaysShowInCombatUiForCharacter<CaoWeiCharacter>(LocalId);
 
         // 多人：在每个队友的玩家状态栏（原版 NMultiplayerPlayerState）上也显示天意之力。
         // 原版辉星就是这么显示的：队友面板里 %StarCountContainer 由 OnCombatSetUp 打开、
@@ -293,6 +295,9 @@ public static class HeavensForce
         {
             power?.RecordLoss(amount);
         }
+
+        // 数值真的减少了：派发“失去天意之力”给该玩家战斗中所有的模组卡牌
+        await NotifyLost(choiceContext, player, amount);
     }
 
     // 直接设定天意之力（用于“酒治百病”把负天意之力归零等场景）
@@ -303,8 +308,32 @@ public static class HeavensForce
             return;
         }
 
+        int previous = SecondaryResourceCmd.Get(player, Id);
         await SecondaryResourceCmd.Set(player, Id, amount, source);
         await SyncPower(choiceContext, player);
+
+        // 设定为更低的数值也属于“失去天意之力”
+        if (amount < previous)
+        {
+            await NotifyLost(choiceContext, player, previous - amount);
+        }
+    }
+
+    // 数值实际减少后，通知该玩家战斗中所有的新三国卡牌（“参见汉中王！”等按“失去天意之力”触发的牌）。
+    // 遍历 PlayerCombatState.AllCards（手牌/抽牌堆/弃牌堆/消耗堆/出牌堆，顺序固定），
+    // 两端执行同一份同步操作 ⇒ 结果一致，无需 LocalContext.IsMe 判定。
+    private static async Task NotifyLost(PlayerChoiceContext choiceContext, Player player, int amount)
+    {
+        if (amount <= 0 || player.PlayerCombatState is not { } combatState)
+        {
+            return;
+        }
+
+        List<NewsanguoCardTemplate> cards = combatState.AllCards.OfType<NewsanguoCardTemplate>().ToList();
+        foreach (NewsanguoCardTemplate card in cards)
+        {
+            await card.OnHeavensForceLost(choiceContext, amount);
+        }
     }
 
     // 数值不为 0 时确保逻辑载体在场。载体在整个战斗期间保留（兼作账本），不做卸下。

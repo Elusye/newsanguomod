@@ -48,7 +48,7 @@ public class WineTheOldHero : NewsanguoCardTemplate
         HoverTipFactory.FromPower<DrunkenMightPower>()
     ];
 
-    public WineTheOldHero() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+    public WineTheOldHero() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
     {
     }
 

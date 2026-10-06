@@ -1,0 +1,71 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" uid="uid://55ngxopraqdl" path="res://icon.svg" id="1_c8lhi"]
+[ext_resource type="Texture2D" uid="uid://dbew8k0b4bodt" path="res://newsanguo/images/characters/CaoWei/character_select_bg.png" id="2_lw0bo"]
+
+[node name="CaoWeiBg" type="Control"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -960.0
+offset_top = -540.0
+offset_right = 1600.0
+offset_bottom = 660.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(1280, 600)
+
+[node name="Control" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1280.0
+offset_top = -600.0
+offset_right = 640.0
+offset_bottom = 478.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.2, 0.12, 0.45, 1)
+
+[node name="Icon" type="TextureRect" parent="Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -28.0
+offset_top = 67.0
+offset_right = 612.0
+offset_bottom = 189.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.82, 0.82)
+texture = ExtResource("1_c8lhi")
+expand_mode = 1
+
+[node name="Background" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(1020.7199, 542)
+scale = Vector2(1.0218688, 1.0218688)
+texture = ExtResource("2_lw0bo")
+
+[node name="CharacterSelectBg" type="Sprite2D" parent="."]
+position = Vector2(1022.22266, 554.50006)
+scale = Vector2(0.8619791, 0.8619791)
+texture = ExtResource("2_lw0bo")
