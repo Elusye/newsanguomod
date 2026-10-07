@@ -26,7 +26,8 @@
   "NEWSANGUO_RELIC_FARMER_GENERAL_YU_JIN.title": "种地将军于禁",
   "NEWSANGUO_RELIC_FARMER_GENERAL_YU_JIN.description": "从你的[gold]牌组[/gold]中选择[blue]{Cards}[/blue]张牌。为这些牌[gold]附魔[/gold]：[purple]播种[/purple]。",
   "NEWSANGUO_RELIC_FARMER_GENERAL_YU_JIN.flavor": "屯田之道，亦可施于牌组。",
-  "SEA_GLASS.NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.title": "酒客玻璃",
+  "SEA_GLASS.NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.title": "酒客玻璃",
+  "SEA_GLASS.NEWSANGUO_CHARACTER_CAO_WEI_CHARACTER.title": "酒客玻璃",
   "NEWSANGUO_RELIC_BOULDER.title": "巨石",
   "NEWSANGUO_RELIC_BOULDER.description": "拾起时，将一张[purple]注能[/purple][gold]滚石+[/gold]加入你的[gold]牌组[/gold]。",
   "NEWSANGUO_RELIC_BOULDER.flavor": "这似乎是某个游戏创始人的最爱…"

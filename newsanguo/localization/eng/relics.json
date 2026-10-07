@@ -26,7 +26,8 @@
   "NEWSANGUO_RELIC_FARMER_GENERAL_YU_JIN.title": "Farmer General Yu Jin",
   "NEWSANGUO_RELIC_FARMER_GENERAL_YU_JIN.description": "Choose [blue]{Cards}[/blue] cards in your [gold]Deck[/gold]. [gold]Enchant[/gold] them with [purple]Sown[/purple].",
   "NEWSANGUO_RELIC_FARMER_GENERAL_YU_JIN.flavor": "The way of the garrison farm works on decks, too.",
-  "SEA_GLASS.NEWSANGUO_CHARACTER_NEWSANGUO_CHARACTER.title": "Wine Glass",
+  "SEA_GLASS.NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.title": "Wine Glass",
+  "SEA_GLASS.NEWSANGUO_CHARACTER_CAO_WEI_CHARACTER.title": "Wine Glass",
   "NEWSANGUO_RELIC_BOULDER.title": "Boulder",
   "NEWSANGUO_RELIC_BOULDER.description": "Upon pickup, add an [purple]Imbued[/purple] [gold]Rolling Boulder+[/gold] to your [gold]Deck[/gold].",
   "NEWSANGUO_RELIC_BOULDER.flavor": "This seems to be the favorite of some game's founder..."
