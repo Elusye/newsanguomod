@@ -105,5 +105,14 @@
   "NEWSANGUO_POWER_INVINCI_DAD_POWER.smartDescription": "每当[gold]{OwnerName}[/gold]造成的伤害被格挡时，它获得等同于玩家剩余[gold]格挡[/gold]点数的[gold]力量[/gold]（多人模式中取最高）。",
   "NEWSANGUO_POWER_PARADOX_POWER.title": "悖论",
   "NEWSANGUO_POWER_PARADOX_POWER.description": "在本回合内，你不能打出被这张牌标记的牌。",
-  "NEWSANGUO_POWER_PARADOX_POWER.smartDescription": "在本回合内，你不能打出被这张牌标记的牌。"
+  "NEWSANGUO_POWER_PARADOX_POWER.smartDescription": "在本回合内，你不能打出被这张牌标记的牌。",
+  "NEWSANGUO_POWER_CREATIVE_MODE_POWER.title": "创造模式",
+  "NEWSANGUO_POWER_CREATIVE_MODE_POWER.description": "战斗结束时，你可以从游戏的所有牌（创造模式除外）中任选一张牌加入牌组。",
+  "NEWSANGUO_POWER_CREATIVE_MODE_POWER.smartDescription": "战斗结束时，你可以从游戏的所有牌（创造模式除外）中任选一张牌加入牌组。",
+  "NEWSANGUO_POWER_MEGALOVANIA_POWER.title": "狂妄之人",
+  "NEWSANGUO_POWER_MEGALOVANIA_POWER.description": "在你的回合开始时，获得{Amount:energyIcons()}。",
+  "NEWSANGUO_POWER_MEGALOVANIA_POWER.smartDescription": "在你的回合开始时，获得[blue]{Amount:energyIcons()}[/blue]。",
+  "NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.title": "君王形态",
+  "NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.description": "每当你获得4点[gold]酒力[/gold]，获得{Amount}点[gold]天意之力[/gold]。",
+  "NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.smartDescription": "每当你获得4点[gold]酒力[/gold]，获得[blue]{Amount}[/blue]点[gold]天意之力[/gold]。"
 }

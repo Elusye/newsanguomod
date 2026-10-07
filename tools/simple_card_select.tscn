@@ -1,0 +1,104 @@
+[gd_scene load_steps=9 format=3 uid="uid://bw2l1wwri58ah"]
+
+[ext_resource type="Script" uid="uid://7qnbtl27jrva" path="res://src/Core/Nodes/Screens/CardSelection/NSimpleCardSelectScreen.cs" id="1_lcobo"]
+[ext_resource type="PackedScene" uid="uid://cso1enqajc0tc" path="res://scenes/cards/card_grid.tscn" id="2_r5hnf"]
+[ext_resource type="FontVariation" uid="uid://c6wnuvk3exmk5" path="res://themes/kreon_regular_shared.tres" id="3_68dqs"]
+[ext_resource type="PackedScene" uid="uid://bl460ab2i4mkx" path="res://scenes/ui/confirm_button.tscn" id="4_51ldf"]
+[ext_resource type="FontVariation" uid="uid://bg85h22rkxs6g" path="res://themes/kreon_bold_shared.tres" id="4_um675"]
+[ext_resource type="PackedScene" uid="uid://crom4irts1tj0" path="res://scenes/combat/combat_piles_container.tscn" id="5_fieny"]
+[ext_resource type="Script" uid="uid://c2oywrx8xbqfx" path="res://addons/mega_text/MegaRichTextLabel.cs" id="5_uhclh"]
+[ext_resource type="PackedScene" uid="uid://rxgwkwxf1dsr" path="res://scenes/combat/peek_button.tscn" id="6_hbs7i"]
+
+[node name="SimpleCardSelectScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_lcobo")
+metadata/_edit_lock_ = true
+
+[node name="CardGrid" parent="." instance=ExtResource("2_r5hnf")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+offset_top = 80.0
+
+[node name="Confirm" parent="." instance=ExtResource("4_51ldf")]
+unique_name_in_owner = true
+layout_mode = 1
+
+[node name="PeekButton" parent="." instance=ExtResource("6_hbs7i")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 4
+anchor_left = 0.0
+anchor_right = 0.0
+offset_left = 100.0
+offset_top = -64.0
+offset_right = 228.0
+offset_bottom = 64.0
+grow_horizontal = 1
+
+[node name="CombatPiles" parent="." instance=ExtResource("5_fieny")]
+unique_name_in_owner = true
+layout_mode = 1
+
+[node name="BottomText" type="MarginContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -62.0
+offset_top = -57.0
+offset_right = 62.0
+offset_bottom = -17.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="ColorRect" type="ColorRect" parent="BottomText"]
+layout_mode = 2
+color = Color(0, 0, 0, 0.752941)
+
+[node name="MarginContainer" type="MarginContainer" parent="BottomText"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 6
+
+[node name="BottomLabel" type="RichTextLabel" parent="BottomText/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/default_color = Color(1, 0.964706, 0.886275, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.25098)
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/normal_font = ExtResource("3_68dqs")
+theme_override_fonts/bold_font = ExtResource("4_um675")
+theme_override_font_sizes/normal_font_size = 24
+theme_override_font_sizes/bold_font_size = 24
+theme_override_font_sizes/bold_italics_font_size = 24
+theme_override_font_sizes/italics_font_size = 24
+theme_override_font_sizes/mono_font_size = 24
+bbcode_enabled = true
+text = "Info text."
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+script = ExtResource("5_uhclh")
+AutoSizeEnabled = false
+MinFontSize = 24
+MaxFontSize = 24
+IsVerticallyBound = false

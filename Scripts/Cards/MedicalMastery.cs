@@ -54,17 +54,15 @@ public class MedicalMastery : NewsanguoCardTemplate
 
     // 卡面附加参数：告诉文案“本牌是不是被复制出来的复制品”。
     // 复制品（CreateClone/CreateDupe 产生的克隆）的 DeckVersion 会被引擎清空
-    // （CardModel.AfterCloned，见 CardModel.cs:1227），因此本牌的斩杀升级逻辑拿不到牌组本体，
+    // （CardModel.AfterCloned，sts2.decompiled.cs:74119-74140），因此本牌的斩杀升级逻辑拿不到牌组本体，
     // 用它斩杀不会升级——这一点在卡面上必须说清楚，否则玩家会以为复制品也能刷升级。
-    // 写法参照原版「疯狂科学」（MadScience.cs:255-266：往描述里塞布尔变量）+ 卡面的条件占位符语法。
+    // 写法参照原版「疯狂科学」（MadScience.cs:255-266：往描述里塞布尔变量）；
+    // 公共部分抽到了基类 NewsanguoCardTemplate.AddIsCloneDescriptionArg。
     protected override void AddExtraArgsToDescription(LocString description)
     {
         base.AddExtraArgsToDescription(description);
-        description.Add(IsCloneArgName, IsClone);
+        AddIsCloneDescriptionArg(description);
     }
-
-    // 卡面条件占位符用的变量名（与 cards.json 中 {IsClone:...|} 对应）
-    private const string IsCloneArgName = "IsClone";
 
     // 卡牌基础数值：造成 15 点伤害
     protected override IEnumerable<DynamicVar> CanonicalVars => [

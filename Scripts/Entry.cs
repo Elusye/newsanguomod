@@ -9,6 +9,7 @@ using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Patches;
 using newsanguo.Scripts.Powers;
 using newsanguo.Scripts.Relics;
+using newsanguo.Scripts.Rewards;
 using newsanguo.Scripts.Settings;
 using newsanguo.Scripts.Telemetry;
 
@@ -46,6 +47,9 @@ public class Entry
         // 否则蜀汉页的共享牌会一直用先命中的新三国池（棕色）——详见 CardLibraryPoolContext.cs
         ApplyPatch(harmony, typeof(CardLibraryPoolFilterPatch));
         ApplyPatch(harmony, typeof(CardLibraryPoolResetPatch));
+        // 「创造模式」的选牌屏要像图鉴一样能搜索 / 筛选：复用图鉴的侧栏控件，只在那一屏生效
+        // （详见 CardSelectSearchPatch.cs 顶部注释；标记由 CreativeModeReward 在弹屏前打开）
+        ApplyPatch(harmony, typeof(CardSelectSearchPatch));
         // “卡牌错位”归位清扫：出牌被取消 / 选牌结束时，把“逻辑上在手牌、画面却停在屏幕中央”的
         // 卡牌节点搬回手牌容器（详见 StrayHandCardCleanupPatch.cs 顶部注释）
         //
@@ -73,6 +77,9 @@ public class Entry
         HeavensForce.Register();
         // 自动注册内容
         ModTypeDiscoveryHub.RegisterModAssembly(ModId, assembly);
+        // 注册自定义奖励类型（「创造模式」在战斗奖励屏上给的那张奖励）。
+        // 必须在开局/读档之前完成：RitsuLib 靠这个注册表在存读档时按动态 RewardType 还原奖励。
+        CreativeModeRewardRegistration.Register();
         // 先古之民遗物官方映射（由 RitsuLib 的补丁在事件/获得遗物时生效）：
         // 古老牙齿：把“仁之剑，义之剑”变化为先古卡“大奸似忠，大伪似真”
         RitsuLibFramework.RegisterArchaicToothTranscendenceMapping<BladeOfVirtue, TheTruestMask>(ModId);

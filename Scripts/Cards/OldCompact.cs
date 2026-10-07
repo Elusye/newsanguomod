@@ -26,6 +26,7 @@ namespace newsanguo.Scripts;
 [RegisterCard(typeof(TokenCardPool))]
 public class OldCompact : NewsanguoCardTemplate
 {
+    // 2026-10-07：保留原版角色卡框（旧·压缩是故障的蓝色卡框）—— 衍生牌不跟随玩家角色
     public override CardPoolModel VisualCardPool => ModelDb.CardPool<DefectCardPool>();
 
     // 获得格挡：可被灵巧等格挡附魔识别

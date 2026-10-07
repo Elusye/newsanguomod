@@ -31,9 +31,9 @@ public class GetOut : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 8 点伤害
+    // 卡牌基础数值：造成 9 点伤害
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(8, ValueProp.Move)
+        new DamageVar(9, ValueProp.Move)
     ];
 
     // 悬停提示：展示“消耗”关键词的说明（卡牌效果会产生消耗行为，但卡牌自身不消耗）
@@ -82,7 +82,7 @@ public class GetOut : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 伤害从 8 提高到 10
-        DynamicVars.Damage.UpgradeValueBy(2m);
+        // 伤害从 9 提高到 12
+        DynamicVars.Damage.UpgradeValueBy(3m);
     }
 }

@@ -1,8 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.CardPools;
+using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Patches;
 using STS2RitsuLib.Keywords;
 using STS2RitsuLib.Scaffolding.Content;
@@ -42,18 +46,63 @@ public abstract class NewsanguoCardTemplate : ModCardTemplate
     /// 所以只在可变实例上按角色取池；图鉴那条路径改用"玩家当前浏览的卡池"上下文
     /// （见 <see cref="CardLibraryPoolContext"/>，由 <see cref="CardLibraryPoolFilterPatch"/> 维护），
     /// 其余场合一律回退到原版行为。
+    ///
+    /// 2026-10-07（用户纠正）：衍生牌（<see cref="TokenCardPool"/>）、诅咒牌（<see cref="CurseCardPool"/>）、
+    /// 状态牌（<see cref="StatusCardPool"/>）这三类原版共享卡池里的牌**不跟随角色**，
+    /// 一律保留它们原本的原版卡框（无色灰 / 诅咒 / 无色灰）——它们跟着角色变成棕/墨绿才是异常。
     /// </summary>
     public override CardPoolModel VisualCardPool
     {
         get
         {
-            if (!IsMutable)
+            // 原版 Pool：ModelDb 里第一个包含这张牌 id 的卡池
+            CardPoolModel ownPool = base.VisualCardPool;
+
+            if (KeepsVanillaFrame(ownPool))
             {
-                return CardLibraryPoolContext.CurrentPool ?? base.VisualCardPool;
+                return ownPool;
             }
 
-            return Owner?.Character?.CardPool ?? base.VisualCardPool;
+            if (!IsMutable)
+            {
+                return CardLibraryPoolContext.CurrentPool ?? ownPool;
+            }
+
+            return Owner?.Character?.CardPool ?? ownPool;
         }
+    }
+
+    /// <summary>
+    /// 这几类原版共享卡池里的本 mod 牌保留自己原本的原版卡框，不换角色卡框：
+    /// 衍生牌 <see cref="TokenCardPool"/>（原版无色卡框）、诅咒牌 <see cref="CurseCardPool"/>（原版诅咒卡框）、
+    /// 状态牌 <see cref="StatusCardPool"/>（原版无色卡框）。
+    /// </summary>
+    private static bool KeepsVanillaFrame(CardPoolModel pool)
+    {
+        return pool is TokenCardPool or CurseCardPool or StatusCardPool;
+    }
+
+    /// <summary>
+    /// 卡面条件占位符用的变量名：与本地化文案里的 <c>{IsClone:…|}</c> 对应。
+    /// </summary>
+    protected const string IsCloneDescriptionArg = "IsClone";
+
+    /// <summary>
+    /// 往卡面描述里塞一个“本牌是不是复制品”的条件变量，
+    /// 供文案里的 <c>{IsClone:打出复制品时的补充说明|}</c> 使用。
+    ///
+    /// 复制品（<see cref="CardModel.CreateClone"/> / <see cref="CardModel.CreateDupe"/>
+    /// 产生的克隆，判断条件就是 <see cref="CardModel.IsClone"/>）生成时，引擎会清空它的
+    /// <see cref="CardModel.DeckVersion"/>（<c>CardModel.AfterCloned</c>，sts2.decompiled.cs:74119-74140）。
+    /// 因此“打出后让牌库本体成长”的牌（替身打击、比夷陵之火还好啊、医术高明）被打出的是复制品时，
+    /// 成长只落在本场战斗的这张副本上，不会写回本体 —— 这一点必须在卡面上说清楚，
+    /// 否则玩家会以为复制品也能刷成长。
+    ///
+    /// 写法参照原版「疯狂科学」（MadScience.cs:255-266：往描述里塞布尔变量）+ 卡面的条件占位符语法。
+    /// </summary>
+    protected void AddIsCloneDescriptionArg(LocString description)
+    {
+        description.Add(IsCloneDescriptionArg, IsClone);
     }
 
     /// <summary>

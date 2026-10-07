@@ -32,6 +32,7 @@ namespace newsanguo.Scripts;
 [RegisterCard(typeof(TokenCardPool))]
 public class OldForgottenRitual : NewsanguoCardTemplate
 {
+    // 2026-10-07：保留原版角色卡框（旧·被遗忘的仪式是铁甲的红色卡框）—— 衍生牌不跟随玩家角色
     public override CardPoolModel VisualCardPool => ModelDb.CardPool<IroncladCardPool>();
 
     // 卡图资源

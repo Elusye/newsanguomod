@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6mdcob7rvi76"
-path="res://.godot/imported/Paradox.png-b6a44f1a81bbd8bcee83613892da954e.ctex"
+uid="uid://d2mtdc0xnybsx"
+path="res://.godot/imported/SovereignForm.png-063fb1a56e53515a06c03eaacf5ebd48.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/powers/Paradox.png"
-dest_files=["res://.godot/imported/Paradox.png-b6a44f1a81bbd8bcee83613892da954e.ctex"]
+source_file="res://newsanguo/images/cards/SovereignForm.png"
+dest_files=["res://.godot/imported/SovereignForm.png-063fb1a56e53515a06c03eaacf5ebd48.ctex"]
 
 [params]
 

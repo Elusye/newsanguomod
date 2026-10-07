@@ -1,0 +1,777 @@
+[gd_scene load_steps=52 format=3 uid="uid://dbv1hvti5nub6"]
+
+[ext_resource type="Script" uid="uid://emcv2heu6j04" path="res://src/Core/Nodes/Screens/CardLibrary/NCardLibrary.cs" id="1_tgsvk"]
+[ext_resource type="PackedScene" uid="uid://bl4mbjqjfffa3" path="res://scenes/ui/back_button.tscn" id="2_e1uqt"]
+[ext_resource type="PackedScene" uid="uid://cso1enqajc0tc" path="res://scenes/cards/card_grid.tscn" id="2_konh8"]
+[ext_resource type="Script" uid="uid://cu6crcx7mdi18" path="res://src/Core/Nodes/CommonUi/NSearchBar.cs" id="2_qpkob"]
+[ext_resource type="FontVariation" uid="uid://c6wnuvk3exmk5" path="res://themes/kreon_regular_shared.tres" id="3_1sl0p"]
+[ext_resource type="Script" uid="uid://dmpp1qcet6qvk" path="res://src/Core/Nodes/GodotExtensions/NMegaLineEdit.cs" id="4_rnoju"]
+[ext_resource type="Script" uid="uid://ylx5eqt8x13v" path="res://src/Core/Nodes/Screens/CardLibrary/NClearSearchButton.cs" id="5_rnoju"]
+[ext_resource type="Texture2D" uid="uid://q1y4ux" path="res://images/atlases/compressed.sprites/back_button_x.tres" id="5_y50fw"]
+[ext_resource type="PackedScene" uid="uid://c0eif6msrle3b" path="res://scenes/screens/card_library/library_pool_toggle.tscn" id="6_s720e"]
+[ext_resource type="Shader" uid="uid://c66gb6g7tup3n" path="res://shaders/hsv.gdshader" id="7_4h2n7"]
+[ext_resource type="Texture2D" uid="uid://x2neryjvbtwy" path="res://images/ui/top_panel/character_icon_ironclad.png" id="7_wog6y"]
+[ext_resource type="Texture2D" uid="uid://dlffnnvpfuhbw" path="res://images/ui/top_panel/character_icon_silent.png" id="8_oqc6e"]
+[ext_resource type="Texture2D" uid="uid://direx8s85b4g7" path="res://images/ui/top_panel/character_icon_defect.png" id="9_ngdd2"]
+[ext_resource type="Texture2D" uid="uid://ddwry85j3nb6" path="res://images/ui/top_panel/character_icon_regent.png" id="10_rud8i"]
+[ext_resource type="Texture2D" uid="uid://ds8ypeeefngl" path="res://images/ui/top_panel/character_icon_necrobinder.png" id="11_kfc6l"]
+[ext_resource type="Texture2D" uid="uid://b2tghoxhxi8p8" path="res://images/ui/run_history/neow.png" id="13_88vqa"]
+[ext_resource type="Texture2D" uid="uid://pmu8305ub80w" path="res://images/packed/card_library/pool_filter_other.png" id="14_ebwtg"]
+[ext_resource type="Script" uid="uid://b2tbya1t08xyw" path="res://src/Core/Nodes/Screens/CardLibrary/NCardLibraryGrid.cs" id="15_8kta8"]
+[ext_resource type="Texture2D" uid="uid://d2oga4" path="res://images/atlases/ui_atlas.sprites/card/energy_colorless.tres" id="16_kuhdt"]
+[ext_resource type="PackedScene" uid="uid://c5h4pu2vdm4xr" path="res://scenes/screens/card_library/card_type_tickbox.tscn" id="19_aasey"]
+[ext_resource type="Texture2D" uid="uid://bes65f3s6d5y0" path="res://images/packed/card_library/type_sort_skill.png" id="20_5eb4s"]
+[ext_resource type="Texture2D" uid="uid://dj663v5ciirj" path="res://images/packed/card_library/type_sort_power.png" id="21_870i2"]
+[ext_resource type="Texture2D" uid="uid://baixwsj0hliie" path="res://images/packed/card_library/type_sort_other.png" id="23_5xa24"]
+[ext_resource type="PackedScene" uid="uid://bkg1relp5vs62" path="res://scenes/screens/card_library/rarity_tickbox.tscn" id="23_pplyu"]
+[ext_resource type="PackedScene" uid="uid://bbbb3bburjuw8" path="res://scenes/screens/card_library/card_library_tickbox.tscn" id="24_5lhaq"]
+[ext_resource type="PackedScene" uid="uid://c34id7iyjsdqh" path="res://scenes/screens/card_library/card_cost_tickbox.tscn" id="24_5n26r"]
+[ext_resource type="PackedScene" uid="uid://cdyfypvscsvs4" path="res://scenes/screens/card_library/library_sort_button.tscn" id="24_d4x8x"]
+[ext_resource type="FontVariation" uid="uid://bg85h22rkxs6g" path="res://themes/kreon_bold_shared.tres" id="28_kuhdt"]
+[ext_resource type="Script" uid="uid://c2oywrx8xbqfx" path="res://addons/mega_text/MegaRichTextLabel.cs" id="29_4h2n7"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nufny"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 1.0
+shader_parameter/v = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vhtl2"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 1.0
+shader_parameter/v = 0.55
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_f5p4f"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 0.3
+shader_parameter/v = 0.55
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xupmp"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 0.3
+shader_parameter/v = 0.55
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wqgy3"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 0.3
+shader_parameter/v = 0.55
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wb6wu"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 0.3
+shader_parameter/v = 0.55
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uqfke"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 0.3
+shader_parameter/v = 0.55
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hs3s4"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 0.3
+shader_parameter/v = 0.55
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_w27kp"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 1.0
+shader_parameter/v = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7ywq0"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 1.0
+shader_parameter/v = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t1c3v"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 1.0
+shader_parameter/v = 1.0
+
+[sub_resource type="Shader" id="Shader_4h2n7"]
+code = "shader_type canvas_item;
+
+uniform float h: hint_range(0,1) = 1;
+uniform float s: hint_range(0,5) = 1;
+uniform float v = 1;
+
+// ⚠I am a very commonly used and important shader!
+// Please be careful when handling me
+void fragment() {
+    mat3 RGB_to_YIQ = mat3(
+        vec3(0.2989,  0.5959,  0.2115),
+        vec3(0.5870, -0.2774, -0.5229),
+        vec3(0.1140, -0.3216,  0.3114));
+
+    vec4 col = texture(TEXTURE, UV);
+
+    vec4 ModularCol = COLOR / col;
+
+    col.rgb = RGB_to_YIQ * col.rgb;
+    float hue = 1.0 - h;
+    hue = mix(0, 6.283185, hue);
+
+    float sin_hue = sin(hue);
+    float cos_hue = cos(hue);
+    mat3 hue_shift = mat3(
+        vec3(1.0, 0, 0),
+        vec3(0, cos_hue, -sin_hue),
+        vec3(0, sin_hue, cos_hue));
+    col.rgb *= hue_shift;
+
+    mat3 sat_shift = mat3(
+        vec3(1.0, 0, 0),
+        vec3(0, s, 0),
+        vec3(0, 0, s));
+    col.rgb = sat_shift * col.rgb;
+
+    col.rgb = mix(vec3(0,0,0), col.rgb, v);
+
+    col.rgb = inverse(RGB_to_YIQ) * col.rgb;
+    COLOR = col;
+    COLOR *= ModularCol;
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qbo2o"]
+resource_local_to_scene = true
+shader = SubResource("Shader_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 1.0
+shader_parameter/v = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kfhid"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 1.0
+shader_parameter/v = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fr656"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 1.0
+shader_parameter/v = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1mw4i"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 1.0
+shader_parameter/v = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_p44tq"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 1.0
+shader_parameter/v = 1.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c57tw"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 1.0
+shader_parameter/v = 1.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ifxsr"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 1.0
+shader_parameter/v = 1.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4enqc"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 1.0
+shader_parameter/v = 1.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4h2n7"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 1.0
+shader_parameter/v = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5lhaq"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h2n7")
+shader_parameter/h = 1.0
+shader_parameter/s = 1.0
+shader_parameter/v = 1.0
+
+[node name="CardLibrary" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_tgsvk")
+metadata/_edit_lock_ = true
+metadata/_edit_group_ = true
+
+[node name="CardGrid" parent="." instance=ExtResource("2_konh8")]
+unique_name_in_owner = true
+layout_direction = 2
+layout_mode = 1
+anchors_preset = -1
+offset_left = 288.0
+script = ExtResource("15_8kta8")
+
+[node name="ScrollContainer" parent="CardGrid" index="0"]
+offset_left = 50.0
+offset_right = -150.0
+
+[node name="Scrollbar" parent="CardGrid" index="1"]
+focus_behavior_recursive = 0
+mouse_behavior_recursive = 0
+accessibility_name = ""
+accessibility_description = ""
+accessibility_live = 0
+accessibility_controls_nodes = Array[NodePath]([])
+accessibility_described_by_nodes = Array[NodePath]([])
+accessibility_labeled_by_nodes = Array[NodePath]([])
+accessibility_flow_to_nodes = Array[NodePath]([])
+
+[node name="Sidebar" type="Control" parent="."]
+custom_minimum_size = Vector2(0.04, 0)
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 288.0
+grow_vertical = 2
+
+[node name="Panel" type="ColorRect" parent="Sidebar"]
+custom_minimum_size = Vector2(288, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.182, 0.2604, 0.28, 0.501961)
+
+[node name="Shadow" type="ColorRect" parent="Sidebar/Panel"]
+show_behind_parent = true
+custom_minimum_size = Vector2(4, 0)
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+color = Color(0.2346, 0.325947, 0.34, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="Sidebar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="TopVBox" type="VBoxContainer" parent="Sidebar/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="SearchBar" type="Control" parent="Sidebar/MarginContainer/TopVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+script = ExtResource("2_qpkob")
+
+[node name="TextArea" type="LineEdit" parent="Sidebar/MarginContainer/TopVBox/SearchBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath("../ClearButton")
+focus_neighbor_bottom = NodePath("../../PoolFilters/IroncladPool")
+theme_override_fonts/font = ExtResource("3_1sl0p")
+theme_override_font_sizes/font_size = 24
+placeholder_text = "NOT_SET"
+script = ExtResource("4_rnoju")
+
+[node name="ClearButton" type="Control" parent="Sidebar/MarginContainer/TopVBox/SearchBar"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -48.0
+offset_top = -24.0
+offset_bottom = 24.0
+grow_horizontal = 0
+grow_vertical = 2
+focus_mode = 2
+script = ExtResource("5_rnoju")
+
+[node name="Image" type="TextureRect" parent="Sidebar/MarginContainer/TopVBox/SearchBar/ClearButton"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -18.0
+offset_top = -18.0
+offset_right = 18.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.9, 0.9)
+pivot_offset = Vector2(24, 24)
+mouse_filter = 2
+texture = ExtResource("5_y50fw")
+expand_mode = 1
+
+[node name="Spacer2" type="Control" parent="Sidebar/MarginContainer/TopVBox"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+
+[node name="PoolFilters" type="GridContainer" parent="Sidebar/MarginContainer/TopVBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 4
+
+[node name="IroncladPool" parent="Sidebar/MarginContainer/TopVBox/PoolFilters" instance=ExtResource("6_s720e")]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_top = NodePath("../../SearchBar/TextArea")
+
+[node name="Image" parent="Sidebar/MarginContainer/TopVBox/PoolFilters/IroncladPool" index="0"]
+material = SubResource("ShaderMaterial_nufny")
+texture = ExtResource("7_wog6y")
+
+[node name="Shadow" parent="Sidebar/MarginContainer/TopVBox/PoolFilters/IroncladPool/Image" index="0"]
+texture = ExtResource("7_wog6y")
+
+[node name="SilentPool" parent="Sidebar/MarginContainer/TopVBox/PoolFilters" instance=ExtResource("6_s720e")]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_top = NodePath("../../SearchBar/TextArea")
+
+[node name="Image" parent="Sidebar/MarginContainer/TopVBox/PoolFilters/SilentPool" index="0"]
+material = SubResource("ShaderMaterial_vhtl2")
+texture = ExtResource("8_oqc6e")
+
+[node name="Shadow" parent="Sidebar/MarginContainer/TopVBox/PoolFilters/SilentPool/Image" index="0"]
+texture = ExtResource("8_oqc6e")
+
+[node name="RegentPool" parent="Sidebar/MarginContainer/TopVBox/PoolFilters" instance=ExtResource("6_s720e")]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_top = NodePath("../../SearchBar/TextArea")
+
+[node name="Image" parent="Sidebar/MarginContainer/TopVBox/PoolFilters/RegentPool" index="0"]
+material = SubResource("ShaderMaterial_f5p4f")
+texture = ExtResource("10_rud8i")
+
+[node name="Shadow" parent="Sidebar/MarginContainer/TopVBox/PoolFilters/RegentPool/Image" index="0"]
+texture = ExtResource("10_rud8i")
+
+[node name="NecrobinderPool" parent="Sidebar/MarginContainer/TopVBox/PoolFilters" instance=ExtResource("6_s720e")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Image" parent="Sidebar/MarginContainer/TopVBox/PoolFilters/NecrobinderPool" index="0"]
+material = SubResource("ShaderMaterial_xupmp")
+texture = ExtResource("11_kfc6l")
+
+[node name="Shadow" parent="Sidebar/MarginContainer/TopVBox/PoolFilters/NecrobinderPool/Image" index="0"]
+texture = ExtResource("11_kfc6l")
+
+[node name="DefectPool" parent="Sidebar/MarginContainer/TopVBox/PoolFilters" instance=ExtResource("6_s720e")]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_top = NodePath("../../SearchBar/TextArea")
+
+[node name="Image" parent="Sidebar/MarginContainer/TopVBox/PoolFilters/DefectPool" index="0"]
+material = SubResource("ShaderMaterial_wqgy3")
+texture = ExtResource("9_ngdd2")
+
+[node name="Shadow" parent="Sidebar/MarginContainer/TopVBox/PoolFilters/DefectPool/Image" index="0"]
+texture = ExtResource("9_ngdd2")
+
+[node name="ColorlessPool" parent="Sidebar/MarginContainer/TopVBox/PoolFilters" instance=ExtResource("6_s720e")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Image" parent="Sidebar/MarginContainer/TopVBox/PoolFilters/ColorlessPool" index="0"]
+material = SubResource("ShaderMaterial_wb6wu")
+texture = ExtResource("16_kuhdt")
+
+[node name="Shadow" parent="Sidebar/MarginContainer/TopVBox/PoolFilters/ColorlessPool/Image" index="0"]
+texture = ExtResource("16_kuhdt")
+
+[node name="AncientsPool" parent="Sidebar/MarginContainer/TopVBox/PoolFilters" instance=ExtResource("6_s720e")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Image" parent="Sidebar/MarginContainer/TopVBox/PoolFilters/AncientsPool" index="0"]
+material = SubResource("ShaderMaterial_uqfke")
+texture = ExtResource("13_88vqa")
+
+[node name="Shadow" parent="Sidebar/MarginContainer/TopVBox/PoolFilters/AncientsPool/Image" index="0"]
+texture = ExtResource("13_88vqa")
+
+[node name="MiscPool" parent="Sidebar/MarginContainer/TopVBox/PoolFilters" instance=ExtResource("6_s720e")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Image" parent="Sidebar/MarginContainer/TopVBox/PoolFilters/MiscPool" index="0"]
+material = SubResource("ShaderMaterial_hs3s4")
+texture = ExtResource("14_ebwtg")
+
+[node name="Shadow" parent="Sidebar/MarginContainer/TopVBox/PoolFilters/MiscPool/Image" index="0"]
+texture = ExtResource("14_ebwtg")
+
+[node name="Spacer" type="Control" parent="Sidebar/MarginContainer/TopVBox"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+
+[node name="CardTypeModule" type="VBoxContainer" parent="Sidebar/MarginContainer/TopVBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="CardTypeSorter" parent="Sidebar/MarginContainer/TopVBox/CardTypeModule" instance=ExtResource("24_d4x8x")]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_bottom = NodePath("../CardTypeToggler/AttackType")
+
+[node name="CardTypeToggler" type="HBoxContainer" parent="Sidebar/MarginContainer/TopVBox/CardTypeModule"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Indent" type="Control" parent="Sidebar/MarginContainer/TopVBox/CardTypeModule/CardTypeToggler"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+
+[node name="AttackType" parent="Sidebar/MarginContainer/TopVBox/CardTypeModule/CardTypeToggler" instance=ExtResource("19_aasey")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Image" parent="Sidebar/MarginContainer/TopVBox/CardTypeModule/CardTypeToggler/AttackType" index="0"]
+material = SubResource("ShaderMaterial_w27kp")
+
+[node name="SkillType" parent="Sidebar/MarginContainer/TopVBox/CardTypeModule/CardTypeToggler" instance=ExtResource("19_aasey")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Image" parent="Sidebar/MarginContainer/TopVBox/CardTypeModule/CardTypeToggler/SkillType" index="0"]
+material = SubResource("ShaderMaterial_7ywq0")
+texture = ExtResource("20_5eb4s")
+
+[node name="PowerType" parent="Sidebar/MarginContainer/TopVBox/CardTypeModule/CardTypeToggler" instance=ExtResource("19_aasey")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Image" parent="Sidebar/MarginContainer/TopVBox/CardTypeModule/CardTypeToggler/PowerType" index="0"]
+material = SubResource("ShaderMaterial_t1c3v")
+texture = ExtResource("21_870i2")
+
+[node name="OtherType" parent="Sidebar/MarginContainer/TopVBox/CardTypeModule/CardTypeToggler" instance=ExtResource("19_aasey")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Image" parent="Sidebar/MarginContainer/TopVBox/CardTypeModule/CardTypeToggler/OtherType" index="0"]
+material = SubResource("ShaderMaterial_qbo2o")
+texture = ExtResource("23_5xa24")
+
+[node name="Spacer" type="Control" parent="Sidebar/MarginContainer/TopVBox/CardTypeModule"]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+
+[node name="RarityModule" type="VBoxContainer" parent="Sidebar/MarginContainer/TopVBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="RaritySorter" parent="Sidebar/MarginContainer/TopVBox/RarityModule" instance=ExtResource("24_d4x8x")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RarityToggler" type="VBoxContainer" parent="Sidebar/MarginContainer/TopVBox/RarityModule"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="CommonRarity" parent="Sidebar/MarginContainer/TopVBox/RarityModule/RarityToggler" instance=ExtResource("23_pplyu")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="UncommonRarity" parent="Sidebar/MarginContainer/TopVBox/RarityModule/RarityToggler" instance=ExtResource("23_pplyu")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TickboxVisuals" parent="Sidebar/MarginContainer/TopVBox/RarityModule/RarityToggler/UncommonRarity" index="0"]
+material = SubResource("ShaderMaterial_kfhid")
+
+[node name="Label" parent="Sidebar/MarginContainer/TopVBox/RarityModule/RarityToggler/UncommonRarity" index="1"]
+modulate = Color(0.529412, 0.807843, 0.921569, 1)
+theme_override_font_sizes/font_size = 22
+text = "Uncommon"
+
+[node name="RareRarity" parent="Sidebar/MarginContainer/TopVBox/RarityModule/RarityToggler" instance=ExtResource("23_pplyu")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TickboxVisuals" parent="Sidebar/MarginContainer/TopVBox/RarityModule/RarityToggler/RareRarity" index="0"]
+material = SubResource("ShaderMaterial_fr656")
+
+[node name="Label" parent="Sidebar/MarginContainer/TopVBox/RarityModule/RarityToggler/RareRarity" index="1"]
+modulate = Color(0.937255, 0.784314, 0.317647, 1)
+theme_override_font_sizes/font_size = 22
+text = "Rare"
+
+[node name="OtherRarity" parent="Sidebar/MarginContainer/TopVBox/RarityModule/RarityToggler" instance=ExtResource("23_pplyu")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TickboxVisuals" parent="Sidebar/MarginContainer/TopVBox/RarityModule/RarityToggler/OtherRarity" index="0"]
+material = SubResource("ShaderMaterial_1mw4i")
+
+[node name="Label" parent="Sidebar/MarginContainer/TopVBox/RarityModule/RarityToggler/OtherRarity" index="1"]
+modulate = Color(0.933333, 0.509804, 0.933333, 1)
+theme_override_font_sizes/font_size = 22
+text = "Other"
+
+[node name="Spacer" type="Control" parent="Sidebar/MarginContainer/TopVBox/RarityModule"]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+
+[node name="CostModule" type="VBoxContainer" parent="Sidebar/MarginContainer/TopVBox"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="CostSorter" parent="Sidebar/MarginContainer/TopVBox/CostModule" instance=ExtResource("24_d4x8x")]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_bottom = NodePath("../CostToggler/Cost0")
+
+[node name="CostToggler" type="HBoxContainer" parent="Sidebar/MarginContainer/TopVBox/CostModule"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Indent" type="Control" parent="Sidebar/MarginContainer/TopVBox/CostModule/CostToggler"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+
+[node name="Cost0" parent="Sidebar/MarginContainer/TopVBox/CostModule/CostToggler" instance=ExtResource("24_5n26r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Cost1" parent="Sidebar/MarginContainer/TopVBox/CostModule/CostToggler" instance=ExtResource("24_5n26r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Image" parent="Sidebar/MarginContainer/TopVBox/CostModule/CostToggler/Cost1" index="0"]
+material = SubResource("ShaderMaterial_p44tq")
+
+[node name="Label" parent="Sidebar/MarginContainer/TopVBox/CostModule/CostToggler/Cost1/Image" index="2"]
+text = "1"
+
+[node name="Cost2" parent="Sidebar/MarginContainer/TopVBox/CostModule/CostToggler" instance=ExtResource("24_5n26r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Image" parent="Sidebar/MarginContainer/TopVBox/CostModule/CostToggler/Cost2" index="0"]
+material = SubResource("ShaderMaterial_c57tw")
+
+[node name="Label" parent="Sidebar/MarginContainer/TopVBox/CostModule/CostToggler/Cost2/Image" index="2"]
+text = "2"
+
+[node name="Cost3+" parent="Sidebar/MarginContainer/TopVBox/CostModule/CostToggler" instance=ExtResource("24_5n26r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Image" parent="Sidebar/MarginContainer/TopVBox/CostModule/CostToggler/Cost3+" index="0"]
+material = SubResource("ShaderMaterial_ifxsr")
+
+[node name="Label" parent="Sidebar/MarginContainer/TopVBox/CostModule/CostToggler/Cost3+/Image" index="2"]
+text = "3+"
+
+[node name="CostX" parent="Sidebar/MarginContainer/TopVBox/CostModule/CostToggler" instance=ExtResource("24_5n26r")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Image" parent="Sidebar/MarginContainer/TopVBox/CostModule/CostToggler/CostX" index="0"]
+material = SubResource("ShaderMaterial_4enqc")
+
+[node name="Label" parent="Sidebar/MarginContainer/TopVBox/CostModule/CostToggler/CostX/Image" index="2"]
+text = "X"
+
+[node name="Spacer" type="Control" parent="Sidebar/MarginContainer/TopVBox/CostModule"]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+
+[node name="AlphabetSorter" parent="Sidebar/MarginContainer/TopVBox" instance=ExtResource("24_d4x8x")]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_bottom = NodePath("../../BottomVBox/MultiplayerCards")
+
+[node name="BottomVBox" type="VBoxContainer" parent="Sidebar/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="MultiplayerCards" parent="Sidebar/MarginContainer/BottomVBox" instance=ExtResource("24_5lhaq")]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_bottom = NodePath("../Stats")
+
+[node name="TickboxVisuals" parent="Sidebar/MarginContainer/BottomVBox/MultiplayerCards" index="0"]
+material = SubResource("ShaderMaterial_4h2n7")
+
+[node name="Label" parent="Sidebar/MarginContainer/BottomVBox/MultiplayerCards" index="1"]
+text = "Multiplayer Cards"
+
+[node name="Stats" parent="Sidebar/MarginContainer/BottomVBox" instance=ExtResource("24_5lhaq")]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_top = NodePath("../MultiplayerCards")
+focus_neighbor_bottom = NodePath("../Upgrades")
+
+[node name="Upgrades" parent="Sidebar/MarginContainer/BottomVBox" instance=ExtResource("24_5lhaq")]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_top = NodePath("../Stats")
+focus_neighbor_bottom = NodePath(".")
+
+[node name="TickboxVisuals" parent="Sidebar/MarginContainer/BottomVBox/Upgrades" index="0"]
+material = SubResource("ShaderMaterial_5lhaq")
+
+[node name="Label" parent="Sidebar/MarginContainer/BottomVBox/Upgrades" index="1"]
+text = "View Upgrades"
+
+[node name="CardCountLabel" type="RichTextLabel" parent="."]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.505882)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -124.0
+offset_top = -62.0
+offset_right = -22.0
+offset_bottom = -31.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/default_color = Color(1, 0.964706, 0.886275, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.25098)
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/normal_font = ExtResource("3_1sl0p")
+theme_override_fonts/bold_font = ExtResource("28_kuhdt")
+theme_override_font_sizes/normal_font_size = 22
+theme_override_font_sizes/bold_font_size = 22
+theme_override_font_sizes/bold_italics_font_size = 22
+theme_override_font_sizes/italics_font_size = 22
+theme_override_font_sizes/mono_font_size = 22
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+vertical_alignment = 1
+script = ExtResource("29_4h2n7")
+AutoSizeEnabled = false
+MinFontSize = 22
+MaxFontSize = 22
+
+[node name="NoResultsLabel" type="RichTextLabel" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 285.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_colors/default_color = Color(1, 0.964706, 0.886275, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.25098)
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/normal_font = ExtResource("3_1sl0p")
+theme_override_fonts/bold_font = ExtResource("28_kuhdt")
+theme_override_font_sizes/normal_font_size = 32
+theme_override_font_sizes/bold_font_size = 32
+theme_override_font_sizes/bold_italics_font_size = 32
+theme_override_font_sizes/italics_font_size = 32
+theme_override_font_sizes/mono_font_size = 32
+bbcode_enabled = true
+text = "No cards found."
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("29_4h2n7")
+AutoSizeEnabled = false
+MinFontSize = 22
+MaxFontSize = 22
+
+[node name="BackButton" parent="." instance=ExtResource("2_e1uqt")]
+unique_name_in_owner = true
+layout_mode = 1
+
+[editable path="CardGrid"]
+[editable path="Sidebar/MarginContainer/TopVBox/PoolFilters/IroncladPool"]
+[editable path="Sidebar/MarginContainer/TopVBox/PoolFilters/SilentPool"]
+[editable path="Sidebar/MarginContainer/TopVBox/PoolFilters/RegentPool"]
+[editable path="Sidebar/MarginContainer/TopVBox/PoolFilters/NecrobinderPool"]
+[editable path="Sidebar/MarginContainer/TopVBox/PoolFilters/DefectPool"]
+[editable path="Sidebar/MarginContainer/TopVBox/PoolFilters/ColorlessPool"]
+[editable path="Sidebar/MarginContainer/TopVBox/PoolFilters/AncientsPool"]
+[editable path="Sidebar/MarginContainer/TopVBox/PoolFilters/MiscPool"]
+[editable path="Sidebar/MarginContainer/TopVBox/CardTypeModule/CardTypeToggler/AttackType"]
+[editable path="Sidebar/MarginContainer/TopVBox/CardTypeModule/CardTypeToggler/SkillType"]
+[editable path="Sidebar/MarginContainer/TopVBox/CardTypeModule/CardTypeToggler/PowerType"]
+[editable path="Sidebar/MarginContainer/TopVBox/CardTypeModule/CardTypeToggler/OtherType"]
+[editable path="Sidebar/MarginContainer/TopVBox/RarityModule/RarityToggler/UncommonRarity"]
+[editable path="Sidebar/MarginContainer/TopVBox/RarityModule/RarityToggler/RareRarity"]
+[editable path="Sidebar/MarginContainer/TopVBox/RarityModule/RarityToggler/OtherRarity"]
+[editable path="Sidebar/MarginContainer/TopVBox/CostModule/CostToggler/Cost1"]
+[editable path="Sidebar/MarginContainer/TopVBox/CostModule/CostToggler/Cost2"]
+[editable path="Sidebar/MarginContainer/TopVBox/CostModule/CostToggler/Cost3+"]
+[editable path="Sidebar/MarginContainer/TopVBox/CostModule/CostToggler/CostX"]
+[editable path="Sidebar/MarginContainer/BottomVBox/MultiplayerCards"]
+[editable path="Sidebar/MarginContainer/BottomVBox/Upgrades"]

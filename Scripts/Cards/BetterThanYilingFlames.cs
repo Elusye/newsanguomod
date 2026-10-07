@@ -149,6 +149,15 @@ public class BetterThanYilingFlames : NewsanguoCardTemplate
         CurrentDamage = BaseDamage + IncreasedDamage;
     }
 
+    // 卡面附加参数：告诉文案“本牌是不是复制品”。
+    // 复制品的 DeckVersion 会被引擎清空（CardModel.AfterCloned，sts2.decompiled.cs:74119-74140），
+    // 用它打出只会让本场这张副本变强，不会写回牌库本体——卡面上要说清楚。
+    protected override void AddExtraArgsToDescription(LocString description)
+    {
+        base.AddExtraArgsToDescription(description);
+        AddIsCloneDescriptionArg(description);
+    }
+
     // 增加永久成长并同步当前伤害值
     private void BuffFromPlay(int extraDamage)
     {

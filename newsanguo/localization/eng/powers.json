@@ -105,5 +105,14 @@
   "NEWSANGUO_POWER_INVINCI_DAD_POWER.smartDescription": "Whenever the damage [gold]{OwnerName}[/gold] deals is blocked, it gains [gold]Strength[/gold] equal to the players' remaining [gold]Block[/gold] (highest in multiplayer).",
   "NEWSANGUO_POWER_PARADOX_POWER.title": "Paradox",
   "NEWSANGUO_POWER_PARADOX_POWER.description": "This turn, you cannot play the cards marked by this card.",
-  "NEWSANGUO_POWER_PARADOX_POWER.smartDescription": "This turn, you cannot play the cards marked by this card."
+  "NEWSANGUO_POWER_PARADOX_POWER.smartDescription": "This turn, you cannot play the cards marked by this card.",
+  "NEWSANGUO_POWER_CREATIVE_MODE_POWER.title": "Creative Mode",
+  "NEWSANGUO_POWER_CREATIVE_MODE_POWER.description": "At the end of combat, you may choose a card from all cards in the game (excluding Creative Mode) and add it to your deck.",
+  "NEWSANGUO_POWER_CREATIVE_MODE_POWER.smartDescription": "At the end of combat, you may choose a card from all cards in the game (excluding Creative Mode) and add it to your deck.",
+  "NEWSANGUO_POWER_MEGALOVANIA_POWER.title": "MEGALOVANIA",
+  "NEWSANGUO_POWER_MEGALOVANIA_POWER.description": "At the start of your turn, gain {Amount:energyIcons()}.",
+  "NEWSANGUO_POWER_MEGALOVANIA_POWER.smartDescription": "At the start of your turn, gain [blue]{Amount:energyIcons()}[/blue].",
+  "NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.title": "Sovereign Form",
+  "NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.description": "Whenever you gain 4 [gold]Drunken Might[/gold], gain {Amount} [gold]Heaven's Force[/gold].",
+  "NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.smartDescription": "Whenever you gain 4 [gold]Drunken Might[/gold], gain [blue]{Amount}[/blue] [gold]Heaven's Force[/gold]."
 }

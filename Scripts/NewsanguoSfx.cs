@@ -56,6 +56,14 @@ public static class NewsanguoSfx
     // 后续新增的音效按同一口径、同一中位基准（-23.1 dB）单独补进表里，不入中位重算（当前共 138 个）。
     // 2026-09-29 新增 heavens_force_decline（「竟然不许！」）：ffmpeg volumedetect 实测 RMS -24.0 / 峰值 -8.2
     //   → raw = 0.7×(中位 -23.1 - (-24.0)) = +0.63，峰值上限 -3-(-8.2) = +5.2 未触发钳制，取 0.5 dB 步进 = +0.5。
+    // 2026-10-07 新增（同一口径：ffmpeg volumedetect 实测 RMS / 峰值 → raw = 0.7×(中位 -23.1 - RMS)，
+    //   再受“峰值+gain ≤ -3 dB”钳制、取 0.5 dB 步进）：
+    //   creative_mode -31.5 / -10.2 → raw +5.88，峰值上限 +7.2 未触发 → +6.0
+    //   auto_pilot -22.1 / -7.2 → raw -0.7 → -0.5
+    //   megalovania -25.9 / -6.4 → raw +1.96 → +2.0
+    //   sovereign_form -26.1 / -4.3 → raw +2.1，峰值上限 +1.3 触发钳制 → +1.0
+    //   sovereign_form_power -24.1 / -7.0 → raw +0.7 → +0.5
+    //   megalovania_power 尚无音频文件，暂记 0（补齐后按同口径重算）
     // 不参与自动测量的：character_death / character_select（引擎侧触发，手工保留原值）、
     // song_of_guan_yu（长音频，走 NewsanguoSfx.PlayOwnLevel 自带基准电平，不查本表）。
     //
@@ -70,6 +78,7 @@ public static class NewsanguoSfx
     {
         ["a_grand_toast"] = 1.5f,
         ["always_mine"] = -7.5f,
+        ["auto_pilot"] = -0.5f,
         ["bai_qi"] = 6.5f,
         ["better_each_day"] = 5f,
         ["better_than_yiling_flames"] = 7f,
@@ -95,6 +104,7 @@ public static class NewsanguoSfx
         ["chenliu_mess_hall_relic"] = 1f,
         ["chow_down"] = 0f,
         ["commander_arrives"] = -4f,
+        ["creative_mode"] = 6f,
         ["cricket_form"] = 4f,
         ["cricket_form_power"] = 4f,
         ["cross_for_cross"] = 6f,
@@ -141,6 +151,8 @@ public static class NewsanguoSfx
         ["loath_to_leave_the_table_damage"] = -2.5f,
         ["longevity_spell"] = -4.5f,
         ["medical_mastery"] = -0.5f,
+        ["megalovania"] = 2f,
+        ["megalovania_power"] = 0f,
         ["military_cudgel"] = -0.5f,
         ["mind_control_spell"] = -1f,
         ["my_three_generals"] = 8.5f,
@@ -184,6 +196,8 @@ public static class NewsanguoSfx
         ["soldier"] = -3f,
         ["son_of_heaven"] = 4.5f,
         ["soul_shackles"] = 1f,
+        ["sovereign_form"] = 1f,
+        ["sovereign_form_power"] = 0.5f,
         ["starry_night"] = -2f,
         ["strike_newsanguo"] = -3f,
         ["ten_thousand_transparent_holes"] = 0.5f,

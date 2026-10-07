@@ -112,6 +112,18 @@ public class ShuHanCardPool : TypeListCardPoolModel, IModColorfulPhilosophersCar
         typeof(MarshalsTerraceFeast),       // 帅台设宴
 
         // 2026-10-05 追加：蜀汉新卡「博望坡悖论」（只在本池注册，曹魏拿不到）
-        typeof(BowangSlopeParadox)          // 博望坡悖论
+        typeof(BowangSlopeParadox),         // 博望坡悖论
+
+        // 2026-10-06 追加：蜀汉先古卡「创造模式」（只在本池注册，曹魏拿不到）
+        typeof(CreativeMode),               // 创造模式
+
+        // 2026-10-07 追加：蜀汉新卡「狂妄之人」（只在本池注册，曹魏拿不到）
+        typeof(Megalovania),                // 狂妄之人
+
+        // 2026-10-07 追加：蜀汉新卡「托管」（只在本池注册，曹魏拿不到）
+        typeof(AutoPilot),                  // 托管
+
+        // 2026-10-07 追加：蜀汉新卡「君王形态」（原名「真正的君王」/ The True King，只在本池注册，曹魏拿不到）
+        typeof(SovereignForm)               // 君王形态
     ];
 }

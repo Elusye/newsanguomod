@@ -24,6 +24,7 @@ namespace newsanguo.Scripts;
 [RegisterCard(typeof(TokenCardPool))]
 public class OldBorrowedTime : NewsanguoCardTemplate
 {
+    // 2026-10-07：保留原版角色卡框（旧·预借时间是死灵的粉色卡框）—— 衍生牌不跟随玩家角色
     public override CardPoolModel VisualCardPool => ModelDb.CardPool<NecrobinderCardPool>();
 
     // 卡图资源

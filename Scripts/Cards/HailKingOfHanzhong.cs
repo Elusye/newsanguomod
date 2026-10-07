@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
@@ -76,5 +78,19 @@ public class HailKingOfHanzhong : NewsanguoCardTemplate
     protected override void OnUpgrade()
     {
         DynamicVars.Block.UpgradeValueBy(2m);
+    }
+
+    // 生成 1 张“参见汉中王！”并加入手牌（供其它卡牌调用，参考原版 Shiv.CreateInHand）
+    public static async Task<CardModel?> CreateInHand(Player owner, ICombatState combatState)
+    {
+        // 战斗已结束或正在结束时不再生成，避免收尾阶段状态错乱
+        if (CombatManager.Instance.IsOverOrEnding)
+        {
+            return null;
+        }
+
+        CardModel card = combatState.CreateCard<HailKingOfHanzhong>(owner);
+        await CardPileCmd.AddGeneratedCardsToCombat([card], PileType.Hand, owner);
+        return card;
     }
 }
