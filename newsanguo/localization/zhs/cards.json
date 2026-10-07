@@ -87,7 +87,7 @@
   "NEWSANGUO_CARD_CENTRAL_BASTION.title": "中原雄关",
   "NEWSANGUO_CARD_CENTRAL_BASTION.description": "获得{Block:diff()}点[gold]格挡[/gold]。\n直到下回合开始前，若你未受到未被格挡的伤害，则下回合开始时再获得{NextTurnBlock:diff()}点[gold]格挡[/gold]。",
   "NEWSANGUO_CARD_PROXY_STRIKE.title": "替身打击",
-  "NEWSANGUO_CARD_PROXY_STRIKE.description": "造成{Damage:diff()}点伤害。\n{IsTargeting:\n这张牌的伤害永久增加{IncreaseBy:diff()}。|若目标的意图伤害大于{InitialDamage:diff()}，则这张牌的伤害永久增加二者的差值。}{IsClone:\n[purple]打出此复制品不会使本体成长。[/purple]|}",
+  "NEWSANGUO_CARD_PROXY_STRIKE.description": "造成{Damage:diff()}点伤害。\n{IsTargeting:这张牌的伤害永久增加{IncreaseBy:diff()}。|若目标的意图伤害大于{InitialDamage:diff()}，则这张牌的伤害永久增加二者的差值。}{IsClone:\n[purple]打出此复制品不会使本体成长。[/purple]|}",
   "NEWSANGUO_CARD_WHO_RULES.title": "你是主还是我是主？",
   "NEWSANGUO_CARD_WHO_RULES.description": "给予另一名玩家{DoomPower:diff()}层[gold]灾厄[/gold]。\n你获得{Energy:energyIcons()}。\n将这张牌放入那名玩家的[gold]抽牌堆[/gold]。",
   "NEWSANGUO_CARD_LOATH_TO_LEAVE_THE_TABLE.title": "你是舍不得这张帅案吧！",

@@ -87,7 +87,7 @@
   "NEWSANGUO_CARD_CENTRAL_BASTION.title": "Central Bastion",
   "NEWSANGUO_CARD_CENTRAL_BASTION.description": "Gain {Block:diff()} [gold]Block[/gold].\nIf you take no unblocked damage before your next turn, gain {NextTurnBlock:diff()} [gold]Block[/gold] at the start of your next turn.",
   "NEWSANGUO_CARD_PROXY_STRIKE.title": "Proxy Strike",
-  "NEWSANGUO_CARD_PROXY_STRIKE.description": "Deal {Damage:diff()} damage.\n{IsTargeting:\nThis card's damage permanently increases by {IncreaseBy:diff()}.|If the target's intent would deal more damage to you than {InitialDamage:diff()}, this card's damage permanently increases by the difference.}{IsClone:\n[purple]Playing this copy will not increase the original's damage.[/purple]|}",
+  "NEWSANGUO_CARD_PROXY_STRIKE.description": "Deal {Damage:diff()} damage.\n{IsTargeting:This card's damage permanently increases by {IncreaseBy:diff()}.|If the target's intent would deal more damage to you than {InitialDamage:diff()}, this card's damage permanently increases by the difference.}{IsClone:\n[purple]Playing this copy will not increase the original's damage.[/purple]|}",
   "NEWSANGUO_CARD_WHO_RULES.title": "Who Rules",
   "NEWSANGUO_CARD_WHO_RULES.description": "Apply {DoomPower:diff()} [gold]Doom[/gold] to another player.\nGain {Energy:energyIcons()}.\nPut this card into that player's [gold]Draw Pile[/gold].",
   "NEWSANGUO_CARD_LOATH_TO_LEAVE_THE_TABLE.title": "Loath to Leave the Table",
