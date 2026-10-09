@@ -1,4 +1,7 @@
 <Project Sdk="Godot.NET.Sdk/4.5.1">
+    <!-- 本机路径。命令行 -p:Sts2Dir= 优先于 local.props。 -->
+    <Import Project="local.props" Condition="Exists('local.props')" />
+
     <PropertyGroup>
         <!-- 如果你安装了10.0并遇到问题，改下这里 -->
         <TargetFramework>net9.0</TargetFramework>
@@ -7,8 +10,6 @@
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
-        <!-- 改成你的杀戮尖塔2目录 -->
-        <Sts2Dir>E:\Program Files (x86)\Steam\steamapps\common\Slay the Spire 2</Sts2Dir>
         <Sts2DataDir>$(Sts2Dir)\data_sts2_windows_x86_64</Sts2DataDir>
 
     </PropertyGroup>
@@ -37,6 +38,18 @@
              3) 框架本体不随本 mod 分发，由 mods/STS2-RitsuLib 运行时提供（见下方 Target）。 -->
         <PackageReference Include="STS2.RitsuLib" Version="[0.6.2]" />
     </ItemGroup>
+
+    <Target Name="Validate Local Paths" BeforeTargets="ResolveAssemblyReferences">
+        <Error
+            Condition="'$(Sts2Dir)' == ''"
+            Text="未配置游戏目录。请将 local.props.example 复制为 local.props 并设置 Sts2Dir，或使用 -p:Sts2Dir=。" />
+        <Error
+            Condition="'$(Sts2Dir)' != '' AND !Exists('$(Sts2Dir)')"
+            Text="Sts2Dir 不存在: $(Sts2Dir)" />
+        <Error
+            Condition="'$(Sts2Dir)' != '' AND Exists('$(Sts2Dir)') AND !Exists('$(Sts2DataDir)\sts2.dll')"
+            Text="Sts2Dir 不是有效的杀戮尖塔 2 目录，缺少: $(Sts2DataDir)\sts2.dll" />
+    </Target>
 
     <!-- 自动复制dll和json（RitsuLib 本体由 mods/STS2-RitsuLib 运行时提供，不要复制进本 mod 目录：
          随 mod 携带的副本会按文件名抢占程序集解析，导致版本与运行时不一致（FileLoadException）。 -->

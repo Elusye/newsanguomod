@@ -7,6 +7,9 @@
 .vs/
 *.user
 
+# 本机游戏目录与 Godot 路径（由 local.props.example 复制而来）
+local.props
+
 # 本地诊断日志
 debug.log
 
@@ -16,6 +19,8 @@ debug.log
 # 构建产物（保险）
 bin/
 obj/
+__pycache__/
+*.pyc
 
 # 本地反编译/临时产物
 .decomp_tmp/

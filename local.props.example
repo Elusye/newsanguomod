@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup>
+    <!-- 杀戮尖塔 2 安装根目录。DLL、json 和 PCK 会部署到该目录下的 mods\newsanguo。 -->
+    <Sts2Dir>C:\Program Files (x86)\Steam\steamapps\common\Slay the Spire 2</Sts2Dir>
+    <!-- Godot 4.5.1 Mono 控制台版。留空时，export-pck.ps1 会依次查找 PATH 和默认安装位置。 -->
+    <GodotExe>C:\Program Files\Godot\Godot_v4.5.1-stable_mono_win64\Godot_v4.5.1-stable_mono_win64_console.exe</GodotExe>
+  </PropertyGroup>
+</Project>
