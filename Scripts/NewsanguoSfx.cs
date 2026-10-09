@@ -53,7 +53,7 @@ public static class NewsanguoSfx
     // 自动生成：136 个音效，中位 RMS -23.1 dB，K=0.7（向中位靠拢），峰值余量 -3 dB。
     // 口径：ffmpeg volumedetect 的 mean_volume 作 RMS，gain = 0.7×(中位-RMS)，再受“峰值+gain ≤ -3 dB”钳制，取 0.5 dB 步进。
     // 替换音频文件后可照此重算整表。
-    // 后续新增的音效按同一口径、同一中位基准（-23.1 dB）单独补进表里，不入中位重算（当前共 138 个）。
+    // 后续新增的音效按同一口径、同一中位基准（-23.1 dB）单独补进表里，不入中位重算（当前共 154 个）。
     // 2026-09-29 新增 you_dare_refuse（「竟然不许！」）：ffmpeg volumedetect 实测 RMS -24.0 / 峰值 -8.2
     //   → raw = 0.7×(中位 -23.1 - (-24.0)) = +0.63，峰值上限 -3-(-8.2) = +5.2 未触发钳制，取 0.5 dB 步进 = +0.5。
     // 2026-10-07 新增（同一口径：ffmpeg volumedetect 实测 RMS / 峰值 → raw = 0.7×(中位 -23.1 - RMS)，
@@ -64,10 +64,20 @@ public static class NewsanguoSfx
     //   sovereign_form -26.1 / -4.3 → raw +2.1，峰值上限 +1.3 触发钳制 → +1.0
     //   sovereign_form_power -24.1 / -7.0 → raw +0.7 → +0.5
     //   megalovania_power 于 2026-10-09 从表内删除（「狂妄之人」能力不再每回合播放音效，该音频从未补齐）
-    // 2026-10-08 新增 heavenly_deluge（「天上大水」）尚无音频文件，暂记 0（补齐后按同口径重算）
-    // 2026-10-08 新增 time_acid_rain（「时光酸雨」，原名「时空酸雨」，2026-10-09 改名）尚无音频文件，暂记 0（补齐后按同口径重算）
-    // 2026-10-09 新增 charge_to_zhuge_liangs_cart（「直奔诸葛亮四轮车！」）、four_wheeled_cart（「四轮车」）尚无音频文件，暂记 0（补齐后按同口径重算）
-    // 不参与自动测量的：character_death / character_select（引擎侧触发，手工保留原值）、
+    // 2026-10-09 全表复核 + 补齐（音频已全部到位，ffmpeg volumedetect 实测 RMS / 峰值）：
+    //   heavenly_deluge（「天上大水」）-22.9 / -3.0 → raw -0.14，峰值上限 -3.0 未触发 → 0.0
+    //   time_acid_rain（「时光酸雨」，原名「时空酸雨」）-19.7 / -3.3 → raw -2.38，峰值上限 +0.3 未触发 → -2.5
+    //   charge_to_zhuge_liangs_cart（「直奔诸葛亮四轮车！」）-24.0 / -11.4 → raw +0.63 → +0.5
+    //   four_wheeled_cart（「四轮车」）-22.6 / -11.4 → raw -0.35 → -0.5
+    //   新增 bowang_slope_paradox -14.5 / -2.7 → raw -6.02，峰值上限 -0.3 未触发 → -6.0
+    //   新增 hail_king_of_hanzhong -18.2 / -3.1 → raw -3.43 → -3.5
+    //   新增 human_printer -24.4 / -6.4 → raw +0.91 → +1.0
+    //   新增 marshals_terrace_feast -30.2 / -11.5 → raw +4.97 → +5.0
+    //   同批复核：158 个音频里既有条目 146/150 与重算值逐条一致。四条例外一律保持原值：
+    //   better_each_day / blood_loss / fall_on_own_sword 的 raw 恰为 +5.25 的半步（原表取 5.0），
+    //   sovereign_form 受峰值钳制后原表取下限 +1.0（四舍五入会到 +1.5，突破 -3 dBFS 上限）。
+    // 不参与自动测量的：character_death（引擎侧触发，手工保留原值）、
+    // character_select（对应音频文件 2026-10-06 已删，仅作 EngineSfxRedirectPatch 的兜底目标）、
     // song_of_guan_yu（长音频，走 NewsanguoSfx.PlayOwnLevel 自带基准电平，不查本表）。
     //
     // 两个角色的选人音效 character_select_caowei / character_select_shuhan 是「同一用途的两个版本」，
@@ -91,6 +101,7 @@ public static class NewsanguoSfx
         ["blades_of_virtue_2"] = -1f,
         ["blood_loss"] = 5f,
         ["bone_melting_palm"] = -3f,
+        ["bowang_slope_paradox"] = -6f,
         ["brew_heals_all"] = 3.5f,
         ["brew_limit_break"] = -6.5f,
         ["cao_art_of_war"] = 3f,
@@ -102,7 +113,7 @@ public static class NewsanguoSfx
         ["character_select"] = 2f,
         ["character_select_caowei"] = 0f,
         ["character_select_shuhan"] = -4.5f,
-        ["charge_to_zhuge_liangs_cart"] = 0f,
+        ["charge_to_zhuge_liangs_cart"] = 0.5f,
         ["check_the_premiere"] = -1f,
         ["chenliu_mess_hall"] = -2f,
         ["chenliu_mess_hall_heal"] = 9.5f,
@@ -132,9 +143,10 @@ public static class NewsanguoSfx
         ["feel_no_acid_power"] = -6.5f,
         ["fire_and_water_proof"] = -2.5f,
         ["forty_sixty_tax"] = 0f,
-        ["four_wheeled_cart"] = 0f,
+        ["four_wheeled_cart"] = -0.5f,
         ["golden_rebellion"] = -2.5f,
         ["great_evil"] = -0.5f,
+        ["hail_king_of_hanzhong"] = -3.5f,
         ["han_xin"] = 7f,
         ["heaven_and_earth"] = -3f,
         ["heaven_hating_swordplay"] = 0f,
@@ -145,6 +157,7 @@ public static class NewsanguoSfx
         ["heavens_decay"] = -4f,
         ["heavens_force"] = 9.5f,
         ["heavens_force_decay"] = 0f,
+        ["human_printer"] = 1f,
         ["human_transmutation_spell"] = -3f,
         ["i_cant_leave"] = -1f,
         ["im_getting_drunk"] = 2f,
@@ -161,6 +174,7 @@ public static class NewsanguoSfx
         ["ma_clan_quad_blast_2"] = 2.5f,
         ["ma_clan_quad_blast_3"] = 1.5f,
         ["ma_clan_quad_blast_4"] = 3.5f,
+        ["marshals_terrace_feast"] = 5f,
         ["medical_mastery"] = -0.5f,
         ["megalovania"] = 2f,
         ["military_cudgel"] = -0.5f,
@@ -208,7 +222,7 @@ public static class NewsanguoSfx
         ["three_blades"] = 4f,
         ["throw_him_out"] = 1.5f,
         ["tiger_wind_cloud_dragon"] = -2f,
-        ["time_acid_rain"] = 0f,
+        ["time_acid_rain"] = -2.5f,
         ["to_a_bigger_goblet"] = 6f,
         ["to_a_bigger_goblet_power"] = 0f,
         ["tremble"] = 6.5f,

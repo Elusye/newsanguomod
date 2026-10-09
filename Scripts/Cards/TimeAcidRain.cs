@@ -11,6 +11,7 @@ using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
+using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -77,6 +78,9 @@ public class TimeAcidRain : NewsanguoCardTemplate
         // （去格挡的写法参考原版卡牌「暴露」Expose：CreatureCmd.LoseBlock(choiceContext, target, target.Block, remover)）
         // 正面效果只清“按当前数值算正面”的能力
         // （力量、灵巧这类可负计数能力为负值时是负面效果，不该被这张牌带走）
+        // 例外：不清「流沙」SandpitPower——它的 AfterRemoved 会强杀被卷入的玩家
+        // （.decompile/sts2full/sts2.decompiled.cs:104573-104606，其中 :104603 是
+        //  `await CreatureCmd.Kill(allAffectedCreature2, force: true);`）⇒ 清掉它等于直接自杀
         // 先快照再逐个移除，避免遍历途中集合变化
         foreach (Creature enemy in combatState.GetOpponentsOf(base.Owner.Creature).Where(c => c.IsAlive))
         {
@@ -84,7 +88,7 @@ public class TimeAcidRain : NewsanguoCardTemplate
             await CreatureCmd.LoseBlock(choiceContext, enemy, enemy.Block, base.Owner.Creature);
 
             List<PowerModel> buffs = enemy.Powers
-                .Where(p => p.TypeForCurrentAmount == PowerType.Buff)
+                .Where(p => p.TypeForCurrentAmount == PowerType.Buff && p is not SandpitPower)
                 .ToList();
             foreach (PowerModel buff in buffs)
             {
