@@ -12,10 +12,9 @@ using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 // 注册卡牌到衍生卡池
 [RegisterCard(typeof(TokenCardPool))]
 public class ZhouYafu : NewsanguoCardTemplate

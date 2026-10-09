@@ -9,6 +9,8 @@ using STS2RitsuLib.Scaffolding.Characters;
 using STS2RitsuLib.Scaffolding.Content;
 using STS2RitsuLib.Utils;
 
+using newsanguo.Scripts.Cards;
+
 namespace newsanguo.Scripts.Characters;
 
 [RegisterSharedCardPool]
@@ -66,13 +68,13 @@ public class NewsanguoCardPool : TypeListCardPoolModel, IModColorfulPhilosophers
         typeof(StrikeCaowei),
         typeof(DefendCaowei),
         typeof(AGrandToast),
-        typeof(CrossForCross),
+        typeof(CrossTheRiverToo),
         typeof(FeelNoAcid),
-        typeof(QuadBlast),
+        typeof(MaClanQuadBlast),
         typeof(SlamTheBowl),
         typeof(ToABiggerGoblet),
-        typeof(BladeOfVirtue),
-        typeof(WineTheOldHero),
+        typeof(BladesOfVirtue),
+        typeof(WineIsTheOldHero),
         typeof(StarryNight),
         typeof(ScorchingStarfall),
         typeof(Divination),
@@ -82,7 +84,7 @@ public class NewsanguoCardPool : TypeListCardPoolModel, IModColorfulPhilosophers
         typeof(PeekIntoHeaven),
         typeof(DesecrateHeaven),
         typeof(SmilingTiger),
-        typeof(DarkfinShark),
+        typeof(DarkHornShark),
         typeof(HumanTransmutationSpell),
         typeof(ReanimationSpell),
         typeof(LongevitySpell),
@@ -94,12 +96,12 @@ public class NewsanguoCardPool : TypeListCardPoolModel, IModColorfulPhilosophers
         typeof(TheTruestMask),
         typeof(DivineInsight),
         typeof(SeaChange),
-        typeof(GetOut),
+        typeof(ThrowHimOut),
         typeof(HeavenRevision),
         typeof(MedicalMastery),
         typeof(Tweak),
-        typeof(SelfFall),
         typeof(Release),
+        // 2026-10-09：「自刎归天！」（FallOnOwnSword）按要求移出本池（改注册到蜀汉卡池）
         // 2026-10-05：「天下无敌」（Invincible）按要求移出本池（改注册到蜀汉卡池）
         // 2026-10-05：新增「参见汉中王！」
         typeof(HailKingOfHanzhong),
@@ -107,12 +109,12 @@ public class NewsanguoCardPool : TypeListCardPoolModel, IModColorfulPhilosophers
         typeof(TriumphBrew),
         typeof(WhatToEat),
         typeof(DongZhuoTheTraitor),
-        typeof(SkywardBlade),
+        typeof(HeavenHatingSwordplay),
         typeof(RuthlessBlade),
-        typeof(BonelessPalm),
+        typeof(BoneMeltingPalm),
         typeof(WolfVsDog),
-        typeof(Unstoppable),
-        typeof(CentralBastion),
+        typeof(FireAndWaterProof),
+        typeof(CentralPlainsPass),
         typeof(ProxyStrike),
         typeof(Tremble),
         typeof(BetterThanYilingFlames),
@@ -121,9 +123,19 @@ public class NewsanguoCardPool : TypeListCardPoolModel, IModColorfulPhilosophers
         typeof(Retire),
         typeof(BrewHealsAll),
         typeof(CheckThePremiere),
-        typeof(HeavenAndEarth),
+        // 2026-10-08：按要求把「天上人间」从曹魏卡池移除（改为只注册在蜀汉卡池）
         typeof(DeafenMe),
         typeof(DragonOmen),
-        typeof(OffWithYourHead)
+        typeof(OffWithYourHead),
+
+        // 2026-10-08 追加：曹魏新卡「天上大水」（只在本池注册，蜀汉拿不到）
+        typeof(HeavenlyDeluge),             // 天上大水
+
+        // 2026-10-08 追加：曹魏新卡「时光酸雨」（原名「时空酸雨」，2026-10-09 改名；只在本池注册，蜀汉拿不到）
+        typeof(TimeAcidRain),               // 时光酸雨
+
+        // 2026-10-09 追加：曹魏新卡「直奔诸葛亮四轮车！」（只在本池注册，蜀汉拿不到；
+        // 其衍生牌「四轮车」注册在衍生池 TokenCardPool，不进本池）
+        typeof(ChargeToZhugeLiangsCart)     // 直奔诸葛亮四轮车！
     ];
 }

@@ -4,6 +4,8 @@ using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Nodes.Cards.Holders;
 using MegaCrit.Sts2.Core.Nodes.Combat;
 
+using newsanguo.Scripts.Cards;
+
 namespace newsanguo.Scripts.Patches;
 
 // “原本就是我的！”（带“奇巧”）在被要求弃手牌时金色高亮。

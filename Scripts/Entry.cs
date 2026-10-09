@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Modding;
 using STS2RitsuLib;
 using STS2RitsuLib.Interop;
 
+using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Patches;
 using newsanguo.Scripts.Powers;
@@ -50,6 +51,16 @@ public class Entry
         // 「创造模式」的选牌屏要像图鉴一样能搜索 / 筛选：复用图鉴的侧栏控件，只在那一屏生效
         // （详见 CardSelectSearchPatch.cs 顶部注释；标记由 CreativeModeReward 在弹屏前打开）
         ApplyPatch(harmony, typeof(CardSelectSearchPatch));
+        // 「曹氏兵法」：①独立召唤的 1 生命值青州兵阵亡后立刻离场（否则尸体会留在 Pets 里）
+        // ②敌人攻击的承伤优先级改成「青州兵（按召唤顺序依次穿透）→ 玩家格挡 → 奥斯提 → 玩家」
+        //   （原版是「玩家格挡 → 奥斯提 → 玩家」，且多只召唤物时一次攻击只有 1 只接刀）
+        ApplyPatch(harmony, typeof(CaoArtOfWarSoldierRemovalPatch));
+        ApplyPatch(harmony, typeof(CaoArtOfWarSoldierDamageCascadePatch));
+        ApplyPatch(harmony, typeof(SoldierDamageCascadeNestedHookSkipPatch));
+        // ③青州兵的战斗表现：站位照原版奥斯提的锚点（主人右侧 + 抬高 75px）并在多只时横向错开，
+        //   同时把引擎给「非奥斯提」宠物关掉的鼠标交互/血条恢复回来（否则鼠标悬浮看不到名字，见补丁顶部注释）
+        ApplyPatch(harmony, typeof(CaoArtOfWarSoldierFormationPatch));
+        ApplyPatch(harmony, typeof(CaoArtOfWarSoldierFormationRelayoutPatch));
         // “卡牌错位”归位清扫：出牌被取消 / 选牌结束时，把“逻辑上在手牌、画面却停在屏幕中央”的
         // 卡牌节点搬回手牌容器（详见 StrayHandCardCleanupPatch.cs 顶部注释）
         //
@@ -82,7 +93,7 @@ public class Entry
         CreativeModeRewardRegistration.Register();
         // 先古之民遗物官方映射（由 RitsuLib 的补丁在事件/获得遗物时生效）：
         // 古老牙齿：把“仁之剑，义之剑”变化为先古卡“大奸似忠，大伪似真”
-        RitsuLibFramework.RegisterArchaicToothTranscendenceMapping<BladeOfVirtue, TheTruestMask>(ModId);
+        RitsuLibFramework.RegisterArchaicToothTranscendenceMapping<BladesOfVirtue, TheTruestMask>(ModId);
         // 欧洛巴斯之触：把初始遗物“沛国佳酿”升级为先古遗物“百年佳酿”
         RitsuLibFramework.RegisterTouchOfOrobasRefinementMapping<FineBrewOfPei, CenturyBrew>(ModId);
         // 音频已全部迁移到 Godot 资源播放，不再注册 FMOD bank / GUIDs 映射（删除 newsanguo.bank 以减小体积）。
@@ -90,7 +101,8 @@ public class Entry
         // （角色选人 / 死亡）由 EngineSfxRedirectPatch 在 NAudioManager.PlayOneShot 入口
         // 截获并转交 NewsanguoSfx 播放同名音频资源，同样不再经过 FMOD。
         SubscribeAudioRestore();
-        // RitsuLib Mod 设置页：注册本 mod 卡牌/能力音效倍率滑杆（与 newsanguo_sfx_volume 控制台命令共用真值源）
+        // RitsuLib Mod 设置页：注册本 mod 的设置项
+        // （“音效音量”分区与控制台命令 newsanguo_sfx_volume 共用真值源；“测试模式”分区控制蜀汉角色是否可选）
         NewsanguoSfxVolumeSettings.Register();
         // 遥测（大盘层）：只申请 run_history（已结束跑局的原版 run-history，含每点的候选卡与是否被选）。
         // 后端地址在 NewsanguoTelemetry.IngestEndpoint；留空时该方法会直接返回、不做任何注册。

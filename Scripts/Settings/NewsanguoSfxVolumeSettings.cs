@@ -4,7 +4,9 @@ using STS2RitsuLib.Settings;
 namespace newsanguo.Scripts.Settings;
 
 /// <summary>
-/// 把本 mod 卡牌/能力音效的开关与倍率注册为 RitsuLib 的 Mod 设置页（游戏内“设置 → Mod 设置”）。
+/// 把本 mod 的设置项注册为 RitsuLib 的 Mod 设置页（游戏内“设置 → Mod 设置”）。
+/// 当前含两个分区：“音效音量”（卡牌/能力音效开关与倍率）与“测试模式”
+/// （测试中的内容是否可见，当前控制“蜀汉”角色是否出现在角色选择界面，见 <see cref="NewsanguoTestModeSettings"/>）。
 ///
 /// 与控制台命令 newsanguo_sfx_volume 共用同一个持久化真值源（NewsanguoSfx.SfxEnabled /
 /// NewsanguoSfx.ModVolumeMultiplier）：设置页控件的 Read/Write 直接读写这些属性
@@ -27,9 +29,9 @@ public static class NewsanguoSfxVolumeSettings
         {
             page.WithSortOrder(0)
                 .WithModDisplayName(ModSettingsText.Literal("新三国"))
-                .WithTitle(ModSettingsText.Literal("新三国音效"))
+                .WithTitle(ModSettingsText.Literal("新三国设置"))
                 .WithDescription(ModSettingsText.Literal(
-                    "调整新三国卡牌/能力音效的开关与音量，叠加在游戏“音效”音量之上。"))
+                    "新三国 mod 的通用设置：卡牌/能力音效、测试模式。"))
                 .AddSection("sfx_volume", section =>
                 {
                     section.WithTitle(ModSettingsText.Literal("音效音量"))
@@ -55,6 +57,17 @@ public static class NewsanguoSfxVolumeSettings
                             valueFormatter: value => value.ToString("0.##") + "×",
                             description: ModSettingsText.Literal(
                                 "1× = 默认音量；0 = 静音；最高 4×。也可用控制台命令 newsanguo_sfx_volume 调整。"));
+                })
+                .AddSection("test_mode", section =>
+                {
+                    section.WithTitle(ModSettingsText.Literal("测试模式"))
+                        .AddToggle(
+                            id: "test_mode_enabled",
+                            label: ModSettingsText.Literal("测试模式"),
+                            binding: NewsanguoTestModeSettings.CreateTestModeBinding(),
+                            description: ModSettingsText.Literal(
+                                "开启后“蜀汉”角色才会出现在角色选择界面；关闭时隐藏，且不会被“随机角色”选中。"
+                                + "用于测试中的内容。修改后重新进入角色选择界面即可生效，无需重启游戏。"));
                 });
         });
     }

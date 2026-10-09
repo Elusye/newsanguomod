@@ -16,14 +16,14 @@ using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Powers;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
-// 注册到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
+// 2026-10-08：按要求从「曹魏」（新三国）卡池移除，改为只注册在蜀汉卡池
+// （同时确认未出现在 NewsanguoCardPool.CardTypes 中，避免仍然命中曹魏池）
+[RegisterCard(typeof(ShuHanCardPool))]
 public class LoathToLeaveTheTable : NewsanguoCardTemplate
 {
 
@@ -32,9 +32,9 @@ public class LoathToLeaveTheTable : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：对所有敌人造成 25 点伤害；酒力阈值 6（升级后 4）
+    // 卡牌基础数值：对所有敌人造成 20 点伤害；酒力阈值 6（升级后 4）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(25, ValueProp.Move),
+        new DamageVar(20, ValueProp.Move),
         new IntVar("WineThreshold", 6)
     ];
 
@@ -131,10 +131,10 @@ public class LoathToLeaveTheTable : NewsanguoCardTemplate
         }
     }
 
-    // 升级后的效果逻辑：伤害 25 → 35；酒力阈值 6 → 4
+    // 升级后的效果逻辑：伤害 20 → 26；酒力阈值 6 → 4
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(10);
+        DynamicVars.Damage.UpgradeValueBy(6);
         DynamicVars["WineThreshold"].UpgradeValueBy(-2);
     }
 }

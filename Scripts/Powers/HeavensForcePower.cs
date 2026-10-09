@@ -12,6 +12,7 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using newsanguo.Scripts.Cards;
 using newsanguo.Scripts;
 using newsanguo.Scripts.Combat;
 namespace newsanguo.Scripts.Powers;
@@ -38,10 +39,10 @@ public class HeavensForcePower : ModPowerTemplate
     /// <summary>一次正向转化给予的“双倍伤害”层数（本次转化固定给 1 层）。</summary>
     public const int ConversionDoubleDamage = 1;
 
-    // 拒绝转化时播放的语音：「竟然不许！」（音频文件 res://newsanguo/audios/heavens_force_decline.mp3；
+    // 拒绝转化时播放的语音：「竟然不许！」（音频文件 res://newsanguo/audios/you_dare_refuse.mp3；
     // NewsanguoSfx.Play 把事件路径的末段当文件名去找，支持未导入的裸 mp3）。
     // 拒绝本身**不改变任何游戏状态**（不扣点数、不给双倍伤害、不进额外回合），只播这句语音。
-    private const string DeclineSfx = "event:/newsanguo/sfx/heavens_force_decline";
+    private const string DeclineSfx = "event:/newsanguo/sfx/you_dare_refuse";
 
     // 标记本回合结束是否触发了正向转化（授予额外回合），引擎随后询问 ShouldTakeExtraTurn 时读取并清除
     private bool _grantExtraTurn;
@@ -172,13 +173,13 @@ public class HeavensForcePower : ModPowerTemplate
 
         List<CardModel> options =
         [
-            combatState.CreateCard<HeavensForceAccept>(Owner.Player),
-            combatState.CreateCard<HeavensForceDecline>(Owner.Player)
+            combatState.CreateCard<FollowHeavensWill>(Owner.Player),
+            combatState.CreateCard<YouDareRefuse>(Owner.Player)
         ];
 
         CardModel? chosen = await CardSelectCmd.FromChooseACardScreen(choiceContext, options, Owner.Player);
 
-        if (chosen is HeavensForceAccept)
+        if (chosen is FollowHeavensWill)
         {
             return true;
         }

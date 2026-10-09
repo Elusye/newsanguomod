@@ -14,10 +14,9 @@ using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 // 预借时间（旧）：旧版本的预借时间，0 费，给自己 3 层灾厄并获得能量
 // 注册卡牌到衍生卡池

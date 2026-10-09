@@ -10,9 +10,8 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
-using newsanguo.Scripts.Cards;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 // 曹魏专属的“防御”（2026-10-05 从 DefendNewsanguo 拆分而来）。
 // 拆分原因同 StrikeCaowei：卡框颜色跟随所属卡池，两个角色各用自己卡池里的那张。

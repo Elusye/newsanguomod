@@ -14,11 +14,10 @@ using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Powers;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 // 国贼董卓嘛！：给予 1 层易伤，且目标的易伤不会在回合结束时减少
 // 注册卡牌到新三国专属卡池

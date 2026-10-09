@@ -9,11 +9,10 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Powers;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 /// <summary>
 /// 「狂妄之人」（MEGALOVANIA，蜀汉专属）：0 费稀有[gold]能力牌[/gold]。
@@ -59,8 +58,16 @@ public class Megalovania : NewsanguoCardTemplate
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
         // 代价：给自己叠易伤（升级后层数变少）
-        await PowerCmd.Apply<VulnerablePower>(
+        VulnerablePower? vulnerable = await PowerCmd.Apply<VulnerablePower>(
             choiceContext, base.Owner.Creature, DynamicVars.Vulnerable.IntValue, base.Owner.Creature, this, silent: false);
+
+        // 原版规则：给玩家施加的 Debuff 首次衰减会被跳过（SkipNextDurationTick = true），
+        // 而持续型 Debuff 只在敌方回合结束时衰减，于是自身易伤会白白多持续一整个敌方回合
+        // （打出后首个敌方回合结束时不减层）。这里显式取消跳过，使它在下一个敌方回合正常衰减。
+        if (vulnerable != null)
+        {
+            vulnerable.SkipNextDurationTick = false;
+        }
 
         // 能力：每回合的能量上限 +1（数值固定 1，叠加体现在能力层数上；被动修正见 MegalovaniaPower）
         await PowerCmd.Apply<MegalovaniaPower>(

@@ -10,15 +10,14 @@ using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Powers;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
 [RegisterCard(typeof(NewsanguoCardPool))]
-public class WhereSWine : NewsanguoCardTemplate
+public class WheresWine : NewsanguoCardTemplate
 {
 
     // 卡图资源
@@ -28,7 +27,7 @@ public class WhereSWine : NewsanguoCardTemplate
 
     // 卡牌基础数值：每次获得酒力时抽 1 张牌
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<WhereSWinePower>(1m)
+        new PowerVar<WheresWinePower>(1m)
     ];
 
     // 悬停提示：展示“酒力”说明
@@ -36,18 +35,18 @@ public class WhereSWine : NewsanguoCardTemplate
         HoverTipFactory.FromPower<DrunkenMightPower>()
     ];
 
-    public WhereSWine() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+    public WheresWine() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
     {
     }
 
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        NewsanguoSfx.Play("event:/newsanguo/sfx/where_s_wine");
+        NewsanguoSfx.Play("event:/newsanguo/sfx/wheres_wine");
 
         // 附加“哪里饮酒？”能力：获得酒力时抽牌
-        int drawCount = DynamicVars["WhereSWinePower"].IntValue;
-        await PowerCmd.Apply<WhereSWinePower>(
+        int drawCount = DynamicVars["WheresWinePower"].IntValue;
+        await PowerCmd.Apply<WheresWinePower>(
             choiceContext,
             base.Owner.Creature,
             drawCount,

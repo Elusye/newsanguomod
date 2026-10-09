@@ -19,10 +19,9 @@ using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 // 被遗忘的仪式（旧）：旧版本的被遗忘的仪式，若本回合消耗过卡牌则获得能量
 // 写法照搬原版 ForgottenRitual，唯一例外：**不加"消耗"关键词**（Old 系列要求），

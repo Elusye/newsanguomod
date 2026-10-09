@@ -14,11 +14,10 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class ScorchingStarfall : NewsanguoCardTemplate

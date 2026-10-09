@@ -9,11 +9,10 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Combat;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 /// <summary>
 /// 「托管」（AutoPilot，蜀汉专属）：0 费罕见技能。

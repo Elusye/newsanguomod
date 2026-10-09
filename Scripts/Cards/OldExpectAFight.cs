@@ -14,10 +14,9 @@ using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 // 跃跃欲试（旧）：旧版本未被削弱的跃跃欲试，手牌中每有一张攻击牌就获得能量
 // 写法照搬原版 ExpectAFight，唯一例外：**不施加 NoEnergyGainPower**

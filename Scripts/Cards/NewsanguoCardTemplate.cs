@@ -17,6 +17,8 @@ namespace newsanguo.Scripts.Cards;
 /// 新三国卡牌的统一基类。子类可通过重写 <see cref="IsScryCard"/> 来显示“预见”关键词。
 /// 注意：子类若重写 <see cref="CanonicalKeywords"/>，必须把 <c>base.CanonicalKeywords</c> 合并进去，
 /// 否则本模板附加的“预见”等模组关键词会丢失。
+/// （“募集”不是模组关键词，而是自建的悬停提示——模组关键词的标题是静态文案、
+/// 显示不了卡面数值，见 Scripts/Cards/RecruitKeyword.cs。）
 /// </summary>
 public abstract class NewsanguoCardTemplate : ModCardTemplate
 {

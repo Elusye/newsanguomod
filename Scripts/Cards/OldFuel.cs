@@ -12,10 +12,9 @@ using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 // 燃料（旧）：旧版本的燃料，获得能量并抽牌，由压缩（旧）生成
 // 注册卡牌到衍生卡池

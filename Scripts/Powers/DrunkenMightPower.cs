@@ -13,6 +13,8 @@ using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using newsanguo.Scripts.Cards;
+
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>

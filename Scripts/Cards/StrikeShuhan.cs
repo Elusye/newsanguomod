@@ -10,9 +10,8 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
-using newsanguo.Scripts.Cards;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 // 蜀汉专属的“打击”（2026-10-05 从 StrikeNewsanguo 拆分而来）。
 // 只注册在蜀汉卡池里，牌框因此跟随蜀汉的墨绿配色（详见 StrikeCaowei 的注释）。

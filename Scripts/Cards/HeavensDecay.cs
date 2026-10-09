@@ -10,12 +10,11 @@ using MegaCrit.Sts2.Core.Models.Cards;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 // 注册到诅咒卡池（与其他诅咒牌一起，可供诅咒奖励/事件获取）
 [RegisterCard(typeof(CurseCardPool))]

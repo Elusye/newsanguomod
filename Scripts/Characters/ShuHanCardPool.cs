@@ -9,6 +9,8 @@ using STS2RitsuLib.Scaffolding.Characters;
 using STS2RitsuLib.Scaffolding.Content;
 using STS2RitsuLib.Utils;
 
+using newsanguo.Scripts.Cards;
+
 namespace newsanguo.Scripts.Characters;
 
 [RegisterSharedCardPool]
@@ -76,29 +78,29 @@ public class ShuHanCardPool : TypeListCardPoolModel, IModColorfulPhilosophersCar
         typeof(ThreeBlades),
         typeof(ToABiggerGoblet),
         typeof(TriumphBrew),
-        typeof(WhereSWine),
+        typeof(WheresWine),
         typeof(WineCut),
-        typeof(WineTheOldHero),
+        typeof(WineIsTheOldHero),
 
         // 2026-10-04 追加：这些牌原本只在新三国（曹魏）卡池里，现同时加入蜀汉卡池
-        typeof(BladeOfVirtue),              // 仁之剑，义之剑
+        typeof(BladesOfVirtue),              // 仁之剑，义之剑
         typeof(RuthlessBlade),              // 无情剑法
         typeof(DragonOmen),                 // 龙可是帝王之征啊
         typeof(DeafenMe),                   // 扎聋我自己的耳朵！
-        typeof(QuadBlast),                  // 马氏四连
+        typeof(MaClanQuadBlast),                  // 马氏四连
         typeof(ProxyStrike),                // 替身打击
         typeof(OffWithYourHead),            // 我砍你的头！
         typeof(PartyOn),                    // 接着奏乐接着舞
         typeof(WhyPickThatUp),              // 你拾它做甚！
-        typeof(CrossForCross),              // 他过江我也过江！
-        typeof(WindOfTiger),                // 风从虎，云从龙
+        typeof(CrossTheRiverToo),              // 他过江我也过江！
+        typeof(TigerWindCloudDragon),                // 风从虎，云从龙
         typeof(SmilingTiger),               // 笑面虎
-        typeof(DarkfinShark),               // 乌角鲨
+        typeof(DarkHornShark),               // 乌角鲨
         typeof(Release),                    // 释怀
         typeof(BetterThanYilingFlames),     // 比夷陵之火还好啊
         typeof(FortySixtyTax),              // 四六征税
         typeof(TenThousandTransparentHoles),// 一万个透明窟窿！
-        typeof(SelfFall),                   // 自刎归天！
+        typeof(FallOnOwnSword),                   // 自刎归天！（2026-10-09 已从曹魏卡池移除）
         typeof(HumanTransmutationSpell),    // 人体炼成术
 
         // 2026-10-05 追加：按要求把「天上人间」「天下无敌」加入蜀汉卡池

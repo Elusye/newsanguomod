@@ -13,7 +13,7 @@ using newsanguo.Scripts.Combat;
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>
-/// 「君王形态」（<see cref="newsanguo.Scripts.SovereignForm"/>）施加的能力：
+/// 「君王形态」（<see cref="newsanguo.Scripts.Cards.SovereignForm"/>）施加的能力：
 /// 你每获得 4 点酒力，就获得 <see cref="ModPowerTemplate.Amount"/> 点天意之力。
 ///
 /// 2026-10-07（不可叠加改造）：<see cref="InstanceType"/> 改为
@@ -31,7 +31,7 @@ namespace newsanguo.Scripts.Powers;
 /// 2026-10-07：随卡牌改名，TheTrueKingPower → SovereignFormPower（本地化 key 同步为
 /// NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.*，音效改为 event:/newsanguo/sfx/sovereign_form_power）。
 ///
-/// 触发判定照抄「何处有酒」（<see cref="WhereSWinePower"/>）的酒力获得钩子：
+/// 触发判定照抄「何处有酒」（<see cref="WheresWinePower"/>）的酒力获得钩子：
 /// <see cref="BeforePowerAmountChanged"/> 记下变化前的层数，
 /// <see cref="AfterPowerAmountChanged"/> 里用“变化后 − 变化前”算出本次真实获得的酒力
 /// （这样「换大盏」等加成也算进累计，与实际到手点数一致）。

@@ -12,12 +12,11 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 // 2026-10-05：按要求从「曹魏」（新三国）卡池移除，改为只注册在蜀汉卡池
 // （同时已从 NewsanguoCardPool.CardTypes 中去掉，避免仍然命中曹魏池）

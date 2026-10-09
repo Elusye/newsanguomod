@@ -13,7 +13,7 @@ namespace newsanguo.Scripts.Powers;
 
 // 注册能力到游戏
 [RegisterPower]
-public class WhereSWinePower : ModPowerTemplate
+public class WheresWinePower : ModPowerTemplate
 {
     // 能力类型：正面 Buff
     public override PowerType Type => PowerType.Buff;
@@ -55,7 +55,7 @@ public class WhereSWinePower : ModPowerTemplate
         if (gainedAmount > 0)
         {
             // 获得酒力触发音效
-            NewsanguoSfx.Play("event:/newsanguo/sfx/where_s_wine_power");
+            NewsanguoSfx.Play("event:/newsanguo/sfx/wheres_wine_power");
 
             // 抽 Amount 张牌
             await CardPileCmd.Draw(choiceContext, Amount, Owner.Player);

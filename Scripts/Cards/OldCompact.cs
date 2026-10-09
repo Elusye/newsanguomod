@@ -16,10 +16,9 @@ using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 // 压缩（旧）：旧版本的压缩，获得格挡并将手牌中所有状态牌变化为燃料（旧）
 // 注册卡牌到衍生卡池

@@ -11,11 +11,10 @@ using MegaCrit.Sts2.Core.Models.Cards;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Powers;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到蜀汉卡池（只在本池注册，曹魏拿不到）
 [RegisterCard(typeof(ShuHanCardPool))]

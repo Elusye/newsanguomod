@@ -10,12 +10,11 @@ using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
 [RegisterCard(typeof(NewsanguoCardPool))]
@@ -41,7 +40,7 @@ public class InvokeHeaven : NewsanguoCardTemplate
     // 属于“天意”体系（涉及天意之力/天意侵蚀）
     public override bool IsHeavensCard => true;
 
-    public InvokeHeaven() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+    public InvokeHeaven() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
     {
     }
 

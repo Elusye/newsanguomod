@@ -12,10 +12,9 @@ using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
 [RegisterCard(typeof(NewsanguoCardPool))]
@@ -30,7 +29,7 @@ public class BetterEachDay : NewsanguoCardTemplate
     // X 费牌（同原版旋风斩/天际钻头）：打出时自动花费全部剩余能量
     protected override bool HasEnergyCostX => true;
 
-    // 消耗（升级后移除）
+    // 消耗（升级不再移除，该关键词常驻）
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     public BetterEachDay() : base(0, CardType.Skill, CardRarity.Rare, TargetType.Self)
@@ -49,20 +48,14 @@ public class BetterEachDay : NewsanguoCardTemplate
         // X = 本回合为打出此牌花费的能量
         int x = ResolveEnergyXValue();
 
-        // 下一回合抽 X+1 张牌、获得 X+1 点能量（原版下回合能力）
-        await PowerCmd.Apply<DrawCardsNextTurnPower>(choiceContext, base.Owner.Creature, x + 1, base.Owner.Creature, this);
-        await PowerCmd.Apply<EnergyNextTurnPower>(choiceContext, base.Owner.Creature, x + 1, base.Owner.Creature, this);
+        // 升级加成：未升级 X+1，升级后 X+2
+        int bonus = IsUpgraded ? 2 : 1;
+
+        // 下一回合抽 X+bonus 张牌、获得 X+bonus 点能量（原版下回合能力）
+        await PowerCmd.Apply<DrawCardsNextTurnPower>(choiceContext, base.Owner.Creature, x + bonus, base.Owner.Creature, this);
+        await PowerCmd.Apply<EnergyNextTurnPower>(choiceContext, base.Owner.Creature, x + bonus, base.Owner.Creature, this);
     }
 
-    // 升级：去除消耗
-    protected override void OnUpgrade()
-    {
-        RemoveKeyword(CardKeyword.Exhaust);
-    }
-
-    // 降级：恢复“消耗”
-    protected override void AfterDowngraded()
-    {
-        AddKeyword(CardKeyword.Exhaust);
-    }
+    // 升级：不再移除“消耗”（该关键词常驻，见 CanonicalKeywords），而是把下回合的 X+1 提升为 X+2。
+    // 数值在 OnPlay 里按 IsUpgraded 结算，卡面文案用 {IfUpgraded:show:X+2|X+1} 切换，此处无需再改数值。
 }

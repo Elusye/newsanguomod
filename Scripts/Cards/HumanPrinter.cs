@@ -10,10 +10,9 @@ using MegaCrit.Sts2.Core.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 // 2026-10-05：蜀汉专属卡（只注册在蜀汉卡池）
 [RegisterCard(typeof(ShuHanCardPool))]

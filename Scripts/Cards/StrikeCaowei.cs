@@ -10,9 +10,8 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
-using newsanguo.Scripts.Cards;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 // 曹魏专属的“打击”（2026-10-05 从 StrikeNewsanguo 拆分而来）。
 // 拆分原因：卡框颜色由卡牌所属卡池决定（CardModel.Pool 取第一个包含该 id 的池），

@@ -13,15 +13,15 @@ using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
-// 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
+// 2026-10-08：按要求从「曹魏」（新三国）卡池移除，改为只注册在蜀汉卡池
+// （同时已从 NewsanguoCardPool.CardTypes 中去掉，避免仍然命中曹魏池）
+[RegisterCard(typeof(ShuHanCardPool))]
 public class HeavenAndEarth : NewsanguoCardTemplate
 {
 

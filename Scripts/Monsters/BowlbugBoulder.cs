@@ -11,6 +11,7 @@ using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Monsters;
+using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.MonsterMoves.Intents;
 using MegaCrit.Sts2.Core.MonsterMoves.MonsterMoveStateMachine;
 using MegaCrit.Sts2.Core.Nodes.Combat;
@@ -25,11 +26,14 @@ namespace newsanguo.Scripts.Monsters;
 
 /// <summary>
 /// 盛碗虫（巨石）BowlbugBoulder —— 原版 BowlbugRock 的强化版（照其 BowlbugRock.cs 改写）：
-///  · 意图与招式循环与原版完全一致：头槌（SingleAttackIntent）→ 失衡则眩晕（StunIntent）→ 循环；
+///  · 招式循环：首个回合「强化」（获得 <see cref="StrengthGain"/> 点力量）→ 之后恒为头槌
+///    （SingleAttackIntent）→ 失衡则眩晕（StunIntent）→ 回到头槌，与原版的头槌/眩晕部分一致；
 ///  · 血量 = BowlbugRock × 3（45~48 → 135~144；攀升 ToughEnemies 下 46~49 → 138~147）；
 ///  · 体型 = 原版的两倍（复用同一套 Spine 场景，在 SetupSkins 里随节点创建就放大，
 ///    并在 AfterAddedToRoom 里再确认一次；见这两处的注释）；
-///  · 头槌伤害固定 25（原版是 15/16 随攀升变化，这里不随攀升提高）；
+///  · 头槌基础伤害固定 15（原版是 15/16 随攀升变化，这里不随攀升提高）；
+///    首个回合的强化给 10 点力量，所以常态下意图显示 25，与旧版的「每回合固定 25」等效，
+///    但会随力量增减变化（玩家削力/给怪上力都会体现在意图数字上）；
 ///  · 失衡用自建能力 BowlbugBoulderImbalancedPower（逻辑同原版，但原版把持有者硬编码成 BowlbugRock）；
 ///  · 只在事件「实践主义者」里登场，且仅当本幕是 Hive（见 Pragmatist.cs 的 CanonicalEncounter）。
 /// 形象沿用原版 bowlbug_rock 的 Spine 场景与“rock”皮肤（巨石＝同一只虫的岩皮形态），
@@ -39,6 +43,7 @@ namespace newsanguo.Scripts.Monsters;
 public class BowlbugBoulder : ModMonsterTemplate
 {
     // 招式状态名（bestiary 的本地化键会用到；名称照搬原版 BowlbugRock）
+    private const string BuffMoveState = "BUFF_MOVE";
     private const string HeadbuttMoveState = "HEADBUTT_MOVE";
     private const string DizzyMoveState = "DIZZY_MOVE";
 
@@ -64,8 +69,11 @@ public class BowlbugBoulder : ModMonsterTemplate
 
     public override int MaxInitialHp => (int)(ModelDb.Monster<BowlbugRock>().MaxInitialHp * 3m);
 
-    // 头槌伤害：固定 25（“每回合打 25”）
-    public static int HeadbuttDamage => 25;
+    // 头槌基础伤害：固定 15（“每回合打 25”现在由首个回合的强化给 10 力量凑出来）
+    public static int HeadbuttDamage => 15;
+
+    // 首个回合「强化」给自己的永久力量
+    public static int StrengthGain => 10;
 
     public override string DeathSfx => "event:/sfx/enemy/enemy_attacks/workbug_rock/workbug_rock_die";
 
@@ -159,25 +167,38 @@ public class BowlbugBoulder : ModMonsterTemplate
         }
     }
 
-    // 招式状态机：与 BowlbugRock 完全同构
-    // 恒常循环：HEADBUTT → 条件分支（失衡 → DIZZY，否则 → HEADBUTT）
+    // 招式状态机：首回合强化，之后与原版 BowlbugRock 同构
+    // 回合 1：BUFF（强化，给 StrengthGain 点力量）
+    // 之后恒常循环：HEADBUTT → 条件分支（失衡 → DIZZY，否则 → HEADBUTT）
     protected override MonsterMoveStateMachine GenerateMoveStateMachine()
     {
         List<MonsterState> states = [];
 
+        MoveState buff = new(BuffMoveState, BuffMove, new BuffIntent());
         MoveState headbutt = new(HeadbuttMoveState, HeadbuttMove, new SingleAttackIntent(HeadbuttDamage));
         MoveState dizzy = new(DizzyMoveState, DizzyMove, new StunIntent());
 
+        // 初始状态（下面 MonsterMoveStateMachine 的第二个参数）是 buff ⇒ 只会在开战第一回合出现一次
+        buff.FollowUpState = headbutt;
         ConditionalBranchState postHeadbutt = new("POST_HEADBUTT");
         headbutt.FollowUpState = postHeadbutt;
         dizzy.FollowUpState = headbutt;
         postHeadbutt.AddState(dizzy, () => IsOffBalance);
         postHeadbutt.AddState(headbutt, () => !IsOffBalance);
 
+        states.Add(buff);
         states.Add(dizzy);
         states.Add(postHeadbutt);
         states.Add(headbutt);
-        return new MonsterMoveStateMachine(states, headbutt);
+        return new MonsterMoveStateMachine(states, buff);
+    }
+
+    // 强化：首个回合使用，之后不会再回到这个招式
+    private async Task BuffMove(IReadOnlyList<Creature> targets)
+    {
+        await CreatureCmd.TriggerAnim(base.Creature, "Cast", 0.6f);
+        await PowerCmd.Apply<StrengthPower>(
+            new ThrowingPlayerChoiceContext(), base.Creature, StrengthGain, base.Creature, null);
     }
 
     // 头槌：造成 HeadbuttDamage 点伤害；若此时处于失衡，紧跟着眩晕（下一回合打 DIZZY_MOVE）
@@ -244,10 +265,13 @@ public class BowlbugBoulder : ModMonsterTemplate
     }
 
     // 图鉴：插一条“眩晕”招式（与原版一致）
+    // 基础列表的顺序＝GenerateMoveStateMachine 里 states 的登记顺序（buff → dizzy → headbutt），
+    // 所以这里用 stateId 定位头槌、把“眩晕”插在它后面，而不是写死下标。
     public override List<BestiaryMonsterMove> GenerateBestiaryMoveList(NCreatureVisuals? creatureVisuals)
     {
         List<BestiaryMonsterMove> list = base.GenerateBestiaryMoveList(creatureVisuals);
-        list.Insert(1, BestiaryMonsterMove.FromStun(Stun));
+        int headbuttIndex = list.FindIndex(move => move.stateId == HeadbuttMoveState);
+        list.Insert(headbuttIndex < 0 ? list.Count : headbuttIndex + 1, BestiaryMonsterMove.FromStun(Stun));
         return list;
     }
 

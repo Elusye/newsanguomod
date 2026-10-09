@@ -14,6 +14,7 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
+using newsanguo.Scripts.Cards;
 using newsanguo.Scripts;
 
 namespace newsanguo.Scripts.Powers;

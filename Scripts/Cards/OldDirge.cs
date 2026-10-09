@@ -15,10 +15,9 @@ using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Characters;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 // 挽歌（旧）：旧版本的挽歌，召唤 3X 次并将 X 张灵魂加入抽牌堆（升级后召唤 4X 次并加入灵魂+）
 // 注册卡牌到衍生卡池
@@ -33,7 +32,7 @@ public class OldDirge : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 每次召唤的奥斯蒂数量（升级后 4）
+    // 每次召唤的奥斯提数量（升级后 4）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new SummonVar(3)
     ];
@@ -63,7 +62,7 @@ public class OldDirge : NewsanguoCardTemplate
         // X = 本回合为打出此牌花费的能量
         int x = ResolveEnergyXValue();
 
-        // 召唤 3X 次（每次召唤 DynamicVars.Summon 只奥斯蒂）
+        // 召唤 3X 次（每次召唤 DynamicVars.Summon 只奥斯提）
         for (int i = 0; i < x; i++)
         {
             await OstyCmd.Summon(choiceContext, base.Owner, DynamicVars.Summon.BaseValue, this);
@@ -85,7 +84,7 @@ public class OldDirge : NewsanguoCardTemplate
         CardCmd.PreviewCardPileAdd(result);
     }
 
-    // 升级：每次召唤的奥斯蒂数量 3 → 4
+    // 升级：每次召唤的奥斯提数量 3 → 4
     protected override void OnUpgrade()
     {
         DynamicVars.Summon.UpgradeValueBy(1);

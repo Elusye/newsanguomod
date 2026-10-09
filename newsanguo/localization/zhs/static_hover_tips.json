@@ -1,5 +1,7 @@
 {
   "NEWSANGUO_SECONDARY_RESOURCE_HEAVENS_FORCE.title": "天意之力",
   "NEWSANGUO_SECONDARY_RESOURCE_HEAVENS_FORCE.description": "回合结束时，若你拥有大量[gold]天意之力[/gold]，则可以选择接受[gold]天意[/gold]的帮助（拒绝则不执行任何操作并保留点数）；反之则会被[gold]天意侵蚀[/gold]。",
-  "NEWSANGUO_SECONDARY_RESOURCE_HEAVENS_FORCE.smartDescription": "回合结束时，若点数≥[blue]10[/blue]，可选择消耗10点[gold]天意之力[/gold]获得1个造成双倍伤害的[gold]额外回合[/gold]（也可以拒绝：不执行任何操作并保留点数）；若点数≤[blue]-10[/blue]，则会被[gold]天意侵蚀[/gold]并恢复10点[gold]天意之力[/gold]。"
+  "NEWSANGUO_SECONDARY_RESOURCE_HEAVENS_FORCE.smartDescription": "回合结束时，若点数≥[blue]10[/blue]，可选择消耗10点[gold]天意之力[/gold]获得1个造成双倍伤害的[gold]额外回合[/gold]（也可以拒绝：不执行任何操作并保留点数）；若点数≤[blue]-10[/blue]，则会被[gold]天意侵蚀[/gold]并恢复10点[gold]天意之力[/gold]。",
+  "NEWSANGUO_KEYWORD_RECRUIT.title": "募集{Summon}",
+  "NEWSANGUO_KEYWORD_RECRUIT.description": "生成{Summon}名1生命值的青州兵。在玩家受到攻击时，青州兵受伤会优先于玩家扣除格挡。\n在你的回合开始时，失去所有募集的青州兵。"
 }

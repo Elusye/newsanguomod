@@ -14,9 +14,8 @@ using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到衍生卡池（原版狂宴 Feed 的变体，额外添加“虚无”）
 [RegisterCard(typeof(TokenCardPool))]

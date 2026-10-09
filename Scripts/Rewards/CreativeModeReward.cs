@@ -13,6 +13,7 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Rewards;
 using STS2RitsuLib.Combat.Rewards;
 
+using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Patches;
 using newsanguo.Scripts.Powers;
 

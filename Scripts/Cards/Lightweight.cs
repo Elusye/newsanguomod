@@ -11,10 +11,9 @@ using MegaCrit.Sts2.Core.Models.CardPools;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Powers;
 
-namespace newsanguo.Scripts;
+namespace newsanguo.Scripts.Cards;
 
 // 注册到状态卡池（模型参照原版 Toxic：1 费、可打出、打出后消耗）
 [RegisterCard(typeof(StatusCardPool))]
