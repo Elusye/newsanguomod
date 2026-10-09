@@ -38,9 +38,26 @@ public static class NewsanguoPublicApi
     /// <summary>天意侵蚀能力的公开 Entry（<c>NEWSANGUO_POWER_HEAVENS_DECAY_POWER</c>）。</summary>
     public const string HeavensDecayPowerEntry = "NEWSANGUO_POWER_HEAVENS_DECAY_POWER";
 
-    public static bool IsNewsanguoCharacter(CharacterModel? character)
+    /// <summary>是否为本模组的「曹魏」角色。</summary>
+    public static bool IsCaoWeiCharacter(CharacterModel? character)
     {
         return character is CaoWeiCharacter;
+    }
+
+    /// <summary>是否为本模组的「蜀汉」角色。</summary>
+    public static bool IsShuHanCharacter(CharacterModel? character)
+    {
+        return character is ShuHanCharacter;
+    }
+
+    /// <summary>
+    /// 是否为本模组提供的任一角色（当前包括「曹魏」和「蜀汉」）。
+    /// 保留此入口以兼容已发布的跨 Mod 代理；需要区分角色时请调用
+    /// <see cref="IsCaoWeiCharacter"/> 或 <see cref="IsShuHanCharacter"/>。
+    /// </summary>
+    public static bool IsNewsanguoCharacter(CharacterModel? character)
+    {
+        return IsCaoWeiCharacter(character) || IsShuHanCharacter(character);
     }
 
     public static Task ApplyDrunkenMight(
