@@ -27,26 +27,60 @@
 
 ## 构建与部署
 
-### 1. 编译 DLL
+### 1. 配置本机路径
+
+首次构建前，将示例配置复制为本机配置：
 
 ```powershell
-dotnet build newsanguo.csproj -c Debug
+Copy-Item .\local.props.example .\local.props
 ```
 
-编译产物：`.godot\mono\temp\bin\Debug\newsanguo.dll`。PostBuild 会自动复制到游戏 `mods\newsanguo\` 目录（若失败请手动复制，或关闭正在运行的游戏进程后重试）。
+然后编辑 `local.props`：
 
-### 2. 资源打包（pck）
+- `Sts2Dir`：杀戮尖塔 2 的安装根目录
+- `GodotExe`：Godot 4.5.1 Mono 控制台版路径；留空时导出脚本会依次查找 `PATH` 和默认安装位置
 
-只改 `.cs` 代码时无需打包 pck（编译即生效）。**修改了 `localization/` 或 `images/` 等资源时**需重新导出 pck：
+`local.props` 已被 Git 忽略，不会提交本机路径。构建需要 .NET 9 SDK、Godot 4.5.1 Mono 和 Python 3。
+
+### 2. 完整构建并部署
+
+默认构建 Debug 版本：
 
 ```powershell
-# Godot 4.5.1 Mono 控制台版
-Godot_v4.5.1-stable_mono_win64_console.exe --headless --path <本项目路径> --export-pack "Windows Desktop" newsanguo.pck
+.\build.cmd
 ```
 
-将生成的 `newsanguo.pck` 覆盖到 `mods\newsanguo\newsanguo.pck`（建议先备份旧 pck）。
+构建 Release 版本：
 
-### 3. 依赖
+```powershell
+.\build.cmd Release
+```
+
+`build.cmd` 会依次编译 C#、部署 DLL/JSON、导出并清理 PCK，最后将成品部署到 `mods\newsanguo\`。编译失败时不会继续导出 PCK。建议执行前关闭游戏，避免已加载的 DLL 或 PCK 被占用。
+
+### 3. 仅编译 C#
+
+只修改 `.cs` 代码时，可以跳过 PCK 导出：
+
+```powershell
+dotnet build .\newsanguo.csproj -c Debug
+```
+
+PostBuild 会自动将 DLL 和 JSON 复制到游戏的 `mods\newsanguo\` 目录。
+
+### 4. 仅导出 PCK
+
+修改了 `localization/`、`images/`、`audios/` 等资源时，可以单独运行：
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\export-pck.ps1
+```
+
+脚本会先导出到临时文件，移除不应随模组分发的 Godot 类缓存和 UID 缓存，成功后再部署到 `mods\newsanguo\newsanguo.pck`。不要直接调用 Godot 导出正式 PCK，否则会绕过清理步骤。
+
+如需临时覆盖本机配置，可向脚本传入 `-Sts2Dir`、`-GodotExe` 或 `-OutputPath`。
+
+### 5. 运行依赖
 
 - `newsanguo.json` 声明依赖 `STS2-RitsuLib >= 0.5.1`，游戏版本 `>= 0.111.0`
 
@@ -86,5 +120,6 @@ newsanguo/
 - **卡牌描述动态数值**：使用 `PowerVar<T>` / `DamageVar` / `BlockVar` / `IntVar` 等 `CanonicalVars`，描述中配合 `{Name:diff()}` 实时显示
 - **升级/降级关键字增减**：在 `OnUpgrade()` / `AfterDowngraded()` 中用 `AddKeyword` / `RemoveKeyword`，不要直接改 `CanonicalKeywords`
 - **诅咒牌**：`CardType.Curse` + `CardRarity.Curse` + `TargetType.None` + 费用 -1，`Eternal`/`Unplayable` 关键字由引擎按序自动追加
-- **本地化改动需重新导出 pck**，纯代码改动无需
-- **游戏运行中构建会 DLL 锁定**，导致 PostBuild 复制失败
+- **资源改动需重新导出 PCK**：使用 `build.cmd` 或 `export-pck.ps1`，不要直接调用 Godot 导出正式包
+- **纯代码改动无需重新导出 PCK**：直接运行 `dotnet build` 即可
+- **构建部署前关闭游戏**：游戏运行中可能锁定 DLL 或 PCK，导致部署失败
