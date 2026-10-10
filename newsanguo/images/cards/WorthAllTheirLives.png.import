@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d2nou4usw66b7"
-path="res://.godot/imported/multiplayer_hand_rock.png-687292eb7649a8cb5b8abbcf7672f8e6.ctex"
+uid="uid://byrtnef8daurt"
+path="res://.godot/imported/WorthAllTheirLives.png-6ff6e84d80178420c24e9cf5a3e115d4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/ui/hands/multiplayer_hand_rock.png"
-dest_files=["res://.godot/imported/multiplayer_hand_rock.png-687292eb7649a8cb5b8abbcf7672f8e6.ctex"]
+source_file="res://newsanguo/images/cards/WorthAllTheirLives.png"
+dest_files=["res://.godot/imported/WorthAllTheirLives.png-6ff6e84d80178420c24e9cf5a3e115d4.ctex"]
 
 [params]
 

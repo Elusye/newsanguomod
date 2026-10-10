@@ -6,7 +6,7 @@ namespace newsanguo.Scripts.Powers;
 
 /// <summary>
 /// “帝王之征”：层数标记能力。
-/// 打出“龙可是帝王之征啊”时，拥有此能力的敌人失去与层数相等的生命。
+/// 打出龙虎牌时，拥有此能力的敌人失去与层数相等的生命。
 /// </summary>
 [RegisterPower]
 public class DragonOmenPower : ModPowerTemplate

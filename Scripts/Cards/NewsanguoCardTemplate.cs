@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.ValueProps;
+using newsanguo.Scripts.Powers;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
@@ -23,6 +26,29 @@ namespace newsanguo.Scripts.Cards;
 public abstract class NewsanguoCardTemplate : ModCardTemplate
 {
     private const string ScryKeywordId = "NEWSANGUO_KEYWORD_SCRY";
+    private const string TigerDragonKeywordId = "NEWSANGUO_KEYWORD_TIGER_DRAGON";
+
+    public virtual bool IsTigerDragonCard => false;
+
+    // 自身效果结算后统一触发；先快照敌人，避免死亡改变枚举集合。
+    public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    {
+        if (cardPlay.Card != this || !IsTigerDragonCard || CombatState is null)
+        {
+            return;
+        }
+        foreach (var enemy in CombatState.HittableEnemies.ToList())
+        {
+            DragonOmenPower? omen = enemy.GetPower<DragonOmenPower>();
+            if (!enemy.IsAlive || omen is null || omen.Amount <= 0)
+            {
+                continue;
+            }
+            await CreatureCmd.Damage(choiceContext, enemy, omen.Amount,
+                ValueProp.Unblockable | ValueProp.Unpowered,
+                dealer: null, cardSource: null, cardPlay: cardPlay);
+        }
+    }
 
     // 由“魔法禁术目录”遗物标记的回合数：该回合内打出这张牌不消耗天意之力（-1 表示未标记）
     private int _freeHeavensForceTurn = -1;
@@ -162,6 +188,11 @@ public abstract class NewsanguoCardTemplate : ModCardTemplate
 
             // 2026-10-04：“禁术牌”关键词已按要求整体删除
             // （原实现：IsForbiddenSpell 为 true 时 yield 出 NEWSANGUO_KEYWORD_FORBIDDEN_SPELL）
+            if (IsTigerDragonCard &&
+                ModKeywordRegistry.TryGet(TigerDragonKeywordId, out ModKeywordDefinition tigerDragonDefinition))
+            {
+                yield return tigerDragonDefinition.CardKeywordValue;
+            }
         }
     }
 }

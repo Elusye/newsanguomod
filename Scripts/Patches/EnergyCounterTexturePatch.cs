@@ -16,8 +16,6 @@ namespace newsanguo.Scripts.Patches;
 [HarmonyPatch(typeof(NEnergyCounter), "_Ready")]
 public static class NewsanguoEnergyCounterPatch
 {
-    private const string ModIconPath = "res://newsanguo/images/ui/energy_newsanguo.png";
-
     // 注意：不能使用 ___player 注入——原版字段名为 _player（带下划线），
     // 当前 Harmony 版本对 ___ 参数只匹配不带下划线的字段名，会导致补丁应用失败。
     public static void Postfix(NEnergyCounter __instance)
@@ -25,15 +23,22 @@ public static class NewsanguoEnergyCounterPatch
         try
         {
             Player? player = AccessTools.Field(typeof(NEnergyCounter), "_player").GetValue(__instance) as Player;
-            if (player?.Character is not CaoWeiCharacter)
+            // 按角色读取各自卡池的大图标，让 HUD 与卡池能量图标使用同一份资源。
+            string? iconPath = player?.Character switch
+            {
+                CaoWeiCharacter character => ((NewsanguoCardPool)character.CardPool).BigEnergyIconPath,
+                ShuHanCharacter character => ((ShuHanCardPool)character.CardPool).BigEnergyIconPath,
+                _ => null
+            };
+            if (iconPath is null)
             {
                 return;
             }
 
-            Texture2D? icon = Godot.ResourceLoader.Load<Texture2D>(ModIconPath);
+            Texture2D? icon = Godot.ResourceLoader.Load<Texture2D>(iconPath);
             if (icon is null)
             {
-                Diagnostics.Log($"[NewsanguoEnergyCounter] 能量图标加载失败: {ModIconPath}");
+                Diagnostics.Log($"[NewsanguoEnergyCounter] 能量图标加载失败: {iconPath}");
                 return;
             }
 

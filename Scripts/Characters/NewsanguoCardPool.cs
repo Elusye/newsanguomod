@@ -18,20 +18,20 @@ public class NewsanguoCardPool : TypeListCardPoolModel, IModColorfulPhilosophers
 {
     public override string Title => "newsanguo";
 
-    public override string EnergyColorName => "newsanguo";
+    public override string EnergyColorName => "newsanguo_caowei";
 
     public override string CardFrameMaterialPath => "card_frame_newsanguo";
 
-    public override Color DeckEntryCardColor => new Color("6B492E");
+    public override Color DeckEntryCardColor => new Color("244C73");
 
     public override Color EnergyOutlineColor => new Color("4A2F1C");
 
     // 能量图标路径（RitsuLib 官方覆盖）：
     // - BigEnergyIconPath：EnergyIconHelper.GetPath 的大图标（卡面/遗物/药水费用图标等）
     // - TextEnergyIconPath：卡牌描述 {Energy:energyIcons()} 富文本图标（24x24 小图，避免 128x128 源图渲染/测量失真）
-    public override string? BigEnergyIconPath => "res://newsanguo/images/ui/energy_newsanguo.png";
+    public override string? BigEnergyIconPath => "res://newsanguo/images/ui/energy/CaoWei/energy.png";
 
-    public override string? TextEnergyIconPath => "res://newsanguo/images/ui/energy_newsanguo_small.png";
+    public override string? TextEnergyIconPath => "res://newsanguo/images/ui/energy/CaoWei/energy_small.png";
 
     public override bool IsColorless => false;
 
@@ -51,9 +51,11 @@ public class NewsanguoCardPool : TypeListCardPoolModel, IModColorfulPhilosophers
             Shader = shader,
             ResourceLocalToScene = true
         };
-        material.SetShaderParameter("h", 0.07f);
-        material.SetShaderParameter("s", 0.7f);
-        material.SetShaderParameter("v", 0.8f);
+        // 将指定的 RGB 底色转换为 HSV，统一卡框材质与牌组列表底色。
+        Color baseColor = new("244C73");
+        material.SetShaderParameter("h", baseColor.H);
+        material.SetShaderParameter("s", baseColor.S);
+        material.SetShaderParameter("v", baseColor.V);
         return material;
     });
 
@@ -124,7 +126,7 @@ public class NewsanguoCardPool : TypeListCardPoolModel, IModColorfulPhilosophers
         typeof(BrewHealsAll),
         typeof(CheckThePremiere),
         // 2026-10-08：按要求把「天上人间」从曹魏卡池移除（改为只注册在蜀汉卡池）
-        typeof(DeafenMe),
+        typeof(WorthAllTheirLives),
         typeof(DragonOmen),
         typeof(OffWithYourHead),
 

@@ -14,7 +14,7 @@ using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>
-/// “风从虎，云从龙”：层数即每当你打出一张“笑面虎”或“龙可是帝王之征啊”时抽取的牌数。
+/// “风从虎，云从龙”：层数即每当你打出一张龙虎牌时抽取的牌数。
 /// </summary>
 [RegisterPower]
 public class TigerWindCloudDragonPower : ModPowerTemplate
@@ -34,7 +34,7 @@ public class TigerWindCloudDragonPower : ModPowerTemplate
         BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png"
     );
 
-    // 每当你打出一张“笑面虎”或“龙可是帝王之征啊”，抽与层数等量的牌
+    // 每当你打出一张龙虎牌，抽与层数等量的牌。
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         CardModel? card = cardPlay.Card;
@@ -45,7 +45,7 @@ public class TigerWindCloudDragonPower : ModPowerTemplate
             return;
         }
 
-        if (card is not SmilingTiger && card is not DragonOmen)
+        if (card is not NewsanguoCardTemplate { IsTigerDragonCard: true })
         {
             return;
         }

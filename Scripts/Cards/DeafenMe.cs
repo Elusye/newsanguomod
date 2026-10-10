@@ -21,9 +21,10 @@ using newsanguo.Scripts.Powers;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
+[RegisterCard(typeof(ShuHanCardPool))]
 public class DeafenMe : NewsanguoCardTemplate
 {
+    public override bool IsTigerDragonCard => true;
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
@@ -41,7 +42,7 @@ public class DeafenMe : NewsanguoCardTemplate
         HoverTipFactory.FromPower<DragonOmenPower>()
     ];
 
-    public DeafenMe() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public DeafenMe() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
     }
 

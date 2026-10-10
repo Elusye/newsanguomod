@@ -139,7 +139,7 @@
   "NEWSANGUO_CARD_DEAFEN_ME.title": "Deafen Me",
   "NEWSANGUO_CARD_DEAFEN_ME.description": "Apply {DragonOmenPower:diff()} [gold]Dragon Omen[/gold] to yourself.\nThe volume of sounds you hear is reduced to 25% this combat.\nDeal {Damage:diff()} damage.",
   "NEWSANGUO_CARD_DRAGON_OMEN.title": "Dragon Omen",
-  "NEWSANGUO_CARD_DRAGON_OMEN.description": "Apply {DragonOmenPower:diff()} [gold]Dragon Omen[/gold].\nAll enemies with [gold]Dragon Omen[/gold] lose HP equal to its amount.",
+  "NEWSANGUO_CARD_DRAGON_OMEN.description": "Apply {DragonOmenPower:diff()} [gold]Dragon Omen[/gold].",
   "NEWSANGUO_CARD_OFF_WITH_YOUR_HEAD.title": "Off With Your Head!",
   "NEWSANGUO_CARD_OFF_WITH_YOUR_HEAD.description": "Deal {Damage:diff()} damage.\nIf the enemy's intent is not an [gold]Attack[/gold], attack twice.",
   "NEWSANGUO_CARD_PLOT.title": "Plot",
@@ -213,7 +213,7 @@
   "NEWSANGUO_CARD_NONSENSE.title": "Nonsense",
   "NEWSANGUO_CARD_NONSENSE.description": "Draw {Cards:diff()} cards.\nRandomize the cost of all cards in your hand this turn.",
   "NEWSANGUO_CARD_TIGER_WIND_CLOUD_DRAGON.title": "Tiger Wind, Cloud Dragon",
-  "NEWSANGUO_CARD_TIGER_WIND_CLOUD_DRAGON.description": "Whenever you play a [gold]Smiling Tiger[/gold] or a [gold]Dragon Omen[/gold], draw {TigerWindCloudDragonPower:diff()} cards.\nAdd a [gold]Smiling Tiger[/gold] and a [gold]Dragon Omen[/gold] to your hand.",
+  "NEWSANGUO_CARD_TIGER_WIND_CLOUD_DRAGON.description": "Whenever you play a [gold]Tiger-Dragon[/gold] card, draw {TigerWindCloudDragonPower:diff()} cards.\nAdd 2 random [gold]Tiger-Dragon[/gold] cards to your hand.",
   "NEWSANGUO_CARD_VENOM_RAT.title": "Venom Rat",
   "NEWSANGUO_CARD_VENOM_RAT.description": "Apply {PoisonPower:diff()} [gold]Poison[/gold].",
   "NEWSANGUO_CARD_RAT_POISON_SCHEME.title": "Rat Poison Scheme",
@@ -264,5 +264,7 @@
   "NEWSANGUO_CARD_CHARGE_TO_ZHUGE_LIANGS_CART.title": "Charge Straight at Zhuge Liang's Cart!",
   "NEWSANGUO_CARD_CHARGE_TO_ZHUGE_LIANGS_CART.description": "Put ALL of your unexhausted Attack cards into your hand.\nThis turn, your Attack cards cost 0, and whenever you kill an enemy with an Attack card, gain a [gold]Four-Wheeled Cart[/gold].",
   "NEWSANGUO_CARD_FOUR_WHEELED_CART.title": "Four-Wheeled Cart",
-  "NEWSANGUO_CARD_FOUR_WHEELED_CART.description": "Gain {Block:diff()} [gold]Block[/gold] {Repeat:diff()} times."
+  "NEWSANGUO_CARD_FOUR_WHEELED_CART.description": "Gain {Block:diff()} [gold]Block[/gold] {Repeat:diff()} times.",
+  "NEWSANGUO_CARD_WORTH_ALL_THEIR_LIVES.title": "Worth All Their Lives!",
+  "NEWSANGUO_CARD_WORTH_ALL_THEIR_LIVES.description": "[gold]Recruit[/gold] {Summon:diff()}.\nUntil the start of your next turn, whenever one of your Qingzhou Soldiers dies, gain 1 [gold]Heaven's Force[/gold]."
 }

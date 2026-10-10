@@ -14,6 +14,7 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
@@ -21,6 +22,7 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class SmilingTiger : NewsanguoCardTemplate
 {
+    public override bool IsTigerDragonCard => true;
 
     // 获得格挡：可被灵巧等格挡附魔识别
     public override bool GainsBlock => true;
@@ -36,10 +38,13 @@ public class SmilingTiger : NewsanguoCardTemplate
     ];
 
     // 卡牌自带“消耗”关键词
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
     // 鼠标悬停时展示格挡说明
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.Static(StaticHoverTip.Block)];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
+        HoverTipFactory.Static(StaticHoverTip.Block),
+        HoverTipFactory.FromPower<DragonOmenPower>()
+    ];
 
     public SmilingTiger() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
     {

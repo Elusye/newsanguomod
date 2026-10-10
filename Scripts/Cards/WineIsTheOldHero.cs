@@ -32,10 +32,10 @@ public class WineIsTheOldHero : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：基础格挡 8；每有 1 点酒力额外获得 2 点格挡（升级 11 / 3）
+    // 卡牌基础数值：基础格挡 12；每有 1 点酒力额外获得 2 点格挡（升级 16 / 3）
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new CalculationBaseVar(8m),
+        new CalculationBaseVar(12m),
         new CalculationExtraVar(2m),
         new CalculatedBlockVar(ValueProp.Move).WithMultiplier(
             (card, _) => card.Owner?.Creature.GetPower<DrunkenMightPower>()?.Amount ?? 0)
@@ -65,10 +65,10 @@ public class WineIsTheOldHero : NewsanguoCardTemplate
             cardPlay);
     }
 
-    // 升级：基础格挡 8 → 11，每点酒力的额外格挡 2 → 3
+    // 升级：基础格挡 12 → 16，每点酒力的额外格挡 2 → 3
     protected override void OnUpgrade()
     {
-        DynamicVars.CalculationBase.UpgradeValueBy(3m);
+        DynamicVars.CalculationBase.UpgradeValueBy(4m);
         DynamicVars.CalculationExtra.UpgradeValueBy(1m);
     }
 }

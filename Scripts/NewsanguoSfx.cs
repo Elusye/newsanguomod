@@ -76,6 +76,7 @@ public static class NewsanguoSfx
     //   同批复核：158 个音频里既有条目 146/150 与重算值逐条一致。四条例外一律保持原值：
     //   better_each_day / blood_loss / fall_on_own_sword 的 raw 恰为 +5.25 的半步（原表取 5.0），
     //   sovereign_form 受峰值钳制后原表取下限 +1.0（四舍五入会到 +1.5，突破 -3 dBFS 上限）。
+    // worth_all_their_lives（全死了我都值！）音频待补，暂用 0 dB。
     // 不参与自动测量的：character_death（引擎侧触发，手工保留原值）、
     // character_select（对应音频文件 2026-10-06 已删，仅作 EngineSfxRedirectPatch 的兜底目标）、
     // song_of_guan_yu（长音频，走 NewsanguoSfx.PlayOwnLevel 自带基准电平，不查本表）。
@@ -240,6 +241,7 @@ public static class NewsanguoSfx
         ["why_pick_that_up_power"] = -5f,
         ["wine_cut"] = 0f,
         ["wine_is_the_old_hero"] = 7f,
+        ["worth_all_their_lives"] = 0f,
         ["wolf_vs_dog"] = -1f,
         ["you_dare_refuse"] = 0.5f,
         ["zhou_yafu"] = 7.5f,

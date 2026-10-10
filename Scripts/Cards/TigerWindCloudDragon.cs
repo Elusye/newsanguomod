@@ -21,21 +21,21 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class TigerWindCloudDragon : NewsanguoCardTemplate
 {
+    public override bool IsTigerDragonCard => true;
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：给予 1 层“风从虎，云从龙”（层数即每张笑面虎/龙可是帝王之征啊触发时抽取的牌数）
+    // 每层能力使每次打出龙虎牌抽 1 张牌。
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new PowerVar<TigerWindCloudDragonPower>(1m)
     ];
 
-    // 悬停提示：展示“笑面虎”和“龙可是帝王之征啊”
+    // 龙虎牌统一展示帝王之征说明，不预览其他龙虎牌。
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromCard<SmilingTiger>(),
-        HoverTipFactory.FromCard<DragonOmen>()
+        HoverTipFactory.FromPower<DragonOmenPower>()
     ];
     // 构造函数
     public TigerWindCloudDragon() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
@@ -49,7 +49,7 @@ public class TigerWindCloudDragon : NewsanguoCardTemplate
 
         NewsanguoSfx.Play("event:/newsanguo/sfx/tiger_wind_cloud_dragon");
 
-        // 获得 1 层“风从虎，云从龙”：层数即笑面虎/龙可是帝王之征啊触发时抽取的牌数
+        // 获得抽牌能力。
         int amount = DynamicVars["TigerWindCloudDragonPower"].IntValue;
         await PowerCmd.Apply<TigerWindCloudDragonPower>(
             choiceContext,
@@ -59,12 +59,18 @@ public class TigerWindCloudDragon : NewsanguoCardTemplate
             this,
             silent: false);
 
-        // 将一张笑面虎和一张龙可是帝王之征啊加入手牌
-        CardModel tiger = combatState.CreateCard<SmilingTiger>(base.Owner);
-        CardModel dragon = combatState.CreateCard<DragonOmen>(base.Owner);
-
-        await CardPileCmd.AddGeneratedCardToCombat(tiger, PileType.Hand, base.Owner);
-        await CardPileCmd.AddGeneratedCardToCombat(dragon, PileType.Hand, base.Owner);
+        // 四种龙虎牌等概率独立抽取两次（允许重复），使用战斗生成 RNG 保证联机同步。
+        for (int i = 0; i < 2; i++)
+        {
+            CardModel generated = Owner.RunState.Rng.CombatCardGeneration.NextInt(4) switch
+            {
+                0 => combatState.CreateCard<SmilingTiger>(Owner),
+                1 => combatState.CreateCard<DragonOmen>(Owner),
+                2 => combatState.CreateCard<TigerWindCloudDragon>(Owner),
+                _ => combatState.CreateCard<DeafenMe>(Owner)
+            };
+            await CardPileCmd.AddGeneratedCardToCombat(generated, PileType.Hand, Owner);
+        }
     }
 
     // 升级后的效果逻辑

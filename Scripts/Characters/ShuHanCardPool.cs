@@ -18,20 +18,20 @@ public class ShuHanCardPool : TypeListCardPoolModel, IModColorfulPhilosophersCar
 {
     public override string Title => "newsanguo";
 
-    public override string EnergyColorName => "newsanguo";
+    public override string EnergyColorName => "newsanguo_shuhan";
 
     public override string CardFrameMaterialPath => "card_frame_newsanguo";
 
-    public override Color DeckEntryCardColor => new Color("1E3B2E");
+    public override Color DeckEntryCardColor => new Color("8B0000");
 
     public override Color EnergyOutlineColor => new Color("12261C");
 
     // 能量图标路径（RitsuLib 官方覆盖）：
     // - BigEnergyIconPath：EnergyIconHelper.GetPath 的大图标（卡面/遗物/药水费用图标等）
     // - TextEnergyIconPath：卡牌描述 {Energy:energyIcons()} 富文本图标（24x24 小图，避免 128x128 源图渲染/测量失真）
-    public override string? BigEnergyIconPath => "res://newsanguo/images/ui/energy_newsanguo.png";
+    public override string? BigEnergyIconPath => "res://newsanguo/images/ui/energy/ShuHan/energy.png";
 
-    public override string? TextEnergyIconPath => "res://newsanguo/images/ui/energy_newsanguo_small.png";
+    public override string? TextEnergyIconPath => "res://newsanguo/images/ui/energy/ShuHan/energy_small.png";
 
     public override bool IsColorless => false;
 
@@ -51,9 +51,11 @@ public class ShuHanCardPool : TypeListCardPoolModel, IModColorfulPhilosophersCar
             Shader = shader,
             ResourceLocalToScene = true
         };
-        material.SetShaderParameter("h", 0.36f);
-        material.SetShaderParameter("s", 0.55f);
-        material.SetShaderParameter("v", 0.42f);
+        // 将指定的 RGB 底色转换为 HSV，统一卡框材质与牌组列表底色。
+        Color baseColor = new("8B0000");
+        material.SetShaderParameter("h", baseColor.H);
+        material.SetShaderParameter("s", baseColor.S);
+        material.SetShaderParameter("v", baseColor.V);
         return material;
     });
 
@@ -64,7 +66,7 @@ public class ShuHanCardPool : TypeListCardPoolModel, IModColorfulPhilosophersCar
     [
         // 2026-10-05：原 StrikeNewsanguo/DefendNewsanguo 拆成按角色各自一张
         // （曹魏用 StrikeCaowei/DefendCaowei、蜀汉用 StrikeShuhan/DefendShuhan），
-        // 蜀汉这两个只在本池注册，牌框因此跟随蜀汉的墨绿配色。
+        // 蜀汉这两个只在本池注册，牌框因此跟随蜀汉的深红配色。
         typeof(StrikeShuhan),
         typeof(DefendShuhan),
         typeof(AGrandToast),

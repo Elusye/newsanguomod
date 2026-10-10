@@ -35,8 +35,8 @@
   "NEWSANGUO_POWER_VICTORY_BY_HEAVENS_WILL_POWER.description": "At the start of your turn, gain {Amount} [gold]Heaven's Force[/gold].",
   "NEWSANGUO_POWER_VICTORY_BY_HEAVENS_WILL_POWER.smartDescription": "At the start of your turn, {Amount:cond:<0?lose|gain} [blue]{Amount:abs()}[/blue] [gold]Heaven's Force[/gold].",
   "NEWSANGUO_POWER_DRAGON_OMEN_POWER.title": "Dragon Omen",
-  "NEWSANGUO_POWER_DRAGON_OMEN_POWER.description": "When [gold]Dragon Omen[/gold] is played, lose HP equal to its stacks.",
-  "NEWSANGUO_POWER_DRAGON_OMEN_POWER.smartDescription": "When [gold]Dragon Omen[/gold] is played, lose HP equal to its stacks.",
+  "NEWSANGUO_POWER_DRAGON_OMEN_POWER.description": "When triggered, this enemy loses HP equal to its Dragon Omen stacks.",
+  "NEWSANGUO_POWER_DRAGON_OMEN_POWER.smartDescription": "When triggered, this enemy loses HP equal to its Dragon Omen stacks.",
   "NEWSANGUO_POWER_FATHER_I_HAVE_FAILED_YOU_POWER.title": "Father, I Have Failed You!",
   "NEWSANGUO_POWER_FATHER_I_HAVE_FAILED_YOU_POWER.description": "Father, I Have Let You Down!",
   "NEWSANGUO_POWER_FATHER_I_HAVE_FAILED_YOU_POWER.smartDescription": "Father, I Have Let You Down!",
@@ -71,8 +71,8 @@
   "NEWSANGUO_POWER_WHY_PICK_THAT_UP_POWER.description": "At the start of your next turn, choose up to {Amount} cards from your [gold]Discard Pile[/gold] and add them to your [gold]Hand[/gold].",
   "NEWSANGUO_POWER_WHY_PICK_THAT_UP_POWER.smartDescription": "At the start of your next turn, choose up to [blue]{Amount}[/blue] cards from your [gold]Discard Pile[/gold] and add them to your [gold]Hand[/gold].",
   "NEWSANGUO_POWER_TIGER_WIND_CLOUD_DRAGON_POWER.title": "Tiger Wind, Cloud Dragon",
-  "NEWSANGUO_POWER_TIGER_WIND_CLOUD_DRAGON_POWER.description": "Whenever you play a [gold]Smiling Tiger[/gold] or a [gold]Dragon Omen[/gold], draw {Amount} cards.",
-  "NEWSANGUO_POWER_TIGER_WIND_CLOUD_DRAGON_POWER.smartDescription": "Whenever you play a [gold]Smiling Tiger[/gold] or a [gold]Dragon Omen[/gold], draw [blue]{Amount}[/blue] cards.",
+  "NEWSANGUO_POWER_TIGER_WIND_CLOUD_DRAGON_POWER.description": "Whenever you play a [gold]Tiger-Dragon[/gold] card, draw {Amount} cards.",
+  "NEWSANGUO_POWER_TIGER_WIND_CLOUD_DRAGON_POWER.smartDescription": "Whenever you play a [gold]Tiger-Dragon[/gold] card, draw [blue]{Amount}[/blue] cards.",
   "NEWSANGUO_POWER_RAT_POISON_SCHEME_POWER.title": "Rat Poison Scheme",
   "NEWSANGUO_POWER_RAT_POISON_SCHEME_POWER.description": "At the start of your turn, add {Amount} [gold]Venom Rat[/gold] to your hand.",
   "NEWSANGUO_POWER_RAT_POISON_SCHEME_POWER.smartDescription": "At the start of your turn, add [blue]{Amount}[/blue] [gold]Venom Rat[/gold] to your hand.",
@@ -117,5 +117,8 @@
   "NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.smartDescription": "Whenever you gain 4 [gold]Drunken Might[/gold], gain [blue]{Amount}[/blue] [gold]Heaven's Force[/gold].",
   "NEWSANGUO_POWER_CHARGE_TO_ZHUGE_LIANGS_CART_POWER.title": "Charge Straight at Zhuge Liang's Cart",
   "NEWSANGUO_POWER_CHARGE_TO_ZHUGE_LIANGS_CART_POWER.description": "This turn, your Attack cards cost 0. Whenever you kill an enemy with an Attack card, gain {Amount} [gold]Four-Wheeled Cart[/gold].",
-  "NEWSANGUO_POWER_CHARGE_TO_ZHUGE_LIANGS_CART_POWER.smartDescription": "This turn, your Attack cards cost 0. Whenever you kill an enemy with an Attack card, gain [blue]{Amount}[/blue] [gold]Four-Wheeled Cart[/gold]."
+  "NEWSANGUO_POWER_CHARGE_TO_ZHUGE_LIANGS_CART_POWER.smartDescription": "This turn, your Attack cards cost 0. Whenever you kill an enemy with an Attack card, gain [blue]{Amount}[/blue] [gold]Four-Wheeled Cart[/gold].",
+  "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.smartDescription": "Until the start of your next turn, whenever one of your Qingzhou Soldiers dies, gain [blue]{Amount}[/blue] [gold]Heaven's Force[/gold].",
+  "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.title": "Worth All Their Lives!",
+  "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.description": "Until the start of your next turn, whenever one of your Qingzhou Soldiers dies, gain {Amount} [gold]Heaven's Force[/gold]."
 }

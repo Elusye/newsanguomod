@@ -35,8 +35,8 @@
   "NEWSANGUO_POWER_VICTORY_BY_HEAVENS_WILL_POWER.description": "在你的回合开始时，获得{Amount}点[gold]天意之力[/gold]。",
   "NEWSANGUO_POWER_VICTORY_BY_HEAVENS_WILL_POWER.smartDescription": "在你的回合开始时，{Amount:cond:<0?失去|获得}[blue]{Amount:abs()}[/blue]点[gold]天意之力[/gold]。",
   "NEWSANGUO_POWER_DRAGON_OMEN_POWER.title": "帝王之征",
-  "NEWSANGUO_POWER_DRAGON_OMEN_POWER.description": "在打出“龙可是帝王之征啊”时，失去与层数相等的生命。",
-  "NEWSANGUO_POWER_DRAGON_OMEN_POWER.smartDescription": "在打出“龙可是帝王之征啊”时，失去与层数相等的生命。",
+  "NEWSANGUO_POWER_DRAGON_OMEN_POWER.description": "触发时，这名敌人失去等同于帝王之征的层数点生命。",
+  "NEWSANGUO_POWER_DRAGON_OMEN_POWER.smartDescription": "触发时，这名敌人失去等同于帝王之征的层数点生命。",
   "NEWSANGUO_POWER_FATHER_I_HAVE_FAILED_YOU_POWER.title": "孩儿不孝啊！",
   "NEWSANGUO_POWER_FATHER_I_HAVE_FAILED_YOU_POWER.description": "孩儿对不住你呀！",
   "NEWSANGUO_POWER_FATHER_I_HAVE_FAILED_YOU_POWER.smartDescription": "孩儿对不住你呀！",
@@ -71,8 +71,8 @@
   "NEWSANGUO_POWER_WHY_PICK_THAT_UP_POWER.description": "在你的下个回合开始时，从你的[gold]弃牌堆[/gold]中选择至多{Amount}张牌加入你的[gold]手牌[/gold]。",
   "NEWSANGUO_POWER_WHY_PICK_THAT_UP_POWER.smartDescription": "在你的下个回合开始时，从你的[gold]弃牌堆[/gold]中选择至多[blue]{Amount}[/blue]张牌加入你的[gold]手牌[/gold]。",
   "NEWSANGUO_POWER_TIGER_WIND_CLOUD_DRAGON_POWER.title": "风从虎，云从龙",
-  "NEWSANGUO_POWER_TIGER_WIND_CLOUD_DRAGON_POWER.description": "每当你打出一张[gold]笑面虎[/gold]或[gold]龙可是帝王之征啊[/gold]时，抽{Amount}张牌。",
-  "NEWSANGUO_POWER_TIGER_WIND_CLOUD_DRAGON_POWER.smartDescription": "每当你打出一张[gold]笑面虎[/gold]或[gold]龙可是帝王之征啊[/gold]时，抽[blue]{Amount}[/blue]张牌。",
+  "NEWSANGUO_POWER_TIGER_WIND_CLOUD_DRAGON_POWER.description": "每当你打出一张[gold]龙虎牌[/gold]时，抽{Amount}张牌。",
+  "NEWSANGUO_POWER_TIGER_WIND_CLOUD_DRAGON_POWER.smartDescription": "每当你打出一张[gold]龙虎牌[/gold]时，抽[blue]{Amount}[/blue]张牌。",
   "NEWSANGUO_POWER_RAT_POISON_SCHEME_POWER.title": "毒鼠计",
   "NEWSANGUO_POWER_RAT_POISON_SCHEME_POWER.description": "在你的回合开始时，将{Amount}张[gold]毒鼠[/gold]加入你的手牌。",
   "NEWSANGUO_POWER_RAT_POISON_SCHEME_POWER.smartDescription": "在你的回合开始时，将[blue]{Amount}[/blue]张[gold]毒鼠[/gold]加入你的手牌。",
@@ -117,5 +117,8 @@
   "NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.smartDescription": "每当你获得4点[gold]酒力[/gold]，获得[blue]{Amount}[/blue]点[gold]天意之力[/gold]。",
   "NEWSANGUO_POWER_CHARGE_TO_ZHUGE_LIANGS_CART_POWER.title": "直奔诸葛亮四轮车",
   "NEWSANGUO_POWER_CHARGE_TO_ZHUGE_LIANGS_CART_POWER.description": "本回合内你的攻击牌免费打出。你使用攻击牌[gold]击杀[/gold]敌人时，获得{Amount}张[gold]四轮车[/gold]。",
-  "NEWSANGUO_POWER_CHARGE_TO_ZHUGE_LIANGS_CART_POWER.smartDescription": "本回合内你的攻击牌免费打出。你使用攻击牌[gold]击杀[/gold]敌人时，获得[blue]{Amount}[/blue]张[gold]四轮车[/gold]。"
+  "NEWSANGUO_POWER_CHARGE_TO_ZHUGE_LIANGS_CART_POWER.smartDescription": "本回合内你的攻击牌免费打出。你使用攻击牌[gold]击杀[/gold]敌人时，获得[blue]{Amount}[/blue]张[gold]四轮车[/gold]。",
+  "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.smartDescription": "直到下个回合开始前，每有一名你的青州兵死亡，获得[blue]{Amount}[/blue]点[gold]天意之力[/gold]。",
+  "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.title": "全死了我都值！",
+  "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.description": "直到下个回合开始前，每有一名你的青州兵死亡，获得{Amount}点[gold]天意之力[/gold]。"
 }

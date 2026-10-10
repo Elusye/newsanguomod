@@ -139,7 +139,7 @@
   "NEWSANGUO_CARD_DEAFEN_ME.title": "扎聋我自己的耳朵！",
   "NEWSANGUO_CARD_DEAFEN_ME.description": "给予自己{DragonOmenPower:diff()}层[gold]帝王之征[/gold]。\n本场战斗中你听到的声音音量降低至25%。\n造成{Damage:diff()}点伤害。",
   "NEWSANGUO_CARD_DRAGON_OMEN.title": "龙可是帝王之征啊",
-  "NEWSANGUO_CARD_DRAGON_OMEN.description": "给予{DragonOmenPower:diff()}层[gold]帝王之征[/gold]。\n所有拥有[gold]帝王之征[/gold]的敌人失去与层数相等的生命。",
+  "NEWSANGUO_CARD_DRAGON_OMEN.description": "给予{DragonOmenPower:diff()}层[gold]帝王之征[/gold]。",
   "NEWSANGUO_CARD_OFF_WITH_YOUR_HEAD.title": "我砍你的头！",
   "NEWSANGUO_CARD_OFF_WITH_YOUR_HEAD.description": "造成{Damage:diff()}点伤害。\n如果敌人的意图不是[gold]攻击[/gold]，则攻击两次。",
   "NEWSANGUO_CARD_PLOT.title": "密谋",
@@ -213,7 +213,7 @@
   "NEWSANGUO_CARD_NONSENSE.title": "春秋胡言乱语！",
   "NEWSANGUO_CARD_NONSENSE.description": "抽{Cards:diff()}张牌。\n在本回合随机化你手牌中所有牌的耗能。",
   "NEWSANGUO_CARD_TIGER_WIND_CLOUD_DRAGON.title": "风从虎，云从龙",
-  "NEWSANGUO_CARD_TIGER_WIND_CLOUD_DRAGON.description": "每当你打出一张[gold]笑面虎[/gold]或[gold]龙可是帝王之征啊[/gold]时，抽{TigerWindCloudDragonPower:diff()}张牌。\n将一张[gold]笑面虎[/gold]和一张[gold]龙可是帝王之征啊[/gold]添加到你的手牌。",
+  "NEWSANGUO_CARD_TIGER_WIND_CLOUD_DRAGON.description": "每当你打出一张[gold]龙虎牌[/gold]时，抽{TigerWindCloudDragonPower:diff()}张牌。\n将两张随机[gold]龙虎牌[/gold]加入你的手牌。",
   "NEWSANGUO_CARD_VENOM_RAT.title": "毒鼠",
   "NEWSANGUO_CARD_VENOM_RAT.description": "给予{PoisonPower:diff()}层[gold]中毒[/gold]。",
   "NEWSANGUO_CARD_RAT_POISON_SCHEME.title": "毒鼠计",
@@ -264,5 +264,7 @@
   "NEWSANGUO_CARD_CHARGE_TO_ZHUGE_LIANGS_CART.title": "直奔诸葛亮四轮车！",
   "NEWSANGUO_CARD_CHARGE_TO_ZHUGE_LIANGS_CART.description": "将你所有未消耗的攻击牌放入手牌。\n本回合内你的攻击牌免费打出，且使用攻击牌击杀敌人时，获得一张[gold]四轮车[/gold]。",
   "NEWSANGUO_CARD_FOUR_WHEELED_CART.title": "四轮车",
-  "NEWSANGUO_CARD_FOUR_WHEELED_CART.description": "获得{Block:diff()}点[gold]格挡[/gold]{Repeat:diff()}次。"
+  "NEWSANGUO_CARD_FOUR_WHEELED_CART.description": "获得{Block:diff()}点[gold]格挡[/gold]{Repeat:diff()}次。",
+  "NEWSANGUO_CARD_WORTH_ALL_THEIR_LIVES.title": "全死了我都值！",
+  "NEWSANGUO_CARD_WORTH_ALL_THEIR_LIVES.description": "[gold]募集[/gold]{Summon:diff()}。\n直到下个回合开始前，每有一名青州兵死亡，获得1点[gold]天意之力[/gold]。"
 }

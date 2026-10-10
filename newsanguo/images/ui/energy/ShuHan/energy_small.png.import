@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c3iqw3d2upcka"
-path="res://.godot/imported/multiplayer_hand_scissors.png-a4b7d8178e79f3d9f4cf11ff87caf63b.ctex"
+uid="uid://bi1mfxscxso4v"
+path="res://.godot/imported/energy_small.png-8f90526bc2c95b3b560ece047aa67e4c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/ui/hands/multiplayer_hand_scissors.png"
-dest_files=["res://.godot/imported/multiplayer_hand_scissors.png-a4b7d8178e79f3d9f4cf11ff87caf63b.ctex"]
+source_file="res://newsanguo/images/ui/energy/ShuHan/energy_small.png"
+dest_files=["res://.godot/imported/energy_small.png-8f90526bc2c95b3b560ece047aa67e4c.ctex"]
 
 [params]
 

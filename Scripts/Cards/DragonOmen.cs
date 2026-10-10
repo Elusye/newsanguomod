@@ -24,6 +24,7 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class DragonOmen : NewsanguoCardTemplate
 {
+    public override bool IsTigerDragonCard => true;
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
@@ -64,22 +65,6 @@ public class DragonOmen : NewsanguoCardTemplate
             this,
             silent: false);
 
-        // 所有拥有帝王之征的敌人失去与层数相等的生命（群体触发，不可格挡、不受力量等伤害修饰）
-        foreach (var enemy in base.CombatState!.HittableEnemies)
-        {
-            DragonOmenPower? omen = enemy.GetPower<DragonOmenPower>();
-            if (omen is not null && omen.Amount > 0)
-            {
-                await CreatureCmd.Damage(
-                    choiceContext,
-                    enemy,
-                    omen.Amount,
-                    ValueProp.Unblockable | ValueProp.Unpowered,
-                    dealer: null,
-                    cardSource: null,
-                    cardPlay: cardPlay);
-            }
-        }
     }
 
     // 升级后的效果逻辑

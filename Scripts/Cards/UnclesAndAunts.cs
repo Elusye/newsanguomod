@@ -55,26 +55,6 @@ public class UnclesAndAunts : NewsanguoCardTemplate
     {
     }
 
-    // 重放 1：打出后引擎会把整套 OnPlay 再执行一遍。原版实现见 CardModel.Play：
-    //   int playCount = await GeneratePlayCount(...);  // = GetEnchantedReplayCount() + 1
-    //   for (int i = 0; i < playCount; i++) { ... await OnPlay(...); }
-    // 而 GetEnchantedReplayCount() = Enchantment?.EnchantPlayCount(BaseReplayCount) ?? BaseReplayCount。
-    //
-    // 注意 BaseReplayCount 的 setter 会 AssertMutable()，所以不能写进构造函数：
-    // 构造函数跑的是"规范模型"（不可变），写它会抛 CanonicalModelException。
-    // 引擎造可变副本的方式是 MutableClone() → MemberwiseClone() → DeepCloneFields()/AfterCloned()，
-    // 所以在这里补上 1。用 < 1 判断，既避免反复克隆把重放次数越叠越高，也保留其他效果给的重放加成。
-    // 悬停提示无需手动添加：CardModel.HoverTips 在本牌重放次数 > 0 时会自动附上"重放"提示。
-    protected override void DeepCloneFields()
-    {
-        base.DeepCloneFields();
-
-        if (BaseReplayCount < 1)
-        {
-            BaseReplayCount = 1;
-        }
-    }
-
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

@@ -38,6 +38,9 @@ public class CaoArtOfWarPower : ModPowerTemplate
     // 独立召唤的青州兵生命值固定为 1（需求：以 1 生命值独立召唤）
     private const decimal IndependentSoldierHp = 1m;
 
+    // 每位玩家同时存活的募集青州兵最多 15 名，阵亡后可再次募集补足。
+    private const int MaxLivingSoldiers = 15;
+
     // 账本：牌 → 那张牌开始打出时的层数。
     // 用 CardModel 作键（引用相等），精确到“这一张牌的这一次出牌”。
     private class Data
@@ -81,16 +84,16 @@ public class CaoArtOfWarPower : ModPowerTemplate
     internal static bool TryConsumeSummonedSoldier(Creature ownerCreature, Creature soldier)
     {
         CaoArtOfWarPower? power = ownerCreature.GetPower<CaoArtOfWarPower>();
-        return power is not null && power.GetInternalData<Data>().summonedSoldiers.Remove(soldier);
+        bool consumed = power is not null && power.GetInternalData<Data>().summonedSoldiers.Remove(soldier);
+        return WorthAllTheirLivesPower.TryConsumeSoldier(ownerCreature, soldier) || consumed;
     }
 
     // 供伤害改道补丁判定“这次伤害该不该由青州兵依次承担”：
-    // 本能力在场，且本能力召唤的青州兵里还有活着的。
+    // 任一募集来源的青州兵里还有活着的（不要求曹氏兵法能力在场）。
     // 见 Scripts/Patches/CaoArtOfWarSoldierDamageCascadePatch.cs
     internal static bool HasLivingSummonedSoldier(Creature ownerCreature)
     {
-        CaoArtOfWarPower? power = ownerCreature.GetPower<CaoArtOfWarPower>();
-        return power is not null && power.GetInternalData<Data>().summonedSoldiers.Any(soldier => soldier.IsAlive);
+        return GetLivingSoldiersInSummonOrder(ownerCreature).Count > 0;
     }
 
     // 承伤优先级（用户 2026-10-09 指定）：青州兵 → 玩家格挡 → 奥斯提 → 玩家。
@@ -100,7 +103,7 @@ public class CaoArtOfWarPower : ModPowerTemplate
     internal static IReadOnlyList<Creature> GetLivingSoldiersInSummonOrder(Creature ownerCreature)
     {
         Player? owner = ownerCreature.Player;
-        if (owner is null || ownerCreature.GetPower<CaoArtOfWarPower>() is null)
+        if (owner is null)
         {
             return System.Array.Empty<Creature>();
         }
@@ -136,10 +139,24 @@ public class CaoArtOfWarPower : ModPowerTemplate
             return;
         }
 
+        if (GetLivingSoldiersInSummonOrder(Owner).Count >= MaxLivingSoldiers)
+        {
+            return;
+        }
+
         Flash();
         for (int i = 0; i < amount; i++)
         {
-            await SummonIndependentSoldier(choiceContext, player);
+            // 每次生成前重新检查，叠层或召唤钩子引发的嵌套募集也不能越过上限。
+            if (GetLivingSoldiersInSummonOrder(Owner).Count >= MaxLivingSoldiers)
+            {
+                break;
+            }
+            Creature? soldier = await SummonIndependentSoldier(choiceContext, player);
+            if (soldier is not null)
+            {
+                GetInternalData<Data>().summonedSoldiers.Add(soldier);
+            }
         }
         // 站位不需要我们操心：青州兵不是 Osty，引擎会走“通用宠物排布”自动把它们在玩家身后错开
         // （NCombatRoom.AddCreature 的 :407015-407035 与 PositionPlayersAndPets 的 :406917-406922）。
@@ -203,22 +220,26 @@ public class CaoArtOfWarPower : ModPowerTemplate
     /// 流程对齐原版 <c>OstyCmd.Summon</c> 的新建分支：AddPet → 挂“替你去死” → 设定生命值 → 结算召唤事件。
     /// 原版的 ModifySummonAmount 钩子在这里不适用：本次召唤的生命值是固定的 1，不随任何加成变化。
     /// </summary>
-    private async Task SummonIndependentSoldier(PlayerChoiceContext choiceContext, Player player)
+    internal static async Task<Creature?> SummonIndependentSoldier(PlayerChoiceContext choiceContext, Player player)
     {
+        if (GetLivingSoldiersInSummonOrder(player.Creature).Count >= MaxLivingSoldiers)
+        {
+            return null;
+        }
         Creature soldier = await PlayerCmd.AddPet<QingzhouSoldier>(player);
         // 青州兵的初始生命值本就是 1（MinInitialHp / MaxInitialHp = 1），这里显式设一遍以免上游改动
         await CreatureCmd.SetMaxHp(soldier, IndependentSoldierHp);
         await CreatureCmd.Heal(soldier, IndependentSoldierHp, false);
         // “替你去死”：让这只青州兵替你承伤（原版对新建的奥斯提做同样的事）
         await PowerCmd.Apply<DieForYouPower>(choiceContext, soldier, 1m, null, null);
-        GetInternalData<Data>().summonedSoldiers.Add(soldier);
 
         var combatState = player.Creature.CombatState;
         if (combatState is null)
         {
-            return;
+            return soldier;
         }
         CombatManager.Instance.History.Summoned(combatState, (int)IndependentSoldierHp, player);
         await Hook.AfterSummon(combatState, choiceContext, player, IndependentSoldierHp);
+        return soldier;
     }
 }

@@ -82,12 +82,12 @@ public class ShuHanCharacter : ModCharacterTemplate<
         ),
         // 多人宝箱石头剪刀布手势图（当前为占位图，可后续替换）：
         // 原版默认按角色 id 查找 res://images/ui/hands/multiplayer_hand_{id}_{gesture}.png，
-        // 此处改为 mod 自有路径，避免宝箱手势图缺失。
+        // 按角色分别配置独立目录，当前沿用同一套占位图，可单独替换而不影响另一角色。
         Multiplayer: new CharacterMultiplayerAssetSet(
-            ArmPointingTexturePath: "res://newsanguo/images/ui/hands/multiplayer_hand_point.png",
-            ArmRockTexturePath: "res://newsanguo/images/ui/hands/multiplayer_hand_rock.png",
-            ArmPaperTexturePath: "res://newsanguo/images/ui/hands/multiplayer_hand_paper.png",
-            ArmScissorsTexturePath: "res://newsanguo/images/ui/hands/multiplayer_hand_scissors.png"
+            ArmPointingTexturePath: "res://newsanguo/images/ui/hands/ShuHan/multiplayer_hand_point.png",
+            ArmRockTexturePath: "res://newsanguo/images/ui/hands/ShuHan/multiplayer_hand_rock.png",
+            ArmPaperTexturePath: "res://newsanguo/images/ui/hands/ShuHan/multiplayer_hand_paper.png",
+            ArmScissorsTexturePath: "res://newsanguo/images/ui/hands/ShuHan/multiplayer_hand_scissors.png"
         ),
         // 死亡/商店/休息处形象（当前为占位图，可后续替换）
         // 线索键用引擎的动画名（AnimState：die / idle_loop …）。
