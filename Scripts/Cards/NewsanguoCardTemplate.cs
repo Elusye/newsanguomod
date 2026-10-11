@@ -25,6 +25,31 @@ namespace newsanguo.Scripts.Cards;
 /// </summary>
 public abstract class NewsanguoCardTemplate : ModCardTemplate
 {
+    // 0.107没有跨玩家出牌落点，保留本mod接口并在出牌完整结算后转移原实例。
+    private CardLocation? _legacyResultLocation;
+    protected virtual CardLocation GetResultLocationForCardPlay() => new()
+    {
+        player = Owner, pileType = base.GetResultPileTypeForCardPlay(), position = CardPilePosition.Bottom
+    };
+    protected override PileType GetResultPileTypeForCardPlay()
+    {
+        _legacyResultLocation = GetResultLocationForCardPlay();
+        return _legacyResultLocation.player == Owner ? _legacyResultLocation.pileType : PileType.Discard;
+    }
+    internal async Task CompleteLegacyTransfer()
+    {
+        CardLocation? location = _legacyResultLocation;
+        _legacyResultLocation = null;
+        if (location is null || location.player == Owner || !location.player.Creature.IsAlive ||
+            !MegaCrit.Sts2.Core.Combat.CombatManager.Instance.IsInProgress || Pile is null)
+        {
+            return;
+        }
+        Pile.RemoveInternal(this);
+        Owner = null!;
+        Owner = location.player;
+        await CardPileCmd.Add(this, location.pileType.GetPile(Owner), location.position);
+    }
     private const string ScryKeywordId = "NEWSANGUO_KEYWORD_SCRY";
     private const string TigerDragonKeywordId = "NEWSANGUO_KEYWORD_TIGER_DRAGON";
 
@@ -46,7 +71,7 @@ public abstract class NewsanguoCardTemplate : ModCardTemplate
             }
             await CreatureCmd.Damage(choiceContext, enemy, omen.Amount,
                 ValueProp.Unblockable | ValueProp.Unpowered,
-                dealer: null, cardSource: null, cardPlay: cardPlay);
+                dealer: null, cardSource: null);
         }
     }
 

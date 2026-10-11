@@ -63,11 +63,10 @@ public static class CaoArtOfWarSoldierDamageCascadePatch
         typeof(decimal),
         typeof(ValueProp),
         typeof(Creature),
-        typeof(CardModel),
-        typeof(CardPlay)
+        typeof(CardModel)
     })]
     [HarmonyPrefix]
-    public static bool Prefix(PlayerChoiceContext choiceContext, IEnumerable<Creature>? targets, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay, ref Task<IEnumerable<DamageResult>> __result)
+    public static bool Prefix(PlayerChoiceContext choiceContext, IEnumerable<Creature>? targets, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, ref Task<IEnumerable<DamageResult>> __result)
     {
         if (SoldierDamageCascade.IsDistributing)
         {
@@ -87,7 +86,7 @@ public static class CaoArtOfWarSoldierDamageCascadePatch
         {
             return true;
         }
-        __result = DistributeTargets(choiceContext, targetList, amount, props, dealer, cardSource, cardPlay);
+        __result = DistributeTargets(choiceContext, targetList, amount, props, dealer, cardSource);
         return false;
     }
 
@@ -96,7 +95,7 @@ public static class CaoArtOfWarSoldierDamageCascadePatch
         CaoArtOfWarPower.HasLivingSummonedSoldier(target);
 
     private static async Task<IEnumerable<DamageResult>> DistributeTargets(PlayerChoiceContext choiceContext,
-        List<Creature> targets, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
+        List<Creature> targets, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource)
     {
         bool previousDistributing = SoldierDamageCascade.IsDistributing;
         // 在异步方法内部设置，调用方和其他独立结算不会继承这次分派状态。
@@ -112,8 +111,8 @@ public static class CaoArtOfWarSoldierDamageCascadePatch
                 }
                 // 按原目标顺序结算；不同玩家各用自己的青州兵，未募集的目标仍走原版。
                 IEnumerable<DamageResult> targetResults = NeedsSoldierCascade(target)
-                    ? await DistributeDamage(choiceContext, target, amount, props, dealer, cardSource, cardPlay)
-                    : await CreatureCmd.Damage(choiceContext, target, amount, props, dealer, cardSource, cardPlay);
+                    ? await DistributeDamage(choiceContext, target, amount, props, dealer, cardSource)
+                    : await CreatureCmd.Damage(choiceContext, target, amount, props, dealer, cardSource);
                 results.AddRange(targetResults);
             }
             return results;
@@ -124,7 +123,7 @@ public static class CaoArtOfWarSoldierDamageCascadePatch
         }
     }
 
-    private static async Task<IEnumerable<DamageResult>> DistributeDamage(PlayerChoiceContext choiceContext, Creature playerCreature, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
+    private static async Task<IEnumerable<DamageResult>> DistributeDamage(PlayerChoiceContext choiceContext, Creature playerCreature, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource)
     {
         bool previousSkip = SoldierDamageCascade.SkipNestedHooks;
         try
@@ -136,7 +135,7 @@ public static class CaoArtOfWarSoldierDamageCascadePatch
             // 链头：伤害修正 + “即将受伤”。整条链只按“打玩家”结算一次
             //（原版语义：ModifyDamage 之后、扣格挡之前触发 BeforeDamageReceived），
             // 所以易伤/虚弱/力量只算一遍，「荆棘」也只会反击一次。
-            decimal modifiedAmount = Hook.ModifyDamage(runState, combatState, playerCreature, dealer, amount, props, cardSource, cardPlay, ModifyDamageHookType.All, CardPreviewMode.None, out IEnumerable<AbstractModel> mods);
+            decimal modifiedAmount = Hook.ModifyDamage(runState, combatState, playerCreature, dealer, amount, props, cardSource, ModifyDamageHookType.All, CardPreviewMode.None, out IEnumerable<AbstractModel> mods);
             await Hook.AfterModifyingDamageAmount(runState, combatState, cardSource, mods);
             await Hook.BeforeDamageReceived(choiceContext, runState, combatState, playerCreature, modifiedAmount, props, dealer, cardSource);
 
@@ -155,7 +154,7 @@ public static class CaoArtOfWarSoldierDamageCascadePatch
                 {
                     continue;
                 }
-                IEnumerable<DamageResult> soldierResults = await CreatureCmd.Damage(choiceContext, soldier, remainingDamage, props | ValueProp.Unblockable, dealer, cardSource, cardPlay);
+                IEnumerable<DamageResult> soldierResults = await CreatureCmd.Damage(choiceContext, soldier, remainingDamage, props | ValueProp.Unblockable, dealer, cardSource);
                 allResults.AddRange(soldierResults);
                 if (soldier.IsAlive)
                 {
@@ -176,7 +175,7 @@ public static class CaoArtOfWarSoldierDamageCascadePatch
             //        这一步不带 Unblockable，格挡才会在奥斯提之前被扣掉；SkipNestedHooks 仍然为 true。
             if (remainingDamage > 0m)
             {
-                allResults.AddRange(await CreatureCmd.Damage(choiceContext, playerCreature, remainingDamage, props, dealer, cardSource, cardPlay));
+                allResults.AddRange(await CreatureCmd.Damage(choiceContext, playerCreature, remainingDamage, props, dealer, cardSource));
             }
             return allResults;
         }

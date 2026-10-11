@@ -47,7 +47,7 @@ public class ChowDown : NewsanguoCardTemplate
         NewsanguoSfx.Play("event:/newsanguo/sfx/chow_down");
 
         // 造成伤害并回复生命
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).Targeting(cardPlay.Target)
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target)
             .WithHitFx("vfx/vfx_bite", null, "blunt_attack.mp3")
             .Execute(choiceContext);
         await CreatureCmd.Heal(base.Owner.Creature, DynamicVars.Heal.BaseValue);

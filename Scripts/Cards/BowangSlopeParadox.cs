@@ -58,7 +58,7 @@ public class BowangSlopeParadox : NewsanguoCardTemplate
         // 抽到的牌本回合「保留」：引擎自带的单回合保留，回合结束时自动清除
         foreach (CardModel card in drawn)
         {
-            CardCmd.ApplySingleTurnRetain(card);
+            card.GiveSingleTurnRetain();
         }
 
         // 抽到的牌本回合「不能被打出」：把牌登记给「悖论」能力，由能力的全局关键词钩子加 Unplayable；

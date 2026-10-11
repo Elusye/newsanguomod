@@ -86,7 +86,7 @@ public class UnclesAndAunts : NewsanguoCardTemplate
         {
             await CreatureCmd.GainBlock(Owner.Creature, blockAmount, blockProps, cardPlay);
             await DamageCmd.Attack(damageAmount)
-                .FromCard(this, cardPlay)
+                .FromCard(this)
                 .Targeting(cardPlay.Target)
                 .WithHitFx("vfx/vfx_attack_slash")
                 .Execute(choiceContext);

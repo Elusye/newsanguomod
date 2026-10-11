@@ -50,7 +50,7 @@ public class WineCut : NewsanguoCardTemplate
 
         // 造成伤害（享受当前酒力加成）
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this, cardPlay)
+            .FromCard(this)
             .Targeting(target)
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);

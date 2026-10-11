@@ -78,7 +78,7 @@ public class FortySixtyTax : NewsanguoCardTemplate
 
         // 对目标造成 18 点伤害
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this, cardPlay)
+            .FromCard(this)
             .Targeting(target)
             .WithHitFx("vfx/vfx_coin_explosion_regular", null, "blunt_attack.mp3")
             .Execute(choiceContext);

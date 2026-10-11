@@ -58,7 +58,7 @@ public class BoneMeltingPalm : NewsanguoCardTemplate
         NewsanguoSfx.Play("event:/newsanguo/sfx/bone_melting_palm");
 
         // 造成伤害
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).Targeting(cardPlay.Target).WithHitFx("vfx/vfx_attack_slash").Execute(choiceContext);
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target).WithHitFx("vfx/vfx_attack_slash").Execute(choiceContext);
 
         // 使目标失去力量（参考原版卡牌“萎靡”Malaise 的负值施加）
         int strengthLoss = DynamicVars.Strength.IntValue;

@@ -35,7 +35,7 @@ public class OldDiamondDiademPower : ModPowerTemplate
     );
 
     // 你受到的攻击伤害减半（乘法修正；中毒等 Unpowered 伤害不受影响）
-    public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
+    public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource)
     {
         if (target != Owner || !props.IsPoweredAttack())
         {

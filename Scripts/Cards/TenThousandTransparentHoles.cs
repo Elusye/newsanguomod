@@ -58,7 +58,7 @@ public class TenThousandTransparentHoles : NewsanguoCardTemplate
 
         // 造成 2 点伤害 4X（升级后 5X）次；命中特效套用原版“穿刺”的金色刺击（NStabVfx）
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this, cardPlay)
+            .FromCard(this)
             .Targeting(cardPlay.Target)
             .WithHitCount(hits)
             .WithHitVfxNode((Creature t) => NStabVfx.Create(t, facingEnemies: true, VfxColor.Gold))

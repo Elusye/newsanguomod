@@ -101,7 +101,7 @@ public class ProxyStrike : NewsanguoCardTemplate
         // （这里先把数值取出来，后面改高初始值不会影响本次这一击）
         decimal dealtValue = DynamicVars.Damage.BaseValue;
         await DamageCmd.Attack(dealtValue)
-            .FromCard(this, cardPlay)
+            .FromCard(this)
             .Targeting(target)
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
@@ -225,7 +225,6 @@ public class ProxyStrike : NewsanguoCardTemplate
                 target,
                 raw,
                 ValueProp.Move,
-                null,
                 null,
                 ModifyDamageHookType.All,
                 CardPreviewMode.None,

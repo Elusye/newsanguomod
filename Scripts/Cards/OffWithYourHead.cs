@@ -63,7 +63,7 @@ public class OffWithYourHead : NewsanguoCardTemplate
         }
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this, cardPlay)
+            .FromCard(this)
             .Targeting(cardPlay.Target)
             .WithHitCount(hitCount)
             .WithHitFx("vfx/vfx_attack_slash")

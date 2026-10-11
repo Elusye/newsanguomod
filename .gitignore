@@ -36,3 +36,6 @@ __pycache__/
 
 # PostHog 分析产物快照（查询语句 analysis/posthog/*.sql 与 tools/*.ps1 可入库，生成的表/图不入库）
 analysis/posthog/out/
+
+# 本地兼容版本打包产物
+artifacts/

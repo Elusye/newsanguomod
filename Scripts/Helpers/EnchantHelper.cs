@@ -42,7 +42,7 @@ public static class EnchantHelper
         // 附魔的 Id.Entry 是大写（如 "ADROIT"），先归一化为小写再比较，
         // 否则剔除表和数值表永远匹配不上
         EnchantmentModel[] candidates = ModelDb.DebugEnchantments
-            .Where(e => !e.IsMock
+            .Where(e => e.GetType().Namespace?.Contains(".Mocks") != true
                 && e is not DeprecatedEnchantment
                 && IsFromVanillaOrThisMod(e)
                 && !ExcludedEntries.Contains(e.Id.Entry.ToLowerInvariant())

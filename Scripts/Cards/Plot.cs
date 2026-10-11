@@ -50,7 +50,7 @@ public class Plot : NewsanguoCardTemplate
 
         // 造成 6 点伤害
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this, cardPlay)
+            .FromCard(this)
             .Targeting(target)
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);

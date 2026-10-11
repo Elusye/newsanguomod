@@ -92,7 +92,7 @@ public class BetterThanYilingFlames : NewsanguoCardTemplate
         // 1) 先造成当前伤害：本次攻击的数值在此刻已经固定，
         //    下面消费手牌换来的成长只影响以后的打出（与卡面文案顺序一致）。
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this, cardPlay)
+            .FromCard(this)
             .Targeting(cardPlay.Target)
             .Execute(choiceContext);
 

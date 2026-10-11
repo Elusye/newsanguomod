@@ -45,11 +45,7 @@ if ([string]::IsNullOrWhiteSpace($Sts2Dir) -and $null -ne $localProps) {
     $Sts2Dir = $localProps.Sts2Dir
 }
 if ([string]::IsNullOrWhiteSpace($OutputPath)) {
-    if ([string]::IsNullOrWhiteSpace($Sts2Dir)) {
-        throw "Sts2Dir is not configured. Copy local.props.example to local.props, or pass -Sts2Dir / -OutputPath."
-    }
-    $Sts2Dir = Resolve-ExistingPath $Sts2Dir "Sts2Dir"
-    $OutputPath = Join-Path $Sts2Dir "mods\newsanguo\newsanguo.pck"
+    $OutputPath = Join-Path $ProjectRoot "artifacts\newsanguo-0.3.6-release.1-sts2-0.107.1\mods\newsanguo\newsanguo.pck"
 }
 
 function Resolve-GodotExe {

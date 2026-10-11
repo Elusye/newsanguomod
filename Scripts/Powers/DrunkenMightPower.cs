@@ -76,7 +76,7 @@ public class DrunkenMightPower : ModPowerTemplate
     }
 
     // 增加攻击牌造成的伤害（返回要叠加的数值增量）
-    public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
+    public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource)
     {
         // 只有这张能力的拥有者打出的攻击牌才享受加成
         if (base.Owner != dealer)

@@ -36,7 +36,7 @@ public class LightningStrike : NewsanguoCardTemplate
         get
         {
             var num = CombatManager.Instance.History.CardPlaysFinished.Count(e =>
-                    e.HappenedThisTurn(CombatState) && e.CardPlay.Player == Owner);
+                    e.HappenedThisTurn(CombatState) && e.CardPlay.Card.Owner == Owner);
             return num < DynamicVars["PlayMax"].IntValue;
         }
     }
@@ -64,7 +64,7 @@ public class LightningStrike : NewsanguoCardTemplate
             NewsanguoSfx.Play("event:/newsanguo/sfx/lightning_strike");
             await Cmd.CustomScaledWait(0.1f, 0.2f);
             await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-                .FromCard(this, cardPlay)
+                .FromCard(this)
                 .Targeting(cardPlay.Target)
                 .WithHitFx("vfx/vfx_attack_lightning", null, "lightning_orb_evoke.mp3")
                 .Execute(choiceContext);
@@ -73,7 +73,7 @@ public class LightningStrike : NewsanguoCardTemplate
         else
         {
             await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-                .FromCard(this, cardPlay)
+                .FromCard(this)
                 .Targeting(cardPlay.Target)
                 .WithHitFx("vfx/vfx_attack_slash")
                 .Execute(choiceContext);

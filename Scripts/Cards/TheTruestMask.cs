@@ -55,7 +55,7 @@ public class TheTruestMask : NewsanguoCardTemplate
 
         // 对所有敌人造成 7 点伤害 2 次
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this, cardPlay)
+            .FromCard(this)
             .TargetingAllOpponents(combatState)
             .WithHitCount(DynamicVars.Repeat.IntValue)
             .WithHitFx("vfx/vfx_attack_slash")

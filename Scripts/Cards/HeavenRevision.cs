@@ -63,7 +63,7 @@ public class HeavenRevision : NewsanguoCardTemplate
 
         // 造成计算伤害（本场战斗中已获得的天意之力 × 2，升级后 × 3；无基础伤害）
         await DamageCmd.Attack(DynamicVars.CalculatedDamage)
-            .FromCard(this, cardPlay)
+            .FromCard(this)
             .Targeting(cardPlay.Target)
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);

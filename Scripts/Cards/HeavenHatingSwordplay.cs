@@ -64,7 +64,7 @@ public class HeavenHatingSwordplay : NewsanguoCardTemplate
 
         // 造成计算伤害（基础 6 + 天意相关牌数量 × 每张额外伤害）
         await DamageCmd.Attack(DynamicVars.CalculatedDamage)
-            .FromCard(this, cardPlay)
+            .FromCard(this)
             .Targeting(cardPlay.Target)
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);

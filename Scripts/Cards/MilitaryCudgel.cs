@@ -51,7 +51,7 @@ public class MilitaryCudgel : NewsanguoCardTemplate
 
         // 造成 2（3）点伤害 2 次
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this, cardPlay)
+            .FromCard(this)
             .Targeting(cardPlay.Target)
             .WithHitCount(2)
             .WithHitFx("vfx/vfx_attack_slash")

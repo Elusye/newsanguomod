@@ -56,7 +56,7 @@ public class ThreeBlades : NewsanguoCardTemplate
 
         // 造成 9（12）点伤害 3 次；斩杀判定参考原版 KnockoutBlow
         bool killedEnemy = (await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this, cardPlay)
+            .FromCard(this)
             .Targeting(cardPlay.Target)
             .WithHitCount(DynamicVars.Repeat.IntValue)
             .WithHitFx("vfx/vfx_attack_slash")

@@ -103,7 +103,7 @@ public class ScorchingStarfall : NewsanguoCardTemplate
                 }
 
                 await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-                    .FromCard(this, cardPlay)
+                    .FromCard(this)
                     .TargetingAllOpponents(combatState)
                     .Execute(choiceContext);
             }

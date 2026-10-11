@@ -88,7 +88,7 @@ public class BeatOfDeathPower : ModPowerTemplate
         ostyIsTakingThisDamage = true;
         try
         {
-            await CreatureCmd.Damage(choiceContext, Owner, hpCost, ValueProp.Unpowered, dealer: Owner, cardSource: null, cardPlay: null);
+            await CreatureCmd.Damage(choiceContext, Owner, hpCost, ValueProp.Unpowered, dealer: Owner, cardSource: null);
         }
         finally
         {

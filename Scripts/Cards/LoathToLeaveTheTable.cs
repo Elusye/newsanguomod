@@ -76,7 +76,7 @@ public class LoathToLeaveTheTable : NewsanguoCardTemplate
         async Task DealDamage(bool grandFinale)
         {
             var attack = DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-                .FromCard(this, cardPlay)
+                .FromCard(this)
                 .TargetingAllOpponents(combatState);
 
             if (grandFinale)

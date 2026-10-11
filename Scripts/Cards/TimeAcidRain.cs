@@ -48,7 +48,7 @@ public class TimeAcidRain : NewsanguoCardTemplate
         // 先破防与施加铁骑，使本次攻击也不受敌方正面能力保护。
         foreach (var enemy in CombatState!.GetOpponentsOf(Owner.Creature).Where(c => c.IsAlive).ToList())
         {
-            await CreatureCmd.LoseBlock(choiceContext, enemy, enemy.Block, Owner.Creature);
+            await CreatureCmd.LoseBlock(enemy, enemy.Block);
             // 先移除人工制品，避免其消耗层数抵消铁骑减益。
             if (enemy.GetPower<ArtifactPower>() is { } artifact)
             {
@@ -58,7 +58,7 @@ public class TimeAcidRain : NewsanguoCardTemplate
                 DynamicVars["IronCavalry"].IntValue, Owner.Creature, this);
         }
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this, cardPlay)
+            .FromCard(this)
             .TargetingAllOpponents(CombatState!)
             .Execute(choiceContext);
     }

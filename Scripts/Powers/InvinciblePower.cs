@@ -32,7 +32,7 @@ public class InvinciblePower : ModPowerTemplate
     );
 
     // 伤害修正（乘法）：若你没有飞行，则对“非振翅/翱翔”敌人造成的攻击伤害 ×（100 + Amount）%
-    public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
+    public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource)
     {
         if (dealer != Owner || !props.IsPoweredAttack())
         {

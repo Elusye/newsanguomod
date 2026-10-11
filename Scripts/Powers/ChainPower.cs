@@ -38,7 +38,7 @@ public class ChainPower : ModPowerTemplate
     );
 
     // 自己受到的攻击伤害减少 50%（乘法修正，与“飞行”同一算法）
-    public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
+    public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource)
     {
         if (target != Owner || !props.IsPoweredAttack())
         {
@@ -76,7 +76,7 @@ public class ChainPower : ModPowerTemplate
 
         foreach (Creature ally in allies)
         {
-            await CreatureCmd.Damage(choiceContext, ally, result.UnblockedDamage, ValueProp.Unblockable | ValueProp.Unpowered, dealer: Owner, cardSource: null, cardPlay: null);
+            await CreatureCmd.Damage(choiceContext, ally, result.UnblockedDamage, ValueProp.Unblockable | ValueProp.Unpowered, dealer: Owner, cardSource: null);
         }
     }
 }
