@@ -48,7 +48,7 @@ if errorlevel 1 goto :err
 
 :pull
 echo === Pulling latest from GitHub (rebase) ===
-git pull --rebase origin main
+git pull --rebase origin codex/release-0.107
 if errorlevel 1 goto :pull_failed
 
 :push
