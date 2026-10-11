@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.Vfx;
 using newsanguo.Scripts.Relics;
 using newsanguo.Scripts.Settings;
+using newsanguo.Scripts.Patches;
 using STS2RitsuLib.Content;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Characters;
@@ -48,7 +49,9 @@ public class ShuHanCharacter : ModCharacterTemplate<
     // HideInCardLibraryCompendium。
     public override bool HideFromVanillaCharacterSelect => !NewsanguoTestModeSettings.TestModeEnabled;
 
-    public override bool AllowInVanillaRandomCharacterSelect => NewsanguoTestModeSettings.TestModeEnabled;
+    // 联机随机开局各客户端必须使用相同候选；本地测试模式仅控制手动选择。
+    public override bool AllowInVanillaRandomCharacterSelect =>
+        NewsanguoTestModeSettings.TestModeEnabled && !ShuHanMultiplayerRandomSelectionPatch.ExcludeShuHan;
 
     public override CharacterAssetProfile AssetProfile => new(
         Ui: new CharacterUiAssetSet(
