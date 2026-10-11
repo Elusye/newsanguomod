@@ -27,12 +27,21 @@ public static class IronCavalryBuffSuppressionPatch
         foreach (AbstractModel model in listeners)
         {
             if (model is PowerModel power && power.TypeForCurrentAmount == PowerType.Buff &&
+                IsSupportedSource(power) &&
                 power is not SandpitPower && power is not MinionPower &&
+                power is not PossessStrengthPower && power is not PossessSpeedPower &&
                 suppressed.Contains(power.Owner))
             {
                 continue;
             }
             yield return model;
         }
+    }
+
+    private static bool IsSupportedSource(PowerModel power)
+    {
+        // 按实际能力类型的程序集判断，避免其他 mod 继承原版能力时也被禁用。
+        var assembly = power.GetType().Assembly;
+        return assembly == typeof(PowerModel).Assembly || assembly == typeof(IronCavalryPower).Assembly;
     }
 }
