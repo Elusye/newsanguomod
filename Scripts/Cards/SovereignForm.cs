@@ -16,7 +16,7 @@ namespace newsanguo.Scripts.Cards;
 
 /// <summary>
 /// 「君王形态」（Sovereign Form，蜀汉专属）：3 费（升级后仍是 3 费）稀有能力牌。
-/// 施加 <see cref="SovereignFormPower"/>：你每获得 4 点酒力，获得 2 点天意之力；
+/// 施加 <see cref="SovereignFormPower"/>：你每获得 2 次酒力，获得 2 点天意之力；
 /// 打出时另外将一张「参见汉中王！」（<see cref="HailKingOfHanzhong"/>）加入你的手牌。
 ///
 /// 2026-10-07：本牌原名「真正的君王」（The True King），按要求改名为「君王形态」/ Sovereign Form，

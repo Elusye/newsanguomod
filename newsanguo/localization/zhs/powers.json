@@ -113,12 +113,18 @@
   "NEWSANGUO_POWER_MEGALOVANIA_POWER.description": "在你的回合开始时，获得{Amount:energyIcons()}。",
   "NEWSANGUO_POWER_MEGALOVANIA_POWER.smartDescription": "在你的回合开始时，获得[blue]{Amount:energyIcons()}[/blue]。",
   "NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.title": "君王形态",
-  "NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.description": "每当你获得4点[gold]酒力[/gold]，获得{Amount}点[gold]天意之力[/gold]。",
-  "NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.smartDescription": "每当你获得4点[gold]酒力[/gold]，获得[blue]{Amount}[/blue]点[gold]天意之力[/gold]。",
+  "NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.description": "每当你获得2次[gold]酒力[/gold]，获得{Amount}点[gold]天意之力[/gold]。",
+  "NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.smartDescription": "每当你获得2次[gold]酒力[/gold]，获得[blue]{Amount}[/blue]点[gold]天意之力[/gold]。",
   "NEWSANGUO_POWER_CHARGE_TO_ZHUGE_LIANGS_CART_POWER.title": "直奔诸葛亮四轮车",
   "NEWSANGUO_POWER_CHARGE_TO_ZHUGE_LIANGS_CART_POWER.description": "本回合内你的攻击牌免费打出。你使用攻击牌[gold]击杀[/gold]敌人时，获得{Amount}张[gold]四轮车[/gold]。",
   "NEWSANGUO_POWER_CHARGE_TO_ZHUGE_LIANGS_CART_POWER.smartDescription": "本回合内你的攻击牌免费打出。你使用攻击牌[gold]击杀[/gold]敌人时，获得[blue]{Amount}[/blue]张[gold]四轮车[/gold]。",
   "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.smartDescription": "直到下个回合开始前，每有一名你的青州兵死亡，获得[blue]{Amount}[/blue]点[gold]天意之力[/gold]。",
   "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.title": "全死了我都值！",
-  "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.description": "直到下个回合开始前，每有一名你的青州兵死亡，获得{Amount}点[gold]天意之力[/gold]。"
+  "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.description": "直到下个回合开始前，每有一名你的青州兵死亡，获得{Amount}点[gold]天意之力[/gold]。",
+  "NEWSANGUO_POWER_IRON_CAVALRY_POWER.smartDescription": "[blue]{Amount}[/blue]回合内，拥有的正面效果失效。",
+  "NEWSANGUO_POWER_IRON_CAVALRY_POWER.description": "界铁骑的生物拥有的正面效果会暂时失效。",
+  "NEWSANGUO_POWER_IRON_CAVALRY_POWER.title": "界铁骑",
+  "NEWSANGUO_POWER_PLATED_ARMOR_POWER.title": "多层护甲",
+  "NEWSANGUO_POWER_PLATED_ARMOR_POWER.description": "回合结束时获得[gold]格挡[/gold]，受到攻击时层数减少。",
+  "NEWSANGUO_POWER_PLATED_ARMOR_POWER.smartDescription": "在你的回合结束时获得[blue]{Amount}[/blue]点[gold]格挡[/gold]。受到攻击伤害而失去生命时，[gold]多层护甲[/gold]的层数将会减少[blue]1[/blue]。"
 }

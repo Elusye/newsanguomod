@@ -1,9 +1,15 @@
 using HarmonyLib;
+using System.Linq;
+using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Combat;
+using MegaCrit.Sts2.Core.Hooks;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Models.Powers;
 
 using newsanguo.Scripts.Powers;
+using newsanguo.Scripts.Monsters;
 
 namespace newsanguo.Scripts.Patches;
 
@@ -27,13 +33,44 @@ public static class CaoArtOfWarSoldierRemovalPatch
             return true;
         }
         Player? owner = creature.PetOwner;
-        if (owner?.Creature is null || !CaoArtOfWarPower.TryConsumeSummonedSoldier(owner.Creature, creature))
+        if (owner?.Creature is null || creature.Monster is not QingzhouSoldier)
         {
             return true;
         }
 
-        // 这只青州兵是「曹氏兵法」召唤的独立个体：同意移除（引擎随即把它移出 Pets 并删除节点）
+        // 清理账本，但离场判定不依赖能力仍在场（主人死亡或能力移除后也必须离场）。
+        CaoArtOfWarPower.TryConsumeSummonedSoldier(owner.Creature, creature);
+        // 青州兵死亡即同意移除（引擎随即把它移出 Pets 并删除节点）。
         __result = true;
         return false;
+    }
+}
+
+/// <summary>原版玩家死亡仅清理奥斯提，在能力被移除及停用钩子前补齐青州兵清理。</summary>
+[HarmonyPatch(typeof(Hook), nameof(Hook.AfterDeath))]
+public static class QingzhouSoldierOwnerDeathCleanupPatch
+{
+    public static void Postfix(Creature creature, bool wasRemovalPrevented, ref Task __result)
+    {
+        if (wasRemovalPrevented || !creature.IsPlayer)
+        {
+            return;
+        }
+        __result = CleanupAfterDeath(__result, creature);
+    }
+
+    private static async Task CleanupAfterDeath(Task originalDeathHooks, Creature creature)
+    {
+        await originalDeathHooks;
+        // 死亡钩子可能复活主人；此时不动召唤物。
+        if (!creature.IsDead || creature.Player?.PlayerCombatState is not { } combat)
+        {
+            return;
+        }
+        Creature[] soldiers = combat.Pets
+            .Where(pet => pet.Monster is QingzhouSoldier && pet.IsAlive && pet.PetOwner == creature.Player)
+            .ToArray();
+        // 与主人死亡一致，强制清场，防止免死效果留下无主召唤物。
+        await CreatureCmd.Kill(soldiers, force: true);
     }
 }

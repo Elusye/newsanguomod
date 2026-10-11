@@ -7,14 +7,13 @@ using MegaCrit.Sts2.Core.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts;
 using newsanguo.Scripts.Combat;
 
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>
 /// 「君王形态」（<see cref="newsanguo.Scripts.Cards.SovereignForm"/>）施加的能力：
-/// 你每获得 4 点酒力，就获得 <see cref="ModPowerTemplate.Amount"/> 点天意之力。
+/// 你每获得 2 次酒力，就获得 <see cref="ModPowerTemplate.Amount"/> 点天意之力。
 ///
 /// 2026-10-07（不可叠加改造）：<see cref="InstanceType"/> 改为
 /// <see cref="PowerInstanceType.Instanced"/>（照抄原版「环绕」<c>OrbitPower</c>：:103194-103237，
@@ -26,7 +25,7 @@ namespace newsanguo.Scripts.Powers;
 ///  · 右上角（<see cref="IHasSecondAmount"/>）= <see cref="GetSecondAmount"/> = Amount
 ///    = 每触发一次给的天意之力点数（「君王形态」2 点，升级版 3 点）；
 ///  · 右下角（引擎原版 <c>%AmountLabel</c> 显示 <see cref="DisplayAmount"/>）
-///    = <see cref="WinePerTrigger"/> − 已攒到的余数 = 还差多少点酒力才触发。
+///    = <see cref="WinePerTrigger"/> − 已攒到的余数 = 还差多少次酒力才触发。
 ///
 /// 2026-10-07：随卡牌改名，TheTrueKingPower → SovereignFormPower（本地化 key 同步为
 /// NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.*，音效改为 event:/newsanguo/sfx/sovereign_form_power）。
@@ -34,13 +33,13 @@ namespace newsanguo.Scripts.Powers;
 /// 触发判定照抄「何处有酒」（<see cref="WheresWinePower"/>）的酒力获得钩子：
 /// <see cref="BeforePowerAmountChanged"/> 记下变化前的层数，
 /// <see cref="AfterPowerAmountChanged"/> 里用“变化后 − 变化前”算出本次真实获得的酒力
-/// （这样「换大盏」等加成也算进累计，与实际到手点数一致）。
+/// （只用于确认本次酒力确实增加，增加点数不影响次数统计）。
 /// </summary>
 [RegisterPower]
 public class SovereignFormPower : ModPowerTemplate, IHasSecondAmount
 {
-    // 每累计获得这么多点酒力触发一次
-    public const int WinePerTrigger = 4;
+    // 每累计获得这么多次酒力触发一次
+    public const int WinePerTrigger = 2;
 
     // 能力类型：正面 Buff
     public override PowerType Type => PowerType.Buff;
@@ -53,7 +52,7 @@ public class SovereignFormPower : ModPowerTemplate, IHasSecondAmount
     // 需要酒力变化的战斗钩子
     public override bool ShouldReceiveCombatHooks => true;
 
-    // 右下角数字：还差多少点酒力才触发（原版用 DisplayAmount 显示在 %AmountLabel 上）
+    // 右下角数字：还差多少次酒力才触发（原版用 DisplayAmount 显示在 %AmountLabel 上）
     public override int DisplayAmount => Math.Max(0, WinePerTrigger - _wineProgress);
 
     // 右上角数字（本 mod 的 IHasSecondAmount 机制）：每触发一次获得的天意之力点数
@@ -71,7 +70,7 @@ public class SovereignFormPower : ModPowerTemplate, IHasSecondAmount
     // 记录酒力变化前的层数
     private int _drunkenMightAmountBeforeChange;
 
-    // 距离下一次触发还差的酒力累计（不满 4 点的余数留到下次继续攒）。
+    // 距离下一次触发还差的酒力累计（不满 2 次的余数留到下次继续攒）。
     // 故意只在战斗内记：能力本身随战斗结束消失，读档回到战斗中最多丢一次余数，无关大局。
     private int _wineProgress;
 
@@ -86,7 +85,7 @@ public class SovereignFormPower : ModPowerTemplate, IHasSecondAmount
         return Task.CompletedTask;
     }
 
-    // 酒力真的增加后，按每 4 点一档换算成天意之力
+    // 酒力真的增加后，按每 2 次一档换算成天意之力
     public override async Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
     {
         if (Owner is null) return;
@@ -97,22 +96,20 @@ public class SovereignFormPower : ModPowerTemplate, IHasSecondAmount
         int gainedAmount = power.Amount - _drunkenMightAmountBeforeChange;
         if (gainedAmount <= 0) return;
 
-        _wineProgress += gainedAmount;
+        // 本次实际增加了酒力，无论增加几点都只记一次。
+        _wineProgress++;
 
-        // 可能一次进账就跨过多档（例如一口喝下 8 点酒力）
+        // 每两次真实获得酒力触发一次。
         int triggers = _wineProgress / WinePerTrigger;
         if (triggers > 0)
         {
             _wineProgress -= triggers * WinePerTrigger;
 
-            // 触发音效（音频文件：newsanguo/audios/sovereign_form_power.mp3|wav|ogg）
-            NewsanguoSfx.Play("event:/newsanguo/sfx/sovereign_form_power");
-
             // 获得天意之力（每档 Amount 点）
             await HeavensForce.Add(choiceContext, Owner.Player, triggers * Amount, null);
         }
 
-        // 不管有没有触发，右下角的“还差几点酒力”都变了 ⇒ 刷新图标两个数字
+        // 不管有没有触发，右下角的“还差几次酒力”都变了 ⇒ 刷新图标两个数字
         RefreshIcon();
     }
 

@@ -26,6 +26,8 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class FireAndWaterProof : NewsanguoCardTemplate
 {
+    // 向引擎声明本牌获得格挡，使格挡相关附魔能够识别它。
+    public override bool GainsBlock => true;
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(

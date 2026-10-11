@@ -113,12 +113,18 @@
   "NEWSANGUO_POWER_MEGALOVANIA_POWER.description": "At the start of your turn, gain {Amount:energyIcons()}.",
   "NEWSANGUO_POWER_MEGALOVANIA_POWER.smartDescription": "At the start of your turn, gain [blue]{Amount:energyIcons()}[/blue].",
   "NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.title": "Sovereign Form",
-  "NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.description": "Whenever you gain 4 [gold]Drunken Might[/gold], gain {Amount} [gold]Heaven's Force[/gold].",
-  "NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.smartDescription": "Whenever you gain 4 [gold]Drunken Might[/gold], gain [blue]{Amount}[/blue] [gold]Heaven's Force[/gold].",
+  "NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.description": "Whenever you gain [gold]Drunken Might[/gold] 2 times, gain {Amount} [gold]Heaven's Force[/gold].",
+  "NEWSANGUO_POWER_SOVEREIGN_FORM_POWER.smartDescription": "Whenever you gain [gold]Drunken Might[/gold] 2 times, gain [blue]{Amount}[/blue] [gold]Heaven's Force[/gold].",
   "NEWSANGUO_POWER_CHARGE_TO_ZHUGE_LIANGS_CART_POWER.title": "Charge Straight at Zhuge Liang's Cart",
   "NEWSANGUO_POWER_CHARGE_TO_ZHUGE_LIANGS_CART_POWER.description": "This turn, your Attack cards cost 0. Whenever you kill an enemy with an Attack card, gain {Amount} [gold]Four-Wheeled Cart[/gold].",
   "NEWSANGUO_POWER_CHARGE_TO_ZHUGE_LIANGS_CART_POWER.smartDescription": "This turn, your Attack cards cost 0. Whenever you kill an enemy with an Attack card, gain [blue]{Amount}[/blue] [gold]Four-Wheeled Cart[/gold].",
   "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.smartDescription": "Until the start of your next turn, whenever one of your Qingzhou Soldiers dies, gain [blue]{Amount}[/blue] [gold]Heaven's Force[/gold].",
   "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.title": "Worth All Their Lives!",
-  "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.description": "Until the start of your next turn, whenever one of your Qingzhou Soldiers dies, gain {Amount} [gold]Heaven's Force[/gold]."
+  "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.description": "Until the start of your next turn, whenever one of your Qingzhou Soldiers dies, gain {Amount} [gold]Heaven's Force[/gold].",
+  "NEWSANGUO_POWER_IRON_CAVALRY_POWER.smartDescription": "Positive effects are disabled for [blue]{Amount}[/blue] turns.",
+  "NEWSANGUO_POWER_IRON_CAVALRY_POWER.description": "Positive effects on creatures with Enhanced Iron Cavalry are temporarily disabled.",
+  "NEWSANGUO_POWER_IRON_CAVALRY_POWER.title": "Enhanced Iron Cavalry",
+  "NEWSANGUO_POWER_PLATED_ARMOR_POWER.title": "Plated Armor",
+  "NEWSANGUO_POWER_PLATED_ARMOR_POWER.description": "Gain [gold]Block[/gold] at the end of your turn. Lose stacks when attacked.",
+  "NEWSANGUO_POWER_PLATED_ARMOR_POWER.smartDescription": "At the end of your turn, gain [blue]{Amount}[/blue] [gold]Block[/gold]. Whenever you lose HP from attack damage, reduce [gold]Plated Armor[/gold] by [blue]1[/blue]."
 }

@@ -14,7 +14,8 @@ using newsanguo.Scripts.Cards;
 namespace newsanguo.Scripts.Characters;
 
 [RegisterSharedCardPool]
-public class ShuHanCardPool : TypeListCardPoolModel, IModColorfulPhilosophersCardPool
+// 不加入 Colorful Philosophers 事件的可交换颜色池。
+public class ShuHanCardPool : TypeListCardPoolModel
 {
     public override string Title => "newsanguo";
 

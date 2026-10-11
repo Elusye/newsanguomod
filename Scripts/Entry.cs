@@ -55,6 +55,8 @@ public class Entry
         // ②敌人攻击的承伤优先级改成「青州兵（按召唤顺序依次穿透）→ 玩家格挡 → 奥斯提 → 玩家」
         //   （原版是「玩家格挡 → 奥斯提 → 玩家」，且多只召唤物时一次攻击只有 1 只接刀）
         ApplyPatch(harmony, typeof(CaoArtOfWarSoldierRemovalPatch));
+        ApplyPatch(harmony, typeof(QingzhouSoldierOwnerDeathCleanupPatch));
+        ApplyPatch(harmony, typeof(IronCavalryBuffSuppressionPatch));
         ApplyPatch(harmony, typeof(CaoArtOfWarSoldierDamageCascadePatch));
         ApplyPatch(harmony, typeof(SoldierDamageCascadeNestedHookSkipPatch));
         // ③青州兵的战斗表现：站位照原版奥斯提的锚点（主人右侧 + 抬高 75px）并在多只时横向错开，

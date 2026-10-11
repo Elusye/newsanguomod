@@ -256,15 +256,17 @@
   "NEWSANGUO_CARD_AUTO_PILOT.title": "托管",
   "NEWSANGUO_CARD_AUTO_PILOT.description": "获得{Energy:energyIcons()}。\n抽{Cards:diff()}张牌。\n[red]让天意爷接管你的这个回合。[/red]",
   "NEWSANGUO_CARD_SOVEREIGN_FORM.title": "君王形态",
-  "NEWSANGUO_CARD_SOVEREIGN_FORM.description": "你每获得{WineThreshold}点[gold]酒力[/gold]，获得{HeavensForcePower:diff()}点[gold]天意之力[/gold]。\n将一张[gold]参见汉中王！[/gold]加入你的手牌。",
+  "NEWSANGUO_CARD_SOVEREIGN_FORM.description": "你每获得{WineThreshold}次[gold]酒力[/gold]，获得{HeavensForcePower:diff()}点[gold]天意之力[/gold]。\n将一张[gold]参见汉中王！[/gold]加入你的手牌。",
   "NEWSANGUO_CARD_HEAVENLY_DELUGE.title": "天上大水",
   "NEWSANGUO_CARD_HEAVENLY_DELUGE.description": "对所有敌人造成{Damage:diff()}点伤害。\n若你的[gold]天意之力[/gold]大于{HeavensForcePower:inverseDiff()}点：\n击晕所有敌人。\n失去{HeavensForcePower:inverseDiff()}点[gold]天意之力[/gold]。",
   "NEWSANGUO_CARD_TIME_ACID_RAIN.title": "时光酸雨",
-  "NEWSANGUO_CARD_TIME_ACID_RAIN.description": "失去{HeavensForcePower:inverseDiff()}点[gold]天意之力[/gold]。\n去除所有敌人的[gold]格挡[/gold]，并清除他们的[gold]正面效果[/gold]。",
+  "NEWSANGUO_CARD_TIME_ACID_RAIN.description": "失去{HeavensForcePower:inverseDiff()}点[gold]天意之力[/gold]。\n去除所有敌人的[gold]格挡[/gold]和[gold]人工制品[/gold]，然后使它们的[gold]正面效果[/gold]在{IronCavalry:diff()}个回合内失效。\n对所有敌人造成{Damage:diff()}点伤害。",
   "NEWSANGUO_CARD_CHARGE_TO_ZHUGE_LIANGS_CART.title": "直奔诸葛亮四轮车！",
   "NEWSANGUO_CARD_CHARGE_TO_ZHUGE_LIANGS_CART.description": "将你所有未消耗的攻击牌放入手牌。\n本回合内你的攻击牌免费打出，且使用攻击牌击杀敌人时，获得一张[gold]四轮车[/gold]。",
   "NEWSANGUO_CARD_FOUR_WHEELED_CART.title": "四轮车",
   "NEWSANGUO_CARD_FOUR_WHEELED_CART.description": "获得{Block:diff()}点[gold]格挡[/gold]{Repeat:diff()}次。",
   "NEWSANGUO_CARD_WORTH_ALL_THEIR_LIVES.title": "全死了我都值！",
-  "NEWSANGUO_CARD_WORTH_ALL_THEIR_LIVES.description": "[gold]募集[/gold]{Summon:diff()}。\n直到下个回合开始前，每有一名青州兵死亡，获得1点[gold]天意之力[/gold]。"
+  "NEWSANGUO_CARD_WORTH_ALL_THEIR_LIVES.description": "[gold]募集[/gold]{Summon:diff()}。\n直到下个回合开始前，每有一名青州兵死亡，获得1点[gold]天意之力[/gold]。",
+  "NEWSANGUO_CARD_WELL_FED_WELL_CLOTHED.title": "不缺吃穿",
+  "NEWSANGUO_CARD_WELL_FED_WELL_CLOTHED.description": "获得{DrunkenMightPower:diff()}点[gold]酒力[/gold]。\n获得{PlatedArmorPower:diff()}层[gold]多层护甲[/gold]。"
 }

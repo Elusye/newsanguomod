@@ -256,15 +256,17 @@
   "NEWSANGUO_CARD_AUTO_PILOT.title": "Autopilot",
   "NEWSANGUO_CARD_AUTO_PILOT.description": "Gain {Energy:energyIcons()}.\nDraw {Cards:diff()} cards.\n[red]Let Lord Heaven take over this turn.[/red]",
   "NEWSANGUO_CARD_SOVEREIGN_FORM.title": "Sovereign Form",
-  "NEWSANGUO_CARD_SOVEREIGN_FORM.description": "Whenever you gain {WineThreshold} [gold]Drunken Might[/gold], gain {HeavensForcePower:diff()} [gold]Heaven's Force[/gold].\nAdd a [gold]Hail, King of Hanzhong![/gold] to your hand.",
+  "NEWSANGUO_CARD_SOVEREIGN_FORM.description": "Whenever you gain [gold]Drunken Might[/gold] {WineThreshold} times, gain {HeavensForcePower:diff()} [gold]Heaven's Force[/gold].\nAdd a [gold]Hail, King of Hanzhong![/gold] to your hand.",
   "NEWSANGUO_CARD_HEAVENLY_DELUGE.title": "Heavenly Deluge",
   "NEWSANGUO_CARD_HEAVENLY_DELUGE.description": "Deal {Damage:diff()} damage to ALL enemies.\nIf your [gold]Heaven's Force[/gold] is above {HeavensForcePower:inverseDiff()}:\nStun ALL enemies.\nLose {HeavensForcePower:inverseDiff()} [gold]Heaven's Force[/gold].",
   "NEWSANGUO_CARD_TIME_ACID_RAIN.title": "Time Acid Rain",
-  "NEWSANGUO_CARD_TIME_ACID_RAIN.description": "Lose {HeavensForcePower:inverseDiff()} [gold]Heaven's Force[/gold].\nRemove all [gold]Block[/gold] from ALL enemies, then remove all of their [gold]positive effects[/gold].",
+  "NEWSANGUO_CARD_TIME_ACID_RAIN.description": "Lose {HeavensForcePower:inverseDiff()} [gold]Heaven's Force[/gold].\nRemove all [gold]Block[/gold] and [gold]Artifact[/gold] from ALL enemies, then disable their [gold]positive effects[/gold] for {IronCavalry:diff()} turns.\nDeal {Damage:diff()} damage to ALL enemies.",
   "NEWSANGUO_CARD_CHARGE_TO_ZHUGE_LIANGS_CART.title": "Charge Straight at Zhuge Liang's Cart!",
   "NEWSANGUO_CARD_CHARGE_TO_ZHUGE_LIANGS_CART.description": "Put ALL of your unexhausted Attack cards into your hand.\nThis turn, your Attack cards cost 0, and whenever you kill an enemy with an Attack card, gain a [gold]Four-Wheeled Cart[/gold].",
   "NEWSANGUO_CARD_FOUR_WHEELED_CART.title": "Four-Wheeled Cart",
   "NEWSANGUO_CARD_FOUR_WHEELED_CART.description": "Gain {Block:diff()} [gold]Block[/gold] {Repeat:diff()} times.",
   "NEWSANGUO_CARD_WORTH_ALL_THEIR_LIVES.title": "Worth All Their Lives!",
-  "NEWSANGUO_CARD_WORTH_ALL_THEIR_LIVES.description": "[gold]Recruit[/gold] {Summon:diff()}.\nUntil the start of your next turn, whenever one of your Qingzhou Soldiers dies, gain 1 [gold]Heaven's Force[/gold]."
+  "NEWSANGUO_CARD_WORTH_ALL_THEIR_LIVES.description": "[gold]Recruit[/gold] {Summon:diff()}.\nUntil the start of your next turn, whenever one of your Qingzhou Soldiers dies, gain 1 [gold]Heaven's Force[/gold].",
+  "NEWSANGUO_CARD_WELL_FED_WELL_CLOTHED.title": "Well Fed, Well Clothed",
+  "NEWSANGUO_CARD_WELL_FED_WELL_CLOTHED.description": "Gain {DrunkenMightPower:diff()} [gold]Drunken Might[/gold].\nGain {PlatedArmorPower:diff()} [gold]Plated Armor[/gold]."
 }

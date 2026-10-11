@@ -76,7 +76,10 @@ public static class NewsanguoSfx
     //   同批复核：158 个音频里既有条目 146/150 与重算值逐条一致。四条例外一律保持原值：
     //   better_each_day / blood_loss / fall_on_own_sword 的 raw 恰为 +5.25 的半步（原表取 5.0），
     //   sovereign_form 受峰值钳制后原表取下限 +1.0（四舍五入会到 +1.5，突破 -3 dBFS 上限）。
-    // worth_all_their_lives（全死了我都值！）音频待补，暂用 0 dB。
+    // 2026-10-11 全量复核（159 个音频）：新增 well_fed_well_clothed RMS -32.0 / 峰值 -15.1 → +6 dB；
+    // worth_all_their_lives RMS -14.7 / 峰值 -0.3 → -6 dB。
+    // 峰值钳制后按 0.5 dB 步进取值时向下保护余量：qin_jin_alliance / wolf_vs_dog → -1.5，
+    // the_truest_mask → -0.5；其余既有短音效保留原校准。
     // 不参与自动测量的：character_death（引擎侧触发，手工保留原值）、
     // character_select（对应音频文件 2026-10-06 已删，仅作 EngineSfxRedirectPatch 的兜底目标）、
     // song_of_guan_yu（长音频，走 NewsanguoSfx.PlayOwnLevel 自带基准电平，不查本表）。
@@ -196,7 +199,7 @@ public static class NewsanguoSfx
         ["player_hurt"] = -7f,
         ["plot"] = -0.5f,
         ["proxy_strike"] = -4f,
-        ["qin_jin_alliance"] = -1f,
+        ["qin_jin_alliance"] = -1.5f,
         ["rat_poison_scheme"] = 0f,
         ["rat_poison_scheme_power"] = 0f,
         ["reanimation_spell"] = -4.5f,
@@ -215,11 +218,10 @@ public static class NewsanguoSfx
         ["son_of_heaven"] = 4.5f,
         ["soul_shackles"] = 1f,
         ["sovereign_form"] = 1f,
-        ["sovereign_form_power"] = 0.5f,
         ["starry_night"] = -2f,
         ["strike_newsanguo"] = -3f,
         ["ten_thousand_transparent_holes"] = 0.5f,
-        ["the_truest_mask"] = 0f,
+        ["the_truest_mask"] = -0.5f,
         ["three_blades"] = 4f,
         ["throw_him_out"] = 1.5f,
         ["tiger_wind_cloud_dragon"] = -2f,
@@ -233,6 +235,7 @@ public static class NewsanguoSfx
         ["venom_rat"] = 0f,
         ["victory_by_heavens_will"] = 9.5f,
         ["victory_by_heavens_will_power"] = 9.5f,
+        ["well_fed_well_clothed"] = 6f,
         ["what_to_eat"] = -2f,
         ["wheres_wine"] = -4.5f,
         ["wheres_wine_power"] = -4.5f,
@@ -241,8 +244,8 @@ public static class NewsanguoSfx
         ["why_pick_that_up_power"] = -5f,
         ["wine_cut"] = 0f,
         ["wine_is_the_old_hero"] = 7f,
-        ["worth_all_their_lives"] = 0f,
-        ["wolf_vs_dog"] = -1f,
+        ["wolf_vs_dog"] = -1.5f,
+        ["worth_all_their_lives"] = -6f,
         ["you_dare_refuse"] = 0.5f,
         ["zhou_yafu"] = 7.5f,
     };

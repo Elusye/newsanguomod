@@ -127,6 +127,7 @@ public class NewsanguoCardPool : TypeListCardPoolModel, IModColorfulPhilosophers
         typeof(CheckThePremiere),
         // 2026-10-08：按要求把「天上人间」从曹魏卡池移除（改为只注册在蜀汉卡池）
         typeof(WorthAllTheirLives),
+        typeof(WellFedWellClothed),
         typeof(DragonOmen),
         typeof(OffWithYourHead),
 

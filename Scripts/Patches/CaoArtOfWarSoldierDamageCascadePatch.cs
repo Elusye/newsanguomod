@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Threading;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
@@ -18,7 +19,7 @@ using newsanguo.Scripts.Powers;
 namespace newsanguo.Scripts.Patches;
 
 /// <summary>
-/// 补丁共享状态（ThreadStatic：战斗只在主线程推进）。
+/// 补丁状态随异步调用上下文保存，避免 await 暂停期间污染其他伤害结算。
 /// IsDistributing：正在手工分派伤害，避免自己的递归调用再次进入补丁。
 /// SkipNestedHooks：分派期间的嵌套 CreatureCmd.Damage 调用要跳过 Hook.ModifyDamage 与 Hook.BeforeDamageReceived，
 /// 因为“伤害修正”与“即将受伤”已经在链头按玩家结算过一次
@@ -26,11 +27,10 @@ namespace newsanguo.Scripts.Patches;
 /// </summary>
 public static class SoldierDamageCascade
 {
-    [ThreadStatic]
-    public static bool IsDistributing;
-
-    [ThreadStatic]
-    public static bool SkipNestedHooks;
+    private static readonly AsyncLocal<bool> Distributing = new();
+    private static readonly AsyncLocal<bool> SkippingHooks = new();
+    public static bool IsDistributing { get => Distributing.Value; set => Distributing.Value = value; }
+    public static bool SkipNestedHooks { get => SkippingHooks.Value; set => SkippingHooks.Value = value; }
 }
 
 /// <summary>
@@ -42,13 +42,13 @@ public static class SoldierDamageCascade
 ///
 /// 原版 CreatureCmd.Damage 的顺序是「扣玩家格挡 → 改道给奥斯提（DieForYouPower.ModifyUnblockedDamageTarget，
 /// 只会挑一只召唤物）→ 玩家」，且多只召唤物同时在场时一次攻击最多只有 1 只接刀、溢出直接落回玩家。
-/// 本补丁把“单个目标就是玩家”的强化攻击整条伤害链接管过来：链头算一次伤害修正与“即将受伤”，
+/// 本补丁逐个接管有青州兵的玩家目标，包括联机中的多目标攻击：链头算一次伤害修正与“即将受伤”，
 /// 然后 ① 手工按顺序打青州兵（带 Unblockable：格挡属于玩家，排在青州兵之后），
 /// ②③④ 把余量伤害交回原版 CreatureCmd.Damage（目标仍是玩家、且不带 Unblockable），
 /// 于是格挡、奥斯提改道、奥斯提溢出回到玩家、死亡结算全部复用引擎逻辑。
 ///
 /// 手工重跑伤害管线的打法参照创意工坊「召唤独立」SummonOstys 的 OstyDamageDistributor（同一套 Hook 顺序 + 跳过嵌套钩子）。
-/// 只在“「曹氏兵法」在场且还有它召唤的活青州兵”时接管，因此只影响“曹氏兵法”体系；
+/// 只在玩家还有募集的活青州兵时接管；
 /// 一只青州兵都没有时完全走原版（奥斯提照旧按原版接刀）。
 ///
 /// 注意：按上述优先级，青州兵一定先挨打（哪怕玩家格挡足够），这是需求里明确要求的顺序。
@@ -74,18 +74,7 @@ public static class CaoArtOfWarSoldierDamageCascadePatch
             return true;
         }
         List<Creature> targetList = targets?.ToList() ?? new List<Creature>();
-        // 只处理“单个目标就是玩家”的情形；其它目标（怪物、召唤物自己、多目标）交回原版
-        if (targetList.Count != 1)
-        {
-            return true;
-        }
-        Creature playerCreature = targetList[0];
-        if (!playerCreature.IsPlayer || playerCreature.Player is null)
-        {
-            return true;
-        }
-        // 与引擎一致：目标已死、或伤害来源已死（引擎会直接返回空结果），都交回原版
-        if (playerCreature.IsDead || (dealer is not null && dealer.IsDead))
+        if (dealer is not null && dealer.IsDead)
         {
             return true;
         }
@@ -94,21 +83,50 @@ public static class CaoArtOfWarSoldierDamageCascadePatch
         {
             return true;
         }
-        if (!CaoArtOfWarPower.HasLivingSummonedSoldier(playerCreature))
+        if (!targetList.Any(NeedsSoldierCascade))
         {
             return true;
         }
-        if (CaoArtOfWarPower.GetLivingSoldiersInSummonOrder(playerCreature).Count == 0)
-        {
-            return true;
-        }
-        SoldierDamageCascade.IsDistributing = true;
-        __result = DistributeDamage(choiceContext, playerCreature, amount, props, dealer, cardSource, cardPlay);
+        __result = DistributeTargets(choiceContext, targetList, amount, props, dealer, cardSource, cardPlay);
         return false;
+    }
+
+    private static bool NeedsSoldierCascade(Creature target) =>
+        target.IsPlayer && target.Player is not null && target.IsAlive &&
+        CaoArtOfWarPower.HasLivingSummonedSoldier(target);
+
+    private static async Task<IEnumerable<DamageResult>> DistributeTargets(PlayerChoiceContext choiceContext,
+        List<Creature> targets, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
+    {
+        bool previousDistributing = SoldierDamageCascade.IsDistributing;
+        // 在异步方法内部设置，调用方和其他独立结算不会继承这次分派状态。
+        SoldierDamageCascade.IsDistributing = true;
+        try
+        {
+            List<DamageResult> results = new();
+            foreach (Creature target in targets)
+            {
+                if (target.IsDead)
+                {
+                    continue;
+                }
+                // 按原目标顺序结算；不同玩家各用自己的青州兵，未募集的目标仍走原版。
+                IEnumerable<DamageResult> targetResults = NeedsSoldierCascade(target)
+                    ? await DistributeDamage(choiceContext, target, amount, props, dealer, cardSource, cardPlay)
+                    : await CreatureCmd.Damage(choiceContext, target, amount, props, dealer, cardSource, cardPlay);
+                results.AddRange(targetResults);
+            }
+            return results;
+        }
+        finally
+        {
+            SoldierDamageCascade.IsDistributing = previousDistributing;
+        }
     }
 
     private static async Task<IEnumerable<DamageResult>> DistributeDamage(PlayerChoiceContext choiceContext, Creature playerCreature, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
     {
+        bool previousSkip = SoldierDamageCascade.SkipNestedHooks;
         try
         {
             List<DamageResult> allResults = new();
@@ -164,8 +182,7 @@ public static class CaoArtOfWarSoldierDamageCascadePatch
         }
         finally
         {
-            SoldierDamageCascade.SkipNestedHooks = false;
-            SoldierDamageCascade.IsDistributing = false;
+            SoldierDamageCascade.SkipNestedHooks = previousSkip;
         }
     }
 }
