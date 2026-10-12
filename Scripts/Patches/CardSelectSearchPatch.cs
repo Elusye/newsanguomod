@@ -175,8 +175,8 @@ internal sealed class PickerSearchUi
     // 搜索框和筛选按钮看着就发灰、不好读。这里把它提到接近不透明（玩家反馈「不透明度可以调高一些」）。
     private const float SidebarPanelAlpha = 0.96f;
 
-    // 卡池按钮里，RitsuLib 给「本 mod 角色」追加的那些叫 MOD_FILTER_{CharacterModel.Id.Entry}
-    // （见 Scripts/Patches/CardLibraryPoolContext.cs）；原版那 8 个按钮就是节点名本身。
+    // 卡池按钮里，RitsuLib 给「本 mod 角色」追加的那些叫 MOD_FILTER_{CharacterModel.Id.Entry}；
+    // 原版那 8 个按钮就是节点名本身。
     private const string ModPoolFilterPrefix = "MOD_FILTER_";
 
     // 图鉴自带的返回箭头位置偏高（玩家反馈「可以再往下一点」），按这个像素量往下挪。
