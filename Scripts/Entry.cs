@@ -28,6 +28,9 @@ public class Entry
         // 逐个应用 Harmony 补丁：单个补丁失败不影响其它补丁与 mod 主体，并在日志中记录失败原因
         var harmony = new Harmony("newsanguo");
         ApplyPatch(harmony, typeof(NewsanguoEnergyCounterPatch));
+        ApplyPatch(harmony, typeof(FireWaterHarmonyWeakPatch));
+        ApplyPatch(harmony, typeof(FireWaterHarmonyVulnerablePatch));
+        ApplyPatch(harmony, typeof(FireWaterHarmonyFrailPatch));
         ApplyPatch(harmony, typeof(ShuHanMultiplayerRandomSelectionPatch));
         ApplyPatch(harmony, typeof(AlwaysMineDiscardSelectPatch));
         ApplyPatch(harmony, typeof(AlwaysMineDiscardSelectionEndPatch));
@@ -54,6 +57,7 @@ public class Entry
         ApplyPatch(harmony, typeof(CaoArtOfWarSoldierRemovalPatch));
         ApplyPatch(harmony, typeof(QingzhouSoldierOwnerDeathCleanupPatch));
         ApplyPatch(harmony, typeof(IronCavalryBuffSuppressionPatch));
+        ApplyPatch(harmony, typeof(IronCavalrySmartDescriptionPatch));
         ApplyPatch(harmony, typeof(CaoArtOfWarSoldierDamageCascadePatch));
         ApplyPatch(harmony, typeof(SoldierDamageCascadeNestedHookSkipPatch));
         // ③青州兵的战斗表现：站位照原版奥斯提的锚点（主人右侧 + 抬高 75px）并在多只时横向错开，

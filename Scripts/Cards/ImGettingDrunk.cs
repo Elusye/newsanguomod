@@ -35,7 +35,7 @@ public class ImGettingDrunk : NewsanguoCardTemplate
         HoverTipFactory.FromCard<Lightweight>()
     ];
 
-    public ImGettingDrunk() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+    public ImGettingDrunk() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
     {
     }
 
@@ -60,9 +60,9 @@ public class ImGettingDrunk : NewsanguoCardTemplate
         await Lightweight.CreateInDiscard(Owner, CombatState!);
     }
 
-    // 升级：酒力 8 → 11
+    // 升级：酒力 8 → 13
     protected override void OnUpgrade()
     {
-        DynamicVars["DrunkenMightPower"].UpgradeValueBy(3);
+        DynamicVars["DrunkenMightPower"].UpgradeValueBy(5);
     }
 }

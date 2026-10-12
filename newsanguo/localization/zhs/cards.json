@@ -324,5 +324,22 @@
   "NEWSANGUO_CARD_WINE_CUT_SHU_HAN.title": "杯酒斩击",
   "NEWSANGUO_CARD_WINE_CUT_SHU_HAN.description": "造成{Damage:diff()}点伤害。\n造成伤害后，返还此牌消耗的[gold]酒力[/gold]。",
   "NEWSANGUO_CARD_WINE_IS_THE_OLD_HERO_SHU_HAN.title": "酒是老英雄",
-  "NEWSANGUO_CARD_WINE_IS_THE_OLD_HERO_SHU_HAN.description": "获得{CalculatedBlock:diff()}点[gold]格挡[/gold]。\n你每拥有1点[gold]酒力[/gold]，这张牌就额外获得{CalculationExtra:diff()}点[gold]格挡[/gold]。"
+  "NEWSANGUO_CARD_WINE_IS_THE_OLD_HERO_SHU_HAN.description": "获得{CalculatedBlock:diff()}点[gold]格挡[/gold]。\n你每拥有1点[gold]酒力[/gold]，这张牌就额外获得{CalculationExtra:diff()}点[gold]格挡[/gold]。",
+  "NEWSANGUO_CARD_FIRE_WATER_HARMONY.title": "水火兼容",
+  "NEWSANGUO_CARD_FIRE_WATER_HARMONY.description": "反转你的[gold]虚弱[/gold]、[gold]易伤[/gold]、[gold]脆弱[/gold]效果。",
+  "NEWSANGUO_CARD_OTTO_MOTHER.title": "棍母",
+  "NEWSANGUO_CARD_OTTO_MOTHER.description": "你是怎么找到这张牌的？",
+  "NEWSANGUO_CARD_IVORY.title": "象牙",
+  "NEWSANGUO_CARD_IVORY.description": "你是怎么找到这张牌的？",
+  "NEWSANGUO_CARD_CARD1225.title": "1225",
+  "NEWSANGUO_CARD_CARD1225.description": "你是怎么找到这张牌的？",
+  "NEWSANGUO_CARD_SO_IMPRESSIVE.title": "好厉害呀！",
+  "NEWSANGUO_CARD_SO_IMPRESSIVE.description": "打出你本场战斗中打出的上一张牌的复制品。",
+  "NEWSANGUO_CARD_SO_IMPRESSIVE.combatTitle": "{PreviousCard}好厉害呀！",
+  "NEWSANGUO_CARD_DARE_YOU_TO_SLASH.title": "有本事你就砍了去！",
+  "NEWSANGUO_CARD_DARE_YOU_TO_SLASH.description": "获得{VulnerablePower:diff()}层[gold]易伤[/gold]。\n获得{DrunkenMightPower:diff()}点[gold]酒力[/gold]。",
+  "NEWSANGUO_CARD_FUTURE_HISTORIAN.title": "未来史学家",
+  "NEWSANGUO_CARD_FUTURE_HISTORIAN.description": "[gold]预见[/gold]你的整个抽牌堆。",
+  "NEWSANGUO_CARD_CYBERTRON_FORCE.title": "赛博坦之力",
+   "NEWSANGUO_CARD_CYBERTRON_FORCE.description": "在你的回合结束时，获得{MetallicizePower:diff()}点[gold]格挡[/gold]。"
 }
