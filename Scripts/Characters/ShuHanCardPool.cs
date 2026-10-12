@@ -74,7 +74,7 @@ public class ShuHanCardPool : TypeListCardPoolModel
         typeof(BrewHealsAll),
         typeof(BrewLimitBreak),
         typeof(ImGettingDrunk),
-        typeof(Intoxicated),
+        typeof(DareYouToSlash),
         typeof(LoathToLeaveTheTable),
         typeof(NewGamePlus),
         typeof(ScorchingStarfall),
@@ -129,6 +129,10 @@ public class ShuHanCardPool : TypeListCardPoolModel
         typeof(AutoPilot),                  // 托管
 
         // 2026-10-07 追加：蜀汉新卡「君王形态」（原名「真正的君王」/ The True King，只在本池注册，曹魏拿不到）
-        typeof(SovereignForm)               // 君王形态
+        typeof(SovereignForm),              // 君王形态
+        typeof(FireWaterHarmony),            // 水火兼容
+        typeof(SoImpressive),                // XX好厉害啊！
+        typeof(FutureHistorian),              // 未来史学家
+        typeof(CybertronForce)                // 赛博坦之力
     ];
 }

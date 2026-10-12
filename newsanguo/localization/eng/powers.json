@@ -121,10 +121,18 @@
   "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.smartDescription": "Until the start of your next turn, whenever one of your Qingzhou Soldiers dies, gain [blue]{Amount}[/blue] [gold]Heaven's Force[/gold].",
   "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.title": "Worth All Their Lives!",
   "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.description": "Until the start of your next turn, whenever one of your Qingzhou Soldiers dies, gain {Amount} [gold]Heaven's Force[/gold].",
-  "NEWSANGUO_POWER_IRON_CAVALRY_POWER.smartDescription": "Positive effects are disabled for [blue]{Amount}[/blue] turns.",
+  "NEWSANGUO_POWER_IRON_CAVALRY_POWER.smartDescription": "Positive effects are disabled for [blue]{Amount}[/blue] turns.\nDisabled positive effects on this enemy: {SuppressedPowers}.",
   "NEWSANGUO_POWER_IRON_CAVALRY_POWER.description": "Positive effects on creatures with Enhanced Iron Cavalry are temporarily disabled.",
   "NEWSANGUO_POWER_IRON_CAVALRY_POWER.title": "Enhanced Iron Cavalry",
   "NEWSANGUO_POWER_PLATED_ARMOR_POWER.title": "Plated Armor",
   "NEWSANGUO_POWER_PLATED_ARMOR_POWER.description": "Gain [gold]Block[/gold] at the end of your turn. Lose stacks when attacked.",
-  "NEWSANGUO_POWER_PLATED_ARMOR_POWER.smartDescription": "At the end of your turn, gain [blue]{Amount}[/blue] [gold]Block[/gold]. Whenever you lose HP from attack damage, reduce [gold]Plated Armor[/gold] by [blue]1[/blue]."
+  "NEWSANGUO_POWER_PLATED_ARMOR_POWER.smartDescription": "At the end of your turn, gain [blue]{Amount}[/blue] [gold]Block[/gold]. Whenever you lose HP from attack damage, reduce [gold]Plated Armor[/gold] by [blue]1[/blue].",
+  "NEWSANGUO_POWER_REVERSAL_POWER.title": "Reversal",
+  "NEWSANGUO_POWER_REVERSAL_POWER.description": "Reverse your [gold]Weak[/gold], [gold]Vulnerable[/gold], and [gold]Frail[/gold].\nWeak increases attack damage, Vulnerable reduces attack damage received, and Frail increases Block.",
+  "NEWSANGUO_POWER_REVERSAL_POWER.smartDescription": "Reverse your [gold]Weak[/gold], [gold]Vulnerable[/gold], and [gold]Frail[/gold].\nWeak increases attack damage, Vulnerable reduces attack damage received, and Frail increases Block.",
+  "NEWSANGUO_POWER_IRON_CAVALRY_POWER.noSuppressedPowers": "None",
+  "NEWSANGUO_POWER_IRON_CAVALRY_POWER.listSeparator": ", ",
+  "NEWSANGUO_POWER_METALLICIZE_POWER.title": "Metallicize",
+  "NEWSANGUO_POWER_METALLICIZE_POWER.description": "Gain Block at the end of your turn.",
+  "NEWSANGUO_POWER_METALLICIZE_POWER.smartDescription": "At the end of your turn, gain [blue]{Amount}[/blue] [gold]Block[/gold]."
 }

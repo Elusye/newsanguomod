@@ -268,5 +268,22 @@
   "NEWSANGUO_CARD_WORTH_ALL_THEIR_LIVES.title": "Worth All Their Lives!",
   "NEWSANGUO_CARD_WORTH_ALL_THEIR_LIVES.description": "[gold]Recruit[/gold] {Summon:diff()}.\nUntil the start of your next turn, whenever one of your Qingzhou Soldiers dies, gain 1 [gold]Heaven's Force[/gold].",
   "NEWSANGUO_CARD_WELL_FED_WELL_CLOTHED.title": "Well Fed, Well Clothed",
-  "NEWSANGUO_CARD_WELL_FED_WELL_CLOTHED.description": "Gain {DrunkenMightPower:diff()} [gold]Drunken Might[/gold].\nGain {PlatedArmorPower:diff()} [gold]Plated Armor[/gold]."
+  "NEWSANGUO_CARD_WELL_FED_WELL_CLOTHED.description": "Gain {DrunkenMightPower:diff()} [gold]Drunken Might[/gold].\nGain {PlatedArmorPower:diff()} [gold]Plated Armor[/gold].",
+  "NEWSANGUO_CARD_FIRE_WATER_HARMONY.title": "Fire-Water Harmony",
+  "NEWSANGUO_CARD_FIRE_WATER_HARMONY.description": "Reverse the effects of your [gold]Weak[/gold], [gold]Vulnerable[/gold], and [gold]Frail[/gold].",
+  "NEWSANGUO_CARD_OTTO_MOTHER.title": "Otto Mother",
+  "NEWSANGUO_CARD_OTTO_MOTHER.description": "How did you find this card?",
+  "NEWSANGUO_CARD_IVORY.title": "Ivory",
+  "NEWSANGUO_CARD_IVORY.description": "How did you find this card?",
+  "NEWSANGUO_CARD_CARD1225.title": "1225",
+  "NEWSANGUO_CARD_CARD1225.description": "How did you find this card?",
+  "NEWSANGUO_CARD_SO_IMPRESSIVE.title": "So Impressive!",
+  "NEWSANGUO_CARD_SO_IMPRESSIVE.description": "Play a duplicate of the last card you played this combat.",
+  "NEWSANGUO_CARD_SO_IMPRESSIVE.combatTitle": "{PreviousCard} Is So Impressive!",
+  "NEWSANGUO_CARD_DARE_YOU_TO_SLASH.title": "Dare You to Slash!",
+  "NEWSANGUO_CARD_DARE_YOU_TO_SLASH.description": "Gain {VulnerablePower:diff()} [gold]Vulnerable[/gold].\nGain {DrunkenMightPower:diff()} [gold]Drunken Might[/gold].",
+  "NEWSANGUO_CARD_FUTURE_HISTORIAN.title": "Future Historian",
+  "NEWSANGUO_CARD_FUTURE_HISTORIAN.description": "[gold]Scry[/gold] your entire Draw Pile.",
+  "NEWSANGUO_CARD_CYBERTRON_FORCE.title": "Cybertron Force",
+  "NEWSANGUO_CARD_CYBERTRON_FORCE.description": "At the end of your turn, gain {MetallicizePower:diff()} [gold]Block[/gold]."
 }

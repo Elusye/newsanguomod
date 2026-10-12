@@ -121,10 +121,18 @@
   "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.smartDescription": "直到下个回合开始前，每有一名你的青州兵死亡，获得[blue]{Amount}[/blue]点[gold]天意之力[/gold]。",
   "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.title": "全死了我都值！",
   "NEWSANGUO_POWER_WORTH_ALL_THEIR_LIVES_POWER.description": "直到下个回合开始前，每有一名你的青州兵死亡，获得{Amount}点[gold]天意之力[/gold]。",
-  "NEWSANGUO_POWER_IRON_CAVALRY_POWER.smartDescription": "[blue]{Amount}[/blue]回合内，拥有的正面效果失效。",
+  "NEWSANGUO_POWER_IRON_CAVALRY_POWER.smartDescription": "[blue]{Amount}[/blue]回合内，拥有的正面效果失效。\n该敌人失效的正面效果有：{SuppressedPowers}。",
   "NEWSANGUO_POWER_IRON_CAVALRY_POWER.description": "界铁骑的生物拥有的正面效果会暂时失效。",
   "NEWSANGUO_POWER_IRON_CAVALRY_POWER.title": "界铁骑",
   "NEWSANGUO_POWER_PLATED_ARMOR_POWER.title": "多层护甲",
   "NEWSANGUO_POWER_PLATED_ARMOR_POWER.description": "回合结束时获得[gold]格挡[/gold]，受到攻击时层数减少。",
-  "NEWSANGUO_POWER_PLATED_ARMOR_POWER.smartDescription": "在你的回合结束时获得[blue]{Amount}[/blue]点[gold]格挡[/gold]。受到攻击伤害而失去生命时，[gold]多层护甲[/gold]的层数将会减少[blue]1[/blue]。"
+  "NEWSANGUO_POWER_PLATED_ARMOR_POWER.smartDescription": "在你的回合结束时获得[blue]{Amount}[/blue]点[gold]格挡[/gold]。受到攻击伤害而失去生命时，[gold]多层护甲[/gold]的层数将会减少[blue]1[/blue]。",
+  "NEWSANGUO_POWER_REVERSAL_POWER.title": "反转",
+  "NEWSANGUO_POWER_REVERSAL_POWER.description": "反转你的[gold]虚弱[/gold]、[gold]易伤[/gold]、[gold]脆弱[/gold]效果。\n虚弱改为增加攻击伤害，易伤改为减少受到的攻击伤害，脆弱改为增加格挡。",
+  "NEWSANGUO_POWER_REVERSAL_POWER.smartDescription": "反转你的[gold]虚弱[/gold]、[gold]易伤[/gold]、[gold]脆弱[/gold]效果。\n虚弱改为增加攻击伤害，易伤改为减少受到的攻击伤害，脆弱改为增加格挡。",
+  "NEWSANGUO_POWER_IRON_CAVALRY_POWER.noSuppressedPowers": "无",
+  "NEWSANGUO_POWER_IRON_CAVALRY_POWER.listSeparator": "、",
+  "NEWSANGUO_POWER_METALLICIZE_POWER.title": "金属化",
+  "NEWSANGUO_POWER_METALLICIZE_POWER.description": "在你的回合结束时获得格挡。",
+  "NEWSANGUO_POWER_METALLICIZE_POWER.smartDescription": "在你的回合结束时获得[blue]{Amount}[/blue]点[gold]格挡[/gold]。"
 }

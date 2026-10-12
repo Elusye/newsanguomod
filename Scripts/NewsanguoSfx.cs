@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using Godot;
 using MegaCrit.Sts2.Core.Saves;
 
@@ -29,6 +31,48 @@ namespace newsanguo.Scripts;
 /// </summary>
 public static class NewsanguoSfx
 {
+    // 按异步调用链记录本次复制品启动的音效，不等待此前已响起的声音或循环音乐。
+    private static readonly AsyncLocal<PlaybackCapture?> CurrentCapture = new();
+    public static PlaybackCapture CapturePlayback() => new();
+    public sealed class PlaybackCapture : IDisposable
+    {
+        private readonly PlaybackCapture? _parent;
+        private readonly List<AudioStreamPlayer> _players = new();
+        private bool _disposed;
+        internal PlaybackCapture()
+        {
+            _parent = CurrentCapture.Value;
+            CurrentCapture.Value = this;
+        }
+        internal void Record(AudioStreamPlayer player)
+        {
+            _players.Add(player);
+            _parent?.Record(player);
+        }
+        public async Task WaitAsync(double leadSeconds = 0)
+        {
+            if (Engine.GetMainLoop() is not SceneTree tree) return;
+            leadSeconds = Math.Max(0, leadSeconds);
+            // 按播放进度计算剩余时间，可提前衔接；停止或释放的播放器不再参与等待。
+            while (_sfxEnabled && _players.Any(player => HasMoreThanRemaining(player, leadSeconds)))
+                await tree.ToSignal(tree, SceneTree.SignalName.ProcessFrame);
+        }
+        private static bool HasMoreThanRemaining(AudioStreamPlayer player, double leadSeconds)
+        {
+            if (!GodotObject.IsInstanceValid(player) || !player.Playing) return false;
+            double duration = player.Stream?.GetLength() ?? 0;
+            // 无法获取时长时仍等待自然结束。
+            if (duration <= 0) return true;
+            double remaining = (duration - player.GetPlaybackPosition()) / Math.Max(0.01, player.PitchScale);
+            return remaining > leadSeconds;
+        }
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+            if (CurrentCapture.Value == this) CurrentCapture.Value = _parent;
+        }
+    }
     // 音频资源目录；事件名即为文件名
     private const string AudioDirectory = "res://newsanguo/audios/";
 
@@ -129,6 +173,8 @@ public static class NewsanguoSfx
         ["cricket_form"] = 4f,
         ["cricket_form_power"] = 4f,
         ["cross_the_river_too"] = 6f,
+        ["cybertron_force"] = -2.0f,
+        ["dare_you_to_slash"] = -6.0f,
         ["dark_horn_shark"] = 5f,
         ["dark_horn_shark_copy"] = 5f,
         ["deafen_me"] = -6.5f,
@@ -146,8 +192,10 @@ public static class NewsanguoSfx
         ["feel_no_acid"] = -2.5f,
         ["feel_no_acid_power"] = -6.5f,
         ["fire_and_water_proof"] = -2.5f,
+        ["fire_water_harmony"] = 2.0f,
         ["forty_sixty_tax"] = 0f,
         ["four_wheeled_cart"] = -0.5f,
+        ["future_historian"] = 3.0f,
         ["golden_rebellion"] = -2.5f,
         ["great_evil"] = -0.5f,
         ["hail_king_of_hanzhong"] = -3.5f,
@@ -214,10 +262,11 @@ public static class NewsanguoSfx
         ["slam_the_bowl_damage"] = -2.5f,
         ["smiling_tiger"] = 4f,
         ["smiling_tiger_copy"] = 3.5f,
+        ["so_impressive"] = -2.5f,
         ["soldier"] = -3f,
         ["son_of_heaven"] = 4.5f,
         ["soul_shackles"] = 1f,
-        ["sovereign_form"] = 1f,
+        ["sovereign_form"] = 0.5f,
         ["starry_night"] = -2f,
         ["strike_newsanguo"] = -3f,
         ["ten_thousand_transparent_holes"] = 0.5f,
@@ -659,6 +708,7 @@ public static class NewsanguoSfx
             ActivePlayers[resourcePath] = list;
         }
         list.Add(player);
+        if (!loop) CurrentCapture.Value?.Record(player);
         player.Play();
 
         if (loop)
