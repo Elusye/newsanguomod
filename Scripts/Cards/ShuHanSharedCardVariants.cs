@@ -84,12 +84,6 @@ public sealed class ImGettingDrunkShuHan : ImGettingDrunk
 }
 
 [RegisterCard(typeof(ShuHanCardPool))]
-public sealed class IntoxicatedShuHan : Intoxicated
-{
-    public override CardAssetProfile AssetProfile => ShuHanSharedCardAssets.ReusePortraitOf<Intoxicated>();
-}
-
-[RegisterCard(typeof(ShuHanCardPool))]
 public sealed class MaClanQuadBlastShuHan : MaClanQuadBlast
 {
     public override CardAssetProfile AssetProfile => ShuHanSharedCardAssets.ReusePortraitOf<MaClanQuadBlast>();

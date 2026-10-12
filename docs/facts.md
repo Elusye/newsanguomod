@@ -27,7 +27,7 @@
 ### 4.5 卡池归属（易错）
 - 一张牌逐池注册统一使用类上的 `[RegisterCard(typeof(...))]`。RitsuLib 0.6.2 的 `TypeListCardPoolModel.CardTypes` 已是默认空序列的**旧式兼容钩子**，其注释明确警告：若同时使用逐牌注入和 `CardTypes`，会重复生成相同模型（`.decompile/ritsu/STS2RitsuLib.Scaffolding.Content/TypeListCardPoolModel.cs:15-68`）。2026-10-12 起 `NewsanguoCardPool` / `ShuHanCardPool` 均不再覆盖该列表。
 - `CardModel.Pool` 只有一个返回值：按 `ModelDb.AllCardPools` 顺序取第一个包含当前 id 的池；同一个卡牌类型同时注册进曹魏、蜀汉两个池，不能记录“这次生成来自哪个池”。《飞溅》又会先把其他角色池的候选展开成 `IEnumerable<CardModel>`，再交给 `CardFactory.GetDistinctForCombat`，创建实体时只有规范牌与 Owner，来源池已经丢失。
-- 因此 2026-10-12 起，28 个共有**玩法**拆为两个实体：原类/id 只注册曹魏池；`Scripts/Cards/ShuHanSharedCardVariants.cs` 中的 `*ShuHan` 类型只注册蜀汉池并继承原类的玩法，使用各自唯一 id 保存来源。`NewsanguoCardTemplate` 不再按 Owner 改写 `VisualCardPool`，卡框与能量图标恢复由卡牌自己的 `Pool` 决定。
+- 因此 2026-10-12 起，27 个共有**玩法**拆为两个实体：原类/id 只注册曹魏池；`Scripts/Cards/ShuHanSharedCardVariants.cs` 中的 `*ShuHan` 类型只注册蜀汉池并继承原类的玩法，使用各自唯一 id 保存来源。`NewsanguoCardTemplate` 不再按 Owner 改写 `VisualCardPool`，卡框与能量图标恢复由卡牌自己的 `Pool` 决定。「陶醉」只属于曹魏，不拆蜀汉实体。直接生成共有牌时要按持有者选实体：`Scripts/Relics/ACertainForbiddenSpellIndex.cs` 对蜀汉生成 `HumanTransmutationSpellShuHan`，另外三张禁术只有曹魏实体。
 - 两个实体复用原卡图，但本地化键按新 id 各自提供；蜀汉初始牌也改注册 `AGrandToastShuHan` / `BladesOfVirtueShuHan`。旧存档没有来源字段，原有共有牌 id 保留为曹魏实体，不自动猜测或迁移。
 
 ### 4.6 天意之力与"免费打出"

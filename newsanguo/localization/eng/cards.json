@@ -291,8 +291,6 @@
   "NEWSANGUO_CARD_HUMAN_TRANSMUTATION_SPELL_SHU_HAN.description": "[gold]Transform[/gold] any number of cards in your hand into [gold]{IfUpgraded:show:Soldier+|Soldier}[/gold].\nLose 1 gold for each card transformed.",
   "NEWSANGUO_CARD_IM_GETTING_DRUNK_SHU_HAN.title": "I'm Getting Drunk",
   "NEWSANGUO_CARD_IM_GETTING_DRUNK_SHU_HAN.description": "Gain {DrunkenMightPower:diff()} [gold]Drunken Might[/gold].\nAdd a [gold]Lightweight[/gold] to your [gold]discard pile[/gold].",
-  "NEWSANGUO_CARD_INTOXICATED_SHU_HAN.title": "Intoxicated",
-  "NEWSANGUO_CARD_INTOXICATED_SHU_HAN.description": "Gain {DrunkenMightPower:diff()} [gold]Drunken Might[/gold].\nIf the last card you played was a [gold]Skill[/gold], gain {energyPrefix:energyIcons(1)}.",
   "NEWSANGUO_CARD_MA_CLAN_QUAD_BLAST_SHU_HAN.title": "Ma Clan Quad Blast",
   "NEWSANGUO_CARD_MA_CLAN_QUAD_BLAST_SHU_HAN.description": "Deal {Damage:diff()} damage to ALL enemies {Repeat:diff()} times.",
   "NEWSANGUO_CARD_NEW_GAME_PLUS_SHU_HAN.title": "New Game Plus",

@@ -291,8 +291,6 @@
   "NEWSANGUO_CARD_HUMAN_TRANSMUTATION_SPELL_SHU_HAN.description": "将你手牌中的任意张[gold]变化[/gold]为[gold]{IfUpgraded:show:士兵+|士兵}[/gold]。\n每变化一张牌，失去1金币。",
   "NEWSANGUO_CARD_IM_GETTING_DRUNK_SHU_HAN.title": "真的是要醉啦！",
   "NEWSANGUO_CARD_IM_GETTING_DRUNK_SHU_HAN.description": "获得{DrunkenMightPower:diff()}点[gold]酒力[/gold]。\n将一张[gold]不胜酒力[/gold]加入你的[gold]弃牌堆[/gold]。",
-  "NEWSANGUO_CARD_INTOXICATED_SHU_HAN.title": "陶醉",
-  "NEWSANGUO_CARD_INTOXICATED_SHU_HAN.description": "获得{DrunkenMightPower:diff()}点[gold]酒力[/gold]。\n若你打出的上一张牌是[gold]技能牌[/gold]，获得{energyPrefix:energyIcons(1)}。",
   "NEWSANGUO_CARD_MA_CLAN_QUAD_BLAST_SHU_HAN.title": "马氏四连",
   "NEWSANGUO_CARD_MA_CLAN_QUAD_BLAST_SHU_HAN.description": "对所有敌人造成{Damage:diff()}点伤害{Repeat:diff()}次。",
   "NEWSANGUO_CARD_NEW_GAME_PLUS_SHU_HAN.title": "二周目玩家",
