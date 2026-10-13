@@ -60,13 +60,22 @@ public class TigerWindCloudDragon : NewsanguoCardTemplate
             silent: false);
 
         // 四种龙虎牌等概率独立抽取两次（允许重复），使用战斗生成 RNG 保证联机同步。
+        // 共有玩法现在用曹魏/蜀汉两个实体保存来源；由蜀汉实体生成的三张共有龙虎牌
+        // 也必须继续生成蜀汉实体，不能在这一步退回曹魏 ID。
+        bool useShuHanVariants = this is TigerWindCloudDragonShuHan;
         for (int i = 0; i < 2; i++)
         {
             CardModel generated = Owner.RunState.Rng.CombatCardGeneration.NextInt(4) switch
             {
-                0 => combatState.CreateCard<SmilingTiger>(Owner),
-                1 => combatState.CreateCard<DragonOmen>(Owner),
-                2 => combatState.CreateCard<TigerWindCloudDragon>(Owner),
+                0 => useShuHanVariants
+                    ? combatState.CreateCard<SmilingTigerShuHan>(Owner)
+                    : combatState.CreateCard<SmilingTiger>(Owner),
+                1 => useShuHanVariants
+                    ? combatState.CreateCard<DragonOmenShuHan>(Owner)
+                    : combatState.CreateCard<DragonOmen>(Owner),
+                2 => useShuHanVariants
+                    ? combatState.CreateCard<TigerWindCloudDragonShuHan>(Owner)
+                    : combatState.CreateCard<TigerWindCloudDragon>(Owner),
                 _ => combatState.CreateCard<DeafenMe>(Owner)
             };
             await CardPileCmd.AddGeneratedCardToCombat(generated, PileType.Hand, Owner);

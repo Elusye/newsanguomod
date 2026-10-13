@@ -1,15 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Godot;
-using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Unlocks;
 using STS2RitsuLib.Interop.AutoRegistration;
-using STS2RitsuLib.Scaffolding.Characters;
 using STS2RitsuLib.Scaffolding.Content;
-using STS2RitsuLib.Utils;
-
-using newsanguo.Scripts.Cards;
 
 namespace newsanguo.Scripts.Characters;
 
@@ -23,9 +15,9 @@ public class ShuHanCardPool : TypeListCardPoolModel
 
     public override string CardFrameMaterialPath => "card_frame_newsanguo";
 
-    public override Color DeckEntryCardColor => new Color("8B0000");
+    public override Color DeckEntryCardColor => new("8B0000");
 
-    public override Color EnergyOutlineColor => new Color("12261C");
+    public override Color EnergyOutlineColor => new("12261C");
 
     // 能量图标路径（RitsuLib 官方覆盖）：
     // - BigEnergyIconPath：EnergyIconHelper.GetPath 的大图标（卡面/遗物/药水费用图标等）
@@ -62,77 +54,6 @@ public class ShuHanCardPool : TypeListCardPoolModel
 
     public override Material? PoolFrameMaterial => _frameMaterial.Value;
 
-    [Obsolete("基类要求保留，请使用新的起始牌注册方式。")]
-    protected override IEnumerable<Type> CardTypes =>
-    [
-        // 2026-10-05：原 StrikeNewsanguo/DefendNewsanguo 拆成按角色各自一张
-        // （曹魏用 StrikeCaowei/DefendCaowei、蜀汉用 StrikeShuhan/DefendShuhan），
-        // 蜀汉这两个只在本池注册，牌框因此跟随蜀汉的深红配色。
-        typeof(StrikeShuhan),
-        typeof(DefendShuhan),
-        typeof(AGrandToast),
-        typeof(BrewHealsAll),
-        typeof(BrewLimitBreak),
-        typeof(ImGettingDrunk),
-        typeof(DareYouToSlash),
-        typeof(LoathToLeaveTheTable),
-        typeof(NewGamePlus),
-        typeof(ScorchingStarfall),
-        typeof(ThreeBlades),
-        typeof(ToABiggerGoblet),
-        typeof(TriumphBrew),
-        typeof(WheresWine),
-        typeof(WineCut),
-        typeof(WineIsTheOldHero),
-
-        // 2026-10-04 追加：这些牌原本只在新三国（曹魏）卡池里，现同时加入蜀汉卡池
-        typeof(BladesOfVirtue),              // 仁之剑，义之剑
-        typeof(RuthlessBlade),              // 无情剑法
-        typeof(DragonOmen),                 // 龙可是帝王之征啊
-        typeof(DeafenMe),                   // 扎聋我自己的耳朵！
-        typeof(MaClanQuadBlast),                  // 马氏四连
-        typeof(ProxyStrike),                // 替身打击
-        typeof(OffWithYourHead),            // 我砍你的头！
-        typeof(PartyOn),                    // 接着奏乐接着舞
-        typeof(WhyPickThatUp),              // 你拾它做甚！
-        typeof(CrossTheRiverToo),              // 他过江我也过江！
-        typeof(TigerWindCloudDragon),                // 风从虎，云从龙
-        typeof(SmilingTiger),               // 笑面虎
-        typeof(DarkHornShark),               // 乌角鲨
-        typeof(Release),                    // 释怀
-        typeof(BetterThanYilingFlames),     // 比夷陵之火还好啊
-        typeof(FortySixtyTax),              // 四六征税
-        typeof(TenThousandTransparentHoles),// 一万个透明窟窿！
-        typeof(FallOnOwnSword),                   // 自刎归天！（2026-10-09 已从曹魏卡池移除）
-        typeof(HumanTransmutationSpell),    // 人体炼成术
-
-        // 2026-10-05 追加：按要求把「天上人间」「天下无敌」加入蜀汉卡池
-        typeof(HeavenAndEarth),             // 天上人间
-        typeof(Invincible),                 // 天下无敌！（已从曹魏卡池移除）
-
-        // 2026-10-05 追加：蜀汉新卡「人肉打印机」（只在本池注册，曹魏拿不到）
-        typeof(HumanPrinter),               // 人肉打印机
-
-        // 2026-10-05 追加：蜀汉新卡「帅台设宴」（只在本池注册，曹魏拿不到）
-        typeof(MarshalsTerraceFeast),       // 帅台设宴
-
-        // 2026-10-05 追加：蜀汉新卡「博望坡悖论」（只在本池注册，曹魏拿不到）
-        typeof(BowangSlopeParadox),         // 博望坡悖论
-
-        // 2026-10-06 追加：蜀汉先古卡「创造模式」（只在本池注册，曹魏拿不到）
-        typeof(CreativeMode),               // 创造模式
-
-        // 2026-10-07 追加：蜀汉新卡「狂妄之人」（只在本池注册，曹魏拿不到）
-        typeof(Megalovania),                // 狂妄之人
-
-        // 2026-10-07 追加：蜀汉新卡「托管」（只在本池注册，曹魏拿不到）
-        typeof(AutoPilot),                  // 托管
-
-        // 2026-10-07 追加：蜀汉新卡「君王形态」（原名「真正的君王」/ The True King，只在本池注册，曹魏拿不到）
-        typeof(SovereignForm),              // 君王形态
-        typeof(FireWaterHarmony),            // 水火兼容
-        typeof(SoImpressive),                // XX好厉害啊！
-        typeof(FutureHistorian),              // 未来史学家
-        typeof(CybertronForce)                // 赛博坦之力
-    ];
+    // 卡牌全部通过各自类上的 [RegisterCard] 逐张注入；共有玩法的牌使用独立的 ShuHan 实体，
+    // 因而卡池来源会随卡牌 ID 一起保留下来。
 }
