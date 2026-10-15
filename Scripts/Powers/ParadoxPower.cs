@@ -16,14 +16,7 @@ using newsanguo.Scripts;
 
 namespace newsanguo.Scripts.Powers;
 
-/// <summary>
-/// 「悖论」（Paradox）：被本能力标记的牌本回合不能被打出。
-/// 由“博望坡悖论”打出时抽到的牌登记进来（<see cref="LockCards" />），玩家回合结束时能力自动移除，标记随之失效。
-/// 实现手法对应原版 HexPower：能力存在期间通过全局关键词钩子给指定牌加 Unplayable，
-/// 能力消失后这个来源的关键词自动消失，不需要手工清理，也不改动卡牌自身的 LocalKeywords。
-/// 显示名/描述在 localization/*/powers.json 的 NEWSANGUO_POWER_PARADOX_POWER.* 里（名字取自类名）；
-/// 能力图标路径按类名取 res://…/powers/ParadoxPower.png（大图 …ParadoxPowerBig.png）。
-/// </summary>
+/// <summary>悖论：被标记的牌本回合耗能增加1，回合结束时移除。</summary>
 [RegisterPower]
 public class ParadoxPower : ModPowerTemplate
 {
@@ -45,31 +38,24 @@ public class ParadoxPower : ModPowerTemplate
         BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png"
     );
 
-    // 悬停提示：解释「不能被打出」
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromKeyword(CardKeyword.Unplayable)
-    ];
-
-    // 登记本回合被锁定的牌（同一回合重复打出时追加；能力实例会被复用，所以集合会累积）
+    // 登记本回合加费的牌（同一回合重复打出时追加；能力实例会被复用，所以集合会累积）
     public void LockCards(IEnumerable<CardModel> cards)
     {
         foreach (CardModel card in cards)
         {
             _lockedCards.Add(card);
+            card.InvokeEnergyCostChanged();
         }
     }
 
-    // 能力存在期间，被锁定的牌获得 Unplayable（等价于“不能被打出”）
-    public override bool TryModifyKeywordsInCombat(CardModel card, ISet<CardKeyword> keywords)
+    // 仅在本能力存在期间加费，不永久修改卡牌费用。
+    public override bool TryModifyEnergyCostInCombat(CardModel card, decimal originalCost, out decimal modifiedCost)
     {
-        if (!_lockedCards.Contains(card))
-        {
-            return false;
-        }
-
-        return keywords.Add(CardKeyword.Unplayable);
+        modifiedCost = originalCost;
+        if (!_lockedCards.Contains(card) || originalCost < 0) return false;
+        modifiedCost = originalCost + 1m;
+        return true;
     }
-
     // 玩家回合结束时移除自身（锁定随之失效）
     public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)
     {
@@ -78,7 +64,9 @@ public class ParadoxPower : ModPowerTemplate
             return;
         }
 
+        var marked = _lockedCards.ToArray();
         _lockedCards.Clear();
         await PowerCmd.Remove(this);
+        foreach (var card in marked) card.InvokeEnergyCostChanged();
     }
 }

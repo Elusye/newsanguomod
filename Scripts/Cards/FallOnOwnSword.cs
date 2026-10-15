@@ -1,3 +1,4 @@
+using MegaCrit.Sts2.Core.HoverTips;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -15,8 +16,7 @@ using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
-// 2026-10-09：按要求从「曹魏」（新三国）卡池移除，改为只注册在蜀汉卡池
-// （同时已从 NewsanguoCardPool.CardTypes 中去掉，避免仍然命中曹魏池）
+// 2026-10-09：按要求从「曹魏」（新三国）卡池移除，改为只注册在蜀汉卡池。
 [RegisterCard(typeof(ShuHanCardPool))]
 public class FallOnOwnSword : NewsanguoCardTemplate
 {
@@ -35,6 +35,8 @@ public class FallOnOwnSword : NewsanguoCardTemplate
 
     // 卡牌自带“消耗”关键词（合并 base 以保留模板附加的模组关键词）
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
+
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.ForEnergy(this)];
 
     public FallOnOwnSword() : base(0, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {

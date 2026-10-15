@@ -21,8 +21,8 @@ using newsanguo.Scripts.Powers;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
-public class ThreeBlades : NewsanguoCardTemplate
+[RegisterCard(typeof(NeutralCardPool))]
+public class ThreeBlades : NeutralCardTemplate
 {
     // 击杀时获得的能量
     private const int EnergyGain = 3;

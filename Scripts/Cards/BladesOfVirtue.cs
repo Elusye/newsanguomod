@@ -21,7 +21,6 @@ namespace newsanguo.Scripts.Cards;
 
 [RegisterCard(typeof(NewsanguoCardPool))]
 [RegisterCharacterStarterCard(typeof(CaoWeiCharacter), 1)]
-[RegisterCharacterStarterCard(typeof(ShuHanCharacter), 1)]
 public class BladesOfVirtue : NewsanguoCardTemplate, IAttackHitHookListener
 {
 

@@ -15,8 +15,8 @@ using newsanguo.Scripts.Powers;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
-public class Release : NewsanguoCardTemplate
+[RegisterCard(typeof(NeutralCardPool))]
+public class Release : NeutralCardTemplate
 {
 
     // 不可通过战斗内的变化/随机生成获得（如“稍作修改”的变化）

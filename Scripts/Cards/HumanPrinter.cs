@@ -33,7 +33,7 @@ public class HumanPrinter : NewsanguoCardTemplate
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
     // 1 费 / 稀有 / 技能 / 目标自身
-    public HumanPrinter() : base(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
+    public HumanPrinter() : base(3, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {
     }
 
@@ -69,7 +69,7 @@ public class HumanPrinter : NewsanguoCardTemplate
         CardCmd.PreviewCardPileAdd(result);
     }
 
-    // 升级：费用 1 → 0（复制张数不变，消耗关键词升级前后都有）
+    // 升级：费用 3 → 2（复制张数不变，消耗关键词升级前后都有）
     protected override void OnUpgrade()
     {
         EnergyCost.UpgradeBy(-1);

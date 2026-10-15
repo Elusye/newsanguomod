@@ -18,8 +18,7 @@ using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
-// 2026-10-05：按要求从「曹魏」（新三国）卡池移除，改为只注册在蜀汉卡池
-// （同时已从 NewsanguoCardPool.CardTypes 中去掉，避免仍然命中曹魏池）
+// 2026-10-05：按要求从「曹魏」（新三国）卡池移除，改为只注册在蜀汉卡池。
 [RegisterCard(typeof(ShuHanCardPool))]
 public class Invincible : NewsanguoCardTemplate
 {
@@ -54,7 +53,7 @@ public class Invincible : NewsanguoCardTemplate
 
         // 本卡不属于天意体系：不失去天意之力（IsHeavensCard 保持默认 false，不计入「恨天剑法」的天意牌统计）
 
-        // 附加“天下无敌”能力：对没有振翅和翱翔的敌人造成伤害增加 BonusPercent%（基础 25%，升级 50%）
+        // 附加“天下无敌”能力：对没有振翅和翱翔的敌人造成伤害增加 BonusPercent%（基础 50%，升级 75%）
         // 效果可叠加：每次打出都会叠加对应百分比的增伤
         int bonusPercent = DynamicVars["BonusPercent"].IntValue;
         await PowerCmd.Apply<InvinciblePower>(choiceContext, base.Owner.Creature, bonusPercent, base.Owner.Creature, this);

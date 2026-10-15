@@ -1,15 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Godot;
-using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Unlocks;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Characters;
 using STS2RitsuLib.Scaffolding.Content;
-using STS2RitsuLib.Utils;
-
-using newsanguo.Scripts.Cards;
 
 namespace newsanguo.Scripts.Characters;
 
@@ -22,9 +16,9 @@ public class NewsanguoCardPool : TypeListCardPoolModel, IModColorfulPhilosophers
 
     public override string CardFrameMaterialPath => "card_frame_newsanguo";
 
-    public override Color DeckEntryCardColor => new Color("244C73");
+    public override Color DeckEntryCardColor => new("244C73");
 
-    public override Color EnergyOutlineColor => new Color("4A2F1C");
+    public override Color EnergyOutlineColor => new("4A2F1C");
 
     // 能量图标路径（RitsuLib 官方覆盖）：
     // - BigEnergyIconPath：EnergyIconHelper.GetPath 的大图标（卡面/遗物/药水费用图标等）
@@ -61,84 +55,6 @@ public class NewsanguoCardPool : TypeListCardPoolModel, IModColorfulPhilosophers
 
     public override Material? PoolFrameMaterial => _frameMaterial.Value;
 
-    [Obsolete("基类要求保留，请使用新的起始牌注册方式。")]
-    protected override IEnumerable<Type> CardTypes =>
-    [
-        // 2026-10-05：原 StrikeNewsanguo/DefendNewsanguo 拆成按角色各自一张
-        // （曹魏用 StrikeCaowei/DefendCaowei、蜀汉用 StrikeShuhan/DefendShuhan），
-        // 这样基础牌的牌框颜色由各自角色卡池决定。
-        typeof(StrikeCaowei),
-        typeof(DefendCaowei),
-        typeof(AGrandToast),
-        typeof(CrossTheRiverToo),
-        typeof(FeelNoAcid),
-        typeof(MaClanQuadBlast),
-        typeof(SlamTheBowl),
-        typeof(ToABiggerGoblet),
-        typeof(BladesOfVirtue),
-        typeof(WineIsTheOldHero),
-        typeof(StarryNight),
-        typeof(ScorchingStarfall),
-        typeof(Divination),
-        typeof(VictoryByHeavensWill),
-        typeof(Plot),
-        typeof(MindControlSpell),
-        typeof(PeekIntoHeaven),
-        typeof(DesecrateHeaven),
-        typeof(SmilingTiger),
-        typeof(DarkHornShark),
-        typeof(HumanTransmutationSpell),
-        typeof(ReanimationSpell),
-        typeof(LongevitySpell),
-        typeof(FatherCanClaimTheThrone),
-        typeof(NewGamePlus),
-        typeof(BrewLimitBreak),
-        typeof(NearAndFar),
-        typeof(Onset),
-        typeof(TheTruestMask),
-        typeof(DivineInsight),
-        typeof(SeaChange),
-        typeof(ThrowHimOut),
-        typeof(HeavenRevision),
-        typeof(MedicalMastery),
-        typeof(Tweak),
-        typeof(Release),
-        // 2026-10-09：「自刎归天！」（FallOnOwnSword）按要求移出本池（改注册到蜀汉卡池）
-        // 2026-10-05：「天下无敌」（Invincible）按要求移出本池（改注册到蜀汉卡池）
-        // 2026-10-05：新增「参见汉中王！」
-        typeof(HailKingOfHanzhong),
-        typeof(CricketForm),
-        typeof(TriumphBrew),
-        typeof(WhatToEat),
-        typeof(DongZhuoTheTraitor),
-        typeof(HeavenHatingSwordplay),
-        typeof(RuthlessBlade),
-        typeof(BoneMeltingPalm),
-        typeof(WolfVsDog),
-        typeof(FireAndWaterProof),
-        typeof(CentralPlainsPass),
-        typeof(ProxyStrike),
-        typeof(Tremble),
-        typeof(BetterThanYilingFlames),
-        typeof(JustKidding),
-        typeof(BetterEachDay),
-        typeof(Retire),
-        typeof(BrewHealsAll),
-        typeof(CheckThePremiere),
-        // 2026-10-08：按要求把「天上人间」从曹魏卡池移除（改为只注册在蜀汉卡池）
-        typeof(WorthAllTheirLives),
-        typeof(WellFedWellClothed),
-        typeof(DragonOmen),
-        typeof(OffWithYourHead),
-
-        // 2026-10-08 追加：曹魏新卡「天上大水」（只在本池注册，蜀汉拿不到）
-        typeof(HeavenlyDeluge),             // 天上大水
-
-        // 2026-10-08 追加：曹魏新卡「时光酸雨」（原名「时空酸雨」，2026-10-09 改名；只在本池注册，蜀汉拿不到）
-        typeof(TimeAcidRain),               // 时光酸雨
-
-        // 2026-10-09 追加：曹魏新卡「直奔诸葛亮四轮车！」（只在本池注册，蜀汉拿不到；
-        // 其衍生牌「四轮车」注册在衍生池 TokenCardPool，不进本池）
-        typeof(ChargeToZhugeLiangsCart)     // 直奔诸葛亮四轮车！
-    ];
+    // 卡牌全部通过各自类上的 [RegisterCard] 逐张注入；不要再覆盖旧式 CardTypes，
+    // 否则 TypeListCardPoolModel 会和 RitsuLib 的注入各生成一份相同模型。
 }

@@ -124,7 +124,7 @@ public class ShuHanCharacter : ModCharacterTemplate<
         ]
     );
 
-    public override int StartingHp => 75;
+    public override int StartingHp => 80;
     public override int MaxEnergy => 3;
     public override int StartingGold => 99;
 

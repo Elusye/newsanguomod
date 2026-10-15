@@ -11,7 +11,7 @@ namespace newsanguo.Scripts.Cards;
 
 /// <summary>
 /// 「竟然不许！」（类名仍是 YouDareRefuse，卡面名字见本地化）——**选择卡**，不是可打出的牌：
-/// 与 <see cref="FollowHeavensWill"/> 一起构成回合结束时那次二选一。选它 = 拒绝本次正向转化，
+/// 与 <see cref="WarpTime"/> 一起构成回合结束时那次二选一。选它 = 拒绝本次正向转化，
 /// **不执行任何操作**：不消耗天意之力、不给“双倍伤害”、不进入额外回合；
 /// 点数保留在 ≥10，下个回合结束时仍会再问。选它时会播一句「竟然不许！」语音（纯表现）。
 /// 真正判定在 <see cref="Powers.HeavensForcePower"/> 里。

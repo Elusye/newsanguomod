@@ -18,8 +18,8 @@ using newsanguo.Scripts.Characters;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
-public class GoldenRebellion : NewsanguoCardTemplate
+[RegisterCard(typeof(NeutralCardPool))]
+public class GoldenRebellion : NeutralCardTemplate
 {
 
     // 卡图资源
@@ -28,7 +28,7 @@ public class GoldenRebellion : NewsanguoCardTemplate
     );
 
     // 自带“消耗”关键词
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
     public GoldenRebellion() : base(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {

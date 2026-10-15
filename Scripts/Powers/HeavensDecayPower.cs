@@ -90,6 +90,9 @@ public class HeavensDecayPower : ModPowerTemplate
         // 天意侵蚀层数-1（减到0后能力自动移除）
         await PowerCmd.ModifyAmount(choiceContext, this, -1, Owner, null, silent: true);
 
+        // 每次接管均将托管层数重设为 13，与托管卡牌一致。
+        await AutoPlayRightToLeft.ApplyTakeoverAsync(choiceContext, player, null);
+
         // 天意爷接管：从右到左自动打出手牌（上限13张）
         await AutoPlayRightToLeft.PlayHandRightToLeftAsync(choiceContext, player);
     }

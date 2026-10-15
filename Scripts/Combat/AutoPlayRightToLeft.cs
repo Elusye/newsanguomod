@@ -1,4 +1,6 @@
 using System.Linq;
+using System.Runtime.CompilerServices;
+using newsanguo.Scripts.Powers;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
@@ -18,20 +20,33 @@ namespace newsanguo.Scripts.Combat;
 public static class AutoPlayRightToLeft
 {
     public const int MaxCardsToPlay = 13;
+    private static readonly ConditionalWeakTable<Player, object> ActivePlayers = new();
+
+    public static async Task ApplyTakeoverAsync(PlayerChoiceContext context, Player owner, CardModel? source)
+    {
+        if (owner.Creature.GetPower<AutoPilotPower>() is { } existing)
+            await PowerCmd.Remove(existing);
+        await PowerCmd.Apply<AutoPilotPower>(context, owner.Creature, MaxCardsToPlay, owner.Creature, source);
+    }
 
     /// <summary>
     /// 玩家从右到左自动打出手牌（上限 <see cref="MaxCardsToPlay"/> 张）。
     /// </summary>
     /// <param name="choiceContext">选择上下文。</param>
     /// <param name="owner">被自动打牌的玩家。</param>
-    public static async Task PlayHandRightToLeftAsync(PlayerChoiceContext choiceContext, Player owner)
+    public static async Task<bool> PlayHandRightToLeftAsync(PlayerChoiceContext choiceContext, Player owner)
     {
-        if (owner?.Creature is null) return;
+        if (owner?.Creature is null) return false;
 
         ICombatState? combatState = owner.Creature.CombatState;
-        if (combatState is null) return;
+        if (combatState is null) return false;
         var playerCombatState = owner.PlayerCombatState;
-        if (playerCombatState is null) return;
+        if (playerCombatState is null) return false;
+        if (owner.Creature.GetPower<AutoPilotPower>() is not { Amount: > 0 } || ActivePlayers.TryGetValue(owner, out _))
+            return false;
+        ActivePlayers.Add(owner, new object());
+        try
+        {
 
         // 推送选择器，避免自动打牌过程弹出卡牌选择界面（与原版低语耳环一致）。
         // 与原版 VakuuCardSelector（从左往右选）不同，这里使用照搬它但方向相反的
@@ -57,6 +72,7 @@ public static class AutoPlayRightToLeft
                     break;
                 }
 
+                if (owner.Creature.GetPower<AutoPilotPower>() is not { Amount: > 0 }) break;
                 CardPile pile = PileType.Hand.GetPile(owner);
                 // 从右到左：取手牌中最右侧一张能打出的牌
                 CardModel? card = pile.Cards.LastOrDefault(c => c.CanPlay());
@@ -68,7 +84,19 @@ public static class AutoPlayRightToLeft
                 Creature? target = GetTarget(card, combatState, owner);
                 await card.SpendResources();
                 await CardCmd.AutoPlay(choiceContext, card, target, AutoPlayType.Default, skipXCapture: true);
+                // 仅接管器实际打出的牌扣层数，手动出牌或其他来源的自动打牌不扣。
+                if (owner.Creature.GetPower<AutoPilotPower>() is { Amount: > 0 } autoPilot)
+                    await PowerCmd.ModifyAmount(choiceContext, autoPilot, -1, owner.Creature, card);
             }
+        }
+        return true;
+        }
+        finally
+        {
+            ActivePlayers.Remove(owner);
+            // 无论牌数是否用完，接管结束后都清除托管。
+            if (owner.Creature.GetPower<AutoPilotPower>() is { } remaining)
+                await PowerCmd.Remove(remaining);
         }
     }
 

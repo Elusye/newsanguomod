@@ -9,7 +9,7 @@
         <LangVersion>13.0</LangVersion>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <PackageOutputDir Condition="'$(PackageOutputDir)' == ''">$(MSBuildProjectDirectory)\artifacts\newsanguo-0.3.6-release.1-sts2-0.107.1\mods\newsanguo</PackageOutputDir>
+        <PackageOutputDir Condition="'$(PackageOutputDir)' == ''">$(MSBuildProjectDirectory)\artifacts\newsanguo-0.3.8-release.1-sts2-0.107.1\mods\newsanguo</PackageOutputDir>
 
         <GameReferenceRoot Condition="'$(GameReferenceRoot)' == ''">$(MSBuildProjectDirectory)\..\references\sts2-0.107.1</GameReferenceRoot>
         <Sts2DataDir Condition="'$(Sts2DataDir)' == ''">$(GameReferenceRoot)\data_sts2_windows_x86_64</Sts2DataDir>

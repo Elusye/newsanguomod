@@ -45,7 +45,7 @@ if ([string]::IsNullOrWhiteSpace($Sts2Dir) -and $null -ne $localProps) {
     $Sts2Dir = $localProps.Sts2Dir
 }
 if ([string]::IsNullOrWhiteSpace($OutputPath)) {
-    $OutputPath = Join-Path $ProjectRoot "artifacts\newsanguo-0.3.6-release.1-sts2-0.107.1\mods\newsanguo\newsanguo.pck"
+    $OutputPath = Join-Path $ProjectRoot "artifacts\newsanguo-0.3.8-release.1-sts2-0.107.1\mods\newsanguo\newsanguo.pck"
 }
 
 function Resolve-GodotExe {

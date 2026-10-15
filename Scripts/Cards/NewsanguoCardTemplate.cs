@@ -8,9 +8,6 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.CardPools;
-using newsanguo.Scripts.Characters;
-using newsanguo.Scripts.Patches;
 using STS2RitsuLib.Keywords;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -36,6 +33,11 @@ public abstract class NewsanguoCardTemplate : ModCardTemplate
         _legacyResultLocation = GetResultLocationForCardPlay();
         return _legacyResultLocation.player == Owner ? _legacyResultLocation.pileType : PileType.Discard;
     }
+    // 0.107把目标牌堆和插入位置分开处理；保留随机放回抽牌堆的语义。
+    public override (PileType, CardPilePosition) ModifyCardPlayResultPileTypeAndPosition(
+        CardModel card, bool isAutoPlay, ResourceInfo resources, PileType pileType, CardPilePosition position) =>
+        card == this && _legacyResultLocation is { } location && location.player == Owner && location.pileType == pileType
+            ? (pileType, location.position) : (pileType, position);
     internal async Task CompleteLegacyTransfer()
     {
         CardLocation? location = _legacyResultLocation;
@@ -86,53 +88,6 @@ public abstract class NewsanguoCardTemplate : ModCardTemplate
         bool showInCardLibrary = true)
         : base(energyCost, type, rarity, targetType, showInCardLibrary)
     {
-    }
-
-    /// <summary>
-    /// 卡框/卡底色取自 <see cref="CardModel.FrameMaterial"/>，而它等于
-    /// <see cref="CardModel.VisualCardPool"/>.FrameMaterial，原版 VisualCardPool 直接返回
-    /// <see cref="CardModel.Pool"/>，也就是“ModelDb 中第一个包含该牌 id 的卡池”。
-    /// 我们的牌同时登记在新三国池与蜀汉池里，于是永远先命中新三国池 → 蜀汉的牌也一直是棕色。
-    /// 这里改成跟随打出这张牌的角色所属卡池：曹魏 → 新三国池（棕），蜀汉 → 蜀汉池（墨绿）。
-    /// 注意：卡牌图鉴里的原型牌是"规范模型"（不可变），访问 <see cref="CardModel.Owner"/>
-    /// 会触发 CanonicalModelException（AssertMutable 抛"Canonical model … used in incorrect place"），
-    /// 所以只在可变实例上按角色取池；图鉴那条路径改用"玩家当前浏览的卡池"上下文
-    /// （见 <see cref="CardLibraryPoolContext"/>，由 <see cref="CardLibraryPoolFilterPatch"/> 维护），
-    /// 其余场合一律回退到原版行为。
-    ///
-    /// 2026-10-07（用户纠正）：衍生牌（<see cref="TokenCardPool"/>）、诅咒牌（<see cref="CurseCardPool"/>）、
-    /// 状态牌（<see cref="StatusCardPool"/>）这三类原版共享卡池里的牌**不跟随角色**，
-    /// 一律保留它们原本的原版卡框（无色灰 / 诅咒 / 无色灰）——它们跟着角色变成棕/墨绿才是异常。
-    /// </summary>
-    public override CardPoolModel VisualCardPool
-    {
-        get
-        {
-            // 原版 Pool：ModelDb 里第一个包含这张牌 id 的卡池
-            CardPoolModel ownPool = base.VisualCardPool;
-
-            if (KeepsVanillaFrame(ownPool))
-            {
-                return ownPool;
-            }
-
-            if (!IsMutable)
-            {
-                return CardLibraryPoolContext.CurrentPool ?? ownPool;
-            }
-
-            return Owner?.Character?.CardPool ?? ownPool;
-        }
-    }
-
-    /// <summary>
-    /// 这几类原版共享卡池里的本 mod 牌保留自己原本的原版卡框，不换角色卡框：
-    /// 衍生牌 <see cref="TokenCardPool"/>（原版无色卡框）、诅咒牌 <see cref="CurseCardPool"/>（原版诅咒卡框）、
-    /// 状态牌 <see cref="StatusCardPool"/>（原版无色卡框）。
-    /// </summary>
-    private static bool KeepsVanillaFrame(CardPoolModel pool)
-    {
-        return pool is TokenCardPool or CurseCardPool or StatusCardPool;
     }
 
     /// <summary>

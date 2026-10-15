@@ -32,7 +32,7 @@ namespace newsanguo.Scripts.Telemetry;
 ///    弃局默认也采集（<c>is_abandoned</c> 可用于过滤），若要完全不采集弃局，给 RunHistory 传
 ///    <c>captureFilter: evt =&gt; !evt.IsAbandoned</c>（一行，但会进一步缩小样本）。
 ///  · 必须玩家 opt-in，样本偏小且非随机（早期尤其明显）。
-///  · 本 mod 自定义的选择界面（「黄金起义」三选一、天意的「顺应天意 / 竟然不许！」等）走的是
+///  · 本 mod 自定义的选择界面（「黄金起义」三选一、天意的「扭曲时空 / 竟然不许！」等）走的是
 ///    <c>CardSelectCmd</c>，原版历史**不记录** —— 要统计它们得另加 Custom 事件（本层未做）。
 /// </summary>
 public static class NewsanguoTelemetry

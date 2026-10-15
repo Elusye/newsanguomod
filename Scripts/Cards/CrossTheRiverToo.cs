@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using MegaCrit.Sts2.Core.HoverTips;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Combat;
@@ -32,6 +33,8 @@ public class CrossTheRiverToo : NewsanguoCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new EnergyVar(2)
     ];
+
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.ForEnergy(this)];
 
     // 存在意图为攻击的敌人时金色高亮（提示会触发获得能量）
     protected override bool ShouldGlowGoldInternal =>

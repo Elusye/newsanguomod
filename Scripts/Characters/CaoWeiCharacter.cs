@@ -105,7 +105,7 @@ public class CaoWeiCharacter : ModCharacterTemplate<
         ]
     );
 
-    public override int StartingHp => 75;
+    public override int StartingHp => 70;
     public override int MaxEnergy => 3;
     public override int StartingGold => 99;
 
