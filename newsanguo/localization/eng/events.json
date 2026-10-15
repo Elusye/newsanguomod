@@ -1,6 +1,6 @@
 {
-  "COLORFUL_PHILOSOPHERS.pages.INITIAL.options.NEWSANGUO.title": "Ochre Brown",
-  "COLORFUL_PHILOSOPHERS.pages.INITIAL.options.NEWSANGUO.description": "Obtain [blue]{Cards}[/blue] New Three Kingdoms {Cards:plural:card|cards}.",
+  "COLORFUL_PHILOSOPHERS.pages.INITIAL.options.NEWSANGUO_CAOWEI.title": "Ochre Brown",
+  "COLORFUL_PHILOSOPHERS.pages.INITIAL.options.NEWSANGUO_CAOWEI.description": "Obtain [blue]{Cards}[/blue] New Three Kingdoms {Cards:plural:card|cards}.",
   "NEWSANGUO_EVENT_NEW_THREE_KINGDOMS_WAY.title": "The New Three Kingdoms Way",
   "NEWSANGUO_EVENT_NEW_THREE_KINGDOMS_WAY.pages.INITIAL.description": "You have returned. It is the [b]New Three Kingdoms Way[/b] again—the starting point of every road, the gateway to every ending.\n\nBack then, beneath the starry night, it was this path that led you to the [gold]Spire[/gold].\n\nAnd now, it waits for you to set out once more. Where to?",
   "NEWSANGUO_EVENT_NEW_THREE_KINGDOMS_WAY.pages.INITIAL.options.NEWSANGUO_RELIC_PORTAL.title": "Take the Portal",

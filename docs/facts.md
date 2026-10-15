@@ -25,6 +25,7 @@
 - 跑局内数据可用 `RitsuLibFramework.BeginModDataRegistration` + `GetRunSavedDataStore(ModId).Register(...)`（类型在 `.decompile/STS2RitsuLib.RunData*`）。
 
 ### 4.5 卡池归属（易错）
+- **“色彩哲学家”选项键由 `EnergyColorName` 派生**：RitsuLib 会把实现 `IModColorfulPhilosophersCardPool` 的卡池追加到原版 `ColorfulPhilosophers.CardPoolColorOrder`；原版随后用 `pool.EnergyColorName.ToUpperInvariant()` 拼出 `COLORFUL_PHILOSOPHERS.pages.INITIAL.options.<颜色>.title/.description`。因此 `NewsanguoCardPool.EnergyColorName == "newsanguo_caowei"` 必须对应 `...NEWSANGUO_CAOWEI.*`；键不存在时 `GetOptionDescription` 返回 `null`，`EventOption.AddLocVars` 会在 `CharacterModel.AddDetailsTo(Description)` 处抛 `NullReferenceException`（2026-10-15 实机复现并修正中英文 `events.json`）。
 - 一张牌逐池注册统一使用类上的 `[RegisterCard(typeof(...))]`。RitsuLib 0.6.2 的 `TypeListCardPoolModel.CardTypes` 已是默认空序列的**旧式兼容钩子**，其注释明确警告：若同时使用逐牌注入和 `CardTypes`，会重复生成相同模型（`.decompile/ritsu/STS2RitsuLib.Scaffolding.Content/TypeListCardPoolModel.cs:15-68`）。2026-10-12 起 `NewsanguoCardPool` / `ShuHanCardPool` 均不再覆盖该列表。
 - `CardModel.Pool` 只有一个返回值：按 `ModelDb.AllCardPools` 顺序取第一个包含当前 id 的池；同一个卡牌类型同时注册进曹魏、蜀汉两个池，不能记录“这次生成来自哪个池”。《飞溅》又会先把其他角色池的候选展开成 `IEnumerable<CardModel>`，再交给 `CardFactory.GetDistinctForCombat`，创建实体时只有规范牌与 Owner，来源池已经丢失。
 - 因此 2026-10-12 起，27 个共有**玩法**拆为两个实体：原类/id 只注册曹魏池；`Scripts/Cards/ShuHanSharedCardVariants.cs` 中的 `*ShuHan` 类型只注册蜀汉池并继承原类的玩法，使用各自唯一 id 保存来源。`NewsanguoCardTemplate` 不再按 Owner 改写 `VisualCardPool`，卡框与能量图标恢复由卡牌自己的 `Pool` 决定。「陶醉」只属于曹魏，不拆蜀汉实体。直接生成共有牌时要按持有者选实体：`Scripts/Relics/ACertainForbiddenSpellIndex.cs` 对蜀汉生成 `HumanTransmutationSpellShuHan`，另外三张禁术只有曹魏实体。

@@ -1,6 +1,6 @@
 {
-  "COLORFUL_PHILOSOPHERS.pages.INITIAL.options.NEWSANGUO.title": "赭石褐色",
-  "COLORFUL_PHILOSOPHERS.pages.INITIAL.options.NEWSANGUO.description": "获得[blue]{Cards}[/blue]张新三国的卡牌。",
+  "COLORFUL_PHILOSOPHERS.pages.INITIAL.options.NEWSANGUO_CAOWEI.title": "赭石褐色",
+  "COLORFUL_PHILOSOPHERS.pages.INITIAL.options.NEWSANGUO_CAOWEI.description": "获得[blue]{Cards}[/blue]张新三国的卡牌。",
   "NEWSANGUO_EVENT_NEW_THREE_KINGDOMS_WAY.title": "新三国道",
   "NEWSANGUO_EVENT_NEW_THREE_KINGDOMS_WAY.pages.INITIAL.description": "你回来了。又是这条[b]新三国道[/b]——任何道路的起点，任何终点的入口。\n\n当初，星夜之下，正是它引你来到高塔。\n\n而今，它又在等你启程。去哪儿？",
   "NEWSANGUO_EVENT_NEW_THREE_KINGDOMS_WAY.pages.INITIAL.options.NEWSANGUO_RELIC_PORTAL.title": "走传送门",
