@@ -85,8 +85,8 @@ public class Lightweight : NewsanguoCardTemplate
         return card.Type != CardType.Attack;
     }
 
-    // 生成 1 张“不胜酒力”并加入弃牌堆（供其它卡牌调用，参考原版 Shiv.CreateInHand）
-    public static async Task<CardModel?> CreateInDiscard(Player owner, ICombatState combatState)
+    // 生成 1 张“不胜酒力”并加入手牌（供其它卡牌调用，参考原版 Shiv.CreateInHand）
+    public static async Task<CardModel?> CreateInHand(Player owner, ICombatState combatState)
     {
         // 战斗已结束或正在结束时不再生成，避免收尾阶段状态错乱
         if (CombatManager.Instance.IsOverOrEnding)
@@ -95,7 +95,9 @@ public class Lightweight : NewsanguoCardTemplate
         }
 
         CardModel lightweight = combatState.CreateCard<Lightweight>(owner);
-        await CardPileCmd.AddGeneratedCardsToCombat([lightweight], PileType.Discard, owner);
+        // 参考原版 CollisionCourse：直接加入手牌，不额外显示生成牌预览。
+        await CardPileCmd.AddGeneratedCardToCombat(lightweight, PileType.Hand, owner);
+        await Cmd.Wait(0.5f);
         return lightweight;
     }
 }

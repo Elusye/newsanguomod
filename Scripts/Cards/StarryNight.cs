@@ -19,8 +19,8 @@ using newsanguo.Scripts.Powers;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
-public class StarryNight : NewsanguoCardTemplate
+[RegisterCard(typeof(NeutralCardPool))]
+public class StarryNight : NeutralCardTemplate
 {
 
     // 鼠标悬停时显示格挡提示

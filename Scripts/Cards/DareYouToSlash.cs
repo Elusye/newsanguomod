@@ -25,7 +25,7 @@ public class DareYouToSlash : NewsanguoCardTemplate
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<VulnerablePower>(), HoverTipFactory.FromPower<DrunkenMightPower>()
     ];
-    public DareYouToSlash() : base(0, CardType.Skill, CardRarity.Common, TargetType.Self) { }
+    public DareYouToSlash() : base(1, CardType.Skill, CardRarity.Common, TargetType.Self) { }
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/dare_you_to_slash");
@@ -34,5 +34,5 @@ public class DareYouToSlash : NewsanguoCardTemplate
         await PowerCmd.Apply<DrunkenMightPower>(choiceContext, Owner.Creature,
             DynamicVars["DrunkenMightPower"].IntValue, Owner.Creature, this);
     }
-    protected override void OnUpgrade() => DynamicVars["DrunkenMightPower"].UpgradeValueBy(5);
+    protected override void OnUpgrade() => DynamicVars["DrunkenMightPower"].UpgradeValueBy(3);
 }

@@ -32,7 +32,7 @@ public class HeavensForcePower : ModPowerTemplate
 {
     /// <summary>
     /// 一次正向/负向转化涉及的点数（阈值、消耗与侵蚀回升量共用）。
-    /// 卡面文案通过“顺应天意”那张选择卡的 <c>{ForceCost}</c> 引用这里，避免两处数字不同步。
+    /// 卡面文案通过“扭曲时空”那张选择卡的 <c>{ForceCost}</c> 引用这里，避免两处数字不同步。
     /// </summary>
     public const int ConversionAmount = 10;
 
@@ -156,7 +156,7 @@ public class HeavensForcePower : ModPowerTemplate
     }
 
     /// <summary>
-    /// 弹出「顺应天意 / 竟然不许！」两张选择卡，问玩家要不要做这次正向转化。
+    /// 弹出「扭曲时空 / 竟然不许！」两张选择卡，问玩家要不要做这次正向转化。
     /// 写法照抄原版「知识恶魔」的「知识的诅咒」（KnowledgeDemon.ChooseCurse）：
     /// 用 <c>CombatState.CreateCard</c> 在战斗内造出两张卡 → <c>CardSelectCmd.FromChooseACardScreen</c>
     /// 二选一（多人下每个玩家各自选，走 PlayerChoiceSynchronizer 同步）。
@@ -173,13 +173,13 @@ public class HeavensForcePower : ModPowerTemplate
 
         List<CardModel> options =
         [
-            combatState.CreateCard<FollowHeavensWill>(Owner.Player),
+            combatState.CreateCard<WarpTime>(Owner.Player),
             combatState.CreateCard<YouDareRefuse>(Owner.Player)
         ];
 
         CardModel? chosen = await CardSelectCmd.FromChooseACardScreen(choiceContext, options, Owner.Player);
 
-        if (chosen is FollowHeavensWill)
+        if (chosen is WarpTime)
         {
             return true;
         }

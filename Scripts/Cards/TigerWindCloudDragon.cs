@@ -33,9 +33,11 @@ public class TigerWindCloudDragon : NewsanguoCardTemplate
         new PowerVar<TigerWindCloudDragonPower>(1m)
     ];
 
-    // 龙虎牌统一展示帝王之征说明，不预览其他龙虎牌。
+    // 展示帝王之征与固定生成的两张龙虎牌。
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<DragonOmenPower>()
+        HoverTipFactory.FromPower<DragonOmenPower>(),
+        this is TigerWindCloudDragonShuHan ? HoverTipFactory.FromCard<SmilingTigerShuHan>() : HoverTipFactory.FromCard<SmilingTiger>(),
+        this is TigerWindCloudDragonShuHan ? HoverTipFactory.FromCard<DragonOmenShuHan>() : HoverTipFactory.FromCard<DragonOmen>()
     ];
     // 构造函数
     public TigerWindCloudDragon() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
@@ -59,18 +61,16 @@ public class TigerWindCloudDragon : NewsanguoCardTemplate
             this,
             silent: false);
 
-        // 四种龙虎牌等概率独立抽取两次（允许重复），使用战斗生成 RNG 保证联机同步。
-        for (int i = 0; i < 2; i++)
-        {
-            CardModel generated = Owner.RunState.Rng.CombatCardGeneration.NextInt(4) switch
-            {
-                0 => combatState.CreateCard<SmilingTiger>(Owner),
-                1 => combatState.CreateCard<DragonOmen>(Owner),
-                2 => combatState.CreateCard<TigerWindCloudDragon>(Owner),
-                _ => combatState.CreateCard<DeafenMe>(Owner)
-            };
-            await CardPileCmd.AddGeneratedCardToCombat(generated, PileType.Hand, Owner);
-        }
+        // 固定各生成一张，保留来源卡池的独立实体。
+        bool useShuHanVariants = this is TigerWindCloudDragonShuHan;
+        CardModel tiger = useShuHanVariants
+            ? combatState.CreateCard<SmilingTigerShuHan>(Owner)
+            : combatState.CreateCard<SmilingTiger>(Owner);
+        CardModel dragon = useShuHanVariants
+            ? combatState.CreateCard<DragonOmenShuHan>(Owner)
+            : combatState.CreateCard<DragonOmen>(Owner);
+        await CardPileCmd.AddGeneratedCardToCombat(tiger, PileType.Hand, Owner);
+        await CardPileCmd.AddGeneratedCardToCombat(dragon, PileType.Hand, Owner);
     }
 
     // 升级后的效果逻辑

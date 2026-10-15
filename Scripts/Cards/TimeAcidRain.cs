@@ -33,7 +33,7 @@ public class TimeAcidRain : NewsanguoCardTemplate
         HoverTipFactory.FromPower<ArtifactPower>()
     ];
 
-    public TimeAcidRain() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies) { }
+    public TimeAcidRain() : base(2, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies) { }
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(3);

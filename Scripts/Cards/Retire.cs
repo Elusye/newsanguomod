@@ -18,8 +18,8 @@ using newsanguo.Scripts.Characters;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
-public class Retire : NewsanguoCardTemplate
+[RegisterCard(typeof(NeutralCardPool))]
+public class Retire : NeutralCardTemplate
 {
 
     // 卡图资源
@@ -33,7 +33,7 @@ public class Retire : NewsanguoCardTemplate
     ];
 
     // 虚无 + 消耗（升级后仅移除虚无，保留消耗）
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Ethereal, CardKeyword.Exhaust];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Ethereal, CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
     // 悬停提示：展示“无实体”说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<IntangiblePower>()];

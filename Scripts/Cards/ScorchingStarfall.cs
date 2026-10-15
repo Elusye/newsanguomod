@@ -58,8 +58,7 @@ public class ScorchingStarfall : NewsanguoCardTemplate
 
     // 悬停提示：本牌只与酒力互动（已不再获取/失去天意之力，故不再挂天意之力的说明）
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<DrunkenMightPower>(),
-        HoverTipFactory.FromPower<HeavensDecayPower>()
+        HoverTipFactory.FromPower<DrunkenMightPower>()
     ];
 
     // 特效资源在跑图时预载（照搬原版 ForgottenRitual / 本 mod「旧遗忘仪式」的写法），

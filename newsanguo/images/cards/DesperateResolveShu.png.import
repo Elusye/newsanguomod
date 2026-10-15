@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b74k2gocldl0l"
-path="res://.godot/imported/Tremble.png-bad5182fa7a2a31f978cbfd1d0ec7c66.ctex"
+uid="uid://bydai4x656xv5"
+path="res://.godot/imported/DesperateResolveShu.png-5fa9be84420e6a48a48e723e294eca86.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/cards/Tremble.png"
-dest_files=["res://.godot/imported/Tremble.png-bad5182fa7a2a31f978cbfd1d0ec7c66.ctex"]
+source_file="res://newsanguo/images/cards/DesperateResolveShu.png"
+dest_files=["res://.godot/imported/DesperateResolveShu.png-5fa9be84420e6a48a48e723e294eca86.ctex"]
 
 [params]
 

@@ -6,7 +6,7 @@ namespace newsanguo.Scripts;
 
 /// <summary>
 /// “扎聋我自己的耳朵！”负面效果的统一音量控制：
-/// 战斗中把本机听到的声音整体降到 25%（约 -12 dB），战斗结束 / SL / 回主菜单时恢复原音量。
+/// 战斗中把本机听到的声音整体降低25%（保留75%，约 -2.5 dB），战斗结束 / SL / 回主菜单时恢复原音量。
 /// 覆盖互不影响的音频来源：
 /// 1) 引擎 FMOD 音效/音乐/环境声 → 通过降低游戏主总线音量（NAudioManager.SetMasterVol）；
 /// 2) 本 mod 自己的 Godot 播放音效 → NewsanguoSfx.ApplyVolumeReduction()。
@@ -14,16 +14,16 @@ namespace newsanguo.Scripts;
 /// </summary>
 public static class HearingVolumeController
 {
-    // 目标音量：线性振幅 0.25（约 -12 dB，听感约为原来的 1/4）
-    private const float TargetLinearVolume = 0.25f;
+    // 目标音量：线性振幅0.75（约 -2.5 dB）
+    private const float TargetLinearVolume = 0.75f;
 
     // 是否正处于音量降低状态
     private static bool _reduced;
 
     public static bool IsReduced => _reduced;
 
-    /// <summary>把本机听到的声音音量降低到原来的 25%（幂等）。</summary>
-    public static void ReduceToQuarterVolume()
+    /// <summary>把本机听到的声音音量降低25%（保留75%）（幂等）。</summary>
+    public static void ReduceVolumeByQuarter()
     {
         if (_reduced)
         {
@@ -33,6 +33,9 @@ public static class HearingVolumeController
         ApplyFmodMasterScale(TargetLinearVolume);
         NewsanguoSfx.ApplyVolumeReduction();
     }
+
+    // 保留旧公共方法签名，兼容已有外部调用。
+    public static void ReduceToQuarterVolume() => ReduceVolumeByQuarter();
 
     /// <summary>恢复本机声音到原音量（幂等）。</summary>
     public static void RestoreFullVolume()

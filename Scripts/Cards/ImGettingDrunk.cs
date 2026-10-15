@@ -24,9 +24,9 @@ public class ImGettingDrunk : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：立即获得的酒力（升级 11）
+    // 卡牌基础数值：立即获得的酒力（升级后 12）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DrunkenMightPower>(8m)
+        new PowerVar<DrunkenMightPower>(9m)
     ];
 
     // 悬停提示：展示“酒力”说明 + “不胜酒力”卡面说明
@@ -35,7 +35,7 @@ public class ImGettingDrunk : NewsanguoCardTemplate
         HoverTipFactory.FromCard<Lightweight>()
     ];
 
-    public ImGettingDrunk() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+    public ImGettingDrunk() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
     {
     }
 
@@ -48,7 +48,7 @@ public class ImGettingDrunk : NewsanguoCardTemplate
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
 
-        // 立即获得 8（11）点酒力
+        // 立即获得 9（12）点酒力
         await PowerCmd.Apply<DrunkenMightPower>(
             choiceContext,
             Owner.Creature,
@@ -56,13 +56,13 @@ public class ImGettingDrunk : NewsanguoCardTemplate
             Owner.Creature,
             this);
 
-        // 负面效果：将一张“不胜酒力”加入你的弃牌堆
-        await Lightweight.CreateInDiscard(Owner, CombatState!);
+        // 负面效果：将一张“不胜酒力”加入你的手牌
+        await Lightweight.CreateInHand(Owner, CombatState!);
     }
 
-    // 升级：酒力 8 → 13
+    // 升级：酒力 9 → 12
     protected override void OnUpgrade()
     {
-        DynamicVars["DrunkenMightPower"].UpgradeValueBy(5);
+        DynamicVars["DrunkenMightPower"].UpgradeValueBy(3);
     }
 }

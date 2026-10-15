@@ -19,8 +19,8 @@ using newsanguo.Scripts.Characters;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
-public class Tremble : NewsanguoCardTemplate
+[RegisterCard(typeof(NeutralCardPool))]
+public class QuakeBeforeMe : NeutralCardTemplate
 {
 
     // 卡图资源
@@ -36,7 +36,7 @@ public class Tremble : NewsanguoCardTemplate
     ];
 
     // 固有 + 消耗
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Innate, CardKeyword.Exhaust];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Innate, CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
     // 悬停提示：展示“虚弱”和“易伤”关键词说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
@@ -45,7 +45,7 @@ public class Tremble : NewsanguoCardTemplate
         HoverTipFactory.FromPower<VulnerablePower>()
     ];
 
-    public Tremble() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.AllEnemies)
+    public QuakeBeforeMe() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.AllEnemies)
     {
     }
 

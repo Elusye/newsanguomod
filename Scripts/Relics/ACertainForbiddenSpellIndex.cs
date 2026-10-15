@@ -82,9 +82,13 @@ public class ACertainForbiddenSpellIndex : ModRelicTemplate
 
         Flash();
 
-        // 候选池：四张禁术牌（人体炼成术 / 将领延寿术 / 心灵控制术 / 亡灵复活术）
+        // 候选池：四张禁术牌（人体炼成术 / 将领延寿术 / 心灵控制术 / 亡灵复活术）。
+        // 只有「人体炼成术」是共有玩法；蜀汉要生成自己的实体，否则卡框会固定成曹魏。
+        // 另外三张只有曹魏实体，按卡池归属保持曹魏卡框。
         List<CardModel> pool = [
-            ModelDb.Card<HumanTransmutationSpell>(),
+            player.Character is ShuHanCharacter
+                ? ModelDb.Card<HumanTransmutationSpellShuHan>()
+                : ModelDb.Card<HumanTransmutationSpell>(),
             ModelDb.Card<LongevitySpell>(),
             ModelDb.Card<MindControlSpell>(),
             ModelDb.Card<ReanimationSpell>()

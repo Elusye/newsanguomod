@@ -17,20 +17,20 @@ using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
-// 曹氏兵法：每当你打出一张牌时以 1 生命值独立募集 1 名青州兵；每当任何生物死亡时你获得 1 点力量；
+// 哀兵必胜·魏：每当你打出一张牌时以 1 生命值独立募集 1 名青州兵；每当任何生物死亡时你获得 1 点力量；
 // 在你的回合开始时移除所有青州兵（这次移除不触发能力）。可叠加，每层提高上述两个数值。
 // 注册卡牌到新三国专属卡池
 [RegisterCard(typeof(NewsanguoCardPool))]
-public class CaoArtOfWar : NewsanguoCardTemplate
+public class DesperateResolveWei : NewsanguoCardTemplate
 {
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
+        PortraitPath: "res://newsanguo/images/cards/CaoArtOfWar.png"
     );
 
     // 卡牌基础数值：打出一张牌时独立募集 1 名 1 生命值的青州兵；任何生物死亡时获得 1 点力量。
-    // 两处数值都随打出的“曹氏兵法”数量叠加，由能力 cao_art_of_war_power 的层数体现。
+    // 两处数值都随打出的“哀兵必胜·魏”数量叠加，由能力 cao_art_of_war_power 的层数体现。
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new SummonVar(1),
         new PowerVar<StrengthPower>(1m)
@@ -47,7 +47,7 @@ public class CaoArtOfWar : NewsanguoCardTemplate
         HoverTipFactory.FromPower<StrengthPower>()
     ];
 
-    public CaoArtOfWar() : base(2, CardType.Power, CardRarity.Rare, TargetType.Self)
+    public DesperateResolveWei() : base(2, CardType.Power, CardRarity.Rare, TargetType.Self)
     {
     }
 
@@ -57,7 +57,7 @@ public class CaoArtOfWar : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/cao_art_of_war");
 
-        // 获得“曹氏兵法”能力（可叠加：每次打出令层数 +1，触发强度随之提高）。
+        // 获得“哀兵必胜·魏”能力（可叠加：每次打出令层数 +1，触发强度随之提高）。
         // 无需记录来源卡：能力在本次出牌结算中才生效，本次出牌不在能力的账本里，自然不会触发
         await PowerCmd.Apply<CaoArtOfWarPower>(
             choiceContext,

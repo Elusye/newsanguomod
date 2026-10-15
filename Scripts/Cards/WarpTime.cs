@@ -13,7 +13,7 @@ using newsanguo.Scripts.Powers;
 namespace newsanguo.Scripts.Cards;
 
 /// <summary>
-/// 「顺应天意」——**选择卡**，不是可打出的牌：
+/// 「扭曲时空」——**选择卡**，不是可打出的牌：
 /// 只在 <see cref="HeavensForcePower"/> 回合结束询问“要不要转化”时，作为
 /// <c>CardSelectCmd.FromChooseACardScreen</c> 的二选一候选出现（照抄原版「知识恶魔」的
 /// 「知识的诅咒」：KnowledgeDemon.ChooseCurse 用 CombatState.CreateCard 造两张卡让玩家选）。
@@ -21,7 +21,7 @@ namespace newsanguo.Scripts.Cards;
 /// 本卡只负责界面与文案（因此费用 -1、不可能被打出，也不会真正进入任何牌堆）。
 /// </summary>
 [RegisterCard(typeof(StatusCardPool))]
-public class FollowHeavensWill : NewsanguoCardTemplate
+public class WarpTime : NewsanguoCardTemplate
 {
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
@@ -45,7 +45,7 @@ public class FollowHeavensWill : NewsanguoCardTemplate
         HoverTipFactory.FromPower<DoubleDamagePower>()
     ];
 
-    public FollowHeavensWill() : base(-1, CardType.Status, CardRarity.Status, TargetType.None)
+    public WarpTime() : base(-1, CardType.Status, CardRarity.Status, TargetType.None)
     {
     }
 }

@@ -18,8 +18,8 @@ using newsanguo.Scripts.Characters;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
-public class CheckThePremiere : NewsanguoCardTemplate
+[RegisterCard(typeof(NeutralCardPool))]
+public class CheckThePremiere : NeutralCardTemplate
 {
 
     // 卡图资源

@@ -31,11 +31,11 @@ public class BowangSlopeParadox : NewsanguoCardTemplate
 
     // 悬停提示：这两张效果都施加在抽到的牌上，这里把关键词含义显示出来
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromKeyword(CardKeyword.Retain),
-        HoverTipFactory.FromKeyword(CardKeyword.Unplayable)
+        HoverTipFactory.FromKeyword(CardKeyword.Retain)
+
     ];
 
-    public BowangSlopeParadox() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+    public BowangSlopeParadox() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
     {
     }
 
@@ -61,8 +61,7 @@ public class BowangSlopeParadox : NewsanguoCardTemplate
             CardCmd.ApplySingleTurnRetain(card);
         }
 
-        // 抽到的牌本回合「不能被打出」：把牌登记给「悖论」能力，由能力的全局关键词钩子加 Unplayable；
-        // 能力会在玩家回合结束时自动移除，锁定随之失效。
+        // 抽到的牌本回合耗能增加1，由悖论能力按引用标记；回合结束时恢复。
         ParadoxPower? power = await PowerCmd.Apply<ParadoxPower>(
             choiceContext,
             base.Owner.Creature,

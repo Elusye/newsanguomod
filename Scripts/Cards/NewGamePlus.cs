@@ -18,8 +18,8 @@ using newsanguo.Scripts.Powers;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
-public class NewGamePlus : NewsanguoCardTemplate
+[RegisterCard(typeof(NeutralCardPool))]
+public class NewGamePlus : NeutralCardTemplate
 {
 
     // 带“预见”关键词（悬停显示预见机制说明）

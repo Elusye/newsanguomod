@@ -25,10 +25,11 @@
 - 跑局内数据可用 `RitsuLibFramework.BeginModDataRegistration` + `GetRunSavedDataStore(ModId).Register(...)`（类型在 `.decompile/STS2RitsuLib.RunData*`）。
 
 ### 4.5 卡池归属（易错）
-- 一张牌属于哪个池由**类上的 `[RegisterCard(typeof(...))]` 特性**决定，不是靠 `NewsanguoCardPool.CardTypes` 列表。
-- `Scripts/Characters/ShuHanCardPool.cs:60-61` 的列表签名带 `[Obsolete("基类要求保留，请使用新的起始牌注册方式。")]`——基类仍要求它，所以共有牌惯例是"特性写曹魏池 + 蜀汉列表里再列一次"。
-- 移出曹魏池的既有先例与注释写法：`Scripts/Cards/Invincible.cs:21-23`（同时把条目从 `NewsanguoCardPool.CardTypes` 删掉）。
-- 2026-10-09 用同一手法再移出一张：「自刎归天！」`Scripts/Cards/FallOnOwnSword.cs:18-19` 改成 `[RegisterCard(typeof(ShuHanCardPool))]`，`Scripts/Characters/NewsanguoCardPool.cs:103` 的条目删掉并留日期注释；蜀汉列表 `Scripts/Characters/ShuHanCardPool.cs:103` 本来就有这一条，保留。
+- **“色彩哲学家”选项键由 `EnergyColorName` 派生**：RitsuLib 会把实现 `IModColorfulPhilosophersCardPool` 的卡池追加到原版 `ColorfulPhilosophers.CardPoolColorOrder`；原版随后用 `pool.EnergyColorName.ToUpperInvariant()` 拼出 `COLORFUL_PHILOSOPHERS.pages.INITIAL.options.<颜色>.title/.description`。因此 `NewsanguoCardPool.EnergyColorName == "newsanguo_caowei"` 必须对应 `...NEWSANGUO_CAOWEI.*`；缺少描述键会导致事件选项初始化空引用。PR #6 修复该键，Beta 的曹魏选项显示为“靛蓝色 / Indigo”。
+- 一张牌逐池注册统一使用类上的 `[RegisterCard(typeof(...))]`。RitsuLib 0.6.2 的 `TypeListCardPoolModel.CardTypes` 已是默认空序列的**旧式兼容钩子**，其注释明确警告：若同时使用逐牌注入和 `CardTypes`，会重复生成相同模型（`.decompile/ritsu/STS2RitsuLib.Scaffolding.Content/TypeListCardPoolModel.cs:15-68`）。2026-10-12 起 `NewsanguoCardPool` / `ShuHanCardPool` 均不再覆盖该列表。
+- `CardModel.Pool` 只有一个返回值：按 `ModelDb.AllCardPools` 顺序取第一个包含当前 id 的池；同一个卡牌类型同时注册进曹魏、蜀汉两个池，不能记录“这次生成来自哪个池”。《飞溅》又会先把其他角色池的候选展开成 `IEnumerable<CardModel>`，再交给 `CardFactory.GetDistinctForCombat`，创建实体时只有规范牌与 Owner，来源池已经丢失。
+- 因此 2026-10-12 起，27 个共有**玩法**拆为两个实体：原类/id 只注册曹魏池；`Scripts/Cards/ShuHanSharedCardVariants.cs` 中的 `*ShuHan` 类型只注册蜀汉池并继承原类的玩法，使用各自唯一 id 保存来源。`NewsanguoCardTemplate` 不再按 Owner 改写 `VisualCardPool`，卡框与能量图标恢复由卡牌自己的 `Pool` 决定。「陶醉」只属于曹魏，不拆蜀汉实体。直接生成共有牌时要按持有者选实体：`Scripts/Relics/ACertainForbiddenSpellIndex.cs` 对蜀汉生成 `HumanTransmutationSpellShuHan`，另外三张禁术只有曹魏实体。
+- 两个实体复用原卡图，但本地化键按新 id 各自提供；蜀汉初始牌也改注册 `AGrandToastShuHan` / `BladesOfVirtueShuHan`。旧存档没有来源字段，原有共有牌 id 保留为曹魏实体，不自动猜测或迁移。
 
 ### 4.6 天意之力与"免费打出"
 `Scripts/Combat/HeavensForce.cs`（`Scripts/Entry.cs:82` 在内容注册前 `HeavensForce.Register()` 注册为次级资源）。`HeavensForceVar` 在免费打出时 `PreviewValue = 0`；卡牌侧判免费的做法见 `Scripts/Cards/HeavenlyDeluge.cs:44,49`（`private int StunThreshold => IsFreeHeavensForceThisTurn ? 0 : DynamicVars["HeavensForcePower"].IntValue;`）。天意体系的牌惯例：`IsHeavensCard => true`、`CanonicalVars => [new HeavensForceVar(n)]`、`AdditionalHoverTips => [HeavensForce.HoverTip(), ...]`。

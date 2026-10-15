@@ -445,7 +445,7 @@ public static class NewsanguoPublicApi
     /// </summary>
     public static void ReduceCombatHearingVolume()
     {
-        HearingVolumeController.ReduceToQuarterVolume();
+        HearingVolumeController.ReduceVolumeByQuarter();
     }
 
     /// <summary>立即把本机音量恢复到用户设置值（幂等）。</summary>

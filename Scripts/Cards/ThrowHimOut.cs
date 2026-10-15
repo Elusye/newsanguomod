@@ -21,8 +21,8 @@ using newsanguo.Scripts.Characters;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
-public class ThrowHimOut : NewsanguoCardTemplate
+[RegisterCard(typeof(NeutralCardPool))]
+public class ThrowHimOut : NeutralCardTemplate
 {
 
     // 卡图资源

@@ -19,8 +19,7 @@ using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
-// 2026-10-08：按要求从「曹魏」（新三国）卡池移除，改为只注册在蜀汉卡池
-// （同时已从 NewsanguoCardPool.CardTypes 中去掉，避免仍然命中曹魏池）
+// 2026-10-08：按要求从「曹魏」（新三国）卡池移除，改为只注册在蜀汉卡池。
 [RegisterCard(typeof(ShuHanCardPool))]
 public class HeavenAndEarth : NewsanguoCardTemplate
 {

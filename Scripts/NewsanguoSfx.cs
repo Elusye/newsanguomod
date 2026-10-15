@@ -22,8 +22,8 @@ namespace newsanguo.Scripts;
 /// 3) 跟随游戏内“音效”音量滑杆（CurrentSfxOptionDb，与原生 FMOD 音效总线同一“选项²”曲线）；
 /// 4) 本 mod 专属倍率 ModVolumeMultiplier（RitsuLib Mod 设置页滑杆 或 控制台命令
 ///    newsanguo_sfx_volume 调整，持久化保存）；
-/// 5) “扎聋我自己的耳朵！”（deafen_me）的听觉受损门（音量降至 1/4），只作用于本播放器，
-///    原版 FMOD 事件由 HearingVolumeController 另行降为 1/4。
+/// 5) “扎聋我自己的耳朵！”（deafen_me）的听觉受损门（音量保留75%），只作用于本播放器，
+///    原版 FMOD 事件由 HearingVolumeController 另行保留75%。
 ///
 /// 例外：长音频（「关羽之歌」系列，见 <see cref="PlayOwnLevel"/>）自带母带电平，只叠加第 1/2/4/5 项，
 /// 不叠加第 3 项的短语音效校准值与游戏「音效」选项曲线；但它会叠加自己那一档系列均衡
@@ -139,8 +139,8 @@ public static class NewsanguoSfx
     {
         ["a_grand_toast"] = 1.5f,
         ["always_mine"] = -7.5f,
-        ["assignment"] = -4.5f,
         ["assignment_power"] = -4.5f,
+        ["assignment"] = -4.5f,
         ["auto_pilot"] = -0.5f,
         ["bai_qi"] = 6.5f,
         ["better_each_day"] = 5f,
@@ -152,45 +152,47 @@ public static class NewsanguoSfx
         ["bowang_slope_paradox"] = -6f,
         ["brew_heals_all"] = 3.5f,
         ["brew_limit_break"] = -6.5f,
+        ["bright_future"] = 0f,
         ["cao_art_of_war"] = 3f,
-        ["central_plains_pass"] = 1.5f,
         ["central_plains_pass_power"] = 2f,
+        ["central_plains_pass"] = 1.5f,
         ["chain_stratagem_1"] = -4f,
         ["chain_stratagem_2"] = -2.5f,
         ["character_death"] = -2f,
-        ["character_select"] = 2f,
         ["character_select_caowei"] = 0f,
         ["character_select_shuhan"] = -4.5f,
+        ["character_select"] = 2f,
         ["charge_to_zhuge_liangs_cart"] = 0.5f,
         ["check_the_premiere"] = -1f,
-        ["chenliu_mess_hall"] = -2f,
         ["chenliu_mess_hall_heal"] = 9.5f,
         ["chenliu_mess_hall_max_hp"] = 0.5f,
         ["chenliu_mess_hall_relic"] = 1f,
+        ["chenliu_mess_hall"] = -2f,
         ["chow_down"] = 0f,
         ["commander_arrives"] = -4f,
         ["creative_mode"] = 6f,
-        ["cricket_form"] = 4f,
         ["cricket_form_power"] = 4f,
+        ["cricket_form"] = 4f,
         ["cross_the_river_too"] = 6f,
         ["cybertron_force"] = -2.0f,
         ["dare_you_to_slash"] = -6.0f,
-        ["dark_horn_shark"] = 5f,
         ["dark_horn_shark_copy"] = 5f,
+        ["dark_horn_shark"] = 5f,
         ["deafen_me"] = -6.5f,
         ["defend_newsanguo"] = -3.5f,
         ["desecrate_heaven"] = -3.5f,
         ["divination"] = -4.5f,
-        ["divine_insight"] = 6.5f,
         ["divine_insight_power"] = 6f,
+        ["divine_insight"] = 6.5f,
+        ["do_you_doubt_my_command"] = 0f,
         ["dong_zhuo_the_traitor"] = -3f,
         ["dragon_omen"] = 2f,
         ["enter_combat_one_hp"] = 2f,
         ["fall_on_own_sword"] = 5f,
-        ["father_can_claim_the_throne"] = -2.5f,
         ["father_can_claim_the_throne_power"] = -2.5f,
-        ["feel_no_acid"] = -2.5f,
+        ["father_can_claim_the_throne"] = -2.5f,
         ["feel_no_acid_power"] = -6.5f,
+        ["feel_no_acid"] = -2.5f,
         ["fire_and_water_proof"] = -2.5f,
         ["fire_water_harmony"] = 2.0f,
         ["forty_sixty_tax"] = 0f,
@@ -204,11 +206,12 @@ public static class NewsanguoSfx
         ["heaven_hating_swordplay"] = 0f,
         ["heaven_revision"] = 0f,
         ["heavenly_deluge"] = 0f,
-        ["heavenly_troops"] = 0f,
         ["heavenly_troops_power"] = 4.5f,
+        ["heavenly_troops"] = 0f,
         ["heavens_decay"] = -4f,
-        ["heavens_force"] = 9.5f,
         ["heavens_force_decay"] = 0f,
+        ["heavens_force"] = 9.5f,
+        ["helpless_worry"] = 0f,
         ["human_printer"] = 1f,
         ["human_transmutation_spell"] = -3f,
         ["i_cant_leave"] = -1f,
@@ -217,10 +220,11 @@ public static class NewsanguoSfx
         ["invincible"] = -1.5f,
         ["invoke_heaven"] = -5.5f,
         ["just_kidding"] = -3f,
+        ["leave_it_to_fate"] = 0f,
         ["lets_discuss"] = -4.5f,
         ["lightning_strike"] = -1.5f,
-        ["loath_to_leave_the_table"] = -2f,
         ["loath_to_leave_the_table_damage"] = -2.5f,
+        ["loath_to_leave_the_table"] = -2f,
         ["longevity_spell"] = -4.5f,
         ["ma_clan_quad_blast_1"] = 2f,
         ["ma_clan_quad_blast_2"] = 2.5f,
@@ -232,14 +236,14 @@ public static class NewsanguoSfx
         ["military_cudgel"] = -0.5f,
         ["mind_control_spell"] = -1f,
         ["my_three_generals"] = 8.5f,
-        ["near_and_far"] = 3f,
         ["near_and_far_power"] = 4f,
+        ["near_and_far"] = 3f,
         ["never_had_these"] = 4.5f,
         ["never_happened"] = -7f,
         ["new_game_plus"] = -3f,
         ["nonsense"] = -4f,
-        ["off_with_your_head"] = -4.5f,
         ["off_with_your_head_double"] = -3f,
+        ["off_with_your_head"] = -4.5f,
         ["one_man_stand"] = -6f,
         ["onset"] = 3f,
         ["party_on"] = 2f,
@@ -248,8 +252,8 @@ public static class NewsanguoSfx
         ["plot"] = -0.5f,
         ["proxy_strike"] = -4f,
         ["qin_jin_alliance"] = -1.5f,
-        ["rat_poison_scheme"] = 0f,
         ["rat_poison_scheme_power"] = 0f,
+        ["rat_poison_scheme"] = 0f,
         ["reanimation_spell"] = -4.5f,
         ["release"] = 1.5f,
         ["rest_site_rest"] = 1.5f,
@@ -258,10 +262,11 @@ public static class NewsanguoSfx
         ["ruthless_blade"] = 5f,
         ["scorching_starfall"] = -3f,
         ["sea_change"] = 5.5f,
-        ["slam_the_bowl"] = -5.5f,
         ["slam_the_bowl_damage"] = -2.5f,
-        ["smiling_tiger"] = 4f,
+        ["slam_the_bowl"] = -5.5f,
+        ["slay_the_thief_lu_bu"] = 0f,
         ["smiling_tiger_copy"] = 3.5f,
+        ["smiling_tiger"] = 4f,
         ["so_impressive"] = -2.5f,
         ["soldier"] = -3f,
         ["son_of_heaven"] = 4.5f,
@@ -269,28 +274,30 @@ public static class NewsanguoSfx
         ["sovereign_form"] = 0.5f,
         ["starry_night"] = -2f,
         ["strike_newsanguo"] = -3f,
+        ["switch_allegiance"] = 0f,
         ["ten_thousand_transparent_holes"] = 0.5f,
         ["the_truest_mask"] = -0.5f,
         ["three_blades"] = 4f,
+        ["threes_a_crowd"] = 0f,
         ["throw_him_out"] = 1.5f,
         ["tiger_wind_cloud_dragon"] = -2f,
         ["time_acid_rain"] = -2.5f,
-        ["to_a_bigger_goblet"] = 6f,
         ["to_a_bigger_goblet_power"] = 0f,
+        ["to_a_bigger_goblet"] = 6f,
         ["tremble"] = 6.5f,
         ["triumph_brew"] = 10f,
         ["tweak"] = 10f,
         ["uncles_and_aunts"] = 4.5f,
         ["venom_rat"] = 0f,
-        ["victory_by_heavens_will"] = 9.5f,
         ["victory_by_heavens_will_power"] = 9.5f,
+        ["victory_by_heavens_will"] = 9.5f,
         ["well_fed_well_clothed"] = 6f,
         ["what_to_eat"] = -2f,
-        ["wheres_wine"] = -4.5f,
         ["wheres_wine_power"] = -4.5f,
+        ["wheres_wine"] = -4.5f,
         ["who_rules"] = 6.5f,
-        ["why_pick_that_up"] = -4f,
         ["why_pick_that_up_power"] = -5f,
+        ["why_pick_that_up"] = -4f,
         ["wine_cut"] = 0f,
         ["wine_is_the_old_hero"] = 7f,
         ["wolf_vs_dog"] = -1.5f,
@@ -339,7 +346,7 @@ public static class NewsanguoSfx
     // 2) 本 mod 专属倍率：RitsuLib Mod 设置页的滑杆 或 游戏内控制台命令 newsanguo_sfx_volume <倍率>
     //    调整（默认 1.0），两者共用 ModVolumeMultiplier 同一真值源，持久化到
     //    user://newsanguo_sfx_volume.json，后续启动自动恢复。
-    // 3) “听觉受损”门（deafen_me）在两者之上再乘 1/4，互不冲突。
+    // 3) “听觉受损”门（deafen_me）在两者之上再乘0.75，互不冲突。
 
     private const string VolumeConfigFileName = "newsanguo_sfx_volume.json";
 
@@ -497,14 +504,14 @@ public static class NewsanguoSfx
     // 把当前倍率 + 开关重新写盘（RitsuLib 设置页 Save 委托复用；属性赋值时已即时保存，这里幂等）
     public static void SaveSfxConfig() => SaveConfig();
 
-    // “听觉受损”门：置位后本 mod 的 Godot 音效整体降低 12 dB（线性音量 0.25），战斗结束/回主菜单时复位。
-    private const float ReducedVolumeDb = 12.0412f; // 10*log10(4)，≈ 音量降至 1/4
+    // “听觉受损”门：置位后本 mod 的 Godot 音效整体降低约2.5 dB（线性音量0.75），战斗结束/回主菜单时复位。
+    private const float ReducedVolumeDb = 2.498775f; // -20*log10(0.75)，保留75%线性音量
 
     private static bool _volumeReduced;
 
     public static bool VolumeReduced => _volumeReduced;
 
-    // 把本 mod 的全部 Godot 播放音效音量降至 1/4（已降则幂等跳过）
+    // 把本 mod 的全部 Godot 播放音效音量保留75%（已降则幂等跳过）
     public static void ApplyVolumeReduction()
     {
         if (_volumeReduced)

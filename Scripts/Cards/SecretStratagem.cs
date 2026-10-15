@@ -16,8 +16,8 @@ using newsanguo.Scripts.Characters;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
-public class Plot : NewsanguoCardTemplate
+[RegisterCard(typeof(NeutralCardPool))]
+public class SecretStratagem : NeutralCardTemplate
 {
 
     // 卡图资源
@@ -35,7 +35,7 @@ public class Plot : NewsanguoCardTemplate
     protected override bool ShouldGlowGoldInternal =>
         PileType.Hand.GetPile(base.Owner).Cards.Count == 3;
 
-    public Plot() : base(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public SecretStratagem() : base(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
     }
 

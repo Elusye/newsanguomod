@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dkpv28w4q1lu2"
-path="res://.godot/imported/FollowHeavensWill.png-bdffc07a7dda2293a7e34c92094a10c3.ctex"
+path="res://.godot/imported/WarpTime.png-1b071589e3af8b02cb5ad4a6022cf63d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/cards/FollowHeavensWill.png"
-dest_files=["res://.godot/imported/FollowHeavensWill.png-bdffc07a7dda2293a7e34c92094a10c3.ctex"]
+source_file="res://newsanguo/images/cards/WarpTime.png"
+dest_files=["res://.godot/imported/WarpTime.png-1b071589e3af8b02cb5ad4a6022cf63d.ctex"]
 
 [params]
 
