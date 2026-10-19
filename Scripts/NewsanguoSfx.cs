@@ -189,7 +189,7 @@ public static class NewsanguoSfx
         ["divine_insight"] = 7.5f,
         ["divine_insight_power"] = 6f,
         ["do_you_doubt_my_command"] = 6.5f,
-        ["dog_eat_dog"] = 0f,
+        ["dog_eat_dog"] = 13f,
         ["dong_zhuo_the_traitor"] = -3f,
         ["dragon_omen"] = 2f,
         ["endless_energy"] = 11f,
