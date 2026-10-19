@@ -20,6 +20,8 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class MindControlSpell : NewsanguoCardTemplate
 {
+    public override bool LosesHeavensForce => true;
+
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
@@ -31,13 +33,15 @@ public class MindControlSpell : NewsanguoCardTemplate
 
     // 卡牌基础数值：失去 5 点天意之力（变量用正值，打出时取负）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new HeavensForceVar(5m)
+        new HeavensForceVar(5m),
+        new PowerVar<BewildermentPower>(2m)
     ];
 
     // 鼠标悬停时显示天意之力与天意侵蚀提示
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HeavensForce.HoverTip(),
-        HoverTipFactory.FromPower<HeavensDecayPower>()
+        HoverTipFactory.FromPower<HeavensDecayPower>(),
+        HoverTipFactory.FromPower<BewildermentPower>()
     ];
 
     // 属于“天意”体系（涉及天意之力/天意侵蚀）
@@ -54,7 +58,7 @@ public class MindControlSpell : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/mind_control_spell");
 
-        // 击晕需要目标
+        // 施加眩惑需要目标
         ArgumentNullException.ThrowIfNull(cardPlay.Target, "cardPlay.Target");
 
         // 播放角色施法动画
@@ -69,8 +73,9 @@ public class MindControlSpell : NewsanguoCardTemplate
             }
         }
 
-        // 击晕目标敌人（参考原版卡牌“口哨”Whistle）
-        await CreatureCmd.Stun(cardPlay.Target);
+        // 给予目标敌人眩惑，按正常负面效果流程接受人工制品抵消。
+        await PowerCmd.Apply<BewildermentPower>(choiceContext, cardPlay.Target,
+            DynamicVars["BewildermentPower"].IntValue, Owner.Creature, this);
 
         // 失去天意之力
         int lostAmount = DynamicVars["HeavensForcePower"].IntValue;
@@ -82,5 +87,6 @@ public class MindControlSpell : NewsanguoCardTemplate
     {
         // 失去的天意之力从 5 减少到 4
         DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
+        DynamicVars["BewildermentPower"].UpgradeValueBy(1);
     }
 }

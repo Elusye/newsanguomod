@@ -2,11 +2,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -25,35 +22,30 @@ public class SecretStratagem : NeutralCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 6 点伤害；满足条件时额外抽 1 张牌（升级不再增加抽牌数）
+    // 卡牌基础数值：获得 4 点格挡；满足条件时额外抽 1 张牌（升级不再增加抽牌数）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(6m, ValueProp.Move),
+        new BlockVar(4m, ValueProp.Move),
         new CardsVar(1)
     ];
+
+    public override bool GainsBlock => true;
 
     // 当前手牌数恰好为 3 时金色高亮（打出后剩 2，可触发额外抽牌）
     protected override bool ShouldGlowGoldInternal =>
         PileType.Hand.GetPile(base.Owner).Cards.Count == 3;
 
-    public SecretStratagem() : base(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public SecretStratagem() : base(0, CardType.Skill, CardRarity.Common, TargetType.Self)
     {
     }
 
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        ArgumentNullException.ThrowIfNull(cardPlay.Target, "cardPlay.Target");
-        Creature target = cardPlay.Target;
-
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/plot");
 
-        // 造成 6 点伤害
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this, cardPlay)
-            .Targeting(target)
-            .WithHitFx("vfx/vfx_attack_slash")
-            .Execute(choiceContext);
+        // 获得 4 点格挡
+        await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay, fast: false);
 
         // 若打出这张牌后手牌数为 2，则额外抽 1 张牌
         // （打出时这张牌已离开手牌，此时的手牌数即为“打出后”的手牌数）
@@ -63,9 +55,9 @@ public class SecretStratagem : NeutralCardTemplate
         }
     }
 
-    // 升级：伤害 6 → 9（抽牌效果不再升级）
+    // 升级：格挡 4 → 7（抽牌效果不再升级）
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(3m);
+        DynamicVars.Block.UpgradeValueBy(3m);
     }
 }

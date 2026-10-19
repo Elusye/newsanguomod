@@ -26,6 +26,11 @@ namespace newsanguo.Scripts.Powers;
 [RegisterPower]
 public class DrunkenMightPower : ModPowerTemplate
 {
+    // 只为护佑生成的那张牌记账；finally 取走，避免影响其他攻击牌。
+    private static readonly Dictionary<CardModel, int> pendingRefunds = new();
+    internal static void BeginRefundForCard(CardModel card) => pendingRefunds.Add(card, 0);
+    internal static int EndRefundForCard(CardModel card) => pendingRefunds.Remove(card, out int amount) ? amount : 0;
+
     // 账本：牌 → 那张牌开始打出时的层数。
     // 用 CardModel 作键（引用相等），精确到“这一张牌的这一次出牌”。
     private class Data
@@ -148,6 +153,7 @@ public class DrunkenMightPower : ModPowerTemplate
     /// </summary>
     public async Task ConsumeThenRefund(PlayerChoiceContext choiceContext, CardModel? cardSource)
     {
+        if (newsanguo.Scripts.Combat.AbilitySuppression.IsSuppressed(this)) return;
         int consumed = ConsumedByHalf;
         if (consumed <= 0 || Owner is null)
         {
@@ -155,6 +161,9 @@ public class DrunkenMightPower : ModPowerTemplate
         }
 
         await HalfForCard(choiceContext, cardSource);
+        // 自带返还的攻击牌已自行结算，护佑不得再次返还。
+        if (cardSource is not null && pendingRefunds.ContainsKey(cardSource))
+            pendingRefunds[cardSource] -= consumed;
         // 减半后层数可能归零导致这份能力被移除，所以重新 Apply 而不是直接改 this
         await PowerCmd.Apply<DrunkenMightPower>(
             choiceContext,
@@ -168,10 +177,13 @@ public class DrunkenMightPower : ModPowerTemplate
     // 把酒力调整为指定值
     private async Task SetAmount(PlayerChoiceContext choiceContext, int target, CardModel? cardSource)
     {
+        if (newsanguo.Scripts.Combat.AbilitySuppression.IsSuppressed(this)) return;
         if (Owner is null || target == Amount)
         {
             return;
         }
+        if (cardSource is not null && pendingRefunds.ContainsKey(cardSource) && target < Amount)
+            pendingRefunds[cardSource] += Amount - target;
         await PowerCmd.ModifyAmount(
             choiceContext,
             this,

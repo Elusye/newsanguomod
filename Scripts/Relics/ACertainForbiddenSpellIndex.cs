@@ -21,8 +21,8 @@ using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Relics;
 
-// 魔法禁术目录：在第 2/3/5 个回合开始时，将一张随机禁术牌加入你的手牌，
-// 那张禁术牌在该回合免费打出，且打出时不消耗天意之力。
+// 曹魏专属：第 2/3/5 回合生成一张会失去天意之力的稀有攻击或技能牌，
+// 该回合免费打出，且打出时不消耗天意之力。
 [RegisterRelic(typeof(NewsanguoRelicPool))]
 public class ACertainForbiddenSpellIndex : ModRelicTemplate
 {
@@ -64,7 +64,7 @@ public class ACertainForbiddenSpellIndex : ModRelicTemplate
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
-    // 每个回合开始时刷新角标；第 2/3/5 个回合额外生成一张随机禁术牌加入手牌
+    // 每个回合开始时刷新角标；第 2/3/5 个回合额外生成一张符合条件的随机牌加入手牌
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {
         if (player != Owner || Owner.PlayerCombatState?.TurnNumber is not { } turnNumber)
@@ -82,21 +82,17 @@ public class ACertainForbiddenSpellIndex : ModRelicTemplate
 
         Flash();
 
-        // 候选池：四张禁术牌（人体炼成术 / 将领延寿术 / 心灵控制术 / 亡灵复活术）。
-        // 只有「人体炼成术」是共有玩法；蜀汉要生成自己的实体，否则卡框会固定成曹魏。
-        // 另外三张只有曹魏实体，按卡池归属保持曹魏卡框。
-        List<CardModel> pool = [
-            player.Character is ShuHanCharacter
-                ? ModelDb.Card<HumanTransmutationSpellShuHan>()
-                : ModelDb.Card<HumanTransmutationSpell>(),
-            ModelDb.Card<LongevitySpell>(),
-            ModelDb.Card<MindControlSpell>(),
-            ModelDb.Card<ReanimationSpell>()
-        ];
-
-        CardModel card = CardFactory
+        // 按实际失去天意之力的标记筛选，不再限定旧有四张禁术牌。
+        var pool = ModelDb.CardPool<NewsanguoCardPool>()
+            .GetUnlockedCards(Owner.UnlockState, Owner.RunState.CardMultiplayerConstraint)
+            .Where(card => card.Rarity == CardRarity.Rare &&
+                card.Type is CardType.Attack or CardType.Skill &&
+                card is NewsanguoCardTemplate { LosesHeavensForce: true });
+        CardModel? card = CardFactory
             .GetDistinctForCombat(Owner, pool, 1, Owner.RunState.Rng.CombatCardGeneration)
-            .First();
+            .FirstOrDefault();
+        if (card is null)
+            return;
 
         // 本回合免费打出（能量消耗为 0）
         card.SetToFreeThisTurn();

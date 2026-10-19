@@ -20,8 +20,8 @@ using newsanguo.Scripts.Characters;
 namespace newsanguo.Scripts.Cards;
 
 // 多人牌：注册到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
-public class ChainStratagem : NewsanguoCardTemplate
+[RegisterCard(typeof(NeutralCardPool))]
+public class ChainStratagem : NeutralCardTemplate
 {
 
     // 仅多人模式可用

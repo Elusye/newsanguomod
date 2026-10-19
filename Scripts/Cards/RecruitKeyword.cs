@@ -21,7 +21,7 @@ namespace newsanguo.Scripts.Cards;
 /// 故放在 static_hover_tips 表（newsanguo/localization/{zhs,eng}/static_hover_tips.json）。
 ///
 /// 2026-10-09 需求（用户 m00512 → m00717 修订）：只有“募集”一个关键词，标题为「募集{数量}」；
-/// 说明里带“在你的回合开始时，失去所有募集的青州兵。”（本 mod 的青州兵都在回合开始时失去，
+/// 说明里带“在敌方回合结束时，失去所有募集的青州兵。”（本 mod 的青州兵都在敌方回合结束时失去，
 /// 所以两套说明合并成一条，不再有“临时募集”）。
 /// </summary>
 public static class RecruitKeyword
@@ -36,7 +36,7 @@ public static class RecruitKeyword
 
     /// <summary>
     /// “募集”提示：标题为「募集{数量}」，说明为“生成{数量}名1生命值的青州兵。……”
-    /// （含“在你的回合开始时，失去所有募集的青州兵。”）；
+    /// （含“在敌方回合结束时，失去所有募集的青州兵。”）；
     /// 数量使用卡面自己的变量（如曹氏兵法的 <c>DynamicVars.Summon</c>）。
     /// </summary>
     public static IHoverTip Recruit(DynamicVar amount)

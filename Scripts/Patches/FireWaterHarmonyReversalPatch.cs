@@ -10,7 +10,7 @@ public static class FireWaterHarmonyReversal
 {
     public static void Apply(PowerModel power, ref decimal multiplier)
     {
-        if (power.Owner.HasPower<ReversalPower>())
+        if (power.Owner.HasPower<ReversalPower>() && !newsanguo.Scripts.Combat.AbilitySuppression.HoldsHanzhong(power.Owner))
             multiplier = Math.Max(0m, 2m - multiplier);
     }
 }

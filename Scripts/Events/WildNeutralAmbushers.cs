@@ -32,6 +32,13 @@ public class WildNeutralAmbushers : ModEventTemplate
     // 进入战斗的事件必须是共享事件（多人下由投票决定进入）
     public override bool IsShared => true;
 
+    // 与陈留大食堂一致，在进入事件时播放入场语音。
+    public override Task AfterEventStarted()
+    {
+        NewsanguoSfx.Play("event:/newsanguo/sfx/wild_neutral_ambushers");
+        return Task.CompletedTask;
+    }
+
     protected override IReadOnlyList<EventOption> GenerateInitialOptions()
     {
         return
@@ -87,8 +94,8 @@ public sealed class SkulkingColonyEffigyEncounter : EncounterModel
     {
         return
         [
-            (ModelDb.Monster<SlumberingBeetle>().ToMutable(), null),
-            (ModelDb.Monster<BygoneEffigy>().ToMutable(), null)
+            (ModelDb.Monster<BygoneEffigy>().ToMutable(), null),
+            (ModelDb.Monster<SlumberingBeetle>().ToMutable(), null)
         ];
     }
 }

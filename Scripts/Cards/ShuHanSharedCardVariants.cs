@@ -1,3 +1,4 @@
+using MegaCrit.Sts2.Core.Models.CardPools;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using newsanguo.Scripts.Characters;
@@ -53,9 +54,12 @@ public sealed class CrossTheRiverTooShuHan : CrossTheRiverToo
     public override CardAssetProfile AssetProfile => ShuHanSharedCardAssets.ReusePortraitOf<CrossTheRiverToo>();
 }
 
-[RegisterCard(typeof(ShuHanCardPool))]
+// 旧 ID 仅供存档读取，不再进入奖励池或图鉴。
+[RegisterCard(typeof(TokenCardPool))]
 public sealed class DarkHornSharkShuHan : DarkHornShark
 {
+    public DarkHornSharkShuHan() : base(false) { }
+    public override bool CanBeGeneratedInCombat => false;
     public override CardAssetProfile AssetProfile => ShuHanSharedCardAssets.ReusePortraitOf<DarkHornShark>();
 }
 
@@ -63,6 +67,15 @@ public sealed class DarkHornSharkShuHan : DarkHornShark
 public sealed class DragonOmenShuHan : DragonOmen
 {
     public override CardAssetProfile AssetProfile => ShuHanSharedCardAssets.ReusePortraitOf<DragonOmen>();
+}
+
+// 旧 ID 仅供存档读取，不再进入奖励池或图鉴。
+[RegisterCard(typeof(TokenCardPool))]
+public sealed class FeelNoAcidShuHan : FeelNoAcid
+{
+    public FeelNoAcidShuHan() : base(false) { }
+    public override bool CanBeGeneratedInCombat => false;
+    public override CardAssetProfile AssetProfile => ShuHanSharedCardAssets.ReusePortraitOf<FeelNoAcid>();
 }
 
 [RegisterCard(typeof(ShuHanCardPool))]
@@ -119,9 +132,12 @@ public sealed class ScorchingStarfallShuHan : ScorchingStarfall
     public override CardAssetProfile AssetProfile => ShuHanSharedCardAssets.ReusePortraitOf<ScorchingStarfall>();
 }
 
-[RegisterCard(typeof(ShuHanCardPool))]
+// 旧 ID 仅供存档读取，不再进入奖励池或图鉴。
+[RegisterCard(typeof(TokenCardPool))]
 public sealed class SmilingTigerShuHan : SmilingTiger
 {
+    public SmilingTigerShuHan() : base(false) { }
+    public override bool CanBeGeneratedInCombat => false;
     public override CardAssetProfile AssetProfile => ShuHanSharedCardAssets.ReusePortraitOf<SmilingTiger>();
 }
 

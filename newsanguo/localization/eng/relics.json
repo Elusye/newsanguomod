@@ -6,7 +6,7 @@
   "NEWSANGUO_RELIC_CENTURY_BREW.description": "At the start of each turn, gain {DrunkenMightPower} [gold]Drunken Might[/gold].",
   "NEWSANGUO_RELIC_CENTURY_BREW.flavor": "A century-old brew, awaiting a distinguished guest.",
   "NEWSANGUO_RELIC_A_CERTAIN_FORBIDDEN_SPELL_INDEX.title": "A Certain Forbidden Spell Index",
-  "NEWSANGUO_RELIC_A_CERTAIN_FORBIDDEN_SPELL_INDEX.description": "At the start of your 3rd, 2nd, and 5th turns, add a random [gold]Forbidden Spell[/gold] to your [gold]Hand[/gold]. That card is free to play that turn and costs no [gold]Heaven's Force[/gold].",
+  "NEWSANGUO_RELIC_A_CERTAIN_FORBIDDEN_SPELL_INDEX.description": "At the start of your 3rd, 2nd, and 5th turns, add a random Rare Attack or Skill that loses [gold]Heaven's Force[/gold] to your [gold]Hand[/gold]. That card is free to play that turn and costs no [gold]Heaven's Force[/gold].",
   "NEWSANGUO_RELIC_A_CERTAIN_FORBIDDEN_SPELL_INDEX.flavor": "A book that meticulously records the New Three Kingdoms' unique mechanics, painstakingly compiled by scholars of the New Three Kingdoms. Reading it is of great benefit to anyone who has transmigrated into that world.",
   "NEWSANGUO_RELIC_PORTAL.title": "Portal",
   "NEWSANGUO_RELIC_PORTAL.description": "The next {Rooms} times you choose the next room, you may ignore your current route.",

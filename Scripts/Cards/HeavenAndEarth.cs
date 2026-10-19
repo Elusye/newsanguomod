@@ -6,59 +6,35 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
-
 using newsanguo.Scripts.Characters;
-using newsanguo.Scripts.Combat;
+using MegaCrit.Sts2.Core.Models.CardPools;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
-// 2026-10-08：按要求从「曹魏」（新三国）卡池移除，改为只注册在蜀汉卡池。
-[RegisterCard(typeof(ShuHanCardPool))]
-public class HeavenAndEarth : NewsanguoCardTemplate
+[RegisterCard(typeof(TokenCardPool))]
+public class HeavenAndEarth : TerritoryCardTemplate
 {
-
-    // 卡图资源
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
-    );
-
-    // 卡牌基础数值：获得的飞行层数
-    protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<FlightPower>(3m)
-    ];
-
-    // 悬停提示：展示“飞行”说明
+        PortraitPath: "res://newsanguo/images/cards/HeavenAndEarth.png");
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<FlightPower>(1m)];
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<FlightPower>()
+        .. base.AdditionalHoverTips, HoverTipFactory.FromPower<FlightPower>()
     ];
+    public HeavenAndEarth() : base(-1, CardRarity.Token) { }
 
-    public HeavenAndEarth() : base(2, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+    public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {
-    }
-
-    // 打出时的效果逻辑
-    protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
-    {
-        // 播放出牌音效
+        // 回合开始抽牌后判定；仅持有者的手牌本体触发，抽牌堆及弃牌堆不触发。
+        if (player != Owner || !Owner.Creature.IsAlive || Pile?.Type != PileType.Hand)
+            return;
         NewsanguoSfx.Play("event:/newsanguo/sfx/heaven_and_earth");
-
-        // 本卡不属于天意体系：不失去天意之力（IsHeavensCard 保持默认 false，不计入「恨天剑法」的天意牌统计）
-
-        // 获得 3 层飞行
-        int flightAmount = DynamicVars["FlightPower"].IntValue;
-        await PowerCmd.Apply<FlightPower>(choiceContext, base.Owner.Creature, flightAmount, base.Owner.Creature, this);
+        await PowerCmd.Apply<FlightPower>(choiceContext, Owner.Creature,
+            DynamicVars["FlightPower"].IntValue, Owner.Creature, this);
     }
-
-    // 升级后的效果逻辑：费用 2 → 1
-    protected override void OnUpgrade()
-    {
-        EnergyCost.UpgradeBy(-1);
-    }
+    protected override void OnUpgrade() => DynamicVars["FlightPower"].UpgradeValueBy(1);
 }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
@@ -15,12 +14,13 @@ using newsanguo.Scripts.Characters;
 
 namespace newsanguo.Scripts.Cards;
 
-/// <summary>复制并自动打出自己的上一张牌；音效在复制品完整结算后播放。</summary>
-[RegisterCard(typeof(ShuHanCardPool))]
-public class SoImpressive : NewsanguoCardTemplate
+/// <summary>记录并复制最近打出的其他牌；打出同名牌不覆盖记录。</summary>
+[RegisterCard(typeof(NeutralCardPool))]
+public class SoImpressive : NeutralCardTemplate
 {
     private int _fallbackIndex = -1;
     private CardModel? _copiedTarget;
+    private CardModel? _recordedCard;
     private string? _playedTitle;
     private bool _historyPreview;
 
@@ -28,16 +28,6 @@ public class SoImpressive : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");
     public SoImpressive() : base(0, CardType.Skill, CardRarity.Rare, TargetType.Self) { }
 
-    private CardModel? PreviousCard
-    {
-        get
-        {
-            CardModel? previous = CombatManager.Instance.History.CardPlaysFinished
-                .LastOrDefault(entry => entry.CardPlay.Player == Owner)?.CardPlay.Card;
-            // 同类牌视作没有可复制的历史，统一使用本牌已确定的衍生牌占位。
-            return previous is SoImpressive ? null : previous;
-        }
-    }
     private CardModel FallbackTemplate => _fallbackIndex switch
     {
         1 => ModelDb.Card<Ivory>(),
@@ -45,7 +35,7 @@ public class SoImpressive : NewsanguoCardTemplate
         _ => ModelDb.Card<OttoMother>()
     };
     private CardModel DisplaySource => IsDupe && _copiedTarget is not null
-        ? _copiedTarget : PreviousCard ?? FallbackTemplate;
+        ? _copiedTarget : _recordedCard ?? FallbackTemplate;
 
     private static string SourceName(CardModel source) => source is SoImpressive impressive
         ? impressive._playedTitle ?? impressive.TitleLocString.GetFormattedText() : source.Title;
@@ -86,6 +76,13 @@ public class SoImpressive : NewsanguoCardTemplate
     {
         if (_fallbackIndex < 0)
             _fallbackIndex = Owner.RunState.Rng.CombatCardGeneration.NextInt(3);
+        if (_recordedCard is null && CombatState is { } combat)
+            _recordedCard = _fallbackIndex switch
+            {
+                1 => combat.CreateCard<Ivory>(Owner),
+                2 => combat.CreateCard<Card1225>(Owner),
+                _ => combat.CreateCard<OttoMother>(Owner)
+            };
     }
     private void RefreshHandTitle()
     {
@@ -104,19 +101,19 @@ public class SoImpressive : NewsanguoCardTemplate
     }
     public override Task BeforeCardPlayed(CardPlay cardPlay)
     {
-        if (cardPlay.Card != this) return Task.CompletedTask;
+        if (cardPlay.Player != Owner) return Task.CompletedTask;
         EnsureFallback();
-        // 自动打出的同类复制品沿用原牌当时的目标，不能重新指向当前历史中的自身。
-        if (!IsDupe || _copiedTarget is null)
+        if (cardPlay.Card is not SoImpressive)
         {
-            CardModel? previous = PreviousCard;
-            _playedTitle = DynamicTitle(SourceName(previous ?? FallbackTemplate));
-            _copiedTarget = previous ?? (_fallbackIndex switch
-            {
-                1 => CombatState!.CreateCard<Ivory>(Owner),
-                2 => CombatState!.CreateCard<Card1225>(Owner),
-                _ => CombatState!.CreateCard<OttoMother>(Owner)
-            });
+            // 在出牌开始时覆盖，嵌套自动出牌也按实际出牌顺序记录。
+            _recordedCard = cardPlay.Card;
+            RefreshHandTitle();
+        }
+        else if (cardPlay.Card == this && (!IsDupe || _copiedTarget is null))
+        {
+            // 冻结这次复制目标；自身及其他同名牌均不覆盖记录。
+            _copiedTarget = _recordedCard;
+            _playedTitle = DynamicTitle(SourceName(_recordedCard ?? FallbackTemplate));
         }
         return Task.CompletedTask;
     }

@@ -25,6 +25,8 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class HeavenlyDeluge : NewsanguoCardTemplate
 {
+    public override bool LosesHeavensForce => true;
+
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
@@ -40,14 +42,6 @@ public class HeavenlyDeluge : NewsanguoCardTemplate
         new HeavensForceVar(5m)
     ];
 
-    // 天意之力大于本次失去量时金色高亮（提示击晕效果会触发）
-    protected override bool ShouldGlowGoldInternal => HeavensForce.Get(base.Owner) > StunThreshold;
-
-    // 击晕阈值 = 本次打出实际要失去的天意之力；本回合免费打出（“魔法禁术目录”）时不失去天意之力，
-    // 阈值为 0，与 HeavensForce.Add 内部的免扣处理（见 Scripts/Combat/HeavensForce.cs）以及
-    // HeavensForceVar 免费时的卡面显示值（PreviewValue = 0）保持同一口径
-    private int StunThreshold => IsFreeHeavensForceThisTurn ? 0 : DynamicVars["HeavensForcePower"].IntValue;
-
     // 悬停提示：展示“天意之力”与“天意侵蚀”说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HeavensForce.HoverTip(),
@@ -58,7 +52,7 @@ public class HeavenlyDeluge : NewsanguoCardTemplate
     {
     }
 
-    // 升级后的效果逻辑：伤害 20 → 26；失去的天意之力 5 → 4（击晕阈值随之变成 4）
+    // 升级后的效果逻辑：伤害 20 → 26；失去的天意之力 5 → 4
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(6m);
@@ -76,10 +70,6 @@ public class HeavenlyDeluge : NewsanguoCardTemplate
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
-        // 快照打出瞬间的天意之力：击晕条件（“天意之力大于本次失去量”）只看打出时的余量，
-        // 不受伤害结算期间任何天意之力变动的影响（快照写法同「你是舍不得这张帅案吧！」的酒力）
-        int forceAtPlay = HeavensForce.Get(base.Owner);
-
         // 对所有敌人造成伤害
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
@@ -87,13 +77,10 @@ public class HeavenlyDeluge : NewsanguoCardTemplate
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
 
-        // 天意之力大于本次失去量：击晕所有敌人
-        if (forceAtPlay > StunThreshold)
+        // 无论当前天意之力多少，均击晕仍存活的敌人。
+        foreach (Creature enemy in combatState.GetOpponentsOf(base.Owner.Creature).Where(c => c.IsAlive))
         {
-            foreach (Creature enemy in combatState.GetOpponentsOf(base.Owner.Creature).Where(c => c.IsAlive))
-            {
-                await CreatureCmd.Stun(enemy);
-            }
+            await CreatureCmd.Stun(enemy);
         }
 
         // 失去天意之力（本回合免费打出时由 HeavensForce.Add 内部免扣）

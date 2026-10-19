@@ -4,5 +4,9 @@
   "NEWSANGUO_KEYWORD_TIGER_DRAGON.description": "When you play a Tiger-Dragon card, trigger Dragon Omen on all enemies.",
   "NEWSANGUO_KEYWORD_TIGER_DRAGON.title": "Tiger-Dragon",
   "NEWSANGUO_KEYWORD_NEUTRAL.title": "Neutral",
-  "NEWSANGUO_KEYWORD_NEUTRAL.description": "Neutral cards appear in the card pools of all characters in the Newsanguo mod."
+  "NEWSANGUO_KEYWORD_NEUTRAL.description": "Neutral cards appear in the card pools of all characters in the Newsanguo mod.",
+  "NEWSANGUO_KEYWORD_EMBER.title": "Ember",
+  "NEWSANGUO_KEYWORD_EMBER.description": "When this card is exhausted, trigger its effect.",
+  "NEWSANGUO_KEYWORD_TERRITORY.title": "Territory",
+  "NEWSANGUO_KEYWORD_TERRITORY.description": "This card has [gold]Retain[/gold] and [gold]cannot be played[/gold]. Its Territory effect is active while in your [gold]Hand[/gold].\n[gold]Right-click[/gold] this card in your Hand to [gold]Exhaust[/gold] it."
 }

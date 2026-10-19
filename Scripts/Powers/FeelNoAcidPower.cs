@@ -29,33 +29,19 @@ public class FeelNoAcidPower : ModPowerTemplate
         BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png"
     );
 
-    // 记录酒力变化前的层数
-    private int _drunkenMightAmountBeforeChange;
-
-    // 在酒力层数变化前记录旧值
-    public override Task BeforePowerAmountChanged(PowerModel power, decimal amount, Creature target, Creature? applier, CardModel? cardSource)
-    {
-        if (Owner is null) return Task.CompletedTask;
-        if (power is DrunkenMightPower && target == Owner)
-        {
-            _drunkenMightAmountBeforeChange = power.Amount;
-        }
-        return Task.CompletedTask;
-    }
-
     // 在酒力层数变化后：每当你失去酒力时，获得与自身层数等量的酒力
     public override async Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
     {
         if (Owner is null) return;
         if (power is not DrunkenMightPower || power.Owner != Owner) return;
 
-        int lost = _drunkenMightAmountBeforeChange - power.Amount;
-        if (lost <= 0) return;
+        // 只响应本次失去酒力，补偿产生的正增量及其他嵌套事件不会再次触发。
+        if (amount >= 0m) return;
 
         // 触发音效：失去酒力时（咱家不怕酸生效）
         NewsanguoSfx.Play("event:/newsanguo/sfx/feel_no_acid_power");
 
-        // 获得 Amount 点酒力（gain 不会再触发本钩子，避免死循环）
+        // 获得 Amount 点酒力；正增量会派发钩子，但不会再次通过上面的负增量判断。
         await PowerCmd.Apply<DrunkenMightPower>(choiceContext, Owner, base.Amount, Owner, null, silent: true);
     }
 }

@@ -4,5 +4,9 @@
   "NEWSANGUO_KEYWORD_TIGER_DRAGON.description": "打出龙虎牌时，触发所有敌人的帝王之征。",
   "NEWSANGUO_KEYWORD_TIGER_DRAGON.title": "龙虎牌",
   "NEWSANGUO_KEYWORD_NEUTRAL.title": "中立",
-  "NEWSANGUO_KEYWORD_NEUTRAL.description": "中立的卡牌会在新三国mod中的所有角色的卡池中出现。"
+  "NEWSANGUO_KEYWORD_NEUTRAL.description": "中立的卡牌会在新三国mod中的所有角色的卡池中出现。",
+  "NEWSANGUO_KEYWORD_EMBER.title": "余烬",
+  "NEWSANGUO_KEYWORD_EMBER.description": "这张牌被消耗时，触发效果。",
+  "NEWSANGUO_KEYWORD_TERRITORY.title": "地域牌",
+  "NEWSANGUO_KEYWORD_TERRITORY.description": "这张牌自带[gold]保留[/gold]且[gold]无法被打出[/gold]，地域效果在[gold]手牌[/gold]中即生效。\n[gold]右键点击[/gold]手牌中的这张牌会将其[gold]消耗[/gold]。"
 }

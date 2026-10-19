@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
@@ -19,6 +20,21 @@ namespace newsanguo.Scripts.Powers;
 [RegisterPower]
 public class TigerWindCloudDragonPower : ModPowerTemplate
 {
+    private sealed class Data
+    {
+        public readonly Dictionary<CardModel, int> AmountsForPlayedCards = new();
+    }
+    protected override object InitInternalData() => new Data();
+
+    // 只使用出牌开始前已有的层数，刚获得或叠加的能力不追溯触发这次出牌。
+    public override Task BeforeCardPlayed(CardPlay cardPlay)
+    {
+        if (Owner.IsAlive && cardPlay.Card is NewsanguoCardTemplate { IsTigerDragonCard: true } card &&
+            card.Owner.Creature == Owner)
+            GetInternalData<Data>().AmountsForPlayedCards[card] = Amount;
+        return Task.CompletedTask;
+    }
+
     // 能力类型：正面 Buff
     public override PowerType Type => PowerType.Buff;
     // 叠加方式：计数器，Amount 表示每次触发抽的牌数（每打出一次“风从虎，云从龙”叠加）
@@ -50,7 +66,8 @@ public class TigerWindCloudDragonPower : ModPowerTemplate
             return;
         }
 
-        // 抽 Amount 张牌
-        await CardPileCmd.Draw(choiceContext, base.Amount, Owner.Player);
+        if (!GetInternalData<Data>().AmountsForPlayedCards.Remove(card, out int amount) || amount <= 0)
+            return;
+        await CardPileCmd.Draw(choiceContext, amount, player);
     }
 }

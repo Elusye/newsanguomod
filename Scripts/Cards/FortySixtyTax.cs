@@ -32,12 +32,11 @@ public class FortySixtyTax : NewsanguoCardTemplate
     );
 
     // 卡牌自带“消耗”关键词
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
-    // 卡牌基础数值：对目标造成 18 点伤害；获得目标当前血量 40% 的金币
+    // 卡牌基础数值：获得目标当前血量 40% 的金币
     // TaxGold 只用于卡面预览（瞄准敌人时显示“将获得多少金币”），实际结算走 ComputeGold
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(18m, ValueProp.Move),
         new IntVar("TaxPercent", 40),
         new TaxGoldVar()
     ];
@@ -58,7 +57,7 @@ public class FortySixtyTax : NewsanguoCardTemplate
         HoverTipFactory.FromKeyword(CardKeyword.Exhaust)
     ];
 
-    public FortySixtyTax() : base(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+    public FortySixtyTax() : base(1, CardType.Skill, CardRarity.Rare, TargetType.AnyEnemy)
     {
     }
 
@@ -72,16 +71,9 @@ public class FortySixtyTax : NewsanguoCardTemplate
 
         NewsanguoSfx.Play("event:/newsanguo/sfx/forty_sixty_tax");
 
-        // 按伤害前血量计算：获得目标当前血量 TaxPercent% 的金币，除以游戏人数（向下取整）
+        // 按当前血量计算：获得目标当前血量 TaxPercent% 的金币，除以游戏人数（向下取整）
         int playerCount = combatState.Players.Count;
         int gold = ComputeGold(target, DynamicVars["TaxPercent"].IntValue, playerCount);
-
-        // 对目标造成 18 点伤害
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this, cardPlay)
-            .Targeting(target)
-            .WithHitFx("vfx/vfx_coin_explosion_regular", null, "blunt_attack.mp3")
-            .Execute(choiceContext);
 
         if (gold > 0)
         {
@@ -92,7 +84,6 @@ public class FortySixtyTax : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 伤害从 18 提高到 23
-        DynamicVars.Damage.UpgradeValueBy(5m);
+        AddKeyword(CardKeyword.Innate);
     }
 }

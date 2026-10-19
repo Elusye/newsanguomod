@@ -12,11 +12,13 @@ using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
-using MegaCrit.Sts2.Core.ValueProps;
+using MegaCrit.Sts2.Core.HoverTips;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Combat;
+using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
@@ -30,29 +32,37 @@ public class AlwaysMine : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌自带“奇巧”与“消耗”关键词（被弃置时改为免费打出，打出后因“消耗”进入消耗堆）
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Sly, CardKeyword.Exhaust];
-
-    // 卡牌基础数值：这张牌被消耗时从弃牌堆拿回手牌的张数（基础 2，升级后 3）
-    protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new CardsVar(2)
+    public override bool IsEmberCard => true;
+    public override bool IsHeavensCard => true;
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Sly, .. base.CanonicalKeywords];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(1), new HeavensForceVar(2m)];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
+        HeavensForce.HoverTip(), HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
+    private bool _resolvingEmber;
 
-    public AlwaysMine() : base(2, CardType.Skill, CardRarity.Common, TargetType.Self)
-    {
-    }
+    public AlwaysMine() : base(1, CardType.Skill, CardRarity.Common, TargetType.Self) { }
 
-    // 被消耗时的效果逻辑（打出后因“消耗”进入消耗堆即触发；被弃置时经“奇巧”免费打出同样触发）
     public override async Task AfterCardExhausted(PlayerChoiceContext choiceContext, CardModel card, bool causedByEthereal)
     {
-        // 该钩子会广播给场上所有牌（含各牌堆），因此必须先确认被消耗的是自己
-        if (card != this || Owner is null)
-        {
+        if (card != this || _resolvingEmber)
             return;
+        _resolvingEmber = true;
+        try
+        {
+            // 打出本体，结算后按正常规则进入弃牌堆；不生成复制品。
+            await CardCmd.AutoPlay(choiceContext, this, null);
         }
+        finally
+        {
+            _resolvingEmber = false;
+        }
+    }
 
-        // 播放音效
+    protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
+    {
         NewsanguoSfx.Play("event:/newsanguo/sfx/always_mine");
+        await HeavensForce.Gain(choiceContext, Owner, DynamicVars["HeavensForcePower"].IntValue, this);
 
         // 从弃牌堆中选择至多 N 张牌放入手牌
         CardPile discard = PileType.Discard.GetPile(Owner);
@@ -88,7 +98,7 @@ public class AlwaysMine : NewsanguoCardTemplate
         await CardPileCmd.Add(selectedList, PileType.Hand);
     }
 
-    // 升级：从弃牌堆拿回的张数 2 → 3
+    // 升级：从弃牌堆拿回的张数 1 → 2
     protected override void OnUpgrade()
     {
         DynamicVars.Cards.UpgradeValueBy(1m);

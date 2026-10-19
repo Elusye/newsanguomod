@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -66,10 +67,18 @@ public class WorthAllTheirLivesPower : ModPowerTemplate
         {
             return;
         }
-        foreach (Creature soldier in GetInternalData<Data>().soldiers.Where(s => s.IsAlive).ToList())
-        {
-            await CreatureCmd.Kill(soldier);
-        }
         await PowerCmd.Remove(this);
     }
+
+    public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
+        IEnumerable<Creature> participants)
+    {
+        if (side != CombatSide.Enemy)
+            return;
+        Data data = GetInternalData<Data>();
+        foreach (Creature soldier in data.soldiers.Where(c => c.IsAlive && c.CombatState is not null).ToList())
+            await CaoArtOfWarPower.DespawnSoldier(soldier);
+        data.soldiers.Clear();
+    }
+
 }

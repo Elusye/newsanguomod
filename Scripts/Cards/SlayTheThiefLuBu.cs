@@ -21,7 +21,7 @@ public class SlayTheThiefLuBu : NewsanguoCardTemplate
 
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(7m, ValueProp.Move)];
 
-    public SlayTheThiefLuBu() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy) { }
+    public SlayTheThiefLuBu() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy) { }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

@@ -28,7 +28,8 @@ public class PlatedArmorPower : ModPowerTemplate
         BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png");
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.Static(StaticHoverTip.Block)];
 
-    public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
+    // 与原版 Plating 一致：在回合末伤害等效果之前获得格挡。
+    public override async Task BeforeSideTurnEndEarly(PlayerChoiceContext choiceContext, CombatSide side,
         IEnumerable<Creature> participants)
     {
         if (side != Owner.Side || !Owner.IsAlive || Amount <= 0 || !participants.Contains(Owner))

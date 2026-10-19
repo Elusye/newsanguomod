@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Cards;
+using newsanguo.Scripts.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Extensions;
 using MegaCrit.Sts2.Core.Models;
@@ -16,6 +18,11 @@ namespace newsanguo.Scripts.Helpers;
 /// </summary>
 public static class EnchantHelper
 {
+    // 稍作修改、将领延寿术共用的选牌及执行限制。
+    internal static bool CanReceiveCardGrantedEnchantment(CardModel card) =>
+        card.Enchantment is null && card.Type is not CardType.Curse and not CardType.Status &&
+        card is not TerritoryCardTemplate;
+
     // 不参与随机附魔的附魔（原版机制性附魔，对玩家无实际收益）
     private static readonly HashSet<string> ExcludedEntries = new()
     {

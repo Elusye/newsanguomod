@@ -7,6 +7,8 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -19,47 +21,58 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class TimeAcidRain : NewsanguoCardTemplate
 {
+    public override bool LosesHeavensForce => true;
+
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");
     public override bool IsHeavensCard => true;
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new HeavensForceVar(5m), new DamageVar(10m, ValueProp.Move),
-        new DynamicVar("IronCavalry", 2m)
+        new HeavensForceVar(5m), new DamageVar(10m, ValueProp.Move)
     ];
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HeavensForce.HoverTip(),
         HoverTipFactory.FromPower<HeavensDecayPower>(),
-        HoverTipFactory.Static(StaticHoverTip.Block),
-        HoverTipFactory.FromPower<ArtifactPower>()
+        HoverTipFactory.Static(StaticHoverTip.Block)
     ];
 
-    public TimeAcidRain() : base(2, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies) { }
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
+
+    public TimeAcidRain() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies) { }
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(3);
         DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
-        DynamicVars["IronCavalry"].UpgradeValueBy(1);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/time_acid_rain");
         await HeavensForce.Add(choiceContext, Owner, -DynamicVars["HeavensForcePower"].IntValue, this);
-        // 先破防与施加铁骑，使本次攻击也不受敌方正面能力保护。
+        // 先移除格挡和符合原界铁骑范围的正面状态，再结算攻击。
         foreach (var enemy in CombatState!.GetOpponentsOf(Owner.Creature).Where(c => c.IsAlive).ToList())
         {
             await CreatureCmd.LoseBlock(choiceContext, enemy, enemy.Block, Owner.Creature);
-            // 先移除人工制品，避免其消耗层数抵消铁骑减益。
-            if (enemy.GetPower<ArtifactPower>() is { } artifact)
+            foreach (PowerModel power in enemy.Powers.Where(CanRemovePositivePower).ToList())
             {
-                await PowerCmd.Remove(artifact);
+                await PowerCmd.Remove(power);
             }
-            await PowerCmd.Apply<IronCavalryPower>(choiceContext, enemy,
-                DynamicVars["IronCavalry"].IntValue, Owner.Creature, this);
         }
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .TargetingAllOpponents(CombatState!)
             .Execute(choiceContext);
     }
+
+    // 沿用原界铁骑范围：仅原版及本 mod 的正面状态，保留以下九项。
+    internal static bool CanRemovePositivePower(PowerModel power)
+    {
+        var assembly = power.GetType().Assembly;
+        return power.TypeForCurrentAmount == PowerType.Buff &&
+            (assembly == typeof(PowerModel).Assembly || assembly == typeof(TimeAcidRain).Assembly) &&
+            power is not SandpitPower && power is not MinionPower &&
+            power is not PossessStrengthPower && power is not PossessSpeedPower &&
+            power is not SurprisePower && power is not ThieveryPower &&
+            power is not HeistPower && power is not SwipePower && power is not FlutterPower;
+    }
+
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
@@ -15,8 +16,8 @@ using newsanguo.Scripts.Powers;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
-public class FeelNoAcid : NewsanguoCardTemplate
+[RegisterCard(typeof(NeutralCardPool))]
+public class FeelNoAcid : NeutralCardTemplate
 {
 
     // 卡图资源
@@ -29,7 +30,11 @@ public class FeelNoAcid : NewsanguoCardTemplate
         new PowerVar<FeelNoAcidPower>(2m)
     ];
 
-    public FeelNoAcid() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self)
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMightPower>()];
+
+    public FeelNoAcid() : this(true) { }
+
+    protected FeelNoAcid(bool showInCardLibrary) : base(1, CardType.Power, CardRarity.Rare, TargetType.Self, showInCardLibrary)
     {
     }
 

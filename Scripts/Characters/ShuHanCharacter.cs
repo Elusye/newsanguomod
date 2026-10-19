@@ -19,8 +19,8 @@ namespace newsanguo.Scripts.Characters;
 [RegisterCharacter]
 public class ShuHanCharacter : ModCharacterTemplate<
     ShuHanCardPool,
-    NewsanguoRelicPool,
-    NewsanguoPotionPool>
+    ShuHanRelicPool,
+    ShuHanPotionPool>
 {
     // 使用 Ironclad 作为原版占位（动画、音效、场景等）
     public override string PlaceholderCharacterId => ModContentRegistry.VanillaCharacterIds.Ironclad;
@@ -36,22 +36,9 @@ public class ShuHanCharacter : ModCharacterTemplate<
     // RitsuLib 便不再为本角色保留这些原版进度路径；若日后要做解锁时间线，改成 true 并补齐上述 epoch 与规则。
     public override bool RequiresEpochAndTimeline => false;
 
-    // —— “测试模式”门禁（设置页：设置 → Mod 设置 → 新三国设置 → 测试模式）——
-    // 未开启测试模式时，蜀汉从原版角色选择界面隐藏，也不会被“随机角色”选中。
-    // RitsuLib 用 IModCharacterVanillaSelectionPolicy 实现这件事：它在 InitCharacterButtons /
-    // NCharacterSelectButton.Init / UpdateRandomCharacterVisibility / StartRunLobby.BeginRunLocally
-    // 这几个方法外挂作用域补丁，并在 ModelDb.AllCharacters 的 getter 上按作用域过滤
-    // （CharacterVanillaSelectionPolicyScope.Apply）。注意与“解锁态”无关：走 UnlockState 那条路会让
-    // 角色以“锁定”样子留在选人界面，而且 UpdateRandomCharacterVisibility 要求全员解锁才显示
-    // “随机角色”按钮，会连带把随机按钮永久藏掉，所以用这套策略属性而不是 epoch 解锁。
-    // 这两个属性在每次构建选人界面时读取（非模型注册期烘焙）⇒ 改开关后重进选人界面即可生效，不必重启。
-    // 卡牌总览（图鉴）的蜀汉卡池筛选项保持可见：测试模式关掉时仍允许查阅卡牌，故不覆写
-    // HideInCardLibraryCompendium。
-    public override bool HideFromVanillaCharacterSelect => !NewsanguoTestModeSettings.TestModeEnabled;
-
-    // 联机随机开局各客户端必须使用相同候选；本地测试模式仅控制手动选择。
-    public override bool AllowInVanillaRandomCharacterSelect =>
-        NewsanguoTestModeSettings.TestModeEnabled && !ShuHanMultiplayerRandomSelectionPatch.ExcludeShuHan;
+    // 蜀汉正式开放：单人、联机手动选择和随机选择均可使用。
+    public override bool HideFromVanillaCharacterSelect => false;
+    public override bool AllowInVanillaRandomCharacterSelect => true;
 
     public override CharacterAssetProfile AssetProfile => new(
         Ui: new CharacterUiAssetSet(

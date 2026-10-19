@@ -20,7 +20,7 @@ namespace newsanguo.Scripts.Monsters;
 ///    承伤优先级：青州兵（多只之间按召唤顺序依次穿透）→ 玩家格挡 → 奥斯提 → 玩家，
 ///    见 Scripts/Patches/CaoArtOfWarSoldierDamageCascadePatch.cs；
 ///  · 阵亡即离场（见 Scripts/Patches/CaoArtOfWarSoldierRemovalPatch.cs），不留尸体等复活；
-///  · 回合开始时被「曹氏兵法」清场。
+///  · 敌方回合结束时直接离场，不播放死亡动画。
 ///
 /// 形象：复用原版奥斯提的 Spine 场景（见 <see cref="AssetProfile"/> 与 <see cref="GenerateAnimator"/>）。
 /// 2026-10-09 曾按用户需求 m00823 短暂换成青州兵自己的贴图，同日用户决定换回奥斯提，并把显示名改叫

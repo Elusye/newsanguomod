@@ -17,8 +17,8 @@ using newsanguo.Scripts.Characters;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
-public class DarkHornShark : NewsanguoCardTemplate
+[RegisterCard(typeof(NeutralCardPool))]
+public class DarkHornShark : NeutralCardTemplate
 {
 
     // 卡图资源
@@ -32,9 +32,11 @@ public class DarkHornShark : NewsanguoCardTemplate
     ];
 
     // 卡牌自带“消耗”关键词
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
-    public DarkHornShark() : base(0, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public DarkHornShark() : this(true) { }
+
+    protected DarkHornShark(bool showInCardLibrary) : base(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy, showInCardLibrary)
     {
     }
 

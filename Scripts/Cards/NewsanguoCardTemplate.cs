@@ -27,6 +27,9 @@ public abstract class NewsanguoCardTemplate : ModCardTemplate
 
     public virtual bool IsTigerDragonCard => false;
 
+    // 余烬效果由各牌的消耗钩子实现；这里只附加关键词与悬浮说明。
+    public virtual bool IsEmberCard => false;
+
     // 自身效果结算后统一触发；先快照敌人，避免死亡改变枚举集合。
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -95,6 +98,9 @@ public abstract class NewsanguoCardTemplate : ModCardTemplate
     /// </summary>
     public virtual bool IsHeavensCard => false;
 
+    /// <summary>此牌的效果会失去天意之力，供魔法禁术目录筛选候选牌。</summary>
+    public virtual bool LosesHeavensForce => false;
+
     /// <summary>
     /// 本回合打出时是否不消耗天意之力。由“魔法禁术目录”遗物在回合开始时标记，
     /// 仅对该回合加入手牌的那张禁术牌生效，回合结束后自动失效。
@@ -134,6 +140,12 @@ public abstract class NewsanguoCardTemplate : ModCardTemplate
                 ModKeywordRegistry.TryGet(ScryKeywordId, out ModKeywordDefinition scryDefinition))
             {
                 yield return scryDefinition.CardKeywordValue;
+            }
+
+            if (IsEmberCard &&
+                ModKeywordRegistry.TryGet("NEWSANGUO_KEYWORD_EMBER", out ModKeywordDefinition emberDefinition))
+            {
+                yield return emberDefinition.CardKeywordValue;
             }
 
             // 2026-10-04：“禁术牌”关键词已按要求整体删除

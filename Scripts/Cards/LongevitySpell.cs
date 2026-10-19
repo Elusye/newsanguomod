@@ -14,6 +14,7 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Helpers;
 using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
@@ -23,6 +24,8 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class LongevitySpell : NewsanguoCardTemplate
 {
+    public override bool LosesHeavensForce => true;
+
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
@@ -73,7 +76,7 @@ public class LongevitySpell : NewsanguoCardTemplate
 
         // 选择任意张手牌中无附魔、自带“消耗”关键词的牌，附加“灵魂”附魔（移除其消耗）
         List<CardModel> selectableCards = PileType.Hand.GetPile(base.Owner).Cards
-            .Where(card => card.Enchantment is null && card.Keywords.Contains(CardKeyword.Exhaust))
+            .Where(card => EnchantHelper.CanReceiveCardGrantedEnchantment(card) && card.Keywords.Contains(CardKeyword.Exhaust))
             .ToList();
         if (selectableCards.Count == 0)
         {
@@ -88,7 +91,8 @@ public class LongevitySpell : NewsanguoCardTemplate
             source: this)).ToList();
         foreach (CardModel card in selected)
         {
-            CardCmd.Enchant<SoulsPower>(card, 1m);
+            if (EnchantHelper.CanReceiveCardGrantedEnchantment(card) && card.Keywords.Contains(CardKeyword.Exhaust))
+                CardCmd.Enchant<SoulsPower>(card, 1m);
         }
     }
 

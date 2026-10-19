@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Helpers;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
@@ -48,6 +49,8 @@ public class BetterThanYilingFlames : NewsanguoCardTemplate
         new DamageVar(CurrentDamage, ValueProp.Move),
         new DynamicVar("Increase", 1m)
     ];
+
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromKeyword(CardKeyword.Exhaust)];
 
     public BetterThanYilingFlames() : base(0, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {

@@ -20,6 +20,8 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class PeekIntoHeaven : NewsanguoCardTemplate
 {
+    public override bool LosesHeavensForce => true;
+
 
     // 带“预见”关键词（悬停显示预见机制说明）
     protected override bool IsScryCard => true;

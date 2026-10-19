@@ -19,8 +19,8 @@ using newsanguo.Scripts.Powers;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
-public class SmilingTiger : NewsanguoCardTemplate
+[RegisterCard(typeof(NeutralCardPool))]
+public class SmilingTiger : NeutralCardTemplate
 {
     public override bool IsTigerDragonCard => true;
 
@@ -46,7 +46,9 @@ public class SmilingTiger : NewsanguoCardTemplate
         HoverTipFactory.FromPower<DragonOmenPower>()
     ];
 
-    public SmilingTiger() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+    public SmilingTiger() : this(true) { }
+
+    protected SmilingTiger(bool showInCardLibrary) : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self, showInCardLibrary)
     {
     }
 
