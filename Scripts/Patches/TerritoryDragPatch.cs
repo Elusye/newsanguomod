@@ -25,7 +25,8 @@ public static class TerritoryDragPatch
             .Count(h => h.CardNode?.Model != card && h.GlobalPosition.X < mouse.X);
         // 先取消原版出牌拖拽，让本体回到手牌容器，再提交同步换位操作。
         __instance.CancelPlayCard();
-        TerritoryHandOrder.Request(card, index);
+        if (TerritoryHandOrder.CanReposition(card))
+            TerritoryHandOrder.Request(card, index);
         __instance.GetViewport().SetInputAsHandled();
         return false;
     }

@@ -1,3 +1,4 @@
+using newsanguo.Scripts.Cards;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -40,6 +41,9 @@ public static class ScryCmd
         {
             return;
         }
+
+        // 地域牌不可丢弃；只排除原检视范围内的地域牌，不额外向下检视。
+        topCards = topCards.Where(card => !TerritoryCardTemplate.HasTerritoryKeyword(card)).ToList();
 
         // 最少选 0 张（可全不丢弃），最多选展示出的全部牌
         CardSelectorPrefs prefs = new(new LocString("cards", "NEWSANGUO_SCRY_PROMPT"), 0, topCards.Count);

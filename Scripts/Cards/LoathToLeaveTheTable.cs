@@ -120,7 +120,8 @@ public class LoathToLeaveTheTable : NewsanguoCardTemplate
             // 所有玩家丢弃所有手牌
             foreach (Creature player in combatState.GetTeammatesOf(base.Owner.Creature).Where(c => c.IsPlayer && c.IsAlive))
             {
-                await CardCmd.Discard(choiceContext, PileType.Hand.GetPile(player.Player).Cards);
+                await CardCmd.Discard(choiceContext, PileType.Hand.GetPile(player.Player).Cards
+                    .Where(card => !TerritoryCardTemplate.HasTerritoryKeyword(card)).ToList());
             }
         }
         else

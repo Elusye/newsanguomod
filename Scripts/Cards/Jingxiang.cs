@@ -17,17 +17,13 @@ public class Jingxiang : NewsanguoCardTemplate
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: "res://newsanguo/images/cards/Jingxiang.png");
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromCard<HeavenAndEarth>(IsUpgraded), ModKeywordRegistry.CreateHoverTip("NEWSANGUO_KEYWORD_TERRITORY"), HoverTipFactory.FromPower<FlightPower>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromCard<HeavenAndEarth>(), ModKeywordRegistry.CreateHoverTip("NEWSANGUO_KEYWORD_TERRITORY"), HoverTipFactory.FromPower<FlightPower>()];
     public Jingxiang() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self) { }
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay play)
     {
+        NewsanguoSfx.Play("event:/newsanguo/sfx/jingxiang");
         await PowerCmd.Apply<FlightPower>(context, Owner.Creature, 1m, Owner.Creature, this);
         var territory = CombatState!.CreateCard<HeavenAndEarth>(Owner);
-        if (IsUpgraded)
-        {
-            territory.UpgradeInternal();
-            territory.FinalizeUpgradeInternal();
-        }
         await CardPileCmd.AddGeneratedCardToCombat(territory, PileType.Hand, Owner);
     }
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);

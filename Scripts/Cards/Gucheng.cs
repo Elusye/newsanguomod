@@ -15,19 +15,15 @@ public class Gucheng : NewsanguoCardTemplate
 {
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: "res://newsanguo/images/cards/Gucheng.png");
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromCard<InvincibleWithinThreeHundredLi>(IsUpgraded), ModKeywordRegistry.CreateHoverTip("NEWSANGUO_KEYWORD_TERRITORY")];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Ethereal, CardKeyword.Exhaust, .. base.CanonicalKeywords];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromCard<InvincibleWithinThreeHundredLi>(), ModKeywordRegistry.CreateHoverTip("NEWSANGUO_KEYWORD_TERRITORY")];
     public Gucheng() : base(3, CardType.Skill, CardRarity.Rare, TargetType.Self) { }
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay play)
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/gucheng");
         var territory = CombatState!.CreateCard<InvincibleWithinThreeHundredLi>(Owner);
-        if (IsUpgraded)
-        {
-            territory.UpgradeInternal();
-            territory.FinalizeUpgradeInternal();
-        }
         await CardPileCmd.AddGeneratedCardToCombat(territory, PileType.Hand, Owner);
     }
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
+    protected override void OnUpgrade() => RemoveKeyword(CardKeyword.Ethereal);
+    protected override void AfterDowngraded() => AddKeyword(CardKeyword.Ethereal);
 }

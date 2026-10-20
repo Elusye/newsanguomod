@@ -68,7 +68,7 @@ public class ShuHanCharacter : ModCharacterTemplate<
             CastSfx: null,
             // 角色死亡音效：PNG 视觉下由 PlayerDeathSfxPatch 在 StartDeathAnim 后缀补播，
             // 直接走 NewsanguoSfx；此处事件路径供引擎级入口匹配。
-            DeathSfx: "event:/newsanguo/sfx/character_death"
+            DeathSfx: "event:/newsanguo/sfx/character_death_shuhan"
         ),
         // 多人宝箱石头剪刀布手势图（当前为占位图，可后续替换）：
         // 原版默认按角色 id 查找 res://images/ui/hands/multiplayer_hand_{id}_{gesture}.png，

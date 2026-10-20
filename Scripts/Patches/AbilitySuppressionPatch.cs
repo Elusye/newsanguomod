@@ -26,7 +26,7 @@ public static class AbilitySuppressionPatch
         foreach (var model in models)
         {
             if (model is PowerModel power &&
-                ((hanzhongOwners.Contains(power.Owner) && AbilitySuppression.IsModPower(power)) ||
+                ((hanzhongOwners.Contains(power.Owner) && AbilitySuppression.CanSuppressWithHanzhong(power)) ||
                 (ironOwners.Contains(power.Owner) && IronCavalryPower.CanSuppressPositivePower(power))))
                 continue;
             yield return model;

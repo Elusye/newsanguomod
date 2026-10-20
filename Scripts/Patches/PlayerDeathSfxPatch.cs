@@ -32,7 +32,7 @@ public static class PlayerDeathSfxPatch
             return;
         }
         // 只处理新三国角色本身
-        if (player.Character is not CaoWeiCharacter)
+        if (player.Character is not CaoWeiCharacter and not ShuHanCharacter)
         {
             return;
         }
@@ -41,6 +41,8 @@ public static class PlayerDeathSfxPatch
         {
             return;
         }
-        NewsanguoSfx.Play("event:/newsanguo/sfx/character_death");
+        NewsanguoSfx.Play(player.Character is ShuHanCharacter
+            ? "event:/newsanguo/sfx/character_death_shuhan"
+            : "event:/newsanguo/sfx/character_death");
     }
 }

@@ -8,5 +8,5 @@
   "NEWSANGUO_KEYWORD_EMBER.title": "余烬",
   "NEWSANGUO_KEYWORD_EMBER.description": "这张牌被消耗时，触发效果。",
   "NEWSANGUO_KEYWORD_TERRITORY.title": "地域牌",
-  "NEWSANGUO_KEYWORD_TERRITORY.description": "这张牌自带[gold]保留[/gold]且[gold]无法被打出[/gold]，地域效果在[gold]手牌[/gold]中即生效。\n[gold]右键点击[/gold]手牌中的这张牌会将其[gold]消耗[/gold]。"
+  "NEWSANGUO_KEYWORD_TERRITORY.description": "这张牌自带[gold]保留[/gold]、[gold]无法被丢弃[/gold]且[gold]无法被打出[/gold]，地域效果在[gold]手牌[/gold]中即生效。\n[gold]右键点击[/gold]手牌中的这张牌会将其[gold]消耗[/gold]。"
 }

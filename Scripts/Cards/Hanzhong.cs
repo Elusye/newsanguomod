@@ -16,17 +16,12 @@ public class Hanzhong : NewsanguoCardTemplate
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: "res://newsanguo/images/cards/Hanzhong.png");
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromCard<AntiMagicField>(IsUpgraded), ModKeywordRegistry.CreateHoverTip("NEWSANGUO_KEYWORD_TERRITORY")];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromCard<AntiMagicField>(), ModKeywordRegistry.CreateHoverTip("NEWSANGUO_KEYWORD_TERRITORY")];
     public Hanzhong() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self) { }
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay play)
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/hanzhong");
         var territory = CombatState!.CreateCard<AntiMagicField>(Owner);
-        if (IsUpgraded)
-        {
-            territory.UpgradeInternal();
-            territory.FinalizeUpgradeInternal();
-        }
         await CardPileCmd.AddGeneratedCardToCombat(territory, PileType.Hand, Owner);
     }
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);

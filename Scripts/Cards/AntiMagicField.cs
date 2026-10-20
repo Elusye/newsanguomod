@@ -36,7 +36,7 @@ public class AntiMagicField : TerritoryCardTemplate
         if (IsMutable && CombatManager.Instance.IsInProgress && Pile?.IsCombatPile == true)
         {
             var names = Pile.Type == PileType.Hand
-                ? Owner.Creature.Powers.Where(AbilitySuppression.IsModPower)
+                ? Owner.Creature.Powers.Where(AbilitySuppression.CanSuppressWithHanzhong)
                     .Select(power => power.Title.GetFormattedText()).Distinct().ToArray()
                 : System.Array.Empty<string>();
             string separator = new LocString("powers", "NEWSANGUO_POWER_IRON_CAVALRY_POWER.listSeparator").GetFormattedText();

@@ -27,9 +27,7 @@ public class Entry
     {
         // 逐个应用 Harmony 补丁：单个补丁失败不影响其它补丁与 mod 主体，并在日志中记录失败原因
         var harmony = new Harmony("newsanguo");
-        AllegianceChange.Register();
         TerritoryHandOrder.Register();
-        ApplyPatch(harmony, typeof(AllegianceChangeVictoryPatch));
         ApplyPatch(harmony, typeof(NewsanguoEnergyCounterPatch));
         ApplyPatch(harmony, typeof(FireWaterHarmonyWeakPatch));
         ApplyPatch(harmony, typeof(FireWaterHarmonyVulnerablePatch));
@@ -48,6 +46,7 @@ public class Entry
         // 注意：补丁是**白名单**——新建的补丁类必须在这里显式加一行，否则只会被编译进 DLL 而永不生效
         // （此前 PragmatistRewardPatch 就是这样“看起来没生效”的）。
         ApplyPatch(harmony, typeof(PragmatistRewardPatch));
+        ApplyPatch(harmony, typeof(KaleidoscopeRewardPatch));
         // 天意给的额外回合不要再“吃掉”原版遗物「佩尔之眼」（PaelsEye）
         ApplyPatch(harmony, typeof(HeavensForcePaelsEyePatch));
         // 「创造模式」的选牌屏要像图鉴一样能搜索 / 筛选：复用图鉴的侧栏控件，只在那一屏生效
@@ -68,6 +67,9 @@ public class Entry
         ApplyPatch(harmony, typeof(TerritoryReplaySoundPatch));
         ApplyPatch(harmony, typeof(TerritoryDragPatch));
         ApplyPatch(harmony, typeof(TerritoryRetainPatch));
+        ApplyPatch(harmony, typeof(TerritoryDiscardPatch));
+        ApplyPatch(harmony, typeof(TerritoryDiscardSelectionPatch));
+        ApplyPatch(harmony, typeof(TerritoryDiscardPromptPatch));
         ApplyPatch(harmony, typeof(TerritoryDescriptionPatch));
         ApplyPatch(harmony, typeof(TerritoryHandReplayRefreshPatch));
         ApplyPatch(harmony, typeof(AbilitySuppressionPatch));

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
@@ -18,7 +19,6 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NeutralCardPool))]
 public class SoImpressive : NeutralCardTemplate
 {
-    private int _fallbackIndex = -1;
     private CardModel? _copiedTarget;
     private CardModel? _recordedCard;
     private string? _playedTitle;
@@ -28,17 +28,10 @@ public class SoImpressive : NeutralCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");
     public SoImpressive() : base(0, CardType.Skill, CardRarity.Rare, TargetType.Self) { }
 
-    private CardModel FallbackTemplate => _fallbackIndex switch
-    {
-        1 => ModelDb.Card<Ivory>(),
-        2 => ModelDb.Card<Card1225>(),
-        _ => ModelDb.Card<OttoMother>()
-    };
-    private CardModel DisplaySource => IsDupe && _copiedTarget is not null
-        ? _copiedTarget : _recordedCard ?? FallbackTemplate;
+    private CardModel? DisplaySource => IsDupe && _copiedTarget is not null
+        ? _copiedTarget : _recordedCard ?? ModelDb.Card<Blank>();
 
-    private static string SourceName(CardModel source) => source is SoImpressive impressive
-        ? impressive._playedTitle ?? impressive.TitleLocString.GetFormattedText() : source.Title;
+    private static string SourceName(CardModel? source) => source?.Title ?? string.Empty;
     private string DynamicTitle(string name)
     {
         LocString title = new("cards", "NEWSANGUO_CARD_SO_IMPRESSIVE.combatTitle");
@@ -61,7 +54,8 @@ public class SoImpressive : NeutralCardTemplate
         {
             if (_historyPreview || !IsMutable || !IsInCombat || CombatState is null)
                 return System.Array.Empty<IHoverTip>();
-            CardModel source = DisplaySource;
+            CardModel? source = DisplaySource;
+            if (source is null) return System.Array.Empty<IHoverTip>();
             // 预览克隆不注册进战斗状态；同类牌的预览冻结名称且不继续递归生成提示。
             if (source is SoImpressive)
             {
@@ -72,37 +66,33 @@ public class SoImpressive : NeutralCardTemplate
             return [HoverTipFactory.FromCard(source)];
         }
     }
-    private void EnsureFallback()
+    private void InitializeRecord()
     {
-        if (_fallbackIndex < 0)
-            _fallbackIndex = Owner.RunState.Rng.CombatCardGeneration.NextInt(3);
-        if (_recordedCard is null && CombatState is { } combat)
-            _recordedCard = _fallbackIndex switch
-            {
-                1 => combat.CreateCard<Ivory>(Owner),
-                2 => combat.CreateCard<Card1225>(Owner),
-                _ => combat.CreateCard<OttoMother>(Owner)
-            };
+        if (_recordedCard is not null || !IsMutable || CombatState is null) return;
+        // 按实际开始出牌的顺序恢复记录，也包括正在结算并生成此牌的来源牌。
+        _recordedCard = CombatManager.Instance.History.CardPlaysStarted
+            .LastOrDefault(entry => entry.CardPlay.Player == Owner && entry.CardPlay.Card is not SoImpressive)
+            ?.CardPlay.Card ?? CombatState.CreateCard<Blank>(Owner);
+    }
+    public override Task AfterCardEnteredCombat(CardModel card)
+    {
+        if (card == this) { InitializeRecord(); RefreshHandTitle(); }
+        return Task.CompletedTask;
     }
     private void RefreshHandTitle()
     {
         if (Pile?.Type == PileType.Hand)
             NCard.FindOnTable(this)?.UpdateVisuals(PileType.Hand, CardPreviewMode.Normal);
     }
-    public override Task AfterCardEnteredCombat(CardModel card)
-    {
-        if (card == this) EnsureFallback();
-        return Task.CompletedTask;
-    }
     public override Task AfterCardChangedPiles(CardModel card, PileType oldPileType, AbstractModel? clonedBy)
     {
-        if (card == this) { EnsureFallback(); RefreshHandTitle(); }
+        if (card == this) { InitializeRecord(); RefreshHandTitle(); }
         return Task.CompletedTask;
     }
     public override Task BeforeCardPlayed(CardPlay cardPlay)
     {
         if (cardPlay.Player != Owner) return Task.CompletedTask;
-        EnsureFallback();
+        InitializeRecord();
         if (cardPlay.Card is not SoImpressive)
         {
             // 在出牌开始时覆盖，嵌套自动出牌也按实际出牌顺序记录。
@@ -113,7 +103,7 @@ public class SoImpressive : NeutralCardTemplate
         {
             // 冻结这次复制目标；自身及其他同名牌均不覆盖记录。
             _copiedTarget = _recordedCard;
-            _playedTitle = DynamicTitle(SourceName(_recordedCard ?? FallbackTemplate));
+            _playedTitle = DynamicTitle(SourceName(_recordedCard));
         }
         return Task.CompletedTask;
     }

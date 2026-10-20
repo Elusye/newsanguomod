@@ -88,9 +88,6 @@
   "NEWSANGUO_POWER_CAO_ART_OF_WAR_POWER.title": "Cao's Art of War",
   "NEWSANGUO_POWER_CAO_ART_OF_WAR_POWER.description": "Whenever you play a card, [gold]Recruit[/gold] {Amount} Qingzhou Soldiers.\nWhenever any creature dies, you gain {Amount} [gold]Strength[/gold].",
   "NEWSANGUO_POWER_CAO_ART_OF_WAR_POWER.smartDescription": "Whenever you play a card, [gold]Recruit[/gold] [blue]{Amount}[/blue] Qingzhou Soldiers.\nWhenever any creature dies, you gain [blue]{Amount}[/blue] [gold]Strength[/gold].",
-  "NEWSANGUO_POWER_OLD_DIAMOND_DIADEM_POWER.title": "Old Diamond Diadem",
-  "NEWSANGUO_POWER_OLD_DIAMOND_DIADEM_POWER.description": "The damage you take from enemies this turn is halved.",
-  "NEWSANGUO_POWER_OLD_DIAMOND_DIADEM_POWER.smartDescription": "The damage you take from enemies this turn is halved.",
   "NEWSANGUO_POWER_DRAW_REDUCTION_POWER.title": "Draw Reduction",
   "NEWSANGUO_POWER_DRAW_REDUCTION_POWER.description": "Draw [blue]{Amount}[/blue] fewer {Amount:plural:card|cards} next turn.",
   "NEWSANGUO_POWER_DRAW_REDUCTION_POWER.smartDescription": "Draw [blue]{Amount}[/blue] fewer {Amount:plural:card|cards} next turn.",
@@ -130,9 +127,6 @@
   "NEWSANGUO_POWER_METALLICIZE_POWER.title": "Metallicize",
   "NEWSANGUO_POWER_METALLICIZE_POWER.description": "Gain Block at the end of your turn.",
   "NEWSANGUO_POWER_METALLICIZE_POWER.smartDescription": "At the end of your turn, gain [blue]{Amount}[/blue] [gold]Block[/gold].",
-  "NEWSANGUO_POWER_SWITCH_ALLEGIANCE_POWER.title": "Switch Allegiance",
-  "NEWSANGUO_POWER_SWITCH_ALLEGIANCE_POWER.description": "At the end of combat, permanently change your character from Shu Han to Cao Wei.",
-  "NEWSANGUO_POWER_SWITCH_ALLEGIANCE_POWER.smartDescription": "At the end of combat, permanently change your character from Shu Han to Cao Wei.",
   "NEWSANGUO_POWER_AUTO_PILOT_POWER.title": "Auto Pilot",
   "NEWSANGUO_POWER_AUTO_PILOT_POWER.description": "Lose 1 stack whenever the takeover plays a card.",
   "NEWSANGUO_POWER_AUTO_PILOT_POWER.smartDescription": "[blue]{Amount}[/blue] stacks remaining. Lose [blue]1[/blue] stack whenever the takeover plays a card.",
@@ -155,5 +149,8 @@
   "NEWSANGUO_POWER_IRON_CAVALRY_POWER.description": "Positive effects on creatures with Enhanced Iron Cavalry are temporarily disabled.",
   "NEWSANGUO_POWER_IRON_CAVALRY_POWER.smartDescription": "Positive effects are disabled for [blue]{Amount}[/blue] turns.\nDisabled positive effects: {SuppressedPowers}.",
   "NEWSANGUO_POWER_IRON_CAVALRY_POWER.listSeparator": ", ",
-  "NEWSANGUO_POWER_IRON_CAVALRY_POWER.noSuppressedPowers": "None"
+  "NEWSANGUO_POWER_IRON_CAVALRY_POWER.noSuppressedPowers": "None",
+  "NEWSANGUO_POWER_RUFFIAN_POWER.title": "Ruffian!",
+  "NEWSANGUO_POWER_RUFFIAN_POWER.description": "All heroes under heaven tremble at my name!",
+  "NEWSANGUO_POWER_RUFFIAN_POWER.smartDescription": "All heroes under heaven tremble at my name!"
 }

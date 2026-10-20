@@ -29,6 +29,13 @@ public static class FatherIHaveFailedYouPowerPatch
     {
         foreach (Player player in runState.Players)
         {
+            if (player.Character is ShuHanCharacter)
+            {
+                _ = TaskHelper.RunSafely(PowerCmd.Apply<RuffianPower>(
+                    new ThrowingPlayerChoiceContext(), player.Creature, 1,
+                    player.Creature, cardSource: null, silent: true));
+                continue;
+            }
             if (player.Character is not CaoWeiCharacter)
             {
                 continue;

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Godot;
 using MegaCrit.Sts2.Core.Combat;
-using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Multiplayer;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -18,7 +17,9 @@ namespace newsanguo.Scripts.Combat;
 /// <summary>通过原版动作队列同步地域牌换位，禁止只改本地显示顺序。</summary>
 public static class TerritoryHandOrder
 {
-    internal const int GuchengMoveEnergyCost = 1;
+    internal static bool CanReposition(CardModel card) => card is not InvincibleWithinThreeHundredLi ||
+        (card.CombatState is { } combat && !CombatManager.Instance.History.CardPlaysStarted.Any(entry =>
+            entry.CardPlay.Player == card.Owner && !entry.CardPlay.IsAutoPlay && entry.HappenedThisTurn(combat)));
 
     private readonly record struct Move(uint CardId, int Index);
     private static readonly RitsuLibManagedNetActionDescriptor<Move> Descriptor = new(
@@ -29,7 +30,7 @@ public static class TerritoryHandOrder
             BinaryPrimitives.WriteInt32LittleEndian(bytes.AsSpan(4), message.Index);
             return bytes;
         }, bytes => new Move(BinaryPrimitives.ReadUInt32LittleEndian(bytes),
-            BinaryPrimitives.ReadInt32LittleEndian(bytes.Slice(4))), async context =>
+            BinaryPrimitives.ReadInt32LittleEndian(bytes.Slice(4))), context =>
         {
             var player = context.Player;
             var hand = player.PlayerCombatState?.Hand;
@@ -37,20 +38,14 @@ public static class TerritoryHandOrder
                 CombatManager.Instance.IsOverOrEnding ||
                 !NetCombatCardDb.Instance.TryGetCard(context.Message.CardId, out CardModel? card) ||
                 card is not TerritoryCardTemplate || card.Owner != player || !hand.Cards.Contains(card))
-                return;
+                return Task.CompletedTask;
             // 原版内部列表保留实体顺序，不模拟离手/入手，以免触发抽牌及弃牌效果。
             var cards = (System.Collections.Generic.IList<CardModel>)hand.Cards;
             int currentIndex = cards.IndexOf(card);
             int targetIndex = Math.Clamp(context.Message.Index, 0, cards.Count - 1);
-            // 拖回原位不收费；队列执行时再次检查能量，防止连续拖拽超支。
-            if (targetIndex == currentIndex)
-                return;
-            if (card is InvincibleWithinThreeHundredLi)
-            {
-                if (player.PlayerCombatState!.Energy < GuchengMoveEnergyCost)
-                    return;
-                await PlayerCmd.LoseEnergy(GuchengMoveEnergyCost, player);
-            }
+            // 队列执行时检查手动出牌历史，避免本地预检与实际执行之间状态变化。
+            if (targetIndex == currentIndex || !CanReposition(card))
+                return Task.CompletedTask;
             cards.Remove(card);
             cards.Insert(targetIndex, card);
             hand.InvokeContentsChanged();
@@ -67,7 +62,7 @@ public static class TerritoryHandOrder
                 ui.ForceRefreshCardIndices();
             }
             foreach (var model in hand.Cards) model.BaseReplayCount = model.BaseReplayCount;
-            return;
+            return Task.CompletedTask;
         }, GameActionType.CombatPlayPhaseOnly);
     public static void Register() => RitsuLibManagedNetActions.Register(Descriptor);
     public static void Request(CardModel card, int index) => RitsuLibManagedNetActions.Request(null,

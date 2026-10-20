@@ -8,5 +8,5 @@
   "NEWSANGUO_KEYWORD_EMBER.title": "Ember",
   "NEWSANGUO_KEYWORD_EMBER.description": "When this card is exhausted, trigger its effect.",
   "NEWSANGUO_KEYWORD_TERRITORY.title": "Territory",
-  "NEWSANGUO_KEYWORD_TERRITORY.description": "This card has [gold]Retain[/gold] and [gold]cannot be played[/gold]. Its Territory effect is active while in your [gold]Hand[/gold].\n[gold]Right-click[/gold] this card in your Hand to [gold]Exhaust[/gold] it."
+  "NEWSANGUO_KEYWORD_TERRITORY.description": "This card has [gold]Retain[/gold] , [gold]cannot be discarded[/gold], and [gold]cannot be played[/gold]. Its Territory effect is active while in your [gold]Hand[/gold].\n[gold]Right-click[/gold] this card in your Hand to [gold]Exhaust[/gold] it."
 }
