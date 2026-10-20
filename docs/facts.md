@@ -125,4 +125,10 @@
 - `ModifyMaxEnergy(Player, decimal)` 是 `AbstractModel` 虚方法（`:71023`），派发点 `Hook.ModifyMaxEnergy`（`:166206-166214`）= 逐个 listener 串行调用、**不筛** `ShouldReceiveCombatHooks`；消费端 `PlayerCombatState.MaxEnergy => (int)Hook.ModifyMaxEnergy(...)`（`:177379`）。实例：`Scripts/Powers/MegalovaniaPower.cs:46-53`、`Scripts/Powers/FatherCanClaimTheThronePower.cs`。
 - 「能力每回合闪烁 + 播声」的写法与移除：`Flash()` 是 `PowerModel` 的方法（`:80256`，批量版 `:80261`）；要静音/静默就**删掉整个回合开始钩子**（`Scripts/Powers/MegalovaniaPower.cs` 2026-10-09 即如此，旧 `AfterPlayerTurnStart` 里是 `Flash(); NewsanguoSfx.Play("event:/newsanguo/sfx/megalovania_power");`），并顺手删掉不再使用的 `using`（同款写法仍在 `Scripts/Powers/FatherCanClaimTheThronePower.cs:58-67`，未改）。
 
+### 4.15 孙乾宇宙角色 / 活力联动（2026-10-19 线程 1 查证）
+- 孙乾宇宙的稳定可选依赖入口是相邻仓库 `../sunqian-universe/Api/SunqianUniversePublicApi.cs` 的 `Squ.Api.SunqianUniversePublicApi`；角色判断使用 `IsSupportingActorCharacter(CharacterModel?)`，并先检查 `IsReady`。其 `MOD_INTEGRATION.md` 明确允许 `[AssemblyInterop("Squ.Api.SunqianUniversePublicApi, sunqian-universe")]` 或 `[ModInterop("sunqian-universe", "Squ.Api.SunqianUniversePublicApi")]`，调用方不应硬引用 `sunqian-universe.dll`。
+- 「活力」是游戏本体的 `VigorPower`，孙乾公开 API 不另包一层活力类型。孙乾自身的反向联动先例是 `../sunqian-universe/Interop/NewsanguoVigorSwap.cs`：《酒》《换大盏》《沛国佳酿》对新三国角色改为调用 `NewsanguoPublicApi.ApplyDrunkenMight`，其余角色继续 `PowerCmd.Apply<VigorPower>`；卡面资源名和悬停也按战斗内 Owner 动态切换。
+- 本模组的对称实现集中在 `Scripts/Interop/SunqianUniverseVigorInterop.cs`：孙乾角色的联动资源为 `VigorPower`，其他角色仍为 `DrunkenMightPower`；未安装孙乾宇宙时代理默认 `IsReady == false`，完全回落到原酒力逻辑。
+- 当前接入 5 组“酒力变化触发”机制：`ToABiggerGobletPower`、`WheresWinePower`、`FeelNoAcidPower`、`SovereignFormPower`、`TriumphBrewPower`。其中「咱家不怕酸」给孙乾角色补回活力；「痛饮庆功酒」按每名盟友自己的角色分别给予活力或酒力。`Lightweight`（不胜酒力）是禁止获得酒力的负面修正，不属于本次变化触发联动，仍只限制酒力。
+
 ---

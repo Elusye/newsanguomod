@@ -4,11 +4,13 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts;
+using newsanguo.Scripts.Interop;
 namespace newsanguo.Scripts.Powers;
 
 // 注册能力到游戏
@@ -30,15 +32,25 @@ public class WheresWinePower : ModPowerTemplate
         BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png"
     );
 
-    // 在酒力层数变化后，如果增加了则抽牌
+    public override LocString Description
+    {
+        get
+        {
+            LocString description = base.Description;
+            SunqianUniverseVigorInterop.AddActiveResourceName(description, this);
+            return description;
+        }
+    }
+
+    // 在当前联动资源（酒力 / 活力）变化后，如果增加了则抽牌
     public override async Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
     {
         if (Owner is null) return;
-        if (power is not DrunkenMightPower || power.Owner != Owner) return;
+        if (power.Owner != Owner || !SunqianUniverseVigorInterop.IsActiveResourcePower(power, Owner)) return;
         if (Amount <= 0) return;
 
         // amount 是引擎已经修正过的本次变化量。不能读取共享旧值：
-        // 失去酒力触发「咱家不怕酸」时，嵌套的补偿事件会覆盖外层快照。
+        // 失去资源触发「咱家不怕酸」时，嵌套的补偿事件会覆盖外层快照。
         if (amount > 0m)
         {
             // 获得酒力触发音效
