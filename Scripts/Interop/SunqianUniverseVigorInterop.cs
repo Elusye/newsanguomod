@@ -27,11 +27,22 @@ public static class SunqianUniversePublicApiInterop
 }
 
 /// <summary>
-/// 新三国酒力机制与孙乾宇宙角色的活力联动：孙乾角色使用原版活力，
-/// 其他角色继续使用新三国酒力。角色识别只走上面的公开 API 代理。
+/// 新三国酒力触发条件与孙乾宇宙角色的活力联动：孙乾角色监听原版活力，
+/// 其他角色继续监听新三国酒力。《咱家不怕酸》的补偿资源也随角色切换，
+/// 其余效果只切换触发条件，不改触发后的原效果。
+/// 角色识别只走上面的公开 API 代理。
 /// </summary>
 internal static class SunqianUniverseVigorInterop
 {
+    private const string HoverTitleKey = "NEWSANGUO_SUNQIAN_VIGOR_INTEROP.hoverTitle";
+    private const string GainHoverKey = "NEWSANGUO_SUNQIAN_VIGOR_INTEROP.gainHover";
+    private const string LoseHoverKey = "NEWSANGUO_SUNQIAN_VIGOR_INTEROP.loseHover";
+
+    private static JointModPresentationMode PresentationMode =>
+        JointModPresentation.Resolve(
+            SunqianUniversePublicApiInterop.IsReady,
+            SunqianUniversePublicApiInterop.IsSupportingActorCharacter);
+
     public static bool UsesVigor(Creature? creature) =>
         SunqianUniversePublicApiInterop.IsReady
         && SunqianUniversePublicApiInterop.IsSupportingActorCharacter(creature?.Player?.Character);
@@ -52,45 +63,58 @@ internal static class SunqianUniverseVigorInterop
             ? PowerCmd.Apply<VigorPower>(choiceContext, target, amount, applier, cardSource, silent)
             : PowerCmd.Apply<DrunkenMightPower>(choiceContext, target, amount, applier, cardSource, silent);
 
-    public static IEnumerable<IHoverTip> ActiveResourceHoverTips(CardModel card)
+    public static IEnumerable<IHoverTip> ActiveResourceHoverTips(CardModel _)
     {
-        Creature? owner = card.IsMutable ? card.Owner?.Creature : null;
-        yield return UsesVigor(owner)
+        yield return PresentationMode == JointModPresentationMode.InlineKeywords
             ? HoverTipFactory.FromPower<VigorPower>()
             : HoverTipFactory.FromPower<DrunkenMightPower>();
     }
 
-    public static IEnumerable<IHoverTip> AllyResourceHoverTips(CardModel card)
+    public static IEnumerable<IHoverTip> TriggerAndDrunkenMightHoverTips(CardModel _)
     {
-        Creature? owner = card.IsMutable ? card.Owner?.Creature : null;
-        bool ownerUsesVigor = UsesVigor(owner);
-
-        yield return ownerUsesVigor
+        bool inlineKeywords = PresentationMode == JointModPresentationMode.InlineKeywords;
+        yield return inlineKeywords
             ? HoverTipFactory.FromPower<VigorPower>()
             : HoverTipFactory.FromPower<DrunkenMightPower>();
 
-        if (SunqianUniversePublicApiInterop.IsReady)
+        if (inlineKeywords)
         {
-            yield return ownerUsesVigor
-                ? HoverTipFactory.FromPower<DrunkenMightPower>()
-                : HoverTipFactory.FromPower<VigorPower>();
+            yield return HoverTipFactory.FromPower<DrunkenMightPower>();
         }
     }
 
-    public static void AddActiveResourceName(LocString description, CardModel card)
+    public static IEnumerable<IHoverTip> InteractionHoverTips(bool gainsResource)
     {
-        Creature? owner = card.IsMutable ? card.Owner?.Creature : null;
-        description.Add("WinePowerName", GetActiveResourceName(owner));
+        if (PresentationMode != JointModPresentationMode.HoverOnly)
+        {
+            yield break;
+        }
+
+        yield return new HoverTip(
+            new LocString("static_hover_tips", HoverTitleKey),
+            new LocString("static_hover_tips", gainsResource ? GainHoverKey : LoseHoverKey));
     }
 
-    public static void AddActiveResourceName(LocString description, PowerModel power)
+    public static void AddActiveResourceName(LocString description, CardModel _)
     {
-        Creature? owner = power.IsMutable ? power.Owner : null;
-        description.Add("WinePowerName", GetActiveResourceName(owner));
+        description.Add("WinePowerName", GetActiveResourceInlineText());
     }
 
-    private static string GetActiveResourceName(Creature? owner) =>
-        (UsesVigor(owner)
-            ? ModelDb.Power<VigorPower>().Title
-            : ModelDb.Power<DrunkenMightPower>().Title).GetFormattedText();
+    public static void AddActiveResourceName(LocString description, PowerModel _)
+    {
+        description.Add("WinePowerName", GetActiveResourceInlineText());
+    }
+
+    private static string GetActiveResourceInlineText()
+    {
+        bool inlineKeywords = PresentationMode == JointModPresentationMode.InlineKeywords;
+        string name = (inlineKeywords
+                ? ModelDb.Power<VigorPower>().Title
+                : ModelDb.Power<DrunkenMightPower>().Title)
+            .GetFormattedText();
+
+        return inlineKeywords
+            ? $"[purple]{name}[/purple]"
+            : $"[gold]{name}[/gold]";
+    }
 }

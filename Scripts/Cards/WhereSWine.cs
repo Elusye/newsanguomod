@@ -34,7 +34,10 @@ public class WheresWine : NewsanguoCardTemplate
 
     // 悬停提示：展示“酒力”说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
-        SunqianUniverseVigorInterop.ActiveResourceHoverTips(this);
+    [
+        ..SunqianUniverseVigorInterop.ActiveResourceHoverTips(this),
+        ..SunqianUniverseVigorInterop.InteractionHoverTips(gainsResource: true)
+    ];
 
     public WheresWine() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
     {

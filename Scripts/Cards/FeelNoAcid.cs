@@ -32,9 +32,12 @@ public class FeelNoAcid : NeutralCardTemplate
         new PowerVar<FeelNoAcidPower>(2m)
     ];
 
-    // 孙乾角色展示活力，其余角色展示酒力。
+    // 孙乾角色的触发条件与补偿都使用活力；其余角色仍使用酒力。
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
-        SunqianUniverseVigorInterop.ActiveResourceHoverTips(this);
+    [
+        ..SunqianUniverseVigorInterop.ActiveResourceHoverTips(this),
+        ..SunqianUniverseVigorInterop.InteractionHoverTips(gainsResource: false)
+    ];
 
     public FeelNoAcid() : this(true) { }
 

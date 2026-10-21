@@ -47,6 +47,7 @@ public class SovereignForm : NewsanguoCardTemplate
     // 悬停提示：酒力、被加入手牌的「参见汉中王！」，以及天意之力资源说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         ..SunqianUniverseVigorInterop.ActiveResourceHoverTips(this),
+        ..SunqianUniverseVigorInterop.InteractionHoverTips(gainsResource: true),
         HoverTipFactory.FromCard<HailKingOfHanzhong>(),
         HeavensForce.HoverTip()
     ];

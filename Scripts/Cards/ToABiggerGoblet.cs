@@ -35,7 +35,10 @@ public class ToABiggerGoblet : NewsanguoCardTemplate
 
     // 鼠标悬停时显示酒力提示
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
-        SunqianUniverseVigorInterop.ActiveResourceHoverTips(this);
+    [
+        ..SunqianUniverseVigorInterop.ActiveResourceHoverTips(this),
+        ..SunqianUniverseVigorInterop.InteractionHoverTips(gainsResource: true)
+    ];
 
     public ToABiggerGoblet() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
     {

@@ -40,7 +40,7 @@ public class FeelNoAcidPower : ModPowerTemplate
         }
     }
 
-    // 在当前联动资源（酒力 / 活力）变化后：每当你失去它时，获得与自身层数等量的同种资源
+    // 在当前联动资源（酒力 / 活力）变化后：每当你失去它时，获得与自身层数等量的同种资源。
     public override async Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
     {
         if (Owner is null) return;
@@ -52,7 +52,7 @@ public class FeelNoAcidPower : ModPowerTemplate
         // 触发音效：失去酒力时（咱家不怕酸生效）
         NewsanguoSfx.Play("event:/newsanguo/sfx/feel_no_acid_power");
 
-        // 获得 Amount 点同种资源；正增量会派发钩子，但不会再次通过上面的负增量判断。
+        // 孙乾角色补回活力，其他角色补回酒力；正增量不会再次通过上面的负增量判断。
         await SunqianUniverseVigorInterop.ApplyActiveResource(
             choiceContext,
             Owner,

@@ -30,7 +30,10 @@ public class TriumphBrew : NewsanguoCardTemplate
 
     // 悬停提示：展示“酒力”说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
-        SunqianUniverseVigorInterop.AllyResourceHoverTips(this);
+    [
+        ..SunqianUniverseVigorInterop.TriggerAndDrunkenMightHoverTips(this),
+        ..SunqianUniverseVigorInterop.InteractionHoverTips(gainsResource: true)
+    ];
 
     public TriumphBrew() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self)
     {
