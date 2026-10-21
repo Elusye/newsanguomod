@@ -125,4 +125,11 @@
 - `ModifyMaxEnergy(Player, decimal)` 是 `AbstractModel` 虚方法（`:71023`），派发点 `Hook.ModifyMaxEnergy`（`:166206-166214`）= 逐个 listener 串行调用、**不筛** `ShouldReceiveCombatHooks`；消费端 `PlayerCombatState.MaxEnergy => (int)Hook.ModifyMaxEnergy(...)`（`:177379`）。实例：`Scripts/Powers/MegalovaniaPower.cs:46-53`、`Scripts/Powers/FatherCanClaimTheThronePower.cs`。
 - 「能力每回合闪烁 + 播声」的写法与移除：`Flash()` 是 `PowerModel` 的方法（`:80256`，批量版 `:80261`）；要静音/静默就**删掉整个回合开始钩子**（`Scripts/Powers/MegalovaniaPower.cs` 2026-10-09 即如此，旧 `AfterPlayerTurnStart` 里是 `Flash(); NewsanguoSfx.Play("event:/newsanguo/sfx/megalovania_power");`），并顺手删掉不再使用的 `using`（同款写法仍在 `Scripts/Powers/FatherCanClaimTheThronePower.cs:58-67`，未改）。
 
+### 4.15 孙乾宇宙角色 / 活力联动（2026-10-21 线程 1 查证）
+- 孙乾宇宙的稳定可选依赖入口是相邻仓库 `../sunqian-universe/Api/SunqianUniversePublicApi.cs` 的 `Squ.Api.SunqianUniversePublicApi`；角色判断使用 `IsSupportingActorCharacter(CharacterModel?)`，并先检查 `IsReady`。其 `MOD_INTEGRATION.md` 明确允许 `[AssemblyInterop("Squ.Api.SunqianUniversePublicApi, sunqian-universe")]` 或 `[ModInterop("sunqian-universe", "Squ.Api.SunqianUniversePublicApi")]`，调用方不应硬引用 `sunqian-universe.dll`。
+- 「活力」是游戏本体的 `VigorPower`，孙乾公开 API 不另包一层活力类型。孙乾自身的反向联动先例是 `../sunqian-universe/Interop/NewsanguoVigorSwap.cs`：《酒》《换大盏》《沛国佳酿》对新三国角色改为调用 `NewsanguoPublicApi.ApplyDrunkenMight`，其余角色继续 `PowerCmd.Apply<VigorPower>`；实际施加资源按目标角色判断，卡面资源名和悬停则交给下述 A/B/C 展示状态机。
+- 孙乾侧现行的展示先例是 `../sunqian-universe/Interop/JointModPresentation.cs`，本模组在 `Scripts/Interop/JointModPresentation.cs` 对称实现同一三态解析器：A `None`（无联动信息）；B `HoverOnly`（卡面仍显示金色酒力，只附加“※模组联动”悬停）；C `InlineKeywords`（卡面改为紫色活力，不显示联动悬停）。B 覆盖“模组已激活但不在跑局”“跑局内、战斗外且队伍有孙乾角色”“战斗内队伍有孙乾角色但本地玩家不是孙乾角色”；C 仅覆盖“战斗内且本地玩家是孙乾角色”；其余为 A。队伍与本地玩家分别通过 `RunState.Players`、`LocalContext.GetMe(runState)` 判断，不能用卡牌 Owner 代替，否则联机展示会错位。
+- 本模组的玩法互操作集中在 `Scripts/Interop/SunqianUniverseVigorInterop.cs`：孙乾角色的联动资源为 `VigorPower`，其他角色仍为 `DrunkenMightPower`；未安装孙乾宇宙时代理默认 `IsReady == false`，完全回落到原酒力逻辑。**玩法判定按实际能力拥有者，卡面展示按本地玩家**，两者不要合并。
+- 当前接入 5 组“酒力变化触发”机制：`ToABiggerGobletPower`、`WheresWinePower`、`FeelNoAcidPower`、`SovereignFormPower`、`TriumphBrewPower`。通常只替换触发条件；唯一例外是「咱家不怕酸」，孙乾角色失去活力后也改为补回活力。其余后续效果不变，例如「痛饮庆功酒」仍令所有盟友获得酒力。`Lightweight`（不胜酒力）是禁止获得酒力的负面修正，不属于本次变化触发联动，仍只限制酒力。
+
 ---

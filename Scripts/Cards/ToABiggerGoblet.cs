@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Cards;
@@ -13,6 +14,7 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using newsanguo.Scripts.Powers;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Interop;
 
 namespace newsanguo.Scripts.Cards;
 
@@ -32,10 +34,20 @@ public class ToABiggerGoblet : NewsanguoCardTemplate
     ];
 
     // 鼠标悬停时显示酒力提示
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMightPower>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
+    [
+        ..SunqianUniverseVigorInterop.ActiveResourceHoverTips(this),
+        ..SunqianUniverseVigorInterop.InteractionHoverTips(gainsResource: true)
+    ];
 
     public ToABiggerGoblet() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
     {
+    }
+
+    protected override void AddExtraArgsToDescription(LocString description)
+    {
+        base.AddExtraArgsToDescription(description);
+        SunqianUniverseVigorInterop.AddActiveResourceName(description, this);
     }
 
     // 打出时的效果逻辑

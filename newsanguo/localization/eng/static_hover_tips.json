@@ -3,5 +3,8 @@
   "NEWSANGUO_SECONDARY_RESOURCE_HEAVENS_FORCE.description": "At the end of your turn, if you have a great deal of [gold]Heaven's Force[/gold], you may accept [gold]Heaven[/gold]'s aid. Otherwise, you suffer [gold]Heaven's Decay[/gold].",
   "NEWSANGUO_SECONDARY_RESOURCE_HEAVENS_FORCE.smartDescription": "At the end of your turn, if your points are at least [blue]10[/blue], you may spend 10 [gold]Heaven's Force[/gold] to gain 1 [gold]extra turn[/gold] that deals double damage. If your points are at most [blue]-10[/blue], you suffer [gold]Heaven's Decay[/gold] and restore 10 [gold]Heaven's Force[/gold].",
   "NEWSANGUO_KEYWORD_RECRUIT.title": "Recruit {Summon}",
-  "NEWSANGUO_KEYWORD_RECRUIT.description": "Generate {Summon} Qingzhou Soldiers with 1 HP each. When you are attacked, Qingzhou Soldiers take damage before your [gold]Block[/gold] is consumed.\nAt the end of the enemy turn, lose all recruited Qingzhou Soldiers.\nYou can have at most 15 Qingzhou Soldiers."
+  "NEWSANGUO_KEYWORD_RECRUIT.description": "Generate {Summon} Qingzhou Soldiers with 1 HP each. When you are attacked, Qingzhou Soldiers take damage before your [gold]Block[/gold] is consumed.\nAt the end of the enemy turn, lose all recruited Qingzhou Soldiers.\nYou can have at most 15 Qingzhou Soldiers.",
+  "NEWSANGUO_SUNQIAN_VIGOR_INTEROP.hoverTitle": "Mod Interaction",
+  "NEWSANGUO_SUNQIAN_VIGOR_INTEROP.gainHover": "For characters from the [purple]Sunqian Universe mod[/purple], this effect triggers when gaining [gold]Vigor[/gold] instead of [gold]Drunken Might[/gold].",
+  "NEWSANGUO_SUNQIAN_VIGOR_INTEROP.loseHover": "For characters from the [purple]Sunqian Universe mod[/purple], this effect triggers when losing [gold]Vigor[/gold] instead of [gold]Drunken Might[/gold]."
 }

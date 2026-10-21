@@ -74,6 +74,7 @@ public class Entry
         ApplyPatch(harmony, typeof(TerritoryHandReplayRefreshPatch));
         ApplyPatch(harmony, typeof(AbilitySuppressionPatch));
         ApplyPatch(harmony, typeof(IronCavalrySmartDescriptionPatch));
+        ApplyPatch(harmony, typeof(SunqianVigorSmartDescriptionPatch));
         ApplyPatch(harmony, typeof(CaoArtOfWarSoldierDamageCascadePatch));
         ApplyPatch(harmony, typeof(SoldierDamageCascadeNestedHookSkipPatch));
         // ③青州兵的战斗表现：站位照原版奥斯提的锚点（主人右侧 + 抬高 75px）并在多只时横向错开，
