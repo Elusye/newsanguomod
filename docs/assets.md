@@ -3,6 +3,7 @@
 ## 6. 素材
 
 - 卡图：`newsanguo/images/cards/<类名>.png`（来自 `AssetProfile` 的 `PortraitPath`，一律用类名）。
+- 新增卡牌占位图：复制 `newsanguo/images/cards/Blank.png`，命名为新卡类名（如 `NoReturn.png`），卡牌引用自己的独立图片路径，方便之后替换（2026-10-21 用户约定）。
 - 角色相关：`newsanguo/images/characters/<角色>/…`（选人图标、锁定图标、战斗形象、死亡形象、商店/休息处形象、地图标记）。
 - 能力/遗物图：`res://newsanguo/images/powers|relics/<名字>.png`（大图惯例 `<名字>Big.png`）。
 - 音频：`newsanguo/audios/<snake_name>.mp3`。

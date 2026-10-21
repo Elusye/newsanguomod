@@ -366,5 +366,9 @@
   "NEWSANGUO_CARD_GUCHENG.title": "Gucheng",
   "NEWSANGUO_CARD_GUCHENG.description": "Add a [gold]Invincible Within Three Hundred Li[/gold] to your Hand.",
   "NEWSANGUO_CARD_BLANK.title": "Blank",
-  "NEWSANGUO_CARD_BLANK.description": "How did you find this card?"
+  "NEWSANGUO_CARD_BLANK.description": "How did you find this card?",
+  "NEWSANGUO_CARD_NO_RETURN.title": "No Return",
+  "NEWSANGUO_CARD_NO_RETURN.description": "Play {TargetCard} from your Discard Pile, then Exhaust it.",
+  "NEWSANGUO_CARD_NO_RETURN.combatTitle": "{TargetCard} Won't Return",
+  "NEWSANGUO_CARD_NO_RETURN.anyCard": "a card"
 }

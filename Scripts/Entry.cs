@@ -28,6 +28,7 @@ public class Entry
         // 逐个应用 Harmony 补丁：单个补丁失败不影响其它补丁与 mod 主体，并在日志中记录失败原因
         var harmony = new Harmony("newsanguo");
         TerritoryHandOrder.Register();
+        TerritoryRightClick.Register();
         ApplyPatch(harmony, typeof(NewsanguoEnergyCounterPatch));
         ApplyPatch(harmony, typeof(FireWaterHarmonyWeakPatch));
         ApplyPatch(harmony, typeof(FireWaterHarmonyVulnerablePatch));
