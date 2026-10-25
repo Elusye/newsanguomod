@@ -237,7 +237,7 @@ public static class HeavensForce
     /// 按增量变动天意之力（正为获得、负为失去）。
     /// </summary>
     /// <param name="source">
-    /// 引发变动的模型（通常是打出中的卡牌）。用于“魔法禁术目录”的本回合免消耗判定。
+    /// 引发变动的模型（通常是打出中的卡牌）。用于“魔法禁术目录”的本回合免扣及“阵营切换”的战斗内免扣判定。
     /// </param>
     public static async Task Add(PlayerChoiceContext choiceContext, Player? player, int delta, AbstractModel? source = null)
     {
@@ -246,8 +246,8 @@ public static class HeavensForce
             return;
         }
 
-        // “魔法禁术目录”：被标记的禁术牌在其加入手牌的那个回合打出时不消耗天意之力
-        if (delta < 0 && source is NewsanguoCardTemplate { IsFreeHeavensForceThisTurn: true })
+        // 统一处理“魔法禁术目录”的本回合免扣及“阵营切换”的战斗内免扣。
+        if (delta < 0 && source is NewsanguoCardTemplate { IsFreeHeavensForce: true })
         {
             return;
         }

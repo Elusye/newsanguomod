@@ -3,9 +3,10 @@
 ## 6. 素材
 
 - 卡图：`newsanguo/images/cards/<类名>.png`（来自 `AssetProfile` 的 `PortraitPath`，一律用类名）。
-- 新增卡牌占位图：复制 `newsanguo/images/cards/Blank.png`，命名为新卡类名（如 `NoReturn.png`），卡牌引用自己的独立图片路径，方便之后替换（2026-10-21 用户约定）。
+- 新增卡牌占位图：复制 `newsanguo/images/cards/SunBen.png`，命名为新卡类名（如 `NoReturn.png`），卡牌引用自己的独立图片路径，方便之后替换（2026-10-21 用户约定）。
 - 角色相关：`newsanguo/images/characters/<角色>/…`（选人图标、锁定图标、战斗形象、死亡形象、商店/休息处形象、地图标记）。
 - 能力/遗物图：`res://newsanguo/images/powers|relics/<名字>.png`（大图惯例 `<名字>Big.png`）。
+- 美味饼干：曹魏与蜀汉分别使用 `newsanguo/images/relics/CaoWei/`、`newsanguo/images/relics/ShuHan/` 下的 `YummyCookie.png`、`YummyCookieOutline.png`、`YummyCookieBig.png`，可独立替换。
 - 音频：`newsanguo/audios/<snake_name>.mp3`。
 - 能量图标（2026-10-10）：两角色分别使用 `newsanguo/images/ui/energy/{CaoWei,ShuHan}/energy.png` 与 `energy_small.png`，当前沿用原占位图。卡池的能量标识分别为 `newsanguo_caowei` / `newsanguo_shuhan`，避免 RitsuLib 按 EnergyColorName 缓存时冲突；HUD 补丁按角色读取对应卡池的大图标。共有牌按卡池归属显示；共用遗物/药水池仍保留 `newsanguo` 标识及旧图标。需用户重导 pck。
 - 多人指向/石头剪刀布手势（2026-10-10）：两角色分别使用 `newsanguo/images/ui/hands/{CaoWei,ShuHan}/multiplayer_hand_{point,rock,paper,scissors}.png`，由各自角色类的 `CharacterMultiplayerAssetSet` 配置。当前各复制一套现有占位图，可分别替换；新 PNG 的导入缓存由 Godot 生成，需用户重导 pck。

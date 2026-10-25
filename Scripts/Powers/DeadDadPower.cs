@@ -40,8 +40,8 @@ public class DeadDadPower : ModPowerTemplate
         public readonly Dictionary<Creature, int> GrantedThisTurn = [];
     }
 
-    // 正面效果
-    public override PowerType Type => PowerType.Buff;
+    // 负面效果
+    public override PowerType Type => PowerType.Debuff;
     // 计数器：层数 = 每打出一张牌获得的敏捷（多次施加叠加）
     public override PowerStackType StackType => PowerStackType.Counter;
     // 不允许负数

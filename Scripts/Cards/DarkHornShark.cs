@@ -34,9 +34,7 @@ public class DarkHornShark : NeutralCardTemplate
     // 卡牌自带“消耗”关键词
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
-    public DarkHornShark() : this(true) { }
-
-    protected DarkHornShark(bool showInCardLibrary) : base(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy, showInCardLibrary)
+    public DarkHornShark() : base(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
     }
 

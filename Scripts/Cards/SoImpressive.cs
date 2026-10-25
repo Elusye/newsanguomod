@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
@@ -15,21 +16,21 @@ using newsanguo.Scripts.Characters;
 
 namespace newsanguo.Scripts.Cards;
 
-/// <summary>记录并复制最近打出的其他牌；打出同名牌不覆盖记录。</summary>
+/// <summary>记录并复制本回合最近打出的其他牌；打出同名牌不覆盖记录。</summary>
 [RegisterCard(typeof(NeutralCardPool))]
 public class SoImpressive : NeutralCardTemplate
 {
     private CardModel? _copiedTarget;
     private CardModel? _recordedCard;
+    private int _recordedTurn = -1;
     private string? _playedTitle;
-    private bool _historyPreview;
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");
-    public SoImpressive() : base(0, CardType.Skill, CardRarity.Rare, TargetType.Self) { }
+    public SoImpressive() : base(1, CardType.Skill, CardRarity.Rare, TargetType.Self) { }
 
     private CardModel? DisplaySource => IsDupe && _copiedTarget is not null
-        ? _copiedTarget : _recordedCard ?? ModelDb.Card<Blank>();
+        ? _copiedTarget : _recordedCard ?? ModelDb.Card<SunBen>();
 
     private static string SourceName(CardModel? source) => source?.Title ?? string.Empty;
     private string DynamicTitle(string name)
@@ -42,7 +43,6 @@ public class SoImpressive : NeutralCardTemplate
     {
         get
         {
-            if (_historyPreview) return _playedTitle ?? base.Title;
             if (!IsMutable || !IsInCombat || CombatState is null) return base.Title;
             if (Pile?.Type == PileType.Play && _playedTitle is not null) return _playedTitle;
             return DynamicTitle(SourceName(DisplaySource));
@@ -52,28 +52,33 @@ public class SoImpressive : NeutralCardTemplate
     {
         get
         {
-            if (_historyPreview || !IsMutable || !IsInCombat || CombatState is null)
+            if (!IsMutable || !IsInCombat || CombatState is null)
                 return System.Array.Empty<IHoverTip>();
             CardModel? source = DisplaySource;
             if (source is null) return System.Array.Empty<IHoverTip>();
-            // 预览克隆不注册进战斗状态；同类牌的预览冻结名称且不继续递归生成提示。
-            if (source is SoImpressive)
-            {
-                var preview = (SoImpressive)source.MutableClone();
-                preview._historyPreview = true;
-                source = preview;
-            }
             return [HoverTipFactory.FromCard(source)];
         }
     }
     private void InitializeRecord()
     {
-        if (_recordedCard is not null || !IsMutable || CombatState is null) return;
+        if (!IsMutable || CombatState is null) return;
+        int turn = Owner.PlayerCombatState!.TurnNumber;
+        if (_recordedCard is not null && _recordedTurn == turn) return;
+        _recordedTurn = turn;
+        _copiedTarget = null;
+        _playedTitle = null;
         // 按实际开始出牌的顺序恢复记录，也包括正在结算并生成此牌的来源牌。
         _recordedCard = CombatManager.Instance.History.CardPlaysStarted
-            .LastOrDefault(entry => entry.CardPlay.Player == Owner && entry.CardPlay.Card is not SoImpressive)
-            ?.CardPlay.Card ?? CombatState.CreateCard<Blank>(Owner);
+            .LastOrDefault(entry => entry.HappenedThisTurn(CombatState) &&
+                entry.CardPlay.Player == Owner && entry.CardPlay.Card is not SoImpressive)
+            ?.CardPlay.Card ?? CombatState.CreateCard<SunBen>(Owner);
     }
+    public override Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
+    {
+        if (player == Owner) { InitializeRecord(); RefreshHandTitle(); }
+        return Task.CompletedTask;
+    }
+
     public override Task AfterCardEnteredCombat(CardModel card)
     {
         if (card == this) { InitializeRecord(); RefreshHandTitle(); }

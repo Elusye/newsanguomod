@@ -30,7 +30,7 @@ namespace newsanguo.Scripts.Cards;
 public class BetterThanYilingFlames : NewsanguoCardTemplate
 {
     // 基础伤害。永久成长在此之上累加，本体数值不变。
-    private const int BaseDamage = 6;
+    private const int BaseDamage = 12;
 
     // 当前伤害与累计的永久成长值。
     // 参照原版「基因算法」（GeneticAlgorithm.cs:22-57）：两者都用 [SavedProperty] 跟随牌库本体存档，
@@ -52,11 +52,11 @@ public class BetterThanYilingFlames : NewsanguoCardTemplate
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromKeyword(CardKeyword.Exhaust)];
 
-    public BetterThanYilingFlames() : base(0, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+    public BetterThanYilingFlames() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
     }
 
-    // 本牌当前的伤害值（= 基础 6 + 永久成长）
+    // 本牌当前的伤害值（= 基础 12 + 永久成长）
     [SavedProperty]
     public int CurrentDamage
     {

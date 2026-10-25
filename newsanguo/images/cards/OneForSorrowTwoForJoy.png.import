@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://x37mutu6wii8"
-path="res://.godot/imported/YummyCookieOutline.png-328e55183825799f760b48d7e542f3d3.ctex"
+uid="uid://b0j1stj034w7a"
+path="res://.godot/imported/OneForSorrowTwoForJoy.png-6d542d22356e3fd725d7f5a306854042.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/relics/YummyCookieOutline.png"
-dest_files=["res://.godot/imported/YummyCookieOutline.png-328e55183825799f760b48d7e542f3d3.ctex"]
+source_file="res://newsanguo/images/cards/OneForSorrowTwoForJoy.png"
+dest_files=["res://.godot/imported/OneForSorrowTwoForJoy.png-6d542d22356e3fd725d7f5a306854042.ctex"]
 
 [params]
 

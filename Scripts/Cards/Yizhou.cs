@@ -17,12 +17,13 @@ public class Yizhou : NewsanguoCardTemplate
         PortraitPath: "res://newsanguo/images/cards/Yizhou.png");
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromCard<EndlessEnergy>(), ModKeywordRegistry.CreateHoverTip("NEWSANGUO_KEYWORD_TERRITORY")];
-    public Yizhou() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self) { }
+    public Yizhou() : base(1, CardType.Skill, CardRarity.Rare, TargetType.Self) { }
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay play)
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/yizhou");
         var territory = CombatState!.CreateCard<EndlessEnergy>(Owner);
         await CardPileCmd.AddGeneratedCardToCombat(territory, PileType.Hand, Owner);
     }
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
+    protected override void OnUpgrade() => AddKeyword(CardKeyword.Innate);
+    protected override void AfterDowngraded() => RemoveKeyword(CardKeyword.Innate);
 }

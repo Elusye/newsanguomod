@@ -53,6 +53,13 @@ public abstract class NewsanguoCardTemplate : ModCardTemplate
     // 由“魔法禁术目录”遗物标记的回合数：该回合内打出这张牌不消耗天意之力（-1 表示未标记）
     private int _freeHeavensForceTurn = -1;
 
+    // 阵营切换生成的卡牌在本场战斗中持续免除天意之力消耗。
+    private bool _freeHeavensForceForCombat;
+
+    public void SetToFreeHeavensForceForCombat() => _freeHeavensForceForCombat = true;
+
+    public bool IsFreeHeavensForce => _freeHeavensForceForCombat || IsFreeHeavensForceThisTurn;
+
     protected NewsanguoCardTemplate(
         int energyCost,
         CardType type,

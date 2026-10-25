@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b7mnm1re51ev4"
-path="res://.godot/imported/Blank.png-1fc6086dfc751e28b64a74f573137305.ctex"
+uid="uid://0bee0wjulybb"
+path="res://.godot/imported/FiveCenturies.png-bfb5493780cb520b34a43572e61b3281.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/cards/Blank.png"
-dest_files=["res://.godot/imported/Blank.png-1fc6086dfc751e28b64a74f573137305.ctex"]
+source_file="res://newsanguo/images/cards/FiveCenturies.png"
+dest_files=["res://.godot/imported/FiveCenturies.png-bfb5493780cb520b34a43572e61b3281.ctex"]
 
 [params]
 

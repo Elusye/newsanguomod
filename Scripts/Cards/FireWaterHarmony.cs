@@ -17,6 +17,7 @@ public class FireWaterHarmony : NewsanguoCardTemplate
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
+        HoverTipFactory.FromPower<ReversalPower>(),
         HoverTipFactory.FromPower<WeakPower>(),
         HoverTipFactory.FromPower<VulnerablePower>(),
         HoverTipFactory.FromPower<FrailPower>()

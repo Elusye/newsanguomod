@@ -104,9 +104,9 @@ public class ShuHanCharacter : ModCharacterTemplate<
         VanillaRelicVisualOverrides:
         [
             new CharacterVanillaRelicVisualOverride("yummy_cookie", new RelicAssetProfile(
-                IconPath: "res://newsanguo/images/relics/YummyCookie.png",
-                IconOutlinePath: "res://newsanguo/images/relics/YummyCookieOutline.png",
-                BigIconPath: "res://newsanguo/images/relics/YummyCookieBig.png"
+                IconPath: "res://newsanguo/images/relics/ShuHan/YummyCookie.png",
+                IconOutlinePath: "res://newsanguo/images/relics/ShuHan/YummyCookieOutline.png",
+                BigIconPath: "res://newsanguo/images/relics/ShuHan/YummyCookieBig.png"
             ))
         ]
     );

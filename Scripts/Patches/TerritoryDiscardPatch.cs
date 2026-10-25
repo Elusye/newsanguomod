@@ -24,10 +24,17 @@ public static class TerritoryDiscardSelectionPatch
     public static void Prefix(Player player, ref CardSelectorPrefs prefs, ref Func<CardModel, bool>? filter) =>
         Restrict(player, ref prefs, ref filter);
 
+    // 用筛选器实例标记已处理的调用，避免 FromHandForDiscard 转入 FromHand 后再次包装。
+    private sealed class DiscardFilter(Func<CardModel, bool>? original)
+    {
+        public bool Matches(CardModel card) =>
+            !TerritoryCardTemplate.HasTerritoryKeyword(card) && (original?.Invoke(card) ?? true);
+    }
+
     internal static void Restrict(Player player, ref CardSelectorPrefs prefs, ref Func<CardModel, bool>? filter)
     {
-        var originalFilter = filter;
-        filter = card => !TerritoryCardTemplate.HasTerritoryKeyword(card) && (originalFilter?.Invoke(card) ?? true);
+        if (filter?.Target is DiscardFilter) return;
+        filter = new DiscardFilter(filter).Matches;
         int count = player.PlayerCombatState?.Hand.Cards.Count(filter) ?? 0;
         int min = Math.Min(prefs.MinSelect, count);
         int max = Math.Min(prefs.MaxSelect, count);

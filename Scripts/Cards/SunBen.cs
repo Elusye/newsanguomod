@@ -7,11 +7,11 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace newsanguo.Scripts.Cards;
 
 [RegisterCard(typeof(TokenCardPool))]
-public class Blank : NewsanguoCardTemplate
+public class SunBen : NewsanguoCardTemplate
 {
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: "res://newsanguo/images/cards/Blank.png");
+        PortraitPath: "res://newsanguo/images/cards/SunBen.png");
     public override bool CanBeGeneratedInCombat => false;
-    public Blank() : base(0, CardType.Skill, CardRarity.Token, TargetType.Self, showInCardLibrary: false) { }
+    public SunBen() : base(0, CardType.Skill, CardRarity.Token, TargetType.Self, showInCardLibrary: false) { }
     protected override Task OnPlay(PlayerChoiceContext context, CardPlay play) => Task.CompletedTask;
 }

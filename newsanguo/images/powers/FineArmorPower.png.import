@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dksjuc2t014w"
-path="res://.godot/imported/YummyCookieBig.png-77389873fb559c8b397ddadc5d0f652d.ctex"
+uid="uid://u4qhwakytsvy"
+path="res://.godot/imported/FineArmorPower.png-8472bad5c8b3807d0420e09323da5854.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://newsanguo/images/relics/YummyCookieBig.png"
-dest_files=["res://.godot/imported/YummyCookieBig.png-77389873fb559c8b397ddadc5d0f652d.ctex"]
+source_file="res://newsanguo/images/powers/FineArmorPower.png"
+dest_files=["res://.godot/imported/FineArmorPower.png-8472bad5c8b3807d0420e09323da5854.ctex"]
 
 [params]
 

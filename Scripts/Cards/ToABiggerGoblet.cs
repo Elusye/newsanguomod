@@ -19,7 +19,7 @@ using newsanguo.Scripts.Interop;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
+[RegisterCard(typeof(TokenCardPool))]
 public class ToABiggerGoblet : NewsanguoCardTemplate
 {
 

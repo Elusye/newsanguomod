@@ -13,11 +13,11 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.Cards;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
-using MegaCrit.Sts2.Core.Models.CardPools;
+using newsanguo.Scripts.Characters;
 namespace newsanguo.Scripts.Cards;
 
-/// <summary>同步随机锁定弃牌；预览不消耗随机数，结算使用同一张原牌并将其消耗。</summary>
-[RegisterCard(typeof(TokenCardPool))]
+/// <summary>预览并打出弃牌堆顶部的原牌，结算后将其消耗。</summary>
+[RegisterCard(typeof(NewsanguoCardPool))]
 public class NoReturn : NewsanguoCardTemplate
 {
     private CardModel? _lockedTarget;
@@ -25,8 +25,7 @@ public class NoReturn : NewsanguoCardTemplate
     private string? _playedTargetName;
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: "res://newsanguo/images/cards/NoReturn.png");
-    public override bool CanBeGeneratedInCombat => false;
-    public NoReturn() : base(1, CardType.Skill, CardRarity.Common, TargetType.Self, showInCardLibrary: false) { }
+    public NoReturn() : base(1, CardType.Skill, CardRarity.Common, TargetType.Self) { }
 
     private bool IsEligible(CardModel card) => card != this && card.Owner == Owner &&
         card.Pile?.Type == PileType.Discard && !card.Keywords.Contains(CardKeyword.Unplayable) &&
@@ -52,16 +51,25 @@ public class NoReturn : NewsanguoCardTemplate
         description.Add("TargetCard", HasTarget ? TargetName :
             new LocString("cards", "NEWSANGUO_CARD_NO_RETURN.anyCard").GetFormattedText());
     }
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromKeyword(CardKeyword.Exhaust)];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips
+    {
+        get
+        {
+            yield return HoverTipFactory.FromKeyword(CardKeyword.Exhaust);
+            // 只读取已记录的目标，不在悬浮预览时改变战斗状态。
+            if (HasTarget && Pile?.Type is PileType.Hand or PileType.Play && _lockedTarget is not null)
+                yield return HoverTipFactory.FromCard(_lockedTarget);
+        }
+    }
 
     private void RefreshTarget()
     {
         if (!IsMutable || !IsInCombat || CombatState is null ||
             Pile?.Type is not (PileType.Hand or PileType.Play) || CombatManager.Instance.IsOverOrEnding)
             return;
-        if (_lockedTarget is not null && IsEligible(_lockedTarget)) return;
-        var candidates = PileType.Discard.GetPile(Owner).Cards.Where(IsEligible).ToList();
-        _lockedTarget = candidates.Count == 0 ? null : Owner.RunState.Rng.CombatCardSelection.NextItem(candidates);
+        // 与原版 CardPilePosition.Top 一致，只取索引 0，不跳过无法打出的牌。
+        var topCard = PileType.Discard.GetPile(Owner).Cards.FirstOrDefault();
+        _lockedTarget = topCard is not null && IsEligible(topCard) ? topCard : null;
         if (Pile.Type == PileType.Hand)
             NCard.FindOnTable(this)?.UpdateVisuals(PileType.Hand, CardPreviewMode.Normal);
     }

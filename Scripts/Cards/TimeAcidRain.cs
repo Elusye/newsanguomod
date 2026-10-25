@@ -40,9 +40,12 @@ public class TimeAcidRain : NewsanguoCardTemplate
     public TimeAcidRain() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies) { }
     protected override void OnUpgrade()
     {
+        AddKeyword(CardKeyword.Innate);
         DynamicVars.Damage.UpgradeValueBy(3);
         DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
     }
+
+    protected override void AfterDowngraded() => RemoveKeyword(CardKeyword.Innate);
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

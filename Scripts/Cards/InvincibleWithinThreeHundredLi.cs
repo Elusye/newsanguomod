@@ -12,10 +12,12 @@ public class InvincibleWithinThreeHundredLi : TerritoryCardTemplate
 {
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: "res://newsanguo/images/cards/InvincibleWithinThreeHundredLi.png");
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("ReplayAmount", 1m)];
+    public int GrantedReplay => DynamicVars["ReplayAmount"].IntValue;
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         .. base.AdditionalHoverTips,
-        HoverTipFactory.Static(StaticHoverTip.ReplayDynamic, new DynamicVar("Times", 1))
+        HoverTipFactory.Static(StaticHoverTip.ReplayDynamic, new DynamicVar("Times", GrantedReplay))
     ];
     public InvincibleWithinThreeHundredLi() : base(-1, CardRarity.Token) { }
-    protected override void OnUpgrade() => AddKeyword(CardKeyword.Innate);
+    protected override void OnUpgrade() => DynamicVars["ReplayAmount"].UpgradeValueBy(1m);
 }

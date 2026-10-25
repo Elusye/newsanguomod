@@ -3,7 +3,6 @@ using HarmonyLib;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Hooks;
 using MegaCrit.Sts2.Core.Runs;
 
@@ -25,15 +24,23 @@ namespace newsanguo.Scripts.Patches;
 [HarmonyPatch(typeof(Hook), nameof(Hook.BeforeCombatStart))]
 public static class FatherIHaveFailedYouPowerPatch
 {
-    public static void Postfix(IRunState runState)
+    public static void Postfix(IRunState runState, ref Task __result)
     {
+        __result = ApplyCharacterPowersAfterStart(__result, runState);
+    }
+
+    private static async Task ApplyCharacterPowersAfterStart(Task original, IRunState runState)
+    {
+        // Harmony postfix 在异步方法返回 Task 时就执行；必须等待原任务，
+        // 否则会与初始遗物的酒力施加并发，导致各端能力列表顺序不同。
+        await original;
         foreach (Player player in runState.Players)
         {
             if (player.Character is ShuHanCharacter)
             {
-                _ = TaskHelper.RunSafely(PowerCmd.Apply<RuffianPower>(
+                await PowerCmd.Apply<RuffianPower>(
                     new ThrowingPlayerChoiceContext(), player.Creature, 1,
-                    player.Creature, cardSource: null, silent: true));
+                    player.Creature, cardSource: null, silent: true);
                 continue;
             }
             if (player.Character is not CaoWeiCharacter)
@@ -42,13 +49,13 @@ public static class FatherIHaveFailedYouPowerPatch
             }
             // 施加能力不会触发任何玩家选择，用 ThrowingPlayerChoiceContext 即可
             // （本体 Sleight of Flesh Power 在同样场景下就是这么做的）
-            _ = TaskHelper.RunSafely(PowerCmd.Apply<FatherIHaveFailedYouPower>(
+            await PowerCmd.Apply<FatherIHaveFailedYouPower>(
                 new ThrowingPlayerChoiceContext(),
                 player.Creature,
                 1,
                 player.Creature,
                 cardSource: null,
-                silent: true));
+                silent: true);
         }
     }
 }

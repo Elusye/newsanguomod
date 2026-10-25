@@ -46,9 +46,7 @@ public class SmilingTiger : NeutralCardTemplate
         HoverTipFactory.FromPower<DragonOmenPower>()
     ];
 
-    public SmilingTiger() : this(true) { }
-
-    protected SmilingTiger(bool showInCardLibrary) : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self, showInCardLibrary)
+    public SmilingTiger() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
     {
     }
 

@@ -16,12 +16,13 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
+using MegaCrit.Sts2.Core.Models.CardPools;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
-// 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
+// 原曹魏实体保留供存档和生成效果使用，不再进入曹魏卡池。
+[RegisterCard(typeof(TokenCardPool))]
 public class DragonOmen : NewsanguoCardTemplate
 {
     public override bool IsTigerDragonCard => true;

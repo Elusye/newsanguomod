@@ -98,9 +98,9 @@ public class CaoWeiCharacter : ModCharacterTemplate<
         VanillaRelicVisualOverrides:
         [
             new CharacterVanillaRelicVisualOverride("yummy_cookie", new RelicAssetProfile(
-                IconPath: "res://newsanguo/images/relics/YummyCookie.png",
-                IconOutlinePath: "res://newsanguo/images/relics/YummyCookieOutline.png",
-                BigIconPath: "res://newsanguo/images/relics/YummyCookieBig.png"
+                IconPath: "res://newsanguo/images/relics/CaoWei/YummyCookie.png",
+                IconOutlinePath: "res://newsanguo/images/relics/CaoWei/YummyCookieOutline.png",
+                BigIconPath: "res://newsanguo/images/relics/CaoWei/YummyCookieBig.png"
             ))
         ]
     );

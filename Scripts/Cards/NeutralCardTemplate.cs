@@ -1,6 +1,4 @@
 using MegaCrit.Sts2.Core.Entities.Cards;
-using System.Collections.Generic;
-using STS2RitsuLib.Keywords;
 using MegaCrit.Sts2.Core.Models;
 using newsanguo.Scripts.Characters;
 
@@ -10,16 +8,6 @@ namespace newsanguo.Scripts.Cards;
 public abstract class NeutralCardTemplate : NewsanguoCardTemplate
 {
     public override CardPoolModel Pool => ModelDb.CardPool<NeutralCardPool>();
-
-    public override IEnumerable<CardKeyword> CanonicalKeywords
-    {
-        get
-        {
-            foreach (var keyword in base.CanonicalKeywords) yield return keyword;
-            if (ModKeywordRegistry.TryGet("NEWSANGUO_KEYWORD_NEUTRAL", out ModKeywordDefinition definition))
-                yield return definition.CardKeywordValue;
-        }
-    }
 
     protected NeutralCardTemplate(int cost, CardType type, CardRarity rarity, TargetType target,
         bool showInCardLibrary = true) : base(cost, type, rarity, target, showInCardLibrary) { }

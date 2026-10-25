@@ -39,9 +39,7 @@ public class FeelNoAcid : NeutralCardTemplate
         ..SunqianUniverseVigorInterop.InteractionHoverTips(gainsResource: false)
     ];
 
-    public FeelNoAcid() : this(true) { }
-
-    protected FeelNoAcid(bool showInCardLibrary) : base(1, CardType.Power, CardRarity.Rare, TargetType.Self, showInCardLibrary)
+    public FeelNoAcid() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self)
     {
     }
 

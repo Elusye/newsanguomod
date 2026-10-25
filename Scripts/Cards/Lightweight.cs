@@ -30,9 +30,6 @@ public class Lightweight : NewsanguoCardTemplate
     // 状态牌不能升级
     public override int MaxUpgradeLevel => 0;
 
-    // 状态牌不参与 modifiers（事件/遗物等）随机生成
-    public override bool CanBeGeneratedByModifiers => false;
-
     // 悬停提示：展示“酒力”能力说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<DrunkenMightPower>()
@@ -73,16 +70,6 @@ public class Lightweight : NewsanguoCardTemplate
             return target == owner ? 0m : 1m;
         }
         return giver == owner ? 0m : 1m;
-    }
-
-    // 当这张牌在本方手牌中时，拦截本方所有攻击牌的打出（卡面置灰，UnplayableReason.BlockedByHook）。
-    // 卡牌自身也参与 Hook.ShouldPlay 的遍历，写法参考原版诅咒 Normality：
-    // 先判归属、再判自己是否在手牌，最后只拦攻击牌；牌不在手牌时一律放行。
-    public override bool ShouldPlay(CardModel card, AutoPlayType autoPlayType)
-    {
-        if (card.Owner != base.Owner) return true;
-        if (base.Pile?.Type != PileType.Hand) return true;
-        return card.Type != CardType.Attack;
     }
 
     // 生成 1 张“不胜酒力”并加入手牌（供其它卡牌调用，参考原版 Shiv.CreateInHand）

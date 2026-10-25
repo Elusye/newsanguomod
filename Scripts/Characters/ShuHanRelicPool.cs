@@ -7,12 +7,12 @@ using STS2RitsuLib.Interop.AutoRegistration;
 
 namespace newsanguo.Scripts.Characters;
 
-/// <summary>沿用共用遗物，但排除曹魏专属的魔法禁术目录。</summary>
+/// <summary>沿用共用遗物，但排除曹魏专属的魔法禁术目录与天子经济学。</summary>
 [RegisterSharedRelicPool]
 public class ShuHanRelicPool : NewsanguoRelicPool
 {
     [Obsolete("基类要求保留。")]
     protected override IEnumerable<Type> RelicTypes => ModelDb.RelicPool<NewsanguoRelicPool>().AllRelics
-        .Where(relic => relic is not ACertainForbiddenSpellIndex)
+        .Where(relic => relic is not ACertainForbiddenSpellIndex and not SonOfHeavenEconomics)
         .Select(relic => relic.GetType()).Distinct();
 }

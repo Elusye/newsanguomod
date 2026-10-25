@@ -21,8 +21,8 @@ public static class TerritoryReplayPatch
         int index = hand.ToList().IndexOf(card);
         if (index < 0) return 0;
         int count = 0;
-        if (index > 0 && hand[index - 1] is InvincibleWithinThreeHundredLi) count++;
-        if (index + 1 < hand.Count && hand[index + 1] is InvincibleWithinThreeHundredLi) count++;
+        if (index > 0 && hand[index - 1] is InvincibleWithinThreeHundredLi left) count += left.GrantedReplay;
+        if (index + 1 < hand.Count && hand[index + 1] is InvincibleWithinThreeHundredLi right) count += right.GrantedReplay;
         return count;
     }
     internal static int ReplayBonus(CardModel card) =>

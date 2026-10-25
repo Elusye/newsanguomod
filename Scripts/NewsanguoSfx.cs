@@ -140,7 +140,12 @@ public static class NewsanguoSfx
     // 2026-10-19：复核177个音频；短音效K=0.7、选人K=1，基准-23.1 dB RMS，峰值不超过-3 dBFS。
     private static readonly Dictionary<string, float> LoudnessGainDb = new()
     {
-        ["no_return"] = 0f,
+        ["no_return"] = 12.5f,
+        ["switch_allegiance"] = -0.5f,
+        ["standard_camp"] = 0f,
+        ["one_for_sorrow_two_for_joy"] = 7f,
+        ["five_centuries"] = 1f,
+        ["a_gift_of_wheels"] = 4f,
         ["character_death_shuhan"] = 5f,
         ["rest_site_smith_shuhan"] = 11f,
         ["yizhou"] = -3.5f,
@@ -171,7 +176,7 @@ public static class NewsanguoSfx
         ["chain_stratagem_2"] = 3.5f,
         ["character_death"] = -2f,
         ["character_select"] = 2f,
-        ["character_select_caowei"] = 0f,
+        ["character_select_caowei"] = -11.5f,
         ["character_select_shuhan"] = 9.5f,
         ["charge_to_zhuge_liangs_cart"] = 0.5f,
         ["check_the_premiere"] = -1f,
