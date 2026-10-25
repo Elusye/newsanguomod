@@ -40,7 +40,7 @@ public class GuanPingsProtectionPower : ModPowerTemplate
                 break;
             var pool = ModelDb.CardPool<ShuHanCardPool>()
                 .GetUnlockedCards(player.UnlockState, player.RunState.CardMultiplayerConstraint)
-                .Where(c => c.Type == CardType.Attack);
+                .Where(c => c.Type == CardType.Attack && !c.EnergyCost.CostsX && !c.HasStarCostX);
             CardModel? card = CardFactory.GetDistinctForCombat(player, pool, 1,
                 player.RunState.Rng.CombatCardGeneration).FirstOrDefault();
             if (card is null)
