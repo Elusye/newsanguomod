@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Cards;
+using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -18,8 +19,8 @@ using newsanguo.Scripts.Characters;
 
 namespace newsanguo.Scripts.Cards;
 
-// 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
+// 原曹魏实体保留供存档读取，不再进入曹魏卡池；蜀汉实体继续独立注册。
+[RegisterCard(typeof(TokenCardPool))]
 public class FortySixtyTax : NewsanguoCardTemplate
 {
 
