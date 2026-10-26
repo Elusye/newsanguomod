@@ -39,21 +39,37 @@ public partial class QingzhouSoldierCounter : Control
 
     public override void _Ready()
     {
-        // 复制原版格挡的布局和文字主题，但不复制信号连接或原版血条逻辑。
-        NodePath labelPath = BlockTemplate.GetPathTo(BlockLabelTemplate);
-        _badge = (Control)BlockTemplate.Duplicate((int)DuplicateFlags.Scripts);
-        _badge.Name = "SoldierBadge";
-        _badge.UniqueNameInOwner = false;
-        _badge.Visible = true;
-        _badge.Modulate = Colors.White;
-        _badge.SelfModulate = new Color("CC995F");
-        MakeMouseTransparent(_badge);
+        // 仅复用原版图标和文字样式，不复制已被其他模组改动的整个格挡容器。
+        // BloodCheck 会递归查找 BlockIcon / BlockLabel；独立命名避免数量标记被误移动。
+        var originalIcon = BlockTemplate.FindChild("BlockIcon", recursive: true, owned: false) as TextureRect;
+        _badge = new Control { Name = "SoldierBadge" };
         AddChild(_badge);
-        _countLabel = _badge.GetNode<MegaLabel>(labelPath);
+        if (originalIcon is not null)
+        {
+            var icon = new TextureRect
+            {
+                Name = "NewsanguoSoldierIcon",
+                Texture = originalIcon.Texture,
+                ExpandMode = TextureRect.ExpandModeEnum.IgnoreSize,
+                StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered,
+                SelfModulate = new Color("CC995F")
+            };
+            _badge.AddChild(icon);
+            icon.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
+        }
+        _countLabel = (MegaLabel)BlockLabelTemplate.Duplicate((int)DuplicateFlags.Scripts);
+        _countLabel.Name = "NewsanguoSoldierCount";
         _countLabel.UniqueNameInOwner = false;
         _countLabel.Visible = true;
         _countLabel.Modulate = Colors.White;
         _countLabel.SelfModulate = Colors.White;
+        _countLabel.HorizontalAlignment = HorizontalAlignment.Center;
+        _countLabel.VerticalAlignment = VerticalAlignment.Center;
+        _countLabel.Scale = Vector2.One;
+        _countLabel.Rotation = 0;
+        _badge.AddChild(_countLabel);
+        _countLabel.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
+        MakeMouseTransparent(_badge);
 
         AnchorLeft = AnchorRight = 1f;
         AnchorTop = AnchorBottom = 0.5f;

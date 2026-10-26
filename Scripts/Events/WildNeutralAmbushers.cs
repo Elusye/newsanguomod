@@ -79,6 +79,12 @@ public sealed class SkulkingColonyEffigyEncounter : EncounterModel
 {
     public override RoomType RoomType => RoomType.Elite;
 
+    // 与原版 OvicopterNormal 一致，扩大镜头范围，缓解两只大型敌人的场面拥挤。
+    public override float GetCameraScaling() => 0.8f;
+    public override Godot.Vector2 GetCameraOffset() =>
+        Godot.Vector2.Down * 50f + Godot.Vector2.Left * 100f;
+
+
     // 注意：不能设置 HasScene => true（那会让 NCombatRoom 尝试加载 res://scenes/encounters/<id>.tscn
     // 自定义场景，文件不存在会导致敌人视觉创建中断）。同时没有自定义场景时槽位必须为 null——
     // NCombatRoom.AddCreature 遇到非 null 槽位但 EncounterSlots == null 会抛异常。保持默认

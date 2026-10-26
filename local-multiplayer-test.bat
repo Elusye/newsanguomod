@@ -8,9 +8,8 @@ rem  Usage:
 rem    local-multiplayer-test.bat          start HOST then JOIN
 rem    local-multiplayer-test.bat host     start host only
 rem    local-multiplayer-test.bat join     start join only
-rem  NOTE: --force-steam off skips Steam init, so workshop mods are NOT
-rem  loaded automatically. Copy workshop item 3747602295 (RitsuLib) into
-rem  mods\RitsuLib\ first (DLL + all .json manifest files).
+rem  Before launch, sync the complete RitsuLib Workshop package into local mods.
+rem  Old local copies are backed up outside the mods directory.
 rem ============================================================
 
 set "GAME_EXE=E:\Program Files (x86)\Steam\steamapps\common\Slay the Spire 2\SlayTheSpire2.exe"
@@ -21,6 +20,13 @@ echo Edit GAME_EXE at the top of this script and try again.
 goto :end
 
 :exe_ok
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0tools\prepare-local-multiplayer.ps1" -GameExe "%GAME_EXE%"
+if errorlevel 1 (
+    echo RitsuLib preparation failed. No game instance was started.
+    pause
+    exit /b 1
+)
+
 if /i "%~1"=="host" goto :host
 if /i "%~1"=="join" goto :join
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Reflection;
+using System.Reflection.Emit;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
@@ -188,37 +190,65 @@ public static class CaoArtOfWarSoldierDamageCascadePatch
 }
 
 /// <summary>
-/// 分派期间的嵌套 Damage 调用跳过两个钩子：
-/// · Hook.ModifyDamage：伤害修正已在链头按玩家算过，逐只青州兵/余量再走一遍会把易伤、虚弱、力量重复计算；
-/// · Hook.BeforeDamageReceived：“即将受伤”也已在链头按玩家触发过（原版「荆棘」就挂在这里），重复触发会打两下。
-/// 只跳过这两个；格挡扣减、HpLost 两段相位、ModifyUnblockedDamageTarget（奥斯提改道）等全部照原版执行。
+/// 在原版伤害管线的调用点跳过分摊内部的重复钩子，不在全局 Hook 上返回 false。
+/// 否则其他 mod 的后置补丁仍会执行，可能使用被跳过的前置补丁尚未初始化的状态。
+/// 普通伤害及链头完整保留全局补丁；只对内部承伤跳过已执行过的两个钩子。
 /// </summary>
-[HarmonyPatch(typeof(Hook))]
+[HarmonyPatch]
 public static class SoldierDamageCascadeNestedHookSkipPatch
 {
-    [HarmonyPatch(nameof(Hook.ModifyDamage))]
-    [HarmonyPrefix]
-    public static bool ModifyDamagePrefix(decimal damage, out IEnumerable<AbstractModel> modifiers, ref decimal __result)
+    private static MethodBase TargetMethod()
+    {
+        var damage = AccessTools.Method(typeof(CreatureCmd), nameof(CreatureCmd.Damage),
+            [typeof(PlayerChoiceContext), typeof(IEnumerable<Creature>), typeof(decimal),
+             typeof(ValueProp), typeof(Creature), typeof(CardModel), typeof(CardPlay)]);
+        return AccessTools.AsyncMoveNext(damage);
+    }
+
+    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    {
+        int damageCalls = 0;
+        int beforeCalls = 0;
+        foreach (var instruction in instructions)
+        {
+            if (instruction.operand is MethodInfo method && method.DeclaringType == typeof(Hook))
+            {
+                if (method.Name == nameof(Hook.ModifyDamage))
+                {
+                    instruction.opcode = OpCodes.Call;
+                    instruction.operand = AccessTools.Method(typeof(SoldierDamageCascadeNestedHookSkipPatch), nameof(ModifyDamage));
+                    damageCalls++;
+                }
+                else if (method.Name == nameof(Hook.BeforeDamageReceived))
+                {
+                    instruction.opcode = OpCodes.Call;
+                    instruction.operand = AccessTools.Method(typeof(SoldierDamageCascadeNestedHookSkipPatch), nameof(BeforeDamageReceived));
+                    beforeCalls++;
+                }
+            }
+            yield return instruction;
+        }
+        if (damageCalls != 1 || beforeCalls != 1)
+            throw new InvalidOperationException($"青州兵伤害钩子调用点不匹配：ModifyDamage={damageCalls}, BeforeDamageReceived={beforeCalls}");
+    }
+
+    public static decimal ModifyDamage(IRunState runState, ICombatState? combatState,
+        Creature? target, Creature? dealer, decimal damage, ValueProp props, CardModel? cardSource,
+        CardPlay? cardPlay, ModifyDamageHookType modifyDamageHookType, CardPreviewMode previewMode,
+        out IEnumerable<AbstractModel> modifiers)
     {
         if (SoldierDamageCascade.SkipNestedHooks)
         {
             modifiers = Enumerable.Empty<AbstractModel>();
-            __result = damage;
-            return false;
+            return damage;
         }
-        modifiers = null;
-        return true;
+        return Hook.ModifyDamage(runState, combatState, target, dealer, damage, props, cardSource,
+            cardPlay, modifyDamageHookType, previewMode, out modifiers);
     }
 
-    [HarmonyPatch(nameof(Hook.BeforeDamageReceived))]
-    [HarmonyPrefix]
-    public static bool BeforeDamageReceivedPrefix(ref Task __result)
-    {
-        if (!SoldierDamageCascade.SkipNestedHooks)
-        {
-            return true;
-        }
-        __result = Task.CompletedTask;
-        return false;
-    }
+    public static Task BeforeDamageReceived(PlayerChoiceContext choiceContext, IRunState runState,
+        ICombatState? combatState, Creature target, decimal amount, ValueProp props,
+        Creature? dealer, CardModel? cardSource) =>
+        SoldierDamageCascade.SkipNestedHooks ? Task.CompletedTask :
+            Hook.BeforeDamageReceived(choiceContext, runState, combatState, target, amount, props, dealer, cardSource);
 }

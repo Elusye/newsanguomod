@@ -26,7 +26,9 @@ public class GuanPingsProtection : NewsanguoCardTemplate
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/guan_pings_protection");
         await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay, fast: false);
-        await PowerCmd.Apply<GuanPingsProtectionPower>(choiceContext, Owner.Creature, 1, Owner.Creature, this);
+        var power = await PowerCmd.Apply<GuanPingsProtectionPower>(choiceContext, Owner.Creature, 1, Owner.Creature, this);
+        // 分别记录升级与未升级的触发，混合叠加时仅升级对应数量的反击牌。
+        if (IsUpgraded && power is not null) power.AddUpgradedTrigger();
     }
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(4);
 }

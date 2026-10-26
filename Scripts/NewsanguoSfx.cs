@@ -144,7 +144,7 @@ public static class NewsanguoSfx
         ["switch_allegiance"] = -0.5f,
         ["standard_camp"] = 0f,
         ["one_for_sorrow_two_for_joy"] = 7f,
-        ["five_centuries"] = 1f,
+        ["five_centuries"] = 3f,
         ["a_gift_of_wheels"] = 4f,
         ["character_death_shuhan"] = 5f,
         ["rest_site_smith_shuhan"] = 11f,

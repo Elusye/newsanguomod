@@ -15,13 +15,12 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace newsanguo.Scripts.Powers;
 
-/// <summary>下回合开始前，己方每名青州兵死亡给予 Amount 点天意之力。</summary>
+/// <summary>敌方回合结束前，己方每名青州兵死亡给予 Amount 点天意之力。</summary>
 [RegisterPower]
 public class WorthAllTheirLivesPower : ModPowerTemplate
 {
     private class Data
     {
-        public int expiryTurn;
         public readonly HashSet<Creature> soldiers = new();
     }
     protected override object InitInternalData() => new Data();
@@ -34,13 +33,6 @@ public class WorthAllTheirLivesPower : ModPowerTemplate
         BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png");
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HeavensForce.HoverTip()];
 
-    internal void RefreshExpiry()
-    {
-        if (Owner.Player?.PlayerCombatState is { } combat)
-        {
-            GetInternalData<Data>().expiryTurn = combat.TurnNumber + 1;
-        }
-    }
     internal void TrackSoldier(Creature soldier) => GetInternalData<Data>().soldiers.Add(soldier);
     internal static bool TryConsumeSoldier(Creature owner, Creature soldier) =>
         owner.GetPower<WorthAllTheirLivesPower>()?.GetInternalData<Data>().soldiers.Remove(soldier) == true;
@@ -49,25 +41,13 @@ public class WorthAllTheirLivesPower : ModPowerTemplate
         bool wasRemovalPrevented, float deathAnimLength)
     {
         Player? player = Owner.Player;
-        // 用回合序号判截止，避免回合开始清场的钩子顺序影响奖励。
-        if (wasRemovalPrevented || !Owner.IsAlive || player?.PlayerCombatState is not { } combat ||
-            combat.TurnNumber >= GetInternalData<Data>().expiryTurn ||
+        if (wasRemovalPrevented || !Owner.IsAlive || player is null ||
             creature.Monster is not QingzhouSoldier || creature.PetOwner != player)
         {
             return;
         }
         Flash();
         await HeavensForce.Gain(choiceContext, player, Amount, this);
-    }
-
-    public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
-    {
-        if (player.Creature != Owner || player.PlayerCombatState is not { } combat ||
-            combat.TurnNumber < GetInternalData<Data>().expiryTurn)
-        {
-            return;
-        }
-        await PowerCmd.Remove(this);
     }
 
     public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
@@ -79,6 +59,7 @@ public class WorthAllTheirLivesPower : ModPowerTemplate
         foreach (Creature soldier in data.soldiers.Where(c => c.IsAlive && c.CombatState is not null).ToList())
             await CaoArtOfWarPower.DespawnSoldier(soldier);
         data.soldiers.Clear();
+        await PowerCmd.Remove(this);
     }
 
 }

@@ -19,6 +19,13 @@ namespace newsanguo.Scripts.Powers;
 [RegisterPower]
 public class GuanPingsProtectionPower : ModPowerTemplate
 {
+    private sealed class Data
+    {
+        public int upgradedTriggers;
+    }
+    protected override object InitInternalData() => new Data();
+    internal void AddUpgradedTrigger() => GetInternalData<Data>().upgradedTriggers++;
+
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
     public override bool ShouldReceiveCombatHooks => true;
@@ -34,6 +41,7 @@ public class GuanPingsProtectionPower : ModPowerTemplate
             !Owner.IsAlive || !dealer.IsAlive || Owner.Player is not { } player)
             return;
         int count = Amount;
+        int upgradedCount = GetInternalData<Data>().upgradedTriggers;
         for (int i = 0; i < count; i++)
         {
             if (!Owner.IsAlive || !dealer.IsAlive || CombatManager.Instance.IsOverOrEnding)
@@ -47,6 +55,7 @@ public class GuanPingsProtectionPower : ModPowerTemplate
                 break;
             // 与「好厉害呀！」相同，打出引擎复制品，由引擎处理结算后的去向。
             card = card.CreateDupe(player);
+            if (i < upgradedCount) CardCmd.Upgrade(card);
             Flash();
             DrunkenMightPower.BeginRefundForCard(card);
             try

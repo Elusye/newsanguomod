@@ -7,7 +7,6 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.Events;
 using MegaCrit.Sts2.Core.Factories;
-using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
@@ -64,6 +63,7 @@ public class Pragmatist : ModEventTemplate
 
     // 本次事件掷出的伏击遭遇（非存档字段，只是缓存：CanonicalEncounter 会被读多次）
     private EncounterModel? _ambushEncounter;
+    private bool _ambushersRevealed;
 
     // 搜索可能获得的三种奖励（每种最多一次）
     private enum SearchResult
@@ -126,6 +126,7 @@ public class Pragmatist : ModEventTemplate
         // 各克隆的 Rng 种子相同（BeginEvent 里按「本局种子 + 事件 id 哈希」新建，不含玩家槽位），
         // 因此重新掷出的结果在所有克隆上必然一致。
         _ambushEncounter = null;
+        _ambushersRevealed = false;
     }
 
     // 进入战斗的事件必须是共享事件；多人下由投票决定进入（非共享会在 EnterCombatWithoutExitingEvent 里抛异常）
@@ -191,37 +192,19 @@ public class Pragmatist : ModEventTemplate
         ];
     }
 
-    // —— 让“怪物只在该出现时才出现”——
-    // Combat 布局进场时就会把 CanonicalEncounter 的怪生成到场景里（NCombatEventLayout.cs:56-62
-    // → NCombatRoom.Create(..., VisualOnly)），所以这里一开始就把敌人节点藏起来，
-    // 只有被偷袭（AMBUSH）时才显形——与“怪物离开了、回来时偷袭你”的设定一致。
-    // 拿到节点的方式与原版「互殴」PunchOff.cs:67 相同：NCombatRoom.Instance.GetCreatureNode(creature)；
-    // 事件里的这个 Instance 会经 NRun.CombatRoom → NEventRoom.EmbeddedCombatRoom 解析到嵌入的战斗房间
-    //（见 NRun.cs:42-51），因此事件布局下同样可用。
-    public override Task AfterEventStarted()
+    // 布局 SetEvent 完成时同步调用，确保首次绘制之前已经隐藏伏兵。
+    // 不延时重试，避免事件已进入伏击页后旧任务再次隐藏敌人。
+    internal void InitializeEnemyVisibility(NCombatRoom? room)
     {
-        // 布局节点在进场之后才创建，这里多刷几次确保藏住（重复设置 Visible 很便宜）
-        TaskHelper.RunSafely(HideEnemiesRoutine());
-        return Task.CompletedTask;
+        if (room is not null) SetEnemiesVisible(_ambushersRevealed, room);
     }
-
-    private async Task HideEnemiesRoutine()
-    {
-        foreach (double delay in EnemyHideDelays)
-        {
-            await Cmd.Wait((float)delay);
-            SetEnemiesVisible(false);
-        }
-    }
-
-    private static readonly double[] EnemyHideDelays = [0.05, 0.15, 0.4];
 
     // 切换布局里敌人节点的可见性（取不到节点时静默跳过：非战斗布局 / 已离场 / TestMode）。
     // 不直接读 EventModel 的 _combatStateForCombatLayout：那是 protected 字段，实机版本里不一定还能访问，
     // 这里改为遍历战斗房间自己的 creature 节点，按“不是玩家”筛出敌人（事件战斗布局里只有玩家与敌人两类）。
-    private void SetEnemiesVisible(bool visible)
+    private void SetEnemiesVisible(bool visible, NCombatRoom? room = null)
     {
-        NCombatRoom? room = NCombatRoom.Instance;
+        room ??= NCombatRoom.Instance;
         if (room is null)
         {
             return;
@@ -265,6 +248,7 @@ public class Pragmatist : ModEventTemplate
         if (Rng.NextDouble() * 100.0 < ambushPercent)
         {
             // 被偷袭：怪物回来了 → 显形，且只能选择战斗
+            _ambushersRevealed = true;
             SetEnemiesVisible(true);
             SetEventState(PageDescription("AMBUSH"),
             [

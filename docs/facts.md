@@ -133,3 +133,9 @@
 - 当前接入 5 组“酒力变化触发”机制：`ToABiggerGobletPower`、`WheresWinePower`、`FeelNoAcidPower`、`SovereignFormPower`、`TriumphBrewPower`。通常只替换触发条件；唯一例外是「咱家不怕酸」，孙乾角色失去活力后也改为补回活力。其余后续效果不变，例如「痛饮庆功酒」仍令所有盟友获得酒力。`Lightweight`（不胜酒力）是禁止获得酒力的负面修正，不属于本次变化触发联动，仍只限制酒力。
 
 ---
+
+### 青州兵嵌套伤害钩子的兼容处理（2026-10-26）
+
+- Harmony 前置补丁返回 false 只跳过原方法，并不会阻止其他后置补丁运行。青州兵分摊不再在全局 `Hook.ModifyDamage` / `Hook.BeforeDamageReceived` 上通过前置补丁跳过原方法。
+- `SoldierDamageCascadeNestedHookSkipPatch` 改为替换原版 `CreatureCmd.Damage` 枚举目标重载的异步状态机中的两个调用点。嵌套承伤时直接返回原伤害、非空修正列表和已完成任务；普通伤害仍调用完整全局钩子。实际游戏 IL 必须各匹配一个调用点，否则补丁注册报错。
+- 此处理避免内部承伤再次进入其他 mod 的全局前后置补丁，同时保留链头的伤害修正与受伤前事件，避免重复计算和重复触发荆棘。

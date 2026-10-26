@@ -13,7 +13,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace newsanguo.Scripts.Cards;
 
-/// <summary>募集青州兵，在下回合开始前为己方青州兵的死亡提供天意之力。</summary>
+/// <summary>募集青州兵，在敌方回合结束前为己方青州兵的死亡提供天意之力。</summary>
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class WorthAllTheirLives : NewsanguoCardTemplate
 {
@@ -34,7 +34,6 @@ public class WorthAllTheirLives : NewsanguoCardTemplate
         // 先挂载能力，使募集期间发生的死亡也能获得奖励。
         await PowerCmd.Apply<WorthAllTheirLivesPower>(choiceContext, Owner.Creature, 1, Owner.Creature, this);
         WorthAllTheirLivesPower power = Owner.Creature.GetPower<WorthAllTheirLivesPower>()!;
-        power.RefreshExpiry();
         for (int i = 0; i < DynamicVars.Summon.IntValue; i++)
         {
             var soldier = await CaoArtOfWarPower.SummonIndependentSoldier(choiceContext, Owner);

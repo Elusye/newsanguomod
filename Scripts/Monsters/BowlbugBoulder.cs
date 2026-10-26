@@ -26,14 +26,13 @@ namespace newsanguo.Scripts.Monsters;
 
 /// <summary>
 /// 盛碗虫（巨石）BowlbugBoulder —— 原版 BowlbugRock 的强化版（照其 BowlbugRock.cs 改写）：
-///  · 招式循环：首个回合「强化」（获得 <see cref="StrengthGain"/> 点力量）→ 之后恒为头槌
+///  · 招式循环：首个回合「强化」（获得 <see cref="InvinciDadGain"/> 层霸无敌，并给予玩家1层迭死亡）→ 之后恒为头槌
 ///    （SingleAttackIntent）→ 失衡则眩晕（StunIntent）→ 回到头槌，与原版的头槌/眩晕部分一致；
 ///  · 血量 = BowlbugRock × 3（45~48 → 135~144；攀升 ToughEnemies 下 46~49 → 138~147）；
 ///  · 体型 = 原版的两倍（复用同一套 Spine 场景，在 SetupSkins 里随节点创建就放大，
 ///    并在 AfterAddedToRoom 里再确认一次；见这两处的注释）；
 ///  · 头槌基础伤害固定 15（原版是 15/16 随攀升变化，这里不随攀升提高）；
-///    首个回合的强化给 10 点力量，所以常态下意图显示 25，与旧版的「每回合固定 25」等效，
-///    但会随力量增减变化（玩家削力/给怪上力都会体现在意图数字上）；
+///    首回合强化获得10点力量，给予玩家迭死亡、自身霸无敌，之后随力量增减改变伤害；
 ///  · 失衡用自建能力 BowlbugBoulderImbalancedPower（逻辑同原版，但原版把持有者硬编码成 BowlbugRock）；
 ///  · 只在事件「实践主义者」里登场，且仅当本幕是 Hive（见 Pragmatist.cs 的 CanonicalEncounter）。
 /// 形象沿用原版 bowlbug_rock 的 Spine 场景与“rock”皮肤（巨石＝同一只虫的岩皮形态），
@@ -69,11 +68,11 @@ public class BowlbugBoulder : ModMonsterTemplate
 
     public override int MaxInitialHp => (int)(ModelDb.Monster<BowlbugRock>().MaxInitialHp * 3m);
 
-    // 头槌基础伤害：固定 15（“每回合打 25”现在由首个回合的强化给 10 力量凑出来）
+    // 头槌基础伤害固定15，后续随霸无敌触发获得的力量增长。
     public static int HeadbuttDamage => 15;
 
-    // 首个回合「强化」给自己的永久力量
-    public static int StrengthGain => 10;
+    // 首个回合「强化」给自己的霸无敌层数
+    public static int InvinciDadGain => 10;
 
     public override string DeathSfx => "event:/sfx/enemy/enemy_attacks/workbug_rock/workbug_rock_die";
 
@@ -129,16 +128,11 @@ public class BowlbugBoulder : ModMonsterTemplate
         node.SetScaleAndHue(BoulderScale, 0f);
     }
 
-    // 入场时挂上失衡标记能力（时机与数值同原版：AfterAddedToRoom + 1 层）与两个“老爹”能力，并把体型放大到 2 倍
+    // 入场时挂上失衡标记能力（时机与数值同原版：AfterAddedToRoom + 1 层），并把体型放大到 2 倍
     public override async Task AfterAddedToRoom()
     {
         await base.AfterAddedToRoom();
         await PowerCmd.Apply<BowlbugBoulderImbalancedPower>(
-            new ThrowingPlayerChoiceContext(), base.Creature, 1m, base.Creature, null);
-        // 「迭死亡」（Dead Dad，1 层）与「霸无敌」（Invinci-Dad，单层标记）
-        await PowerCmd.Apply<DeadDadPower>(
-            new ThrowingPlayerChoiceContext(), base.Creature, 1m, base.Creature, null);
-        await PowerCmd.Apply<InvinciDadPower>(
             new ThrowingPlayerChoiceContext(), base.Creature, 1m, base.Creature, null);
         TaskHelper.RunSafely(ApplyBoulderScale());
     }
@@ -168,7 +162,7 @@ public class BowlbugBoulder : ModMonsterTemplate
     }
 
     // 招式状态机：首回合强化，之后与原版 BowlbugRock 同构
-    // 回合 1：BUFF（强化，给 StrengthGain 点力量）
+    // 回合 1：BUFF（强化：给玩家迭死亡，自身获得 InvinciDadGain 层霸无敌）
     // 之后恒常循环：HEADBUTT → 条件分支（失衡 → DIZZY，否则 → HEADBUTT）
     protected override MonsterMoveStateMachine GenerateMoveStateMachine()
     {
@@ -197,8 +191,15 @@ public class BowlbugBoulder : ModMonsterTemplate
     private async Task BuffMove(IReadOnlyList<Creature> targets)
     {
         await CreatureCmd.TriggerAnim(base.Creature, "Cast", 0.6f);
-        await PowerCmd.Apply<StrengthPower>(
-            new ThrowingPlayerChoiceContext(), base.Creature, StrengthGain, base.Creature, null);
+        var context = new ThrowingPlayerChoiceContext();
+        await PowerCmd.Apply<StrengthPower>(context, Creature, 10m, Creature, null);
+        // 强化时才施加两项能力，不在进场时预置；多人下每位存活玩家各获得1层。
+        foreach (var player in Creature.CombatState!.Players)
+        {
+            if (player.Creature.IsAlive)
+                await PowerCmd.Apply<DeadDadPower>(context, player.Creature, 1m, Creature, null);
+        }
+        await PowerCmd.Apply<InvinciDadPower>(context, Creature, InvinciDadGain, Creature, null);
     }
 
     // 头槌：造成 HeadbuttDamage 点伤害；若此时处于失衡，紧跟着眩晕（下一回合打 DIZZY_MOVE）

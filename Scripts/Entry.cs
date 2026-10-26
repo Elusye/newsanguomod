@@ -47,6 +47,7 @@ public class Entry
         // 注意：补丁是**白名单**——新建的补丁类必须在这里显式加一行，否则只会被编译进 DLL 而永不生效
         // （此前 PragmatistRewardPatch 就是这样“看起来没生效”的）。
         ApplyPatch(harmony, typeof(PragmatistRewardPatch));
+        ApplyPatch(harmony, typeof(PragmatistInitialVisibilityPatch));
         ApplyPatch(harmony, typeof(KaleidoscopeRewardPatch));
         // 天意给的额外回合不要再“吃掉”原版遗物「佩尔之眼」（PaelsEye）
         ApplyPatch(harmony, typeof(HeavensForcePaelsEyePatch));
@@ -75,6 +76,7 @@ public class Entry
         ApplyPatch(harmony, typeof(TerritoryHandReplayRefreshPatch));
         ApplyPatch(harmony, typeof(AbilitySuppressionPatch));
         ApplyPatch(harmony, typeof(IronCavalrySmartDescriptionPatch));
+        ApplyPatch(harmony, typeof(UnsettlingLampSelfDebuffPatch));
         ApplyPatch(harmony, typeof(SunqianVigorSmartDescriptionPatch));
         ApplyPatch(harmony, typeof(CaoArtOfWarSoldierDamageCascadePatch));
         ApplyPatch(harmony, typeof(SoldierDamageCascadeNestedHookSkipPatch));
