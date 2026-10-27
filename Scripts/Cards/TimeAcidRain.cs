@@ -67,7 +67,10 @@ public class TimeAcidRain : NewsanguoCardTemplate
     }
 
     // 沿用原界铁骑范围：仅原版及本 mod 的正面状态，保留以下九项。
-    internal static bool CanRemovePositivePower(PowerModel power)
+    internal static bool CanRemovePositivePower(PowerModel power) =>
+        power is not SkittishPower && IsEligiblePositivePower(power);
+
+    internal static bool IsEligiblePositivePower(PowerModel power)
     {
         var assembly = power.GetType().Assembly;
         return power.TypeForCurrentAmount == PowerType.Buff &&

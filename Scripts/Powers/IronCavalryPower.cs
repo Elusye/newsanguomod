@@ -18,7 +18,7 @@ public class IronCavalryPower : ModPowerTemplate
 {
     // 界铁骑额外保留潜地；时光酸雨仍按原清除范围处理。
     internal static bool CanSuppressPositivePower(PowerModel power) =>
-        power is not BurrowedPower && TimeAcidRain.CanRemovePositivePower(power);
+        power is not BurrowedPower && TimeAcidRain.IsEligiblePositivePower(power);
 
     public override PowerType Type => PowerType.Debuff;
     public override PowerStackType StackType => PowerStackType.Counter;
