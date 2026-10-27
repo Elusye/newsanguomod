@@ -68,6 +68,7 @@ public class Entry
         ApplyPatch(harmony, typeof(TerritoryReplayCountPatch));
         ApplyPatch(harmony, typeof(TerritoryReplaySoundPatch));
         ApplyPatch(harmony, typeof(TerritoryDragPatch));
+        ApplyPatch(harmony, typeof(TerritoryRepositionGlowPatch));
         ApplyPatch(harmony, typeof(TerritoryRetainPatch));
         ApplyPatch(harmony, typeof(TerritoryDiscardPatch));
         ApplyPatch(harmony, typeof(TerritoryDiscardSelectionPatch));

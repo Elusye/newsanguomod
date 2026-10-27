@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using MegaCrit.Sts2.Core.Combat;
+using newsanguo.Scripts.Combat;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -14,6 +16,10 @@ public class InvincibleWithinThreeHundredLi : TerritoryCardTemplate
         PortraitPath: "res://newsanguo/images/cards/InvincibleWithinThreeHundredLi.png");
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("ReplayAmount", 1m)];
     public int GrantedReplay => DynamicVars["ReplayAmount"].IntValue;
+    protected override bool ShouldGlowGoldInternal =>
+        IsMutable && Pile?.Type == PileType.Hand &&
+        Owner.PlayerCombatState?.Phase == PlayerTurnPhase.Play &&
+        !CombatManager.Instance.IsOverOrEnding && TerritoryHandOrder.CanReposition(this);
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         .. base.AdditionalHoverTips,
         HoverTipFactory.Static(StaticHoverTip.ReplayDynamic, new DynamicVar("Times", GrantedReplay))

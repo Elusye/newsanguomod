@@ -31,3 +31,15 @@ public static class TerritoryDragPatch
         return false;
     }
 }
+
+// 地域牌无法打出，需绕过原版手牌金光的 CanPlay 限制；选牌模式仍使用原版判定。
+[HarmonyPatch(typeof(NHandCardHolder), "ShouldGlowGold", MethodType.Getter)]
+public static class TerritoryRepositionGlowPatch
+{
+    public static void Postfix(NHandCardHolder __instance, ref bool __result)
+    {
+        if (!__result && NPlayerHand.Instance is { SelectModeGoldGlowOverride: null } &&
+            __instance.CardNode?.Model is InvincibleWithinThreeHundredLi card && card.ShouldGlowGold)
+            __result = true;
+    }
+}

@@ -16,10 +16,12 @@ using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
-// 注册到诅咒卡池（与其他诅咒牌一起，可供诅咒奖励/事件获取）
+// 注册到诅咒卡池；随机生成禁用，仍由天意之力机制定向给予。
 [RegisterCard(typeof(CurseCardPool))]
 public class HeavensDecay : NewsanguoCurseTemplate
 {
+    public override bool CanBeGeneratedByModifiers => false;
+
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
