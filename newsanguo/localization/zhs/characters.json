@@ -12,8 +12,8 @@
   "NEWSANGUO_CHARACTER_CAO_WEI_CHARACTER.unlockText": "该角色一开始就可以使用。",
   "NEWSANGUO_CHARACTER_CAO_WEI_CHARACTER.aromaPrinciple": "[sine]……这香气，像陈年的酒，又像新浇的血。天命，要变了。[/sine]",
   "NEWSANGUO_CHARACTER_CAO_WEI_CHARACTER.goldMonologue": "[sine]这堆金子……够换一城的酒，够喝到三分归一统。[/sine]",
-  "NEWSANGUO_CHARACTER_CAO_WEI_CHARACTER.banter.alive.endTurnPing": "且慢！待我浮一大白，再来！",
-  "NEWSANGUO_CHARACTER_CAO_WEI_CHARACTER.banter.dead.endTurnPing": "我躺一会儿，你们先打着。",
+  "NEWSANGUO_CHARACTER_CAO_WEI_CHARACTER.banter.alive.endTurnPing": "能不能快点啊，兵贵神速啊！",
+  "NEWSANGUO_CHARACTER_CAO_WEI_CHARACTER.banter.dead.endTurnPing": "我都躺下了，诸位还没打完？",
   "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.title": "蜀汉",
   "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.titleObject": "蜀汉",
   "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.description": "一个被天意侵蚀的世界。",
@@ -27,6 +27,6 @@
   "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.unlockText": "该角色一开始就可以使用。",
   "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.aromaPrinciple": "[sine]……这香气，如新酿的酒，也如初升的旗。仁德所至，人心自归。[/sine]",
   "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.goldMonologue": "[sine]这些金子……够置一军之甲，够换一城之酒。[/sine]",
-  "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.banter.alive.endTurnPing": "稍待，容我满饮此杯，再来！",
-  "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.banter.dead.endTurnPing": "我先歇一歇，诸位继续。"
+  "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.banter.alive.endTurnPing": "军师，下一步呢？",
+  "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.banter.dead.endTurnPing": "汉室还等着诸位呢！"
 }

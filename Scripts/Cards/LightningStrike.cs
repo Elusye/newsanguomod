@@ -72,6 +72,7 @@ public class LightningStrike : NewsanguoCardTemplate
         }
         else
         {
+            NewsanguoSfx.Play("event:/newsanguo/sfx/lightning_strike_2");
             await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
                 .FromCard(this, cardPlay)
                 .Targeting(cardPlay.Target)

@@ -139,3 +139,6 @@
 - Harmony 前置补丁返回 false 只跳过原方法，并不会阻止其他后置补丁运行。青州兵分摊不再在全局 `Hook.ModifyDamage` / `Hook.BeforeDamageReceived` 上通过前置补丁跳过原方法。
 - `SoldierDamageCascadeNestedHookSkipPatch` 改为替换原版 `CreatureCmd.Damage` 枚举目标重载的异步状态机中的两个调用点。嵌套承伤时直接返回原伤害、非空修正列表和已完成任务；普通伤害仍调用完整全局钩子。实际游戏 IL 必须各匹配一个调用点，否则补丁注册报错。
 - 此处理避免内部承伤再次进入其他 mod 的全局前后置补丁，同时保留链头的伤害修正与受伤前事件，避免重复计算和重复触发荆棘。
+
+### 多人后排角色与酒力染色（2026-10-27）
+- 原版 `NCombatRoom.PositionPlayersAndPets` 会把后排角色及其宠物的 `Visuals.Modulate` 设为 `(0.5, 0.5, 0.5)`；`AddPet` 也会按站位给后排宠物调暗。酒力染色保持 R 不变，以当前 R 作为亮度基准计算 G/B，并让两通道并行补间；归零恢复该亮度，避免覆盖后排调暗导致偏色。

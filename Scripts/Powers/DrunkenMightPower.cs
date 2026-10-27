@@ -198,7 +198,7 @@ public class DrunkenMightPower : ModPowerTemplate
     // 达到最红所需的层数
     private const int MaxTintAmount = 100;
 
-    // 最红时绿/蓝通道的倍率。Modulate 是乘法：只压 G/B、R 恒为 1，观感就是越喝越红。
+    // 最红时绿/蓝通道相对原亮度的倍率；保留多人后排角色的原版调暗效果。
     private const float MinGreenBlue = 0.35f;
 
     // 颜色过渡时长（秒）
@@ -237,13 +237,15 @@ public class DrunkenMightPower : ModPowerTemplate
             return;
         }
 
-        float greenBlue = 1f - (1f - MinGreenBlue) * Mathf.Clamp(amount / (float)MaxTintAmount, 0f, 1f);
+        // 原版后排站位会将 RGB 同时设为 0.5；R 不受酒力修改，可作为原亮度基准。
+        float greenBlue = visuals.Modulate.R *
+            (1f - (1f - MinGreenBlue) * Mathf.Clamp(amount / (float)MaxTintAmount, 0f, 1f));
         if (_tintTween is not null && _tintTween.IsValid())
         {
             _tintTween.Kill();
         }
         // 只补间 G/B 两个通道：不碰 R，也不碰 alpha（本体复活动画会在补间 modulate:a）
-        _tintTween = visuals.CreateTween();
+        _tintTween = visuals.CreateTween().SetParallel();
         _tintTween.TweenProperty(visuals, "modulate:g", greenBlue, TintDuration)
             .SetEase(Tween.EaseType.Out).SetTrans(Tween.TransitionType.Sine);
         _tintTween.TweenProperty(visuals, "modulate:b", greenBlue, TintDuration)

@@ -12,8 +12,8 @@
   "NEWSANGUO_CHARACTER_CAO_WEI_CHARACTER.unlockText": "This character is available from the start.",
   "NEWSANGUO_CHARACTER_CAO_WEI_CHARACTER.aromaPrinciple": "[sine]...This scent—like aged wine, and like freshly spilled blood. The Mandate of Heaven is about to change.[/sine]",
   "NEWSANGUO_CHARACTER_CAO_WEI_CHARACTER.goldMonologue": "[sine]This heap of gold... enough to trade for a city's worth of wine, enough to drink until the three kingdoms become one.[/sine]",
-  "NEWSANGUO_CHARACTER_CAO_WEI_CHARACTER.banter.alive.endTurnPing": "Hold on! Let me raise a grand toast first, then we go again!",
-  "NEWSANGUO_CHARACTER_CAO_WEI_CHARACTER.banter.dead.endTurnPing": "I'll lie here a while. You all keep fighting.",
+  "NEWSANGUO_CHARACTER_CAO_WEI_CHARACTER.banter.alive.endTurnPing": "Hurry up! Speed is the essence of war!",
+  "NEWSANGUO_CHARACTER_CAO_WEI_CHARACTER.banter.dead.endTurnPing": "I'm already down. Are you still not done?",
   "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.title": "Shu Han",
   "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.titleObject": "Shu Han",
   "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.description": "A world being eroded by Heaven's Decay.",
@@ -27,6 +27,6 @@
   "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.unlockText": "This character is available from the start.",
   "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.aromaPrinciple": "[sine]...This scent—like freshly brewed wine, and like a banner newly raised. Where benevolence goes, hearts follow.[/sine]",
   "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.goldMonologue": "[sine]This gold... enough to arm an army, enough to buy a city's worth of wine.[/sine]",
-  "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.banter.alive.endTurnPing": "One moment—let me drain this cup, then we go again!",
-  "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.banter.dead.endTurnPing": "I'll rest a while. Carry on, all of you."
+  "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.banter.alive.endTurnPing": "Strategist, what is our next move?",
+  "NEWSANGUO_CHARACTER_SHU_HAN_CHARACTER.banter.dead.endTurnPing": "The Han dynasty is still waiting for you!"
 }
