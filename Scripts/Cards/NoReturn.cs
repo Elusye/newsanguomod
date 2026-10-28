@@ -16,7 +16,7 @@ using STS2RitsuLib.Scaffolding.Content;
 using newsanguo.Scripts.Characters;
 namespace newsanguo.Scripts.Cards;
 
-/// <summary>预览并打出弃牌堆顶部的原牌，结算后将其消耗。</summary>
+/// <summary>预览并打出弃牌堆最后一张原牌，结算后将其消耗。</summary>
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class NoReturn : NewsanguoCardTemplate
 {
@@ -69,10 +69,10 @@ public class NoReturn : NewsanguoCardTemplate
         if (!IsMutable || !IsInCombat || CombatState is null ||
             Pile?.Type is not (PileType.Hand or PileType.Play) || CombatManager.Instance.IsOverOrEnding)
             return;
-        // 从原版牌堆顶部开始，仅跳过“好厉害呀！”，避免动态名称和复制来源互相引用。
-        var topCard = PileType.Discard.GetPile(Owner).Cards.FirstOrDefault(card => card is not SoImpressive);
-        _useFallback = topCard is null;
-        _lockedTarget = topCard is not null && IsEligible(topCard) ? topCard : null;
+        // 从弃牌堆末尾开始，仅跳过“好厉害呀！”，避免动态名称和复制来源互相引用。
+        var lastCard = PileType.Discard.GetPile(Owner).Cards.LastOrDefault(card => card is not SoImpressive);
+        _useFallback = lastCard is null;
+        _lockedTarget = lastCard is not null && IsEligible(lastCard) ? lastCard : null;
         if (Pile.Type == PileType.Hand)
             NCard.FindOnTable(this)?.UpdateVisuals(PileType.Hand, CardPreviewMode.Normal);
     }
