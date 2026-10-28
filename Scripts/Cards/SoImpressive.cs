@@ -48,6 +48,12 @@ public class SoImpressive : NeutralCardTemplate
             return DynamicTitle(SourceName(DisplaySource));
         }
     }
+    protected override void AddExtraArgsToDescription(LocString description)
+    {
+        base.AddExtraArgsToDescription(description);
+        description.Add("PreviousCard", SourceName(Pile?.Type == PileType.Play
+            ? _copiedTarget ?? DisplaySource : DisplaySource));
+    }
     protected override IEnumerable<IHoverTip> AdditionalHoverTips
     {
         get

@@ -21,20 +21,22 @@ namespace newsanguo.Scripts.Cards;
 public class NoReturn : NewsanguoCardTemplate
 {
     private CardModel? _lockedTarget;
+    private bool _useFallback;
+    private CardModel? DisplayTarget => _lockedTarget ?? (_useFallback ? ModelDb.Card<SunBen>() : null);
     private CardModel? _resolvingCard;
     private string? _playedTargetName;
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: "res://newsanguo/images/cards/NoReturn.png");
     public NoReturn() : base(1, CardType.Skill, CardRarity.Common, TargetType.Self) { }
 
-    private bool IsEligible(CardModel card) => card != this && card.Owner == Owner &&
+    private bool IsEligible(CardModel card) => card != this && card is not SoImpressive && card.Owner == Owner &&
         card.Pile?.Type == PileType.Discard && !card.Keywords.Contains(CardKeyword.Unplayable) &&
         !TerritoryCardTemplate.HasTerritoryKeyword(card);
     private bool HasTarget => IsMutable && IsInCombat && CombatState is not null &&
         (Pile?.Type == PileType.Play && _playedTargetName is not null ||
-         _lockedTarget is not null && IsEligible(_lockedTarget));
+         _useFallback || _lockedTarget is not null && IsEligible(_lockedTarget));
     private string TargetName => Pile?.Type == PileType.Play && _playedTargetName is not null
-        ? _playedTargetName : _lockedTarget?.Title ?? string.Empty;
+        ? _playedTargetName : DisplayTarget?.Title ?? string.Empty;
     public override string Title
     {
         get
@@ -57,8 +59,8 @@ public class NoReturn : NewsanguoCardTemplate
         {
             yield return HoverTipFactory.FromKeyword(CardKeyword.Exhaust);
             // 只读取已记录的目标，不在悬浮预览时改变战斗状态。
-            if (HasTarget && Pile?.Type is PileType.Hand or PileType.Play && _lockedTarget is not null)
-                yield return HoverTipFactory.FromCard(_lockedTarget);
+            if (HasTarget && Pile?.Type is PileType.Hand or PileType.Play && DisplayTarget is { } target)
+                yield return HoverTipFactory.FromCard(target);
         }
     }
 
@@ -67,8 +69,9 @@ public class NoReturn : NewsanguoCardTemplate
         if (!IsMutable || !IsInCombat || CombatState is null ||
             Pile?.Type is not (PileType.Hand or PileType.Play) || CombatManager.Instance.IsOverOrEnding)
             return;
-        // 与原版 CardPilePosition.Top 一致，只取索引 0，不跳过无法打出的牌。
-        var topCard = PileType.Discard.GetPile(Owner).Cards.FirstOrDefault();
+        // 从原版牌堆顶部开始，仅跳过“好厉害呀！”，避免动态名称和复制来源互相引用。
+        var topCard = PileType.Discard.GetPile(Owner).Cards.FirstOrDefault(card => card is not SoImpressive);
+        _useFallback = topCard is null;
         _lockedTarget = topCard is not null && IsEligible(topCard) ? topCard : null;
         if (Pile.Type == PileType.Hand)
             NCard.FindOnTable(this)?.UpdateVisuals(PileType.Hand, CardPreviewMode.Normal);
@@ -88,17 +91,25 @@ public class NoReturn : NewsanguoCardTemplate
         if (play.Card == this)
         {
             RefreshTarget();
-            _playedTargetName = _lockedTarget is not null && IsEligible(_lockedTarget) ? _lockedTarget.Title : null;
+            _playedTargetName = _useFallback || _lockedTarget is not null && IsEligible(_lockedTarget)
+                ? DisplayTarget?.Title : null;
         }
         return Task.CompletedTask;
     }
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay play)
     {
+        CardModel? target = _useFallback
+            ? CombatState!.CreateCard<SunBen>(Owner).CreateDupe(Owner)
+            : _lockedTarget is not null && IsEligible(_lockedTarget) ? _lockedTarget : null;
+        if (target is not null)
+        {
+            using var playback = NewsanguoSfx.CapturePlayback();
+            _resolvingCard = target;
+            try { await CardCmd.AutoPlay(context, target, null); }
+            finally { _resolvingCard = null; }
+            await playback.WaitAsync(leadSeconds: 0.5);
+        }
         NewsanguoSfx.Play("event:/newsanguo/sfx/no_return");
-        if (_lockedTarget is null || !IsEligible(_lockedTarget)) return;
-        _resolvingCard = _lockedTarget;
-        try { await CardCmd.AutoPlay(context, _resolvingCard, null); }
-        finally { _resolvingCard = null; }
     }
     public override CardLocation ModifyCardPlayResultLocation(CardModel card, bool isAutoPlay,
         ResourceInfo resources, CardLocation location) => card == _resolvingCard

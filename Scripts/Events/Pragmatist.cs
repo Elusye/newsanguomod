@@ -15,6 +15,7 @@ using MegaCrit.Sts2.Core.Nodes.Combat;
 using MegaCrit.Sts2.Core.Nodes.Rooms;
 using MegaCrit.Sts2.Core.Rewards;
 using MegaCrit.Sts2.Core.Rooms;
+using MegaCrit.Sts2.Core.Runs;
 using newsanguo.Scripts.Monsters;
 using newsanguo.Scripts.Relics;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -47,6 +48,8 @@ namespace newsanguo.Scripts.Events;
 [RegisterActEvent(typeof(Glory))]
 public class Pragmatist : ModEventTemplate
 {
+    public override bool IsAllowed(IRunState runState) => runState.TotalFloor >= 8;
+
     // 第 1/2/3 次搜索时“怪物回来”的概率（%）
     private const int FirstAmbushPercent = 35;
     private const int SecondAmbushPercent = 60;
