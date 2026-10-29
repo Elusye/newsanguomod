@@ -17,11 +17,11 @@ public class BrightFuture : NewsanguoCardTemplate
 {
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<BrightFuturePower>(2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<BrightFuturePower>(1m)];
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<BrightFuturePower>()
     ];
-    public BrightFuture() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self) { }
+    public BrightFuture() : base(2, CardType.Power, CardRarity.Rare, TargetType.Self) { }
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/bright_future");

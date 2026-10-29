@@ -25,7 +25,7 @@ public class DesperateResolveShuPower : ModPowerTemplate
     public override Task BeforePowerAmountChanged(PowerModel power, decimal amount, Creature target,
         Creature? applier, CardModel? cardSource)
     {
-        if (target == Owner && power.Type == PowerType.Debuff)
+        if (target == Owner)
             _before[power] = power.Amount;
         return Task.CompletedTask;
     }
@@ -33,9 +33,13 @@ public class DesperateResolveShuPower : ModPowerTemplate
     public override async Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power,
         decimal amount, Creature? applier, CardModel? cardSource)
     {
-        if (power.Owner != Owner || power.Type != PowerType.Debuff || !_before.Remove(power, out int before)) return;
-        // 按实际获得次数触发，不按获得的层数触发；被挡住或没有增加不触发。
-        if (amount > 0 && power.Amount > before && Owner.IsAlive)
+        if (power.Owner != Owner || !_before.Remove(power, out int before) ||
+            power.TypeForCurrentAmount != PowerType.Debuff) return;
+        // 正层数负面效果按增加触发；负层数（如永久缩小、负力量）按继续降低触发。
+        // 减层、归零、被人工制品抵消或没有实际变化均不触发。
+        bool gainedDebuff = amount > 0 && power.Amount > 0 && power.Amount > before ||
+            amount < 0 && power.Amount < 0 && power.Amount < System.Math.Min(before, 0);
+        if (gainedDebuff && Owner.IsAlive)
             await PowerCmd.Apply<DamageBoostPower>(choiceContext, Owner, 10m * Amount, Owner, cardSource);
     }
 }

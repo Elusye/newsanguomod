@@ -131,8 +131,8 @@
   "NEWSANGUO_POWER_AUTO_PILOT_POWER.description": "Lose 1 stack whenever the takeover plays a card.",
   "NEWSANGUO_POWER_AUTO_PILOT_POWER.smartDescription": "[blue]{Amount}[/blue] stacks remaining. Lose [blue]1[/blue] stack whenever the takeover plays a card.",
   "NEWSANGUO_POWER_BRIGHT_FUTURE_POWER.title": "Bright Future",
-  "NEWSANGUO_POWER_BRIGHT_FUTURE_POWER.description": "At the start of your turn, gain 1 stack each of [blue]{Amount}[/blue] random different positive effects.",
-  "NEWSANGUO_POWER_BRIGHT_FUTURE_POWER.smartDescription": "At the start of your turn, gain 1 stack each of [blue]{Amount}[/blue] random different positive effects.",
+  "NEWSANGUO_POWER_BRIGHT_FUTURE_POWER.description": "At the start of your turn, play [blue]{Amount}[/blue] random non-Ancient Power {Amount:plural:card|cards} from all cards in the game.",
+  "NEWSANGUO_POWER_BRIGHT_FUTURE_POWER.smartDescription": "At the start of your turn, play [blue]{Amount}[/blue] random non-Ancient Power {Amount:plural:card|cards} from all cards in the game.",
   "NEWSANGUO_POWER_DESPERATE_RESOLVE_SHU_POWER.title": "Desperate Resolve · Shu",
   "NEWSANGUO_POWER_DESPERATE_RESOLVE_SHU_POWER.description": "Whenever you gain a debuff, gain 10 Damage Boost.",
   "NEWSANGUO_POWER_DESPERATE_RESOLVE_SHU_POWER.smartDescription": "Whenever you gain a debuff, gain [blue]10[/blue] [gold]Damage Boost[/gold] per stack of this effect. Currently [blue]{Amount}[/blue] stacks.",
@@ -158,5 +158,11 @@
   "NEWSANGUO_POWER_FINE_ARMOR_POWER.smartDescription": "Gain [blue]{Amount}[/blue] additional [gold]Block[/gold] from cards. At the start of your turn, halve your [gold]Fine Armor[/gold].",
   "NEWSANGUO_POWER_ONE_FOR_SORROW_TWO_FOR_JOY_POWER.title": "One for Sorrow, Two for Joy",
   "NEWSANGUO_POWER_ONE_FOR_SORROW_TWO_FOR_JOY_POWER.description": "Whenever one of your cards is Exhausted, gain [gold]Drunken Might[/gold].",
-  "NEWSANGUO_POWER_ONE_FOR_SORROW_TWO_FOR_JOY_POWER.smartDescription": "Whenever one of your cards is Exhausted, gain [blue]{Amount}[/blue] [gold]Drunken Might[/gold]."
+  "NEWSANGUO_POWER_ONE_FOR_SORROW_TWO_FOR_JOY_POWER.smartDescription": "Whenever one of your cards is Exhausted, gain [blue]{Amount}[/blue] [gold]Drunken Might[/gold].",
+  "NEWSANGUO_POWER_DONT_BE_ANGRY_POWER.title": "Don't Be Angry",
+  "NEWSANGUO_POWER_DONT_BE_ANGRY_POWER.description": "Whenever you are attacked this turn, play random Attacks from your Exhaust Pile.",
+  "NEWSANGUO_POWER_DONT_BE_ANGRY_POWER.smartDescription": "Whenever you are attacked this turn, play [blue]{Amount}[/blue] random {Amount:plural:Attack|Attacks} from your Exhaust Pile.",
+  "NEWSANGUO_POWER_REWARD_EVERY_ESCAPE_POWER.title": "Reward Every Escape",
+  "NEWSANGUO_POWER_REWARD_EVERY_ESCAPE_POWER.description": "Whenever you discard a card during your turn, draw cards.",
+  "NEWSANGUO_POWER_REWARD_EVERY_ESCAPE_POWER.smartDescription": "Whenever you discard a card during your turn, draw [blue]{Amount}[/blue] {Amount:plural:card|cards}."
 }

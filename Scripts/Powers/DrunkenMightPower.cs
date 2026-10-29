@@ -92,7 +92,7 @@ public class DrunkenMightPower : ModPowerTemplate
         {
             return 0m;
         }
-        return base.Amount;
+        return base.Amount * (cardSource is ThirstyAxe axe ? axe.WineMultiplier : 1m);
     }
 
     // 打牌开始前：记录此刻的层数（只登记本能力拥有者打出的攻击牌）

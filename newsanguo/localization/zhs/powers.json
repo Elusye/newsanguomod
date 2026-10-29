@@ -131,8 +131,8 @@
   "NEWSANGUO_POWER_AUTO_PILOT_POWER.description": "每被接管打出一张牌，托管层数减少1。",
   "NEWSANGUO_POWER_AUTO_PILOT_POWER.smartDescription": "当前有[blue]{Amount}[/blue]层托管。每被接管打出一张牌，层数减少[blue]1[/blue]。",
   "NEWSANGUO_POWER_BRIGHT_FUTURE_POWER.title": "前途灿烂",
-  "NEWSANGUO_POWER_BRIGHT_FUTURE_POWER.description": "在你的回合开始时，随机获得[blue]{Amount}[/blue]种正面效果各一层。",
-  "NEWSANGUO_POWER_BRIGHT_FUTURE_POWER.smartDescription": "在你的回合开始时，随机获得[blue]{Amount}[/blue]种正面效果各一层。",
+  "NEWSANGUO_POWER_BRIGHT_FUTURE_POWER.description": "在你的回合开始时，从游戏中的所有非先古能力牌中随机打出[blue]{Amount}[/blue]张。",
+  "NEWSANGUO_POWER_BRIGHT_FUTURE_POWER.smartDescription": "在你的回合开始时，从游戏中的所有非先古能力牌中随机打出[blue]{Amount}[/blue]张。",
   "NEWSANGUO_POWER_DESPERATE_RESOLVE_SHU_POWER.title": "哀兵必胜·蜀",
   "NEWSANGUO_POWER_DESPERATE_RESOLVE_SHU_POWER.description": "每当你获得负面效果时，获得10层伤害提升。",
   "NEWSANGUO_POWER_DESPERATE_RESOLVE_SHU_POWER.smartDescription": "每当你获得负面效果时，每层本效果使你获得[blue]10[/blue]层[gold]伤害提升[/gold]。当前有[blue]{Amount}[/blue]层本效果。",
@@ -158,5 +158,11 @@
   "NEWSANGUO_POWER_FINE_ARMOR_POWER.smartDescription": "增加从卡牌中获得的[gold]格挡[/gold][blue]{Amount}[/blue]点。在你的回合开始时，[gold]精甲[/gold]点数减半。",
   "NEWSANGUO_POWER_ONE_FOR_SORROW_TWO_FOR_JOY_POWER.title": "一者悲伤，二者道喜",
   "NEWSANGUO_POWER_ONE_FOR_SORROW_TWO_FOR_JOY_POWER.description": "每当你有一张牌被消耗时，获得[gold]酒力[/gold]。",
-  "NEWSANGUO_POWER_ONE_FOR_SORROW_TWO_FOR_JOY_POWER.smartDescription": "每当你有一张牌被消耗时，获得[blue]{Amount}[/blue]点[gold]酒力[/gold]。"
+  "NEWSANGUO_POWER_ONE_FOR_SORROW_TWO_FOR_JOY_POWER.smartDescription": "每当你有一张牌被消耗时，获得[blue]{Amount}[/blue]点[gold]酒力[/gold]。",
+  "NEWSANGUO_POWER_DONT_BE_ANGRY_POWER.title": "不要愤怒",
+  "NEWSANGUO_POWER_DONT_BE_ANGRY_POWER.description": "本回合每受到一次攻击，就从消耗牌堆中随机打出攻击牌。",
+  "NEWSANGUO_POWER_DONT_BE_ANGRY_POWER.smartDescription": "本回合每受到一次攻击，就从消耗牌堆中随机打出[blue]{Amount}[/blue]张攻击牌。",
+  "NEWSANGUO_POWER_REWARD_EVERY_ESCAPE_POWER.title": "逃一个赏一个",
+  "NEWSANGUO_POWER_REWARD_EVERY_ESCAPE_POWER.description": "每当你在回合进行中丢弃一张牌时，抽牌。",
+  "NEWSANGUO_POWER_REWARD_EVERY_ESCAPE_POWER.smartDescription": "每当你在回合进行中丢弃一张牌时，抽[blue]{Amount}[/blue]张牌。"
 }

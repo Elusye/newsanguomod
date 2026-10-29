@@ -25,7 +25,7 @@ public class DesperateResolveShu : NewsanguoCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/cao_art_of_war");
-        int debuffs = Owner.Creature.Powers.Where(power => power.Type == PowerType.Debuff)
+        int debuffs = Owner.Creature.Powers.Where(power => power.TypeForCurrentAmount == PowerType.Debuff)
             .Select(power => power.Id).Distinct().Count();
         if (debuffs > 0)
             await PowerCmd.Apply<DamageBoostPower>(choiceContext, Owner.Creature, 10m * debuffs, Owner.Creature, this);
