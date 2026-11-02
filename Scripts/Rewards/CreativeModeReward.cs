@@ -14,6 +14,7 @@ using MegaCrit.Sts2.Core.Rewards;
 using STS2RitsuLib.Combat.Rewards;
 
 using newsanguo.Scripts.Cards;
+using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Patches;
 using newsanguo.Scripts.Powers;
 
@@ -65,7 +66,10 @@ public sealed class CreativeModeReward : ModCustomReward
         // 候选 = 游戏里的全部卡牌，只排除「创造模式」自己
         string selfEntry = ModelDb.GetId(typeof(CreativeMode)).Entry;
         List<CardCreationResult> options = [];
-        foreach (CardModel canonical in ModelDb.AllCards)
+        // 显式包含中立池，兼容全卡列表已缓存的情况；按 ID 去重，避免共有牌重复。
+        var candidates = ModelDb.AllCards.Concat(ModelDb.CardPool<NeutralCardPool>().AllCards)
+            .DistinctBy(card => card.Id);
+        foreach (CardModel canonical in candidates)
         {
             if (string.Equals(canonical.Id.Entry, selfEntry, StringComparison.Ordinal))
             {

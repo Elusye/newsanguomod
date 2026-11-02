@@ -17,8 +17,8 @@ using newsanguo.Scripts.Characters;
 namespace newsanguo.Scripts.Cards;
 
 // 多人牌：注册到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
-public class WhatToEat : NewsanguoCardTemplate
+[RegisterCard(typeof(NeutralCardPool))]
+public class WhatToEat : NeutralCardTemplate
 {
 
     // 仅多人模式可用
@@ -30,7 +30,7 @@ public class WhatToEat : NewsanguoCardTemplate
     );
 
     // 消耗
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
     // 鼠标悬停时显示“干饭”卡牌标注（升级时显示升级版干饭）
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [

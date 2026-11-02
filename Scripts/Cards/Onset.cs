@@ -21,6 +21,8 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class Onset : NewsanguoCardTemplate
 {
+    public override bool LosesHeavensForce => true;
+
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(

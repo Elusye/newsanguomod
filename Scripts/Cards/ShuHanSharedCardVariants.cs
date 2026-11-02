@@ -54,12 +54,6 @@ public sealed class CrossTheRiverTooShuHan : CrossTheRiverToo
 }
 
 [RegisterCard(typeof(ShuHanCardPool))]
-public sealed class DarkHornSharkShuHan : DarkHornShark
-{
-    public override CardAssetProfile AssetProfile => ShuHanSharedCardAssets.ReusePortraitOf<DarkHornShark>();
-}
-
-[RegisterCard(typeof(ShuHanCardPool))]
 public sealed class DragonOmenShuHan : DragonOmen
 {
     public override CardAssetProfile AssetProfile => ShuHanSharedCardAssets.ReusePortraitOf<DragonOmen>();
@@ -117,12 +111,6 @@ public sealed class RuthlessBladeShuHan : RuthlessBlade
 public sealed class ScorchingStarfallShuHan : ScorchingStarfall
 {
     public override CardAssetProfile AssetProfile => ShuHanSharedCardAssets.ReusePortraitOf<ScorchingStarfall>();
-}
-
-[RegisterCard(typeof(ShuHanCardPool))]
-public sealed class SmilingTigerShuHan : SmilingTiger
-{
-    public override CardAssetProfile AssetProfile => ShuHanSharedCardAssets.ReusePortraitOf<SmilingTiger>();
 }
 
 [RegisterCard(typeof(ShuHanCardPool))]

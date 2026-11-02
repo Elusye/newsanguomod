@@ -1,3 +1,8 @@
+using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using System.Collections.Generic;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -5,7 +10,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace newsanguo.Scripts.Powers;
 
-/// <summary>狂妄之人：参照称帝修改回合抽牌数量，每层额外抽1张。</summary>
+/// <summary>狂妄之人：每层在自身回合开始时额外获得1点能量。</summary>
 [RegisterPower]
 public class MegalovaniaPower : ModPowerTemplate
 {
@@ -17,6 +22,10 @@ public class MegalovaniaPower : ModPowerTemplate
         IconPath: $"res://newsanguo/images/powers/{GetType().Name}.png",
         BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png");
 
-    public override decimal ModifyHandDraw(Player player, decimal count) =>
-        player == Owner.Player ? count + Amount : count;
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.ForEnergy(this)];
+    public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
+    {
+        if (player.Creature != Owner || !Owner.IsAlive) return;
+        await PlayerCmd.GainEnergy(Amount, player);
+    }
 }

@@ -4,12 +4,14 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Combat;
+using newsanguo.Scripts.Interop;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
@@ -44,7 +46,8 @@ public class SovereignForm : NewsanguoCardTemplate
 
     // 悬停提示：酒力、被加入手牌的「参见汉中王！」，以及天意之力资源说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<DrunkenMightPower>(),
+        ..SunqianUniverseVigorInterop.ActiveResourceHoverTips(this),
+        ..SunqianUniverseVigorInterop.InteractionHoverTips(gainsResource: true),
         HoverTipFactory.FromCard<HailKingOfHanzhong>(),
         HeavensForce.HoverTip()
     ];
@@ -55,6 +58,12 @@ public class SovereignForm : NewsanguoCardTemplate
     // 3 费、稀有、能力牌、目标为自己（升级不降费，改加天意之力，见 OnUpgrade）
     public SovereignForm() : base(3, CardType.Power, CardRarity.Rare, TargetType.Self)
     {
+    }
+
+    protected override void AddExtraArgsToDescription(LocString description)
+    {
+        base.AddExtraArgsToDescription(description);
+        SunqianUniverseVigorInterop.AddActiveResourceName(description, this);
     }
 
     // 打出时的效果逻辑：挂上能力，再把一张「参见汉中王！」塞进手牌

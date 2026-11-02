@@ -24,7 +24,7 @@ namespace newsanguo.Scripts.Potions;
 ///
 /// 注册：<c>[RegisterPotion(typeof(NewsanguoPotionPool))]</c> 会由 RitsuLib 注入到共享药水池
 /// （池本身已标 <c>[RegisterSharedPotionPool]</c>，会追加进 <c>ModelDb.AllPotionPools</c>），
-/// 两个角色（曹魏/蜀汉）都以该池作为 PotionPool —— 所以只写这一条特性即可在商店/奖励里出现。
+/// 曹魏使用该池；蜀汉使用排除此药水的 ShuHanPotionPool，因此仅曹魏能自然获取。
 /// 模型 id 形如 <c>NEWSANGUO_POTION_LORD_HEAVENS_NOTE</c>，本地化键即以此为前缀。
 /// </summary>
 [RegisterPotion(typeof(NewsanguoPotionPool))]

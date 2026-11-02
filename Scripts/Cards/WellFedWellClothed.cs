@@ -14,8 +14,8 @@ using newsanguo.Scripts.Powers;
 namespace newsanguo.Scripts.Cards;
 
 /// <summary>不缺吃穿：获得酒力与多层护甲，升级后均由 4 提高到 6。</summary>
-[RegisterCard(typeof(NewsanguoCardPool))]
-public class WellFedWellClothed : NewsanguoCardTemplate
+[RegisterCard(typeof(NeutralCardPool))]
+public class WellFedWellClothed : NeutralCardTemplate
 {
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");

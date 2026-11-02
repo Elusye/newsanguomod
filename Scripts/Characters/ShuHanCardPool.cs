@@ -1,13 +1,13 @@
 using System;
 using Godot;
 using STS2RitsuLib.Interop.AutoRegistration;
+using STS2RitsuLib.Scaffolding.Characters;
 using STS2RitsuLib.Scaffolding.Content;
 
 namespace newsanguo.Scripts.Characters;
 
 [RegisterSharedCardPool]
-// 不加入 Colorful Philosophers 事件的可交换颜色池。
-public class ShuHanCardPool : TypeListCardPoolModel
+public class ShuHanCardPool : TypeListCardPoolModel, IModColorfulPhilosophersCardPool
 {
     public override string Title => "newsanguo";
 

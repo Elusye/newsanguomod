@@ -5,16 +5,19 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization;
+using MegaCrit.Sts2.Core.Models.CardPools;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Interop;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
 // 多人牌：注册到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
+[RegisterCard(typeof(TokenCardPool))]
 public class TriumphBrew : NewsanguoCardTemplate
 {
 
@@ -27,10 +30,20 @@ public class TriumphBrew : NewsanguoCardTemplate
     );
 
     // 悬停提示：展示“酒力”说明
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DrunkenMightPower>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
+    [
+        ..SunqianUniverseVigorInterop.TriggerAndDrunkenMightHoverTips(this),
+        ..SunqianUniverseVigorInterop.InteractionHoverTips(gainsResource: true)
+    ];
 
     public TriumphBrew() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self)
     {
+    }
+
+    protected override void AddExtraArgsToDescription(LocString description)
+    {
+        base.AddExtraArgsToDescription(description);
+        SunqianUniverseVigorInterop.AddActiveResourceName(description, this);
     }
 
     // 打出时的效果逻辑

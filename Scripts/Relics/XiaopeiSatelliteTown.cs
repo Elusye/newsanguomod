@@ -46,7 +46,7 @@ public class XiaopeiSatelliteTown : ModRelicTemplate
         BigIconPath: $"res://newsanguo/images/relics/{GetType().Name}Big.png"
     );
 
-    public override RelicRarity Rarity => RelicRarity.Common;
+    public override RelicRarity Rarity => RelicRarity.Uncommon;
 
     // 需要接收战斗钩子，否则 AfterSideTurnStart 不会被调用
     public override bool ShouldReceiveCombatHooks => true;

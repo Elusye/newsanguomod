@@ -23,7 +23,7 @@ namespace newsanguo.Scripts.Powers;
 /// “曹氏兵法”赋予的可叠加能力：层数（Amount）= 已打出的“曹氏兵法”张数。
 /// 1) 你每打出一张牌，就以 1 生命值“募集”与层数相同数量的青州兵（这批青州兵在你的回合开始时失去）；
 /// 2) 每当任何生物死亡，你获得与层数相同的力量（触发点同原版“忧郁”Melancholy 的 AfterDeath Hook）；
-/// 3) 在你的回合开始时，移除本能力召唤的所有青州兵（这一批死亡不触发第 2 条）。
+/// 3) 在敌方回合结束时，移除本能力召唤的所有青州兵（不按死亡结算）。
 /// 参照原版“残影”（AfterimagePower）：打牌开始前记账层数，打出后按键结账并移除。
 /// 因此“打牌开始时本能力还不存在”的那张牌（即首次打出“曹氏兵法”自身）不会触发；
 /// 已有该能力后再打出“曹氏兵法”属于正常出牌，会照常触发。
@@ -47,11 +47,9 @@ public class CaoArtOfWarPower : ModPowerTemplate
     {
         public readonly Dictionary<CardModel, int> amountsForPlayedCards = new();
 
-        // 本能力召唤出来的青州兵（独立个体）：用于“回合开始时移除”以及“移除时不触发本能力”。
+        // 本能力召唤出来的青州兵（独立个体）：用于敌方回合结束时直接移除。
         public readonly HashSet<Creature> summonedSoldiers = new();
 
-        // 正在被本能力清场的青州兵：这批死亡不算“生物死亡”，不给力量。
-        public readonly HashSet<Creature> soldiersBeingRemoved = new();
     }
 
     // 正面效果
@@ -169,50 +167,34 @@ public class CaoArtOfWarPower : ModPowerTemplate
         {
             return;
         }
-        // 回合开始时的那次清场不算“生物死亡”，不触发本能力
-        if (GetInternalData<Data>().soldiersBeingRemoved.Remove(creature))
-        {
-            return;
-        }
-
         Flash();
         await PowerCmd.Apply<StrengthPower>(choiceContext, Owner, Amount, Owner, null);
     }
 
-    // 在你的回合开始时：移除本能力召唤的所有青州兵（此过程不触发本能力）
-    public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
+    // 到期直接离场，不播放死亡动画，也不触发任何死亡奖励。
+    public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
+        IEnumerable<Creature> participants)
     {
-        if (Owner is null || player is null || player.Creature != Owner)
-        {
+        if (side != CombatSide.Enemy)
             return;
-        }
-
         Data data = GetInternalData<Data>();
-        if (data.summonedSoldiers.Count == 0)
-        {
-            return;
-        }
-
-        List<Creature> soldiers = data.summonedSoldiers.Where(c => c.IsAlive).ToList();
-        foreach (Creature soldier in soldiers)
-        {
-            data.soldiersBeingRemoved.Add(soldier);
-        }
-        foreach (Creature soldier in soldiers)
-        {
-            await CreatureCmd.Kill(soldier);
-        }
-
-        // 死亡被阻止（例如免疫）的个体下个回合再清；名单里已死的个体已被补丁消费掉
-        data.soldiersBeingRemoved.Clear();
+        foreach (Creature soldier in data.summonedSoldiers.Where(c => c.IsAlive && c.CombatState is not null).ToList())
+            await DespawnSoldier(soldier);
         data.summonedSoldiers.Clear();
-        foreach (Creature soldier in soldiers)
+    }
+
+    // Escape 不触发死亡事件，须同时清理原版只在 OnPetDied 中维护的宠物列表。
+    internal static async Task DespawnSoldier(Creature soldier)
+    {
+        if (soldier.PetOwner?.PlayerCombatState is { } combat)
         {
-            if (soldier.IsAlive)
-            {
-                data.summonedSoldiers.Add(soldier);
-            }
+            if (combat.Pets is IList<Creature> pets)
+                pets.Remove(soldier);
+            var handler = typeof(PlayerCombatState).GetMethod("OnPetDied",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+            soldier.Died -= (System.Action<Creature>)handler.CreateDelegate(typeof(System.Action<Creature>), combat);
         }
+        await CreatureCmd.Escape(soldier);
     }
 
     /// <summary>

@@ -36,7 +36,7 @@ public class TigerWindCloudDragon : NewsanguoCardTemplate
     // 展示帝王之征与固定生成的两张龙虎牌。
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<DragonOmenPower>(),
-        this is TigerWindCloudDragonShuHan ? HoverTipFactory.FromCard<SmilingTigerShuHan>() : HoverTipFactory.FromCard<SmilingTiger>(),
+        HoverTipFactory.FromCard<SmilingTiger>(),
         this is TigerWindCloudDragonShuHan ? HoverTipFactory.FromCard<DragonOmenShuHan>() : HoverTipFactory.FromCard<DragonOmen>()
     ];
     // 构造函数
@@ -63,9 +63,7 @@ public class TigerWindCloudDragon : NewsanguoCardTemplate
 
         // 固定各生成一张，保留来源卡池的独立实体。
         bool useShuHanVariants = this is TigerWindCloudDragonShuHan;
-        CardModel tiger = useShuHanVariants
-            ? combatState.CreateCard<SmilingTigerShuHan>(Owner)
-            : combatState.CreateCard<SmilingTiger>(Owner);
+        CardModel tiger = combatState.CreateCard<SmilingTiger>(Owner);
         CardModel dragon = useShuHanVariants
             ? combatState.CreateCard<DragonOmenShuHan>(Owner)
             : combatState.CreateCard<DragonOmen>(Owner);

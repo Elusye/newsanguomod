@@ -122,6 +122,11 @@ public static class HeavensForce
 
         // 只在本角色下常驻显示（数值为 0 时也显示，便于玩家看到“透支”进度）
         resources.AlwaysShowInCombatUiForCharacter<CaoWeiCharacter>(LocalId);
+        // 框架默认仅把高于初始值的资源视为已使用；天意之力可直接透支为负数。
+        // 对其他角色也显示非零值，并借由战斗内常驻的逻辑载体保留回到零后的计数器。
+        resources.RegisterCombatUiAlwaysVisibleWhen(LocalId, context =>
+            context.Amount != 0 || context.Player.Creature.HasPower<HeavensForcePower>());
+
 
         // 多人：在每个队友的玩家状态栏（原版 NMultiplayerPlayerState）上也显示天意之力。
         // 原版辉星就是这么显示的：队友面板里 %StarCountContainer 由 OnCombatSetUp 打开、
@@ -232,7 +237,7 @@ public static class HeavensForce
     /// 按增量变动天意之力（正为获得、负为失去）。
     /// </summary>
     /// <param name="source">
-    /// 引发变动的模型（通常是打出中的卡牌）。用于“魔法禁术目录”的本回合免消耗判定。
+    /// 引发变动的模型（通常是打出中的卡牌）。用于“魔法禁术目录”的本回合免扣及“阵营切换”的战斗内免扣判定。
     /// </param>
     public static async Task Add(PlayerChoiceContext choiceContext, Player? player, int delta, AbstractModel? source = null)
     {
@@ -241,8 +246,8 @@ public static class HeavensForce
             return;
         }
 
-        // “魔法禁术目录”：被标记的禁术牌在其加入手牌的那个回合打出时不消耗天意之力
-        if (delta < 0 && source is NewsanguoCardTemplate { IsFreeHeavensForceThisTurn: true })
+        // 统一处理“魔法禁术目录”的本回合免扣及“阵营切换”的战斗内免扣。
+        if (delta < 0 && source is NewsanguoCardTemplate { IsFreeHeavensForce: true })
         {
             return;
         }

@@ -23,6 +23,8 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(TokenCardPool))]
 public class VenomRat : NewsanguoCardTemplate
 {
+    public override bool LosesHeavensForce => true;
+
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(

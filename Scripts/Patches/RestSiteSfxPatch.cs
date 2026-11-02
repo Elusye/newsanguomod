@@ -53,6 +53,13 @@ internal static class RestSiteSfx
             {
                 NewsanguoSfx.Play(sfx);
             }
+            else if (character.Player.Character is ShuHanCharacter)
+            {
+                if (sfx == "event:/newsanguo/sfx/rest_site_rest")
+                    NewsanguoSfx.Play("event:/newsanguo/sfx/rest_site_rest_shuhan");
+                else if (sfx == "event:/newsanguo/sfx/rest_site_smith")
+                    NewsanguoSfx.Play("event:/newsanguo/sfx/rest_site_smith_shuhan");
+            }
             return;
         }
     }

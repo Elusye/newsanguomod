@@ -9,7 +9,7 @@ using newsanguo.Scripts.Rewards;
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>
-/// 「创造模式」能力：战斗结束时给拥有者加一张「创造模式」奖励，
+/// 「创造模式」能力：战斗结束时按层数给拥有者添加「创造模式」奖励，
 /// 玩家在战斗奖励屏上点选它，即可从游戏里的全部卡牌中自选一张加入牌组（选牌逻辑见 CreativeModeReward）。
 ///
 /// 钩子为什么可以挂在能力上：AfterCombatEnd 在 EndCombatInternal 里于 turnState.IsInProgress = false 之后、
@@ -25,8 +25,8 @@ public class CreativeModePower : ModPowerTemplate
 {
     // 正面效果：Buff
     public override PowerType Type => PowerType.Buff;
-    // 不叠加：存在即生效
-    public override PowerStackType StackType => PowerStackType.Single;
+    // 每层提供一次独立的选牌奖励。
+    public override PowerStackType StackType => PowerStackType.Counter;
     // 不允许负数
     public override bool AllowNegative => false;
     // 需要战斗钩子（战斗结束钩子）
@@ -44,7 +44,8 @@ public class CreativeModePower : ModPowerTemplate
         // 只有挂在玩家身上的能力才有效
         if (Owner?.Player is { } player)
         {
-            room.AddExtraReward(player, new CreativeModeReward(player));
+            for (int i = 0; i < Amount; i++)
+                room.AddExtraReward(player, new CreativeModeReward(player));
         }
 
         return Task.CompletedTask;

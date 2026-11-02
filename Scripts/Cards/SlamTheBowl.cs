@@ -54,7 +54,7 @@ public class SlamTheBowl : NewsanguoCardTemplate
         //      直接用 CardPileCmd 移牌会绕过该检查（同「窥探天意」「一人坚守！」的注释）
         List<CardModel> handCards = CardPile.Get(PileType.Hand, base.Owner)!
             .Cards
-            .Where(c => c != this)
+            .Where(c => c != this && !TerritoryCardTemplate.HasTerritoryKeyword(c))
             .ToList();
 
         if (handCards.Count > 0)

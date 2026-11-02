@@ -75,7 +75,7 @@ public static class AutoPlayRightToLeft
                 if (owner.Creature.GetPower<AutoPilotPower>() is not { Amount: > 0 }) break;
                 CardPile pile = PileType.Hand.GetPile(owner);
                 // 从右到左：取手牌中最右侧一张能打出的牌
-                CardModel? card = pile.Cards.LastOrDefault(c => c.CanPlay());
+                CardModel? card = pile.Cards.LastOrDefault(c => c is not newsanguo.Scripts.Cards.TerritoryCardTemplate && c.CanPlay());
                 if (card == null)
                 {
                     break;

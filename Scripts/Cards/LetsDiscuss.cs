@@ -46,7 +46,7 @@ public class LetsDiscuss : NewsanguoCardTemplate
         }
 
         // 由玩家选择丢弃等量的牌
-        List<CardModel> toDiscard = (await CardSelectCmd.FromHand(
+        List<CardModel> toDiscard = (await CardSelectCmd.FromHandForDiscard(
             context: choiceContext,
             player: base.Owner,
             prefs: new CardSelectorPrefs(CardSelectorPrefs.DiscardSelectionPrompt, drawn.Count, drawn.Count),

@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Cards;
 using STS2RitsuLib.Cards.DynamicVars;
@@ -10,13 +12,14 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Interop;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
-public class FeelNoAcid : NewsanguoCardTemplate
+[RegisterCard(typeof(NeutralCardPool))]
+public class FeelNoAcid : NeutralCardTemplate
 {
 
     // 卡图资源
@@ -29,8 +32,21 @@ public class FeelNoAcid : NewsanguoCardTemplate
         new PowerVar<FeelNoAcidPower>(2m)
     ];
 
+    // 孙乾角色的触发条件与补偿都使用活力；其余角色仍使用酒力。
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
+    [
+        ..SunqianUniverseVigorInterop.ActiveResourceHoverTips(this),
+        ..SunqianUniverseVigorInterop.InteractionHoverTips(gainsResource: false)
+    ];
+
     public FeelNoAcid() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self)
     {
+    }
+
+    protected override void AddExtraArgsToDescription(LocString description)
+    {
+        base.AddExtraArgsToDescription(description);
+        SunqianUniverseVigorInterop.AddActiveResourceName(description, this);
     }
 
     // 打出时的效果逻辑

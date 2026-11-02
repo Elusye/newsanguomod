@@ -12,13 +12,14 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
+using MegaCrit.Sts2.Core.Models.CardPools;
 using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
+[RegisterCard(typeof(TokenCardPool))]
 public class BrewHealsAll : NewsanguoCardTemplate
 {
     // 卡图资源

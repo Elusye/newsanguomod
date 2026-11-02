@@ -11,6 +11,7 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Acts;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
+using MegaCrit.Sts2.Core.Runs;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -31,6 +32,10 @@ namespace newsanguo.Scripts.Events;
 [RegisterActEvent(typeof(Glory))]
 public class ThreeVisitsToTheThatchedCottage : ModEventTemplate
 {
+    // 参照原版 ColossalFlower：所有玩家均能承担两次失去生命后，事件才可出现。
+    public override bool IsAllowed(IRunState runState) =>
+        runState.Players.All(player => player.Creature.CurrentHp > 8);
+
     // 页面名（对应本地化键里的 pages.<页面名>）
     private const string InitialPage = "INITIAL";
     private const string FirstVisitPage = "FIRST_VISIT";

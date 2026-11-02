@@ -1,3 +1,4 @@
+using MegaCrit.Sts2.Core.Models.CardPools;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -21,7 +22,7 @@ using newsanguo.Scripts.Characters;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
+[RegisterCard(typeof(TokenCardPool))]
 public class RuthlessBlade : NewsanguoCardTemplate
 {
 

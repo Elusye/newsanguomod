@@ -2,11 +2,13 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts;
+using newsanguo.Scripts.Interop;
 namespace newsanguo.Scripts.Powers;
 
 // 注册能力到游戏
@@ -28,7 +30,17 @@ public class ToABiggerGobletPower : ModPowerTemplate
         BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png"
     );
 
-    // 当你获得酒力时，额外获得等同于换大盏层数的酒力。
+    public override LocString Description
+    {
+        get
+        {
+            LocString description = base.Description;
+            SunqianUniverseVigorInterop.AddActiveResourceName(description, this);
+            return description;
+        }
+    }
+
+    // 当你获得当前联动资源时，额外获得等同于换大盏层数的同种资源。
     // 用 ModifyPowerAmountGivenAdditive（而非 TryModifyPowerAmountReceived）：
     // 原版 PowerVar<T>.UpdateCardPreview 会调用 ModifyPowerAmountGiven，
     // 因此手牌中的酒力数值会自动把这份加成算进卡面（打出时的实际结算同样走这条钩子）。
@@ -40,7 +52,7 @@ public class ToABiggerGobletPower : ModPowerTemplate
     // 实际结算时播放“换大盏”增强音效（卡面预览刷新不会走这里）
     public override Task AfterModifyingPowerAmountGiven(PowerModel power)
     {
-        if (power is DrunkenMightPower)
+        if (SunqianUniverseVigorInterop.IsActiveResourcePower(power, Owner))
         {
             NewsanguoSfx.Play("event:/newsanguo/sfx/to_a_bigger_goblet_power");
         }
@@ -52,9 +64,9 @@ public class ToABiggerGobletPower : ModPowerTemplate
     private bool ShouldBoost(Creature giver, decimal amount, Creature? target, PowerModel power)
     {
         if (Owner is null) return false;
-        // 只增强“获得”酒力（失去酒力时不加成）
+        // 只增强正向获得（失去资源时不加成）
         if (amount <= 0m) return false;
-        if (power is not DrunkenMightPower) return false;
+        if (!SunqianUniverseVigorInterop.IsActiveResourcePower(power, Owner)) return false;
 
         // 归属判定：原版 Hook.ModifyPowerAmountGiven 会遍历全场模型（对方手牌/能力也在内），
         // 所以必须判干净，别把别人的酒力也算成自己的：

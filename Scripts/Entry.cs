@@ -27,14 +27,15 @@ public class Entry
     {
         // 逐个应用 Harmony 补丁：单个补丁失败不影响其它补丁与 mod 主体，并在日志中记录失败原因
         var harmony = new Harmony("newsanguo");
-        AllegianceChange.Register();
-        ApplyPatch(harmony, typeof(AllegianceChangeVictoryPatch));
+        TerritoryHandOrder.Register();
+        TerritoryRightClick.Register();
         ApplyPatch(harmony, typeof(NewsanguoEnergyCounterPatch));
         ApplyPatch(harmony, typeof(LegacyCardTransferPatch));
         ApplyPatch(harmony, typeof(FireWaterHarmonyWeakPatch));
         ApplyPatch(harmony, typeof(FireWaterHarmonyVulnerablePatch));
         ApplyPatch(harmony, typeof(FireWaterHarmonyFrailPatch));
-        ApplyPatch(harmony, typeof(ShuHanMultiplayerRandomSelectionPatch));
+        ApplyPatch(harmony, typeof(ReversalPowerTitlePatch));
+        ApplyPatch(harmony, typeof(ReversalPowerDescriptionPatch));
         ApplyPatch(harmony, typeof(AlwaysMineDiscardSelectPatch));
         ApplyPatch(harmony, typeof(AlwaysMineDiscardSelectionEndPatch));
         ApplyPatch(harmony, typeof(AlwaysMineDiscardGlowPatch));
@@ -49,6 +50,8 @@ public class Entry
         // 注意：补丁是**白名单**——新建的补丁类必须在这里显式加一行，否则只会被编译进 DLL 而永不生效
         // （此前 PragmatistRewardPatch 就是这样“看起来没生效”的）。
         ApplyPatch(harmony, typeof(PragmatistRewardPatch));
+        ApplyPatch(harmony, typeof(PragmatistInitialVisibilityPatch));
+        ApplyPatch(harmony, typeof(KaleidoscopeRewardPatch));
         // 天意给的额外回合不要再“吃掉”原版遗物「佩尔之眼」（PaelsEye）
         ApplyPatch(harmony, typeof(HeavensForcePaelsEyePatch));
         // 「创造模式」的选牌屏要像图鉴一样能搜索 / 筛选：复用图鉴的侧栏控件，只在那一屏生效
@@ -59,8 +62,26 @@ public class Entry
         //   （原版是「玩家格挡 → 奥斯提 → 玩家」，且多只召唤物时一次攻击只有 1 只接刀）
         ApplyPatch(harmony, typeof(CaoArtOfWarSoldierRemovalPatch));
         ApplyPatch(harmony, typeof(QingzhouSoldierOwnerDeathCleanupPatch));
-        ApplyPatch(harmony, typeof(IronCavalryBuffSuppressionPatch));
+        ApplyPatch(harmony, typeof(QingzhouSoldierCounterPatch));
+        ApplyPatch(harmony, typeof(BewildermentMovePatch));
+        ApplyPatch(harmony, typeof(BewildermentSmartDescriptionPatch));
+        ApplyPatch(harmony, typeof(BewildermentIntentColorPatch));
+        ApplyPatch(harmony, typeof(BewildermentFacingPatch));
+        ApplyPatch(harmony, typeof(TerritoryReplayPatch));
+        ApplyPatch(harmony, typeof(TerritoryReplayCountPatch));
+        ApplyPatch(harmony, typeof(TerritoryReplaySoundPatch));
+        ApplyPatch(harmony, typeof(TerritoryDragPatch));
+        ApplyPatch(harmony, typeof(TerritoryRepositionGlowPatch));
+        ApplyPatch(harmony, typeof(TerritoryRetainPatch));
+        ApplyPatch(harmony, typeof(TerritoryDiscardPatch));
+        ApplyPatch(harmony, typeof(TerritoryDiscardSelectionPatch));
+        ApplyPatch(harmony, typeof(TerritoryDiscardPromptPatch));
+        ApplyPatch(harmony, typeof(TerritoryDescriptionPatch));
+        ApplyPatch(harmony, typeof(TerritoryHandReplayRefreshPatch));
+        ApplyPatch(harmony, typeof(AbilitySuppressionPatch));
         ApplyPatch(harmony, typeof(IronCavalrySmartDescriptionPatch));
+        ApplyPatch(harmony, typeof(UnsettlingLampSelfDebuffPatch));
+        ApplyPatch(harmony, typeof(SunqianVigorSmartDescriptionPatch));
         ApplyPatch(harmony, typeof(CaoArtOfWarSoldierDamageCascadePatch));
         ApplyPatch(harmony, typeof(SoldierDamageCascadeNestedHookSkipPatch));
         // ③青州兵的战斗表现：站位照原版奥斯提的锚点（主人右侧 + 抬高 75px）并在多只时横向错开，
@@ -110,7 +131,7 @@ public class Entry
         // 截获并转交 NewsanguoSfx 播放同名音频资源，同样不再经过 FMOD。
         SubscribeAudioRestore();
         // RitsuLib Mod 设置页：注册本 mod 的设置项
-        // （“音效音量”分区与控制台命令 newsanguo_sfx_volume 共用真值源；“测试模式”分区控制蜀汉角色是否可选）
+        // （音效设置与控制台命令 newsanguo_sfx_volume 共用真值源）
         NewsanguoSfxVolumeSettings.Register();
         // 遥测（大盘层）：只申请 run_history（已结束跑局的原版 run-history，含每点的候选卡与是否被选）。
         // 后端地址在 NewsanguoTelemetry.IngestEndpoint；留空时该方法会直接返回、不做任何注册。

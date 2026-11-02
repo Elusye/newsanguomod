@@ -42,9 +42,10 @@ public class GoldenRebellion : NeutralCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/golden_rebellion");
 
-        // 从新三国卡池的稀有牌中生成 3 张候选（FilterForCombat 会自动排除不可战斗生成的牌），
-        // 使用战斗生成 RNG 保证多人同步
-        IEnumerable<CardModel> rareCards = ModelDb.CardPool<NewsanguoCardPool>().AllCards
+        // 按持有者当前角色的卡池生成稀有牌，包含已注入该角色卡池的中立牌。
+        // 同时遵守解锁与单人/多人限制，使用战斗生成 RNG 保证联机同步。
+        IEnumerable<CardModel> rareCards = Owner.Character.CardPool
+            .GetUnlockedCards(Owner.UnlockState, Owner.RunState.CardMultiplayerConstraint)
             .Where(c => c.Rarity == CardRarity.Rare);
         List<CardModel> options = CardFactory.GetDistinctForCombat(base.Owner, rareCards, 3, base.Owner.RunState.Rng.CombatCardGeneration).ToList();
 

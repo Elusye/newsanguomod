@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -21,7 +22,18 @@ public class SlayTheThiefLuBu : NewsanguoCardTemplate
 
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(7m, ValueProp.Move)];
 
-    public SlayTheThiefLuBu() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy) { }
+    public SlayTheThiefLuBu() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy) { }
+
+    private int GetHitCount(CardPlay? currentPlay = null) => !IsMutable || !IsInCombat ? 1 :
+        1 + CombatManager.Instance.History.CardPlaysStarted.Count(entry =>
+            entry.CardPlay != currentPlay && entry.CardPlay.Card.Owner == Owner && entry.CardPlay.Card.Id == Id);
+
+    protected override void AddExtraArgsToDescription(LocString description)
+    {
+        base.AddExtraArgsToDescription(description);
+        description.Add("HitCount", GetHitCount());
+    }
+
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -29,12 +41,11 @@ public class SlayTheThiefLuBu : NewsanguoCardTemplate
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
         // 出牌开始记录已经包含本次；排除它，只统计本玩家此前打出的同一 ID。
         // ID 不随升级变化，也不会把联机队友的出牌算入。
-        int previousPlays = CombatManager.Instance.History.CardPlaysStarted.Count(entry =>
-            entry.CardPlay != cardPlay && entry.CardPlay.Card.Owner == Owner && entry.CardPlay.Card.Id == Id);
+        int hitCount = GetHitCount(cardPlay);
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this)
             .Targeting(cardPlay.Target)
-            .WithHitCount(1 + previousPlays)
+            .WithHitCount(hitCount)
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);
     }

@@ -26,6 +26,11 @@ namespace newsanguo.Scripts.Powers;
 [RegisterPower]
 public class DrunkenMightPower : ModPowerTemplate
 {
+    // 只为护佑生成的那张牌记账；finally 取走，避免影响其他攻击牌。
+    private static readonly Dictionary<CardModel, int> pendingRefunds = new();
+    internal static void BeginRefundForCard(CardModel card) => pendingRefunds.Add(card, 0);
+    internal static int EndRefundForCard(CardModel card) => pendingRefunds.Remove(card, out int amount) ? amount : 0;
+
     // 账本：牌 → 那张牌开始打出时的层数。
     // 用 CardModel 作键（引用相等），精确到“这一张牌的这一次出牌”。
     private class Data
@@ -87,7 +92,7 @@ public class DrunkenMightPower : ModPowerTemplate
         {
             return 0m;
         }
-        return base.Amount;
+        return base.Amount * (cardSource is ThirstyAxe axe ? axe.WineMultiplier : 1m);
     }
 
     // 打牌开始前：记录此刻的层数（只登记本能力拥有者打出的攻击牌）
@@ -148,6 +153,7 @@ public class DrunkenMightPower : ModPowerTemplate
     /// </summary>
     public async Task ConsumeThenRefund(PlayerChoiceContext choiceContext, CardModel? cardSource)
     {
+        if (newsanguo.Scripts.Combat.AbilitySuppression.IsSuppressed(this)) return;
         int consumed = ConsumedByHalf;
         if (consumed <= 0 || Owner is null)
         {
@@ -155,6 +161,9 @@ public class DrunkenMightPower : ModPowerTemplate
         }
 
         await HalfForCard(choiceContext, cardSource);
+        // 自带返还的攻击牌已自行结算，护佑不得再次返还。
+        if (cardSource is not null && pendingRefunds.ContainsKey(cardSource))
+            pendingRefunds[cardSource] -= consumed;
         // 减半后层数可能归零导致这份能力被移除，所以重新 Apply 而不是直接改 this
         await PowerCmd.Apply<DrunkenMightPower>(
             choiceContext,
@@ -168,10 +177,13 @@ public class DrunkenMightPower : ModPowerTemplate
     // 把酒力调整为指定值
     private async Task SetAmount(PlayerChoiceContext choiceContext, int target, CardModel? cardSource)
     {
+        if (newsanguo.Scripts.Combat.AbilitySuppression.IsSuppressed(this)) return;
         if (Owner is null || target == Amount)
         {
             return;
         }
+        if (cardSource is not null && pendingRefunds.ContainsKey(cardSource) && target < Amount)
+            pendingRefunds[cardSource] += Amount - target;
         await PowerCmd.ModifyAmount(
             choiceContext,
             this,
@@ -186,7 +198,7 @@ public class DrunkenMightPower : ModPowerTemplate
     // 达到最红所需的层数
     private const int MaxTintAmount = 100;
 
-    // 最红时绿/蓝通道的倍率。Modulate 是乘法：只压 G/B、R 恒为 1，观感就是越喝越红。
+    // 最红时绿/蓝通道相对原亮度的倍率；保留多人后排角色的原版调暗效果。
     private const float MinGreenBlue = 0.35f;
 
     // 颜色过渡时长（秒）
@@ -225,13 +237,15 @@ public class DrunkenMightPower : ModPowerTemplate
             return;
         }
 
-        float greenBlue = 1f - (1f - MinGreenBlue) * Mathf.Clamp(amount / (float)MaxTintAmount, 0f, 1f);
+        // 原版后排站位会将 RGB 同时设为 0.5；R 不受酒力修改，可作为原亮度基准。
+        float greenBlue = visuals.Modulate.R *
+            (1f - (1f - MinGreenBlue) * Mathf.Clamp(amount / (float)MaxTintAmount, 0f, 1f));
         if (_tintTween is not null && _tintTween.IsValid())
         {
             _tintTween.Kill();
         }
         // 只补间 G/B 两个通道：不碰 R，也不碰 alpha（本体复活动画会在补间 modulate:a）
-        _tintTween = visuals.CreateTween();
+        _tintTween = visuals.CreateTween().SetParallel();
         _tintTween.TweenProperty(visuals, "modulate:g", greenBlue, TintDuration)
             .SetEase(Tween.EaseType.Out).SetTrans(Tween.TransitionType.Sine);
         _tintTween.TweenProperty(visuals, "modulate:b", greenBlue, TintDuration)

@@ -14,6 +14,10 @@ public class NeutralCardPool : TypeListCardPoolModel
     internal static void RegisterSharedCards()
     {
         var content = STS2RitsuLib.Content.ModContentRegistry.For(Entry.ModId);
+        content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.ThirstyAxe>();
+        content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.ThirstyAxe>();
+        content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.StandardCamp>();
+        content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.StandardCamp>();
         content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.SecretStratagem>();
         content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.SecretStratagem>();
         content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.ThrowHimOut>();
@@ -34,6 +38,22 @@ public class NeutralCardPool : TypeListCardPoolModel
         content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.NewGamePlus>();
         content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.GoldenRebellion>();
         content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.GoldenRebellion>();
+        content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.DarkHornShark>();
+        content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.DarkHornShark>();
+        content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.ChainStratagem>();
+        content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.ChainStratagem>();
+        content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.SmilingTiger>();
+        content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.SmilingTiger>();
+        content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.WhatToEat>();
+        content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.WhatToEat>();
+        content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.WellFedWellClothed>();
+        content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.WellFedWellClothed>();
+        content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.FeelNoAcid>();
+        content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.FeelNoAcid>();
+        content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.DareYouToSlash>();
+        content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.DareYouToSlash>();
+        content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.SoImpressive>();
+        content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.SoImpressive>();
     }
 
     public override string Title => "newsanguo";

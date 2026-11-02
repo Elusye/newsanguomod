@@ -24,6 +24,7 @@ public static class EngineSfxRedirectPatch
         // 分角色选人音效：曹魏 / 蜀汉
         "event:/newsanguo/sfx/character_select_caowei",
         "event:/newsanguo/sfx/character_select_shuhan",
+        "event:/newsanguo/sfx/character_death_shuhan",
         "event:/newsanguo/sfx/character_death"
     };
 

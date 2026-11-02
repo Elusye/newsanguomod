@@ -1,3 +1,4 @@
+using MegaCrit.Sts2.Core.Models.CardPools;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -14,8 +15,8 @@ using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
-// 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
+// 卡池归属由注册特性决定；保留原类名与存档 ID。
+[RegisterCard(typeof(TokenCardPool))]
 public class PartyOn : NewsanguoCardTemplate
 {
 

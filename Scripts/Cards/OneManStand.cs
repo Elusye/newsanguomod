@@ -55,7 +55,7 @@ public class OneManStand : NewsanguoCardTemplate
 
         // 丢弃手牌到只剩一张：选择一张保留，其余全部丢弃
         CardPile hand = PileType.Hand.GetPile(base.Owner);
-        if (hand.Cards.Count <= 1)
+        if (hand.Cards.Count(c => !TerritoryCardTemplate.HasTerritoryKeyword(c)) <= 1)
         {
             return;
         }
@@ -64,7 +64,7 @@ public class OneManStand : NewsanguoCardTemplate
             prefs: new CardSelectorPrefs(new LocString("cards", "NEWSANGUO_CARD_SELECT_ONE_TO_KEEP"), 1),
             context: choiceContext,
             player: base.Owner,
-            filter: null,
+            filter: card => !TerritoryCardTemplate.HasTerritoryKeyword(card),
             source: this)).FirstOrDefault();
         if (keepCard is null)
         {

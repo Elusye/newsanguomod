@@ -11,12 +11,13 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
+using MegaCrit.Sts2.Core.Models.CardPools;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
-// 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
+// 原曹魏实体保留供存档和生成效果使用，不再进入曹魏卡池。
+[RegisterCard(typeof(TokenCardPool))]
 public class ImGettingDrunk : NewsanguoCardTemplate
 {
     // 卡图资源
@@ -24,9 +25,9 @@ public class ImGettingDrunk : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：立即获得的酒力（升级后 12）
+    // 卡牌基础数值：立即获得的酒力（升级后 8）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DrunkenMightPower>(9m)
+        new PowerVar<DrunkenMightPower>(6m)
     ];
 
     // 悬停提示：展示“酒力”说明 + “不胜酒力”卡面说明
@@ -35,7 +36,7 @@ public class ImGettingDrunk : NewsanguoCardTemplate
         HoverTipFactory.FromCard<Lightweight>()
     ];
 
-    public ImGettingDrunk() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+    public ImGettingDrunk() : base(0, CardType.Skill, CardRarity.Common, TargetType.Self)
     {
     }
 
@@ -48,7 +49,7 @@ public class ImGettingDrunk : NewsanguoCardTemplate
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(Owner.Creature, "Cast", Owner.Character.CastAnimDelay);
 
-        // 立即获得 9（12）点酒力
+        // 立即获得 6（8）点酒力
         await PowerCmd.Apply<DrunkenMightPower>(
             choiceContext,
             Owner.Creature,
@@ -60,9 +61,9 @@ public class ImGettingDrunk : NewsanguoCardTemplate
         await Lightweight.CreateInHand(Owner, CombatState!);
     }
 
-    // 升级：酒力 9 → 12
+    // 升级：酒力 6 → 8
     protected override void OnUpgrade()
     {
-        DynamicVars["DrunkenMightPower"].UpgradeValueBy(3);
+        DynamicVars["DrunkenMightPower"].UpgradeValueBy(2);
     }
 }

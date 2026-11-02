@@ -3,11 +3,13 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Combat;
+using newsanguo.Scripts.Interop;
 
 namespace newsanguo.Scripts.Powers;
 
@@ -67,8 +69,18 @@ public class SovereignFormPower : ModPowerTemplate, IHasSecondAmount
         BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png"
     );
 
-    // 记录酒力变化前的层数
-    private int _drunkenMightAmountBeforeChange;
+    public override LocString Description
+    {
+        get
+        {
+            LocString description = base.Description;
+            SunqianUniverseVigorInterop.AddActiveResourceName(description, this);
+            return description;
+        }
+    }
+
+    // 记录当前联动资源（酒力 / 活力）变化前的层数
+    private int _resourceAmountBeforeChange;
 
     // 距离下一次触发还差的酒力累计（不满 2 次的余数留到下次继续攒）。
     // 故意只在战斗内记：能力本身随战斗结束消失，读档回到战斗中最多丢一次余数，无关大局。
@@ -78,9 +90,9 @@ public class SovereignFormPower : ModPowerTemplate, IHasSecondAmount
     public override Task BeforePowerAmountChanged(PowerModel power, decimal amount, Creature target, Creature? applier, CardModel? cardSource)
     {
         if (Owner is null) return Task.CompletedTask;
-        if (power is DrunkenMightPower && target == Owner)
+        if (target == Owner && SunqianUniverseVigorInterop.IsActiveResourcePower(power, Owner))
         {
-            _drunkenMightAmountBeforeChange = power.Amount;
+            _resourceAmountBeforeChange = power.Amount;
         }
         return Task.CompletedTask;
     }
@@ -90,10 +102,10 @@ public class SovereignFormPower : ModPowerTemplate, IHasSecondAmount
     {
         if (Owner is null) return;
         // 只认本方身上的酒力（失去酒力时 amount 为负，直接放行不入账）
-        if (power is not DrunkenMightPower || power.Owner != Owner) return;
+        if (power.Owner != Owner || !SunqianUniverseVigorInterop.IsActiveResourcePower(power, Owner)) return;
         if (amount <= 0m) return;
 
-        int gainedAmount = power.Amount - _drunkenMightAmountBeforeChange;
+        int gainedAmount = power.Amount - _resourceAmountBeforeChange;
         if (gainedAmount <= 0) return;
 
         // 本次实际增加了酒力，无论增加几点都只记一次。

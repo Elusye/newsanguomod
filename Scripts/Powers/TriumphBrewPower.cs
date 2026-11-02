@@ -6,9 +6,11 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
+using newsanguo.Scripts.Interop;
 
 namespace newsanguo.Scripts.Powers;
 
@@ -31,31 +33,41 @@ public class TriumphBrewPower : ModPowerTemplate
         BigIconPath: "res://newsanguo/images/powers/ToABiggerGobletPowerBig.png"
     );
 
+    public override LocString Description
+    {
+        get
+        {
+            LocString description = base.Description;
+            SunqianUniverseVigorInterop.AddActiveResourceName(description, this);
+            return description;
+        }
+    }
+
     // 连锁保护：某次“传播”进行期间，阻止任何“痛饮庆功酒”再次触发，避免盟友之间来回传播形成死循环
     private static bool _isPropagating;
 
-    // 记录酒力变化前的层数
-    private int _drunkenMightAmountBeforeChange;
+    // 记录当前联动资源（酒力 / 活力）变化前的层数
+    private int _resourceAmountBeforeChange;
 
-    // 在酒力层数变化前记录旧值
+    // 在当前联动资源（酒力 / 活力）变化前记录旧值
     public override Task BeforePowerAmountChanged(PowerModel power, decimal amount, Creature target, Creature? applier, CardModel? cardSource)
     {
         if (Owner is null) return Task.CompletedTask;
-        if (power is DrunkenMightPower && target == Owner)
+        if (target == Owner && SunqianUniverseVigorInterop.IsActiveResourcePower(power, Owner))
         {
-            _drunkenMightAmountBeforeChange = power.Amount;
+            _resourceAmountBeforeChange = power.Amount;
         }
         return Task.CompletedTask;
     }
 
-    // 在酒力层数变化后，如果自己获得了酒力，则让其他盟友获得等量酒力
+    // 当前联动资源增加后触发；后续原效果不变，其他盟友统一获得等量酒力。
     public override async Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
     {
         if (Owner is null) return;
-        if (power is not DrunkenMightPower || power.Owner != Owner) return;
-        if (_isPropagating) return; // 这份酒力正来自其他盟友的“痛饮庆功酒”，不再继续传播
+        if (power.Owner != Owner || !SunqianUniverseVigorInterop.IsActiveResourcePower(power, Owner)) return;
+        if (_isPropagating) return; // 正在结算其他“痛饮庆功酒”的传播，不再继续连锁。
 
-        int gainedAmount = power.Amount - _drunkenMightAmountBeforeChange;
+        int gainedAmount = power.Amount - _resourceAmountBeforeChange;
         if (gainedAmount <= 0) return;
 
         // 找出其他存活的玩家盟友

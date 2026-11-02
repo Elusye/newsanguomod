@@ -60,7 +60,7 @@ public class Tweak : NewsanguoCardTemplate
         if (IsUpgraded)
         {
             // 升级：为所有未附魔的手牌添加随机附魔
-            foreach (CardModel hand in PileType.Hand.GetPile(base.Owner).Cards.Where(c => c.Enchantment is null).ToArray())
+            foreach (CardModel hand in PileType.Hand.GetPile(base.Owner).Cards.Where(EnchantHelper.CanReceiveCardGrantedEnchantment).ToArray())
             {
                 EnchantHelper.ApplyRandomEnchant(hand, base.Owner);
             }
@@ -72,9 +72,9 @@ public class Tweak : NewsanguoCardTemplate
                 prefs: new CardSelectorPrefs(CardSelectorPrefs.EnchantSelectionPrompt, 1),
                 context: choiceContext,
                 player: base.Owner,
-                filter: card => card.Enchantment is null,
+                filter: EnchantHelper.CanReceiveCardGrantedEnchantment,
                 source: this)).FirstOrDefault();
-            if (selected is null)
+            if (selected is null || !EnchantHelper.CanReceiveCardGrantedEnchantment(selected))
             {
                 return;
             }
