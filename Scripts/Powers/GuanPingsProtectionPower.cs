@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Combat;
@@ -9,10 +10,11 @@ using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.Factories;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.HoverTips;
+using newsanguo.Scripts.Cards;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
-using newsanguo.Scripts.Characters;
 
 namespace newsanguo.Scripts.Powers;
 
@@ -25,6 +27,8 @@ public class GuanPingsProtectionPower : ModPowerTemplate
     }
     protected override object InitInternalData() => new Data();
     internal void AddUpgradedTrigger() => GetInternalData<Data>().upgradedTriggers++;
+
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [VirtualCardHoverTip.Create()];
 
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
@@ -46,7 +50,7 @@ public class GuanPingsProtectionPower : ModPowerTemplate
         {
             if (!Owner.IsAlive || !dealer.IsAlive || CombatManager.Instance.IsOverOrEnding)
                 break;
-            var pool = ModelDb.CardPool<ShuHanCardPool>()
+            var pool = player.Character.CardPool
                 .GetUnlockedCards(player.UnlockState, player.RunState.CardMultiplayerConstraint)
                 .Where(c => c.Type == CardType.Attack && !c.EnergyCost.CostsX && !c.HasStarCostX);
             CardModel? card = CardFactory.GetDistinctForCombat(player, pool, 1,

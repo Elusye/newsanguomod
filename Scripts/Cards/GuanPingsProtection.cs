@@ -20,7 +20,7 @@ public class GuanPingsProtection : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");
     protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(12m, ValueProp.Move)];
     public override bool GainsBlock => true;
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<GuanPingsProtectionPower>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<GuanPingsProtectionPower>(), VirtualCardHoverTip.Create()];
     public GuanPingsProtection() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self) { }
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

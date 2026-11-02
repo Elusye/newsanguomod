@@ -6,5 +6,7 @@
   "NEWSANGUO_KEYWORD_RECRUIT.description": "生成{Summon}名1生命值的青州兵。在玩家受到攻击时，青州兵受伤会优先于玩家扣除格挡。\n在敌方回合结束时，失去所有募集的青州兵。\n青州兵的数量上限为15。",
   "NEWSANGUO_SUNQIAN_VIGOR_INTEROP.hoverTitle": "※模组联动",
   "NEWSANGUO_SUNQIAN_VIGOR_INTEROP.gainHover": "对于[purple]孙乾宇宙模组[/purple]角色，此效果将在获得[gold]活力[/gold]时触发，而非[gold]酒力[/gold]。",
-  "NEWSANGUO_SUNQIAN_VIGOR_INTEROP.loseHover": "对于[purple]孙乾宇宙模组[/purple]角色，此效果将在失去[gold]活力[/gold]时触发，而非[gold]酒力[/gold]。"
+  "NEWSANGUO_SUNQIAN_VIGOR_INTEROP.loseHover": "对于[purple]孙乾宇宙模组[/purple]角色，此效果将在失去[gold]活力[/gold]时触发，而非[gold]酒力[/gold]。",
+  "NEWSANGUO_VIRTUAL_CARD.title": "虚拟牌",
+  "NEWSANGUO_VIRTUAL_CARD.description": "虚拟牌打出后既不会进入[gold]弃牌堆[/gold]也不会进入[gold]消耗牌堆[/gold]。"
 }

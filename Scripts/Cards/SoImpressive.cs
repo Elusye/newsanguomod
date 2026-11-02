@@ -59,10 +59,10 @@ public class SoImpressive : NeutralCardTemplate
         get
         {
             if (!IsMutable || !IsInCombat || CombatState is null)
-                return System.Array.Empty<IHoverTip>();
+                return [VirtualCardHoverTip.Create()];
             CardModel? source = DisplaySource;
-            if (source is null) return System.Array.Empty<IHoverTip>();
-            return [HoverTipFactory.FromCard(source)];
+            if (source is null) return [VirtualCardHoverTip.Create()];
+            return [VirtualCardHoverTip.Create(), HoverTipFactory.FromCard(source)];
         }
     }
     private void InitializeRecord()

@@ -947,24 +947,15 @@ internal sealed class PickerSearchUi
             return null;
         }
 
-        return card => IsInPool(card, pool);
+        return CreatePoolMatcher(pool);
     }
 
-    private static bool IsInPool(CardModel card, CardPoolModel pool)
+    private static Func<CardModel, bool> CreatePoolMatcher(CardPoolModel pool)
     {
-        try
-        {
-            // CardModel.Pool = 「第一个包含这张牌的池」，和原版图鉴的判定一致
-            // （不在任何池里的牌它会抛 InvalidProgramException，所以必须包住）。
-            // 原版图鉴用的是类型判断（`c.Pool is IroncladCardPool`），这里两者都认：
-            // 同一个池在 ModelDb 里是单例，引用相等通常成立；保险起见再加一层类型比较。
-            CardPoolModel? cardPool = card.Pool;
-            return ReferenceEquals(cardPool, pool) || (cardPool is not null && cardPool.GetType() == pool.GetType());
-        }
-        catch (Exception)
-        {
-            return false;
-        }
+        // 按实际注册成员筛选；共有牌的显示 Pool 仍是中立池，不能据此排除它们。
+        // 选牌实体与原型不是同一个对象，使用 ID 匹配；在创建筛选器时构建集合，避免反复遍历卡池。
+        var members = pool.AllCards.Select(card => card.Id).ToHashSet();
+        return card => members.Contains(card.Id);
     }
 
     // 图鉴是单选：选中一颗就把别的都取消（`NCardPoolFilter.IsSelected` 的 setter 只改外观，不会再发 Toggled）。
