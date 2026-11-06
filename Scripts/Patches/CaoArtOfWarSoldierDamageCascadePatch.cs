@@ -31,6 +31,7 @@ public static class SoldierDamageCascade
 {
     private static readonly AsyncLocal<bool> Distributing = new();
     private static readonly AsyncLocal<bool> SkippingHooks = new();
+    internal static bool NestedHooksReady { get; set; }
     public static bool IsDistributing { get => Distributing.Value; set => Distributing.Value = value; }
     public static bool SkipNestedHooks { get => SkippingHooks.Value; set => SkippingHooks.Value = value; }
 }
@@ -70,7 +71,7 @@ public static class CaoArtOfWarSoldierDamageCascadePatch
     [HarmonyPrefix]
     public static bool Prefix(PlayerChoiceContext choiceContext, IEnumerable<Creature>? targets, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, ref Task<IEnumerable<DamageResult>> __result)
     {
-        if (SoldierDamageCascade.IsDistributing)
+        if (!SoldierDamageCascade.NestedHooksReady || SoldierDamageCascade.IsDistributing)
         {
             return true;
         }
@@ -227,8 +228,8 @@ public static class SoldierDamageCascadeNestedHookSkipPatch
             }
             yield return instruction;
         }
-        if (damageCalls != 1 || beforeCalls != 1)
-            throw new InvalidOperationException($"青州兵伤害钩子调用点不匹配：ModifyDamage={damageCalls}, BeforeDamageReceived={beforeCalls}");
+        if (damageCalls < 1 || beforeCalls < 1)
+            throw new InvalidOperationException($"青州兵伤害钩子缺少必要调用点：ModifyDamage={damageCalls}, BeforeDamageReceived={beforeCalls}");
     }
 
     public static decimal ModifyDamage(IRunState runState, ICombatState? combatState,

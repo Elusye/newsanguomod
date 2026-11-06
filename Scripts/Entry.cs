@@ -82,8 +82,12 @@ public class Entry
         ApplyPatch(harmony, typeof(IronCavalrySmartDescriptionPatch));
         ApplyPatch(harmony, typeof(UnsettlingLampSelfDebuffPatch));
         ApplyPatch(harmony, typeof(SunqianVigorSmartDescriptionPatch));
-        ApplyPatch(harmony, typeof(CaoArtOfWarSoldierDamageCascadePatch));
-        ApplyPatch(harmony, typeof(SoldierDamageCascadeNestedHookSkipPatch));
+        // 只有嵌套伤害去重生效后才接管分摊，避免逐只青州兵重复计算倍率。
+        SoldierDamageCascade.NestedHooksReady = ApplyPatch(harmony, typeof(SoldierDamageCascadeNestedHookSkipPatch));
+        if (SoldierDamageCascade.NestedHooksReady)
+            ApplyPatch(harmony, typeof(CaoArtOfWarSoldierDamageCascadePatch));
+        else
+            Logger.Warn("青州兵伤害分摊已停用：配套伤害去重补丁加载失败，回退原版召唤物承伤。");
         // ③青州兵的战斗表现：站位照原版奥斯提的锚点（主人右侧 + 抬高 75px）并在多只时横向错开，
         //   同时把引擎给「非奥斯提」宠物关掉的鼠标交互/血条恢复回来（否则鼠标悬浮看不到名字，见补丁顶部注释）
         ApplyPatch(harmony, typeof(CaoArtOfWarSoldierFormationPatch));
@@ -138,18 +142,20 @@ public class Entry
         NewsanguoTelemetry.Register();
     }
 
-    private static void ApplyPatch(Harmony harmony, Type patchType)
+    private static bool ApplyPatch(Harmony harmony, Type patchType)
     {
         try
         {
             harmony.CreateClassProcessor(patchType).Patch();
             Logger.Info($"Applied Harmony patch: {patchType.Name}");
             Diagnostics.Log($"Applied Harmony patch: {patchType.Name}");
+            return true;
         }
         catch (Exception e)
         {
-            Logger.Error($"Failed to apply Harmony patch {patchType.Name}: {e.Message}");
+            Logger.Error($"Failed to apply Harmony patch {patchType.Name}: {e}");
             Diagnostics.Log($"Failed to apply Harmony patch {patchType.Name}: {e}");
+            return false;
         }
     }
 
