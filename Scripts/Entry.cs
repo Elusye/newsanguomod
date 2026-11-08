@@ -56,6 +56,7 @@ public class Entry
         ApplyPatch(harmony, typeof(KaleidoscopeRewardPatch));
         // 天意给的额外回合不要再“吃掉”原版遗物「佩尔之眼」（PaelsEye）
         ApplyPatch(harmony, typeof(HeavensForcePaelsEyePatch));
+        ApplyPatch(harmony, typeof(PaelsWingDuplicateAlternativePatch));
         // 「创造模式」的选牌屏要像图鉴一样能搜索 / 筛选：复用图鉴的侧栏控件，只在那一屏生效
         // （详见 CardSelectSearchPatch.cs 顶部注释；标记由 CreativeModeReward 在弹屏前打开）
         ApplyPatch(harmony, typeof(CardSelectSearchPatch));

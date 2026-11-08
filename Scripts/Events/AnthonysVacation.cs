@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Events;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.ValueProps;
 using MegaCrit.Sts2.Core.Models;
@@ -23,7 +24,13 @@ namespace newsanguo.Scripts.Events;
 [RegisterActEvent(typeof(Glory))]
 public sealed class AnthonysVacation : ModEventTemplate
 {
-    private const int MercyHpLoss = 2;
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new MaxHpVar(5m), new HpLossVar(0m)];
+
+    public override void CalculateVars()
+    {
+        // 用进入事件时的最大生命值计算，预览与实际扣血共用同一个整数。
+        DynamicVars.HpLoss.BaseValue = (int)(Owner!.Creature.MaxHp * 0.35m);
+    }
 
     // 暂时关闭事件的自然出现。
     public override bool IsAllowed(IRunState runState) => false;
@@ -43,7 +50,7 @@ public sealed class AnthonysVacation : ModEventTemplate
             new EventOption(this, eligible ? null : Wrath, InitialOptionKey(eligible ? "WRATH_LOCKED" : "WRATH"),
                 HoverTipFactory.FromCard<TonyStrike>(), HoverTipFactory.FromCard<TonyDefend>()),
             new EventOption(this, eligible ? null : PleadForMercy, InitialOptionKey(eligible ? "MERCY_LOCKED" : "MERCY"))
-                .ThatDoesDamage(MercyHpLoss)
+                .ThatDoesDamage(DynamicVars.HpLoss.BaseValue - DynamicVars.MaxHp.BaseValue)
         ];
     }
 
@@ -76,13 +83,11 @@ public sealed class AnthonysVacation : ModEventTemplate
 
     private async Task PleadForMercy()
     {
-        var player = Owner!;
-        await CreatureCmd.Damage(new ThrowingPlayerChoiceContext(), player.Creature, MercyHpLoss,
+        var creature = Owner!.Creature;
+        await CreatureCmd.GainMaxHp(creature, DynamicVars.MaxHp.BaseValue);
+        await CreatureCmd.Damage(new ThrowingPlayerChoiceContext(), creature, DynamicVars.HpLoss.BaseValue,
             ValueProp.Unblockable | ValueProp.Unpowered, null, null);
-        if (!player.Creature.IsAlive) return;
-
-        await AddRandomCards(1);
-        SetEventState(PageDescription("MERCY"), GenerateInitialOptions());
+        SetEventFinished(PageDescription("MERCY"));
     }
 
     private async Task AddRandomCards(int count)
