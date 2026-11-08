@@ -12,7 +12,6 @@ using MegaCrit.Sts2.Core.ValueProps;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Acts;
 using MegaCrit.Sts2.Core.Models.Cards;
-using MegaCrit.Sts2.Core.Runs;
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Enchantments;
 using newsanguo.Scripts.Relics;
@@ -31,9 +30,6 @@ public sealed class AnthonysVacation : ModEventTemplate
         // 用进入事件时的最大生命值计算，预览与实际扣血共用同一个整数。
         DynamicVars.HpLoss.BaseValue = (int)(Owner!.Creature.MaxHp * 0.35m);
     }
-
-    // 暂时关闭事件的自然出现。
-    public override bool IsAllowed(IRunState runState) => false;
 
     public override EventAssetProfile AssetProfile => new(
         InitialPortraitPath: "res://newsanguo/images/events/AnthonysVacation.png");
