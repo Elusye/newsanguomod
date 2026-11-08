@@ -26,9 +26,12 @@ using newsanguo.Scripts.Characters;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
+[RegisterCard(typeof(RetiredCardPool))]
 public class BetterThanYilingFlames : NewsanguoCardTemplate
 {
+    public override bool CanBeGeneratedByModifiers => Pool is not RetiredCardPool;
+    public override bool CanBeGeneratedInCombat => Pool is not RetiredCardPool;
+
     // 基础伤害。永久成长在此之上累加，本体数值不变。
     private const int BaseDamage = 12;
 

@@ -51,8 +51,7 @@ public class SwitchAllegiance : NewsanguoCardTemplate
         foreach (var card in generated)
         {
             if (card is NewsanguoCardTemplate modCard) modCard.SetToFreeHeavensForceForCombat();
-            var result = await CardPileCmd.AddGeneratedCardToCombat(card, PileType.Hand, Owner);
-            CardCmd.PreviewCardPileAdd(result, 1.2f);
+            await CardPileCmd.AddGeneratedCardToCombat(card, PileType.Hand, Owner);
         }
     }
 }

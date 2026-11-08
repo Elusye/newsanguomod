@@ -27,6 +27,8 @@ public class Entry
     {
         // 逐个应用 Harmony 补丁：单个补丁失败不影响其它补丁与 mod 主体，并在日志中记录失败原因
         var harmony = new Harmony("newsanguo");
+        ApplyPatch(harmony, typeof(TonyDefendBlockCapPatch));
+        ApplyPatch(harmony, typeof(FragileEnchantmentCombatEndPatch));
         TerritoryHandOrder.Register();
         TerritoryRightClick.Register();
         ApplyPatch(harmony, typeof(NewsanguoEnergyCounterPatch));
@@ -42,6 +44,7 @@ public class Entry
         ApplyPatch(harmony, typeof(EngineSfxRedirectPatch));
         ApplyPatch(harmony, typeof(SecondAmountLabelPatch));
         ApplyPatch(harmony, typeof(HeavensForceHoverTipPatch));
+        ApplyPatch(harmony, typeof(HeavensForcePlayLimitPatch));
         ApplyPatch(harmony, typeof(FatherIHaveFailedYouPowerPatch));
         ApplyPatch(harmony, typeof(RestSiteSmithSfxPatch));
         ApplyPatch(harmony, typeof(RestSiteHealSfxPatch));

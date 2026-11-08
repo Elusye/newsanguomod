@@ -12,6 +12,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.HoverTips;
 using newsanguo.Scripts.Cards;
+using newsanguo.Scripts.Enchantments;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -60,18 +61,10 @@ public class GuanPingsProtectionPower : ModPowerTemplate
             // 与「好厉害呀！」相同，打出引擎复制品，由引擎处理结算后的去向。
             card = card.CreateDupe(player);
             if (i < upgradedCount) CardCmd.Upgrade(card);
+            if (card.Enchantment is not null) CardCmd.ClearEnchantment(card);
+            CardCmd.Enchant<MellowWine>(card, 1m);
             Flash();
-            DrunkenMightPower.BeginRefundForCard(card);
-            try
-            {
-                await CardCmd.AutoPlay(choiceContext, card, dealer);
-            }
-            finally
-            {
-                int refund = DrunkenMightPower.EndRefundForCard(card);
-                if (refund > 0 && Owner.IsAlive && !CombatManager.Instance.IsOverOrEnding)
-                    await PowerCmd.Apply<DrunkenMightPower>(choiceContext, Owner, refund, Owner, card);
-            }
+            await CardCmd.AutoPlay(choiceContext, card, dealer);
         }
     }
 

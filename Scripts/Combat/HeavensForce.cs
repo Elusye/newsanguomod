@@ -47,7 +47,7 @@ public static class HeavensForce
 
     // 阈值高亮的触发点：≥10 金色（即将转化为额外回合）、≤-10 红色（即将被天意侵蚀）
     // 与 HeavensForcePower 回合末转化所用的 ±10 一致
-    private const int Threshold = 10;
+    internal const int Threshold = 10;
     // 高亮颜色取自原版卡牌高亮（gold / red），保持与卡牌高亮一致的观感
     private static readonly Color GoldHighlight = NCardHighlight.gold with { A = 1f };
     private static readonly Color RedHighlight = NCardHighlight.red with { A = 1f };

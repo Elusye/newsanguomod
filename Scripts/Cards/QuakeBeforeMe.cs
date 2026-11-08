@@ -56,6 +56,7 @@ public class QuakeBeforeMe : NeutralCardTemplate
 
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/tremble");
+        VfxCmd.PlayOnCreatureCenter(Owner.Creature, "vfx/vfx_scream");
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);

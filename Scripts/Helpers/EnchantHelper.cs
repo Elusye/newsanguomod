@@ -3,6 +3,7 @@ using System.Linq;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using newsanguo.Scripts.Cards;
+using newsanguo.Scripts.Enchantments;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Extensions;
 using MegaCrit.Sts2.Core.Models;
@@ -43,14 +44,14 @@ public static class EnchantHelper
         ["vigorous"] = 8m
     };
 
-    /// <summary>给卡牌施加一个随机的可用原版附魔（多人同步：使用战斗生成 RNG）。</summary>
+    /// <summary>给卡牌施加一个随机的可用附魔（多人同步：使用战斗生成 RNG）。</summary>
     public static void ApplyRandomEnchant(CardModel card, Player owner)
     {
         // 附魔的 Id.Entry 是大写（如 "ADROIT"），先归一化为小写再比较，
         // 否则剔除表和数值表永远匹配不上
         EnchantmentModel[] candidates = ModelDb.DebugEnchantments
             .Where(e => !e.IsMock
-                && e is not DeprecatedEnchantment
+                && e is not DeprecatedEnchantment and not FineTuning and not Fragile
                 && IsFromVanillaOrThisMod(e)
                 && !ExcludedEntries.Contains(e.Id.Entry.ToLowerInvariant())
                 && e.CanEnchant(card))

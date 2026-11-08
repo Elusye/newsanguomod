@@ -70,14 +70,8 @@ public static class NewsanguoTelemetry
                 // 授权说明按 RitsuLib 的要求写清「数据类别 + 用途 + 接收方」，不写空话
                 TelemetryRequest.RunHistory(
                     ModSettingsText.Literal(
-                        "上传已结束跑局的原版 run-history，用来分析平衡性与卡牌选取率："
-                        + "每个地图点的候选卡与最终选择、遗物/药水/事件的选择、卡牌升级与附魔、金币与血量变化。"
-                        + "数据发送到 PostHog（第三方分析服务），只带匿名安装 ID；"
-                        + "不会上传昵称、账号、Steam ID 或存档路径。可随时在设置里撤回授权。"
-                        + "  Uploads the vanilla run-history of finished runs (card choices, relic/potion/event picks, "
-                        + "upgrades, enchants, gold and HP changes) to PostHog (third-party analytics) under an "
-                        + "anonymous install ID, to analyze balance and card pick rates. "
-                        + "No nickname, account, Steam ID or save paths. Consent can be revoked at any time."),
+                        "将已结束的跑局记录发送至 PostHog，用于分析游戏平衡。仅使用匿名安装 ID，可拒绝或在设置中撤回授权。"
+                        + "\nSends completed run histories to PostHog for balance analysis using an anonymous install ID. You can decline or revoke access in Settings."),
                     []),
             ],
         });

@@ -7,7 +7,7 @@
   "NEWSANGUO_RELIC_CENTURY_BREW.flavor": "A century-old brew, awaiting a distinguished guest.",
   "NEWSANGUO_RELIC_A_CERTAIN_FORBIDDEN_SPELL_INDEX.title": "A Certain Forbidden Spell Index",
   "NEWSANGUO_RELIC_A_CERTAIN_FORBIDDEN_SPELL_INDEX.description": "At the start of your 3rd, 2nd, and 5th turns, add a random Rare Attack or Skill that loses [gold]Heaven's Force[/gold] to your [gold]Hand[/gold]. That card is free to play that turn and costs no [gold]Heaven's Force[/gold].",
-  "NEWSANGUO_RELIC_A_CERTAIN_FORBIDDEN_SPELL_INDEX.flavor": "A book that meticulously records the New Three Kingdoms' unique mechanics, painstakingly compiled by scholars of the New Three Kingdoms. Reading it is of great benefit to anyone who has transmigrated into that world.",
+  "NEWSANGUO_RELIC_A_CERTAIN_FORBIDDEN_SPELL_INDEX.flavor": "A detailed account of the New Three Kingdoms' unique mechanics, painstakingly compiled by its scholars.",
   "NEWSANGUO_RELIC_PORTAL.title": "Portal",
   "NEWSANGUO_RELIC_PORTAL.description": "The next {Rooms} times you choose the next room, you may ignore your current route.",
   "NEWSANGUO_RELIC_PORTAL.flavor": "What lies beyond the door? Perhaps only Heaven knows.",
@@ -27,5 +27,14 @@
   "SEA_GLASS.NEWSANGUO_CHARACTER_CAO_WEI_CHARACTER.title": "Wine Glass",
   "NEWSANGUO_RELIC_BOULDER.title": "Boulder",
   "NEWSANGUO_RELIC_BOULDER.description": "Upon pickup, add an [purple]Imbued[/purple] [gold]Rolling Boulder+[/gold] to your [gold]Deck[/gold].",
-  "NEWSANGUO_RELIC_BOULDER.flavor": "This seems to be the favorite of some game's founder..."
+  "NEWSANGUO_RELIC_BOULDER.flavor": "This seems to be the favorite of some game's founder...",
+  "NEWSANGUO_RELIC_VACATION_COUNTDOWN.title": "Vacation Countdown",
+  "NEWSANGUO_RELIC_VACATION_COUNTDOWN.description": "After 3 combats, obtain a random Relic.",
+  "NEWSANGUO_RELIC_VACATION_COUNTDOWN.flavor": "Please wait patiently for the next update.",
+  "NEWSANGUO_RELIC_SELF_CONTROL.title": "Self-Discipline",
+  "NEWSANGUO_RELIC_SELF_CONTROL.description": "If you played no Attacks this turn, [gold]Retain[/gold] your hand at the end of your turn.",
+  "NEWSANGUO_RELIC_SELF_CONTROL.flavor": "As long as the green hills stand, there will be firewood!",
+  "NEWSANGUO_RELIC_HEIRLOOM_CODEX.title": "Heirloom Codex",
+  "NEWSANGUO_RELIC_HEIRLOOM_CODEX.description": "At the end of each combat, add the last card you played this combat to your deck and enchant it with [purple]Fragile[/purple].",
+  "NEWSANGUO_RELIC_HEIRLOOM_CODEX.flavor": "Only the final stroke remains."
 }

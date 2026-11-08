@@ -11,6 +11,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Hooks;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.ValueProps;
 using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -19,19 +20,7 @@ using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Monsters;
 namespace newsanguo.Scripts.Powers;
 
-/// <summary>
-/// “曹氏兵法”赋予的可叠加能力：层数（Amount）= 已打出的“曹氏兵法”张数。
-/// 1) 你每打出一张牌，就以 1 生命值“募集”与层数相同数量的青州兵（这批青州兵在你的回合开始时失去）；
-/// 2) 每当任何生物死亡，你获得与层数相同的力量（触发点同原版“忧郁”Melancholy 的 AfterDeath Hook）；
-/// 3) 在敌方回合结束时，移除本能力召唤的所有青州兵（不按死亡结算）。
-/// 参照原版“残影”（AfterimagePower）：打牌开始前记账层数，打出后按键结账并移除。
-/// 因此“打牌开始时本能力还不存在”的那张牌（即首次打出“曹氏兵法”自身）不会触发；
-/// 已有该能力后再打出“曹氏兵法”属于正常出牌，会照常触发。
-/// 召唤物是本 mod 自己的怪物「青州兵」（Scripts/Monsters/QingzhouSoldier.cs），与奥斯提彻底区分开：
-/// 不走原版 OstyCmd.Summon（那条路在已有奥斯提活着时只做 GainMaxHp：“一只、血量累加”），
-/// 每次召唤都是独立个体（思路同创意工坊“召唤独立”SummonOstys，但只作用于本能力召唤的青州兵）；
-/// 「古挽歌」等仍走原版路径召唤奥斯提，两者并存互不干扰。
-/// </summary>
+/// <summary>骄兵必败：每层提供回合结束时募集的一名青州兵。</summary>
 [RegisterPower]
 public class CaoArtOfWarPower : ModPowerTemplate
 {
@@ -41,23 +30,16 @@ public class CaoArtOfWarPower : ModPowerTemplate
     // 每位玩家同时存活的募集青州兵最多 15 名，阵亡后可再次募集补足。
     private const int MaxLivingSoldiers = 15;
 
-    // 账本：牌 → 那张牌开始打出时的层数。
-    // 用 CardModel 作键（引用相等），精确到“这一张牌的这一次出牌”。
     private class Data
     {
-        public readonly Dictionary<CardModel, int> amountsForPlayedCards = new();
-
-        // 本能力召唤出来的青州兵（独立个体）：用于敌方回合结束时直接移除。
         public readonly HashSet<Creature> summonedSoldiers = new();
-
     }
 
     // 正面效果
     public override PowerType Type => PowerType.Buff;
-    // 可叠加：Counter 显示当前层数（= 已打出的“曹氏兵法”张数），每层提供相同的触发强度
+    // 层数表示每回合结束时募集的数量。
     public override PowerStackType StackType => PowerStackType.Counter;
     public override bool AllowNegative => false;
-    // 出牌、死亡与回合开始钩子需要战斗上下文
     public override bool ShouldReceiveCombatHooks => true;
 
     protected override object InitInternalData()
@@ -71,7 +53,7 @@ public class CaoArtOfWarPower : ModPowerTemplate
         BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png"
     );
 
-    // 悬停提示：“募集”说明（数量取当前层数 = 每打出一张牌募集的青州兵数）。
+    // 悬停提示显示当前每回合的募集数量。
     // 能力描述里的“募集”是金色文本，解释由这条提示提供；文案见 Scripts/Cards/RecruitKeyword.cs。
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         RecruitKeyword.Recruit(Amount)
@@ -110,77 +92,44 @@ public class CaoArtOfWarPower : ModPowerTemplate
             .ToList();
     }
 
-    // 打牌开始前：记录此刻的层数
-    public override Task BeforeCardPlayed(CardPlay cardPlay)
+    public override async Task AfterDamageGiven(PlayerChoiceContext context, Creature? dealer,
+        DamageResult result, ValueProp props, Creature target, CardModel? cardSource)
     {
-        CardModel? card = cardPlay.Card;
-        // 只统计本能力拥有者打出的牌（多人模式下过滤其他玩家）
-        if (Owner is null || card is null || card.Owner?.Creature != Owner)
-        {
-            return Task.CompletedTask;
-        }
-        GetInternalData<Data>().amountsForPlayedCards.Add(card, Amount);
-        return Task.CompletedTask;
-    }
-
-    // 每当你打出一张牌时：按记账的层数独立召唤青州兵（账本里没有这张牌则不触发，每张牌只结算一次）
-    public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
-    {
-        CardModel? card = cardPlay.Card;
-        Player? player = card?.Owner;
-        if (Owner is null || !Owner.IsAlive || card is null || player is null || player.Creature != Owner)
-        {
+        if (!result.WasTargetKilled || dealer is not { IsAlive: true } || dealer.Side == Owner.Side ||
+            result.Receiver is not { Monster: QingzhouSoldier } soldier || soldier.PetOwner?.Creature != Owner)
             return;
-        }
-        if (!GetInternalData<Data>().amountsForPlayedCards.Remove(card, out int amount) || amount <= 0)
-        {
-            return;
-        }
-
-        if (GetLivingSoldiersInSummonOrder(Owner).Count >= MaxLivingSoldiers)
-        {
-            return;
-        }
 
         Flash();
-        for (int i = 0; i < amount; i++)
-        {
-            // 每次生成前重新检查，叠层或召唤钩子引发的嵌套募集也不能越过上限。
-            if (GetLivingSoldiersInSummonOrder(Owner).Count >= MaxLivingSoldiers)
-            {
-                break;
-            }
-            Creature? soldier = await SummonIndependentSoldier(choiceContext, player);
-            if (soldier is not null)
-            {
-                GetInternalData<Data>().summonedSoldiers.Add(soldier);
-            }
-        }
-        // 站位不需要我们操心：青州兵不是 Osty，引擎会走“通用宠物排布”自动把它们在玩家身后错开
-        // （NCombatRoom.AddCreature 的 :407015-407035 与 PositionPlayersAndPets 的 :406917-406922）。
+        await PowerCmd.Apply<StrengthPower>(context, dealer, -1m, Owner, null);
     }
 
-    // 每当任何生物死亡时：获得与层数相同的力量（本能力清场移除的青州兵除外）
-    public override async Task AfterDeath(PlayerChoiceContext choiceContext, Creature creature, bool wasRemovalPrevented, float deathAnimLength)
-    {
-        if (wasRemovalPrevented || Owner is null || !Owner.IsAlive || Amount <= 0)
-        {
-            return;
-        }
-        Flash();
-        await PowerCmd.Apply<StrengthPower>(choiceContext, Owner, Amount, Owner, null);
-    }
-
-    // 到期直接离场，不播放死亡动画，也不触发任何死亡奖励。
-    public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
+    public override async Task AfterSideTurnEnd(PlayerChoiceContext context, CombatSide side,
         IEnumerable<Creature> participants)
     {
-        if (side != CombatSide.Enemy)
-            return;
         Data data = GetInternalData<Data>();
-        foreach (Creature soldier in data.summonedSoldiers.Where(c => c.IsAlive && c.CombatState is not null).ToList())
-            await DespawnSoldier(soldier);
-        data.summonedSoldiers.Clear();
+        if (side == CombatSide.Enemy)
+        {
+            // 到期直接离场，不播放死亡动画，也不触发死亡奖励。
+            foreach (Creature soldier in data.summonedSoldiers.Where(c => c.IsAlive && c.CombatState is not null).ToList())
+                await DespawnSoldier(soldier);
+            data.summonedSoldiers.Clear();
+            return;
+        }
+
+        if (side != Owner.Side || !Owner.IsAlive || Owner.Player is not { } player || !participants.Contains(Owner) ||
+            CombatManager.Instance.IsOverOrEnding || Amount <= 0 ||
+            GetLivingSoldiersInSummonOrder(Owner).Count >= MaxLivingSoldiers)
+            return;
+
+        Flash();
+        int count = Amount;
+        for (int i = 0; i < count; i++)
+        {
+            if (!Owner.IsAlive || CombatManager.Instance.IsOverOrEnding) break;
+            var soldier = await SummonIndependentSoldier(context, player);
+            if (soldier is null) break;
+            data.summonedSoldiers.Add(soldier);
+        }
     }
 
     // Escape 不触发死亡事件，须同时清理原版只在 OnPetDied 中维护的宠物列表。

@@ -11,15 +11,17 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
-using MegaCrit.Sts2.Core.Models.CardPools;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
 // 原曹魏实体保留供存档和生成效果使用，不再进入曹魏卡池。
-[RegisterCard(typeof(TokenCardPool))]
+[RegisterCard(typeof(RetiredCardPool))]
 public class ImGettingDrunk : NewsanguoCardTemplate
 {
+    public override bool CanBeGeneratedByModifiers => Pool is not RetiredCardPool;
+    public override bool CanBeGeneratedInCombat => Pool is not RetiredCardPool;
+
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"

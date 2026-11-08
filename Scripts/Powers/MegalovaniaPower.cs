@@ -1,6 +1,3 @@
-using System.Threading.Tasks;
-using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using System.Collections.Generic;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Entities.Players;
@@ -10,7 +7,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace newsanguo.Scripts.Powers;
 
-/// <summary>狂妄之人：每层在自身回合开始时额外获得1点能量。</summary>
+/// <summary>狂妄之人：每层使自身能量上限提高1点。</summary>
 [RegisterPower]
 public class MegalovaniaPower : ModPowerTemplate
 {
@@ -23,9 +20,6 @@ public class MegalovaniaPower : ModPowerTemplate
         BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png");
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.ForEnergy(this)];
-    public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
-    {
-        if (player.Creature != Owner || !Owner.IsAlive) return;
-        await PlayerCmd.GainEnergy(Amount, player);
-    }
+    public override decimal ModifyMaxEnergy(Player player, decimal amount) =>
+        player == Owner.Player ? amount + Amount : amount;
 }

@@ -25,7 +25,7 @@ public class BrightFuturePower : ModPowerTemplate
         BigIconPath: "res://newsanguo/images/powers/BrightFuturePowerBig.png");
 
     internal static bool IsCandidate(CardModel card) => card.Type == CardType.Power &&
-        card.Rarity != CardRarity.Ancient &&
+        card.Rarity != CardRarity.Ancient && card.Pool is not newsanguo.Scripts.Characters.RetiredCardPool &&
         card is not newsanguo.Scripts.Cards.Release and not VoidForm and not Neurosurge and not Royalties;
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext context, Player player)

@@ -13,5 +13,9 @@ public class SunBen : NewsanguoCardTemplate
         PortraitPath: "res://newsanguo/images/cards/SunBen.png");
     public override bool CanBeGeneratedInCombat => false;
     public SunBen() : base(0, CardType.Skill, CardRarity.Token, TargetType.Self, showInCardLibrary: false) { }
-    protected override Task OnPlay(PlayerChoiceContext context, CardPlay play) => Task.CompletedTask;
+    protected override Task OnPlay(PlayerChoiceContext context, CardPlay play)
+    {
+        NewsanguoSfx.Play("event:/newsanguo/sfx/sun_ben");
+        return Task.CompletedTask;
+    }
 }

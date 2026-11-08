@@ -21,9 +21,12 @@ using newsanguo.Scripts.Characters;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
+[RegisterCard(typeof(RetiredCardPool))]
 public class ProxyStrike : NewsanguoCardTemplate
 {
+    public override bool CanBeGeneratedByModifiers => Pool is not RetiredCardPool;
+    public override bool CanBeGeneratedInCombat => Pool is not RetiredCardPool;
+
     // 卡面文案里的名字：这张牌的伤害初始值（不带力量修正的“原值”）
     // DamageVar 的 Damage 在手牌里会显示成力量等修正后的数值，
     // 所以比较基准（“大于12/16”）单独用 InitialDamage 这个不变修正的镜像变量。

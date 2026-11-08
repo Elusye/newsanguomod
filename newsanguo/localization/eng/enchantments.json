@@ -1,0 +1,8 @@
+{
+  "NEWSANGUO_ENCHANTMENT_FINE_TUNING.title": "Fine Tuning",
+  "NEWSANGUO_ENCHANTMENT_FINE_TUNING.description": "Whenever you draw this card, its [gold]Block[/gold] permanently changes by -1 or +1. If it can grant more than 15 Block, it always loses 1.",
+  "NEWSANGUO_ENCHANTMENT_MELLOW_WINE.title": "Mellow Wine",
+  "NEWSANGUO_ENCHANTMENT_MELLOW_WINE.description": "After playing this card, refund the [gold]Drunken Might[/gold] it consumed.",
+  "NEWSANGUO_ENCHANTMENT_FRAGILE.title": "Fragile",
+  "NEWSANGUO_ENCHANTMENT_FRAGILE.description": "This card has [gold]Innate[/gold] and [gold]Replay 1[/gold]. Remove it from your deck after one combat."
+}

@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Godot;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Enchantments;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
@@ -14,6 +16,7 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Cards;
+using newsanguo.Scripts.Enchantments;
 
 namespace newsanguo.Scripts.Powers;
 
@@ -26,11 +29,6 @@ namespace newsanguo.Scripts.Powers;
 [RegisterPower]
 public class DrunkenMightPower : ModPowerTemplate
 {
-    // 只为护佑生成的那张牌记账；finally 取走，避免影响其他攻击牌。
-    private static readonly Dictionary<CardModel, int> pendingRefunds = new();
-    internal static void BeginRefundForCard(CardModel card) => pendingRefunds.Add(card, 0);
-    internal static int EndRefundForCard(CardModel card) => pendingRefunds.Remove(card, out int amount) ? amount : 0;
-
     // 账本：牌 → 那张牌开始打出时的层数。
     // 用 CardModel 作键（引用相等），精确到“这一张牌的这一次出牌”。
     private class Data
@@ -132,14 +130,17 @@ public class DrunkenMightPower : ModPowerTemplate
         }
 
         // 按打出瞬间的层数减半（向下取整）
-        await SetAmount(choiceContext, amount / 2, card);
+        await ResolveHalf(choiceContext, amount / 2, card);
     }
 
     // 酒力减半（向下取整）：打出攻击牌后消耗一半酒力，供「杯酒斩击」在自身 OnPlay 内手动调用
-    public async Task HalfForCard(PlayerChoiceContext choiceContext, CardModel? cardSource)
-    {
-        await SetAmount(choiceContext, Amount / 2, cardSource);
-    }
+    public Task HalfForCard(PlayerChoiceContext choiceContext, CardModel? cardSource) =>
+        ResolveHalf(choiceContext, Amount / 2, cardSource);
+
+    private Task ResolveHalf(PlayerChoiceContext context, int target, CardModel? card) =>
+        card?.Enchantment is MellowWine { Status: not EnchantmentStatus.Disabled }
+            ? ConsumeThenRefund(context, card, target)
+            : SetAmount(context, target, card);
 
     // 按“打出攻击牌后减半”的规则，本次会被消耗掉的酒力：减半后剩 Amount/2（向下取整），差额即消耗量。
     public int ConsumedByHalf => Amount - Amount / 2;
@@ -151,19 +152,21 @@ public class DrunkenMightPower : ModPowerTemplate
     /// 供「杯酒斩击」「悍将三刀」在自身 OnPlay 内调用 —— 这两张牌被排除在 AfterCardPlayed
     /// 的自动减半之外，消耗与返还都由它们自己结算。
     /// </summary>
-    public async Task ConsumeThenRefund(PlayerChoiceContext choiceContext, CardModel? cardSource)
+    public Task ConsumeThenRefund(PlayerChoiceContext choiceContext, CardModel? cardSource) =>
+        ConsumeThenRefund(choiceContext, cardSource, Amount / 2);
+
+    private async Task ConsumeThenRefund(PlayerChoiceContext choiceContext, CardModel? cardSource, int target)
     {
         if (newsanguo.Scripts.Combat.AbilitySuppression.IsSuppressed(this)) return;
-        int consumed = ConsumedByHalf;
-        if (consumed <= 0 || Owner is null)
+        int consumed = Math.Max(0, Amount - target);
+        if (Owner is null)
         {
             return;
         }
 
-        await HalfForCard(choiceContext, cardSource);
-        // 自带返还的攻击牌已自行结算，护佑不得再次返还。
-        if (cardSource is not null && pendingRefunds.ContainsKey(cardSource))
-            pendingRefunds[cardSource] -= consumed;
+        await SetAmount(choiceContext, target, cardSource);
+        if (consumed == 0) return;
+
         // 减半后层数可能归零导致这份能力被移除，所以重新 Apply 而不是直接改 this
         await PowerCmd.Apply<DrunkenMightPower>(
             choiceContext,
@@ -182,8 +185,6 @@ public class DrunkenMightPower : ModPowerTemplate
         {
             return;
         }
-        if (cardSource is not null && pendingRefunds.ContainsKey(cardSource) && target < Amount)
-            pendingRefunds[cardSource] += Amount - target;
         await PowerCmd.ModifyAmount(
             choiceContext,
             this,
