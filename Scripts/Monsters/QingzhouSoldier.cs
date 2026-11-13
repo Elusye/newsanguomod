@@ -53,9 +53,6 @@ public class QingzhouSoldier : ModMonsterTemplate
     //（想恢复奥斯提那声死亡叫就把这里改成 true，字符串已经在上面备好。）
     public override bool HasDeathSfx => false;
 
-    // 同原版奥斯提：活着才显示血条
-    public override bool IsHealthBarVisible => base.Creature.IsAlive;
-
     // 名称走 monsters 表。默认实现是 L10NMonsterLookup(Id.Entry + ".name")，
     // 这里显式写死同一个键，避免以后改类名/前缀时名字突然变空。
     // 当前文案（用户 2026-10-09 指定）：zhs「青州兵（迫真）」/ eng「Qingzhou Soldier (Allegedly)」。

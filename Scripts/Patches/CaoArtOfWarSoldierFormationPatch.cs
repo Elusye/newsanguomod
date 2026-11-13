@@ -109,7 +109,7 @@ public static class SoldierFormation
         // ① 恢复鼠标交互：引擎的通用宠物行每次都把「非奥斯提」宠物（含之前召的青州兵）关掉
         foreach (NCreature soldier in soldiers)
         {
-            soldier.ToggleIsInteractable(true);
+            soldier.SetIsInteractable(true, changeVisibilityImmediately: true);
         }
 
         // ② 站位：锚点照抄原版奥斯提（主人右侧 + 抬高 75 像素），多只时沿斜向阶梯一只比一只更右上

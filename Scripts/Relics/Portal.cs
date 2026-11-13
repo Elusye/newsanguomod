@@ -37,7 +37,7 @@ public class Portal : ModRelicTemplate
     //      下一次进宝箱房 BeginRelicPicking() 会抛 InvalidOperationException，而该异常发生在
     //      FadeOut 之后、FadeIn 与 ActionExecutor.Unpause() 之前 → 黑屏且输入队列永久暂停。
     // 因此多人局不发放「传送门」，把这条可重访节点的路径直接掐掉。
-    public override bool IsAllowed(IRunState runState)
+    protected override bool IsAllowedInternal(IRunState runState)
     {
         return runState.Players.Count == 1;
     }

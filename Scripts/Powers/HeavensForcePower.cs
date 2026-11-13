@@ -110,7 +110,7 @@ public class HeavensForcePower : ModPowerTemplate
     // 先问好，再把答案记进 _grantExtraTurn 供随后的 ShouldTakeExtraTurn 读取。
     public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)
     {
-        if (side != Owner.Side)
+        if (side != Owner.Side || Owner.IsDead || !participants.Contains(Owner))
         {
             return;
         }
@@ -125,7 +125,7 @@ public class HeavensForcePower : ModPowerTemplate
         {
             // 先问玩家要不要这次转化；拒绝（「竟然不许！」）**不执行任何操作**：
             // 点数保留在 ≥10，本回合不给双倍伤害、不进额外回合，下个回合结束仍会再问
-            if (!await AskAboutHeavensAssist(choiceContext))
+            if (!await AskAboutHeavensAssist())
             {
                 return;
             }
@@ -159,10 +159,10 @@ public class HeavensForcePower : ModPowerTemplate
     /// 弹出「扭曲时空 / 竟然不许！」两张选择卡，问玩家要不要做这次正向转化。
     /// 写法照抄原版「知识恶魔」的「知识的诅咒」（KnowledgeDemon.ChooseCurse）：
     /// 用 <c>CombatState.CreateCard</c> 在战斗内造出两张卡 → <c>CardSelectCmd.FromChooseACardScreen</c>
-    /// 二选一（多人下每个玩家各自选，走 PlayerChoiceSynchronizer 同步）。
+    /// 二选一（走 PlayerChoiceSynchronizer 同步，等待结果后再继续回合结算）。
     /// 返回 true = 接受转化；false = 拒绝（「竟然不许！」，不执行任何操作）。
     /// </summary>
-    private async Task<bool> AskAboutHeavensAssist(PlayerChoiceContext choiceContext)
+    private async Task<bool> AskAboutHeavensAssist()
     {
         // 战斗正在收尾（例如这一下已经打完最后一只怪）时不再弹窗，按“不接受”处理
         // 注意：本能力的 Owner 就是持有者生物（Creature），所以战斗状态直接从 Owner 取
@@ -177,7 +177,8 @@ public class HeavensForcePower : ModPowerTemplate
             combatState.CreateCard<YouDareRefuse>(Owner.Player)
         ];
 
-        CardModel? chosen = await CardSelectCmd.FromChooseACardScreen(choiceContext, options, Owner.Player);
+        // 与知识恶魔一致，等待选择期间不向联机行动队列插入钩子动作。
+        CardModel? chosen = await CardSelectCmd.FromChooseACardScreen(new BlockingPlayerChoiceContext(), options, Owner.Player);
 
         if (chosen is WarpTime)
         {

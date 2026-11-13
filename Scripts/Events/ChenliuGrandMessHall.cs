@@ -86,7 +86,7 @@ public class ChenliuGrandMessHall : ModEventTemplate
         CardModel hungry = Owner!.RunState.CreateCard<Hungry>(Owner);
         CardCmd.PreviewCardPileAdd(await CardPileCmd.Add(hungry, PileType.Deck));
         // 获得一件随机遗物：按标准稀有度概率抽取，本局不会重复出现同一件
-        RelicModel relic = RelicFactory.PullNextRelicFromFront(Owner).ToMutable();
+        RelicModel relic = RelicFactory.PullNextRelicForRewardFromFront(Owner).ToMutable();
         await RelicCmd.Obtain(relic, Owner);
         SetEventFinished(PageDescription("HUNGRY_RELIC"));
     }

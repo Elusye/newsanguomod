@@ -10,6 +10,7 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Random;
+using MegaCrit.Sts2.Core.Runs;
 
 namespace newsanguo.Scripts.Combat;
 
@@ -53,7 +54,7 @@ public static class AutoPlayRightToLeft
         // RightToLeftCardSelector（从右往左选）：自动打出的牌若触发需要选择手牌
         // （变化/消耗/丢弃）的子效果（如“赋值”），会像取手牌一样选中手牌最右边的一张/多张，
         // 保证天意爷接管时无需任何手动选择。
-        using (CardSelectCmd.PushSelector(new RightToLeftCardSelector()))
+        using (RunManager.Instance.CardSelectorStack.PushSelector(owner, new RightToLeftCardSelector()))
         {
             int cardsPlayed = 0;
             int startTurn = playerCombatState.TurnNumber;

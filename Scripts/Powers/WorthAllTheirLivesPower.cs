@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Models;
 using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Monsters;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -37,7 +38,7 @@ public class WorthAllTheirLivesPower : ModPowerTemplate
     internal static bool TryConsumeSoldier(Creature owner, Creature soldier) =>
         owner.GetPower<WorthAllTheirLivesPower>()?.GetInternalData<Data>().soldiers.Remove(soldier) == true;
 
-    public override async Task AfterDeath(PlayerChoiceContext choiceContext, Creature creature,
+    public override async Task AfterDeath(PlayerChoiceContext choiceContext, Creature creature, CardModel? source,
         bool wasRemovalPrevented, float deathAnimLength)
     {
         Player? player = Owner.Player;

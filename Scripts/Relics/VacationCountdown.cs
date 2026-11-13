@@ -15,7 +15,7 @@ namespace newsanguo.Scripts.Relics;
 public sealed class VacationCountdown : ModRelicTemplate
 {
     public override RelicRarity Rarity => RelicRarity.Event;
-    public override bool IsAllowed(IRunState runState) => false;
+    protected override bool IsAllowedInternal(IRunState runState) => false;
     public override bool ShowCounter => true;
     public override int DisplayAmount => 3 - CompletedBattles;
     public override RelicAssetProfile AssetProfile => new(
@@ -33,7 +33,7 @@ public sealed class VacationCountdown : ModRelicTemplate
         InvokeDisplayAmountChanged();
         if (CompletedBattles < 3) return;
         Flash();
-        await RelicCmd.Obtain(RelicFactory.PullNextRelicFromFront(Owner).ToMutable(), Owner);
+        await RelicCmd.Obtain(RelicFactory.PullNextRelicForRewardFromFront(Owner).ToMutable(), Owner);
         await RelicCmd.Remove(this);
     }
 }

@@ -281,7 +281,7 @@ public class Pragmatist : ModEventTemplate
 
             case SearchResult.Relic:
                 // 随机遗物：按标准稀有度概率抽取，本局不会重复出现同一件（与陈留大食堂一致）
-                RelicModel relic = RelicFactory.PullNextRelicFromFront(Owner!).ToMutable();
+                RelicModel relic = RelicFactory.PullNextRelicForRewardFromFront(Owner!).ToMutable();
                 await RelicCmd.Obtain(relic, Owner!);
                 ShowResultPage("FOUND_RELIC");
                 return;
