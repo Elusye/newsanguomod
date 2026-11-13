@@ -128,6 +128,8 @@
   "NEWSANGUO_CARD_OLD_BORROWED_TIME.description": "给予自身{DoomPower:diff()}层[gold]灾厄[/gold]。\n获得{Energy:energyIcons()}。",
   "NEWSANGUO_CARD_OLD_DIRGE.title": "挽歌（旧）",
   "NEWSANGUO_CARD_OLD_DIRGE.description": "[gold]召唤[/gold]{Summon:diff()}X次。\n将X张[gold]{IfUpgraded:show:灵魂+|灵魂}[/gold]添加到你的[gold]抽牌堆[/gold]中。",
+  "NEWSANGUO_CARD_OLD_MEMENTO_MORI.title": "铭记死亡（旧）",
+  "NEWSANGUO_CARD_OLD_MEMENTO_MORI.description": "造成{CalculatedDamage:diff()}点伤害。\n本回合每丢弃一张牌，伤害增加{ExtraDamage:diff()}点。",
   "NEWSANGUO_CARD_OLD_COMPACT.title": "压缩（旧）",
   "NEWSANGUO_CARD_OLD_COMPACT.description": "获得{Block:diff()}点[gold]格挡[/gold]。\n将你[gold]手牌[/gold]中的全部状态牌[gold]变化[/gold]为[gold]{IfUpgraded:show:燃料（旧）+|燃料（旧）}[/gold]。",
   "NEWSANGUO_CARD_OLD_FUEL.title": "燃料（旧）",

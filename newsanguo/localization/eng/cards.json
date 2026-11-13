@@ -128,6 +128,8 @@
   "NEWSANGUO_CARD_OLD_BORROWED_TIME.description": "Apply {DoomPower:diff()} [gold]Doom[/gold] to yourself.\nGain {Energy:energyIcons()}.",
   "NEWSANGUO_CARD_OLD_DIRGE.title": "Old Dirge",
   "NEWSANGUO_CARD_OLD_DIRGE.description": "[gold]Summon[/gold] {Summon:diff()} X times.\nAdd X [gold]{IfUpgraded:show:Souls+|Souls}[/gold] into your [gold]Draw Pile[/gold].",
+  "NEWSANGUO_CARD_OLD_MEMENTO_MORI.title": "Old Memento Mori",
+  "NEWSANGUO_CARD_OLD_MEMENTO_MORI.description": "Deal {CalculatedDamage:diff()} damage.\nDeals {ExtraDamage:diff()} additional damage for each card you discarded this turn.",
   "NEWSANGUO_CARD_OLD_COMPACT.title": "Old Compact",
   "NEWSANGUO_CARD_OLD_COMPACT.description": "Gain {Block:diff()} [gold]Block[/gold].\n[gold]Transform[/gold] all Status cards in your [gold]Hand[/gold] into [gold]{IfUpgraded:show:Old Fuel+|Old Fuel}[/gold].",
   "NEWSANGUO_CARD_OLD_FUEL.title": "Old Fuel",
