@@ -47,23 +47,6 @@ public class HeavensForcePower : ModPowerTemplate
     // 标记本回合结束是否触发了正向转化（授予额外回合），引擎随后询问 ShouldTakeExtraTurn 时读取并清除
     private bool _grantExtraTurn;
 
-    // 本次额外回合是否由天意的正向转化授予（供「佩尔之眼」补丁判断，
-    // 见 Patches/HeavensForcePaelsEyePatch）。
-    // ⚠ 不能在 AfterTakingExtraTurn 里清除：引擎对 AfterTakingExtraTurn 的派发是遍历所有监听者、
-    // 顺序不保证（Hook.AfterTakingExtraTurn），若我们先清掉，补丁可能读到 false 而放过 PaelsEye。
-    // 因此改为在**下一次回合开始**时清除 —— 那时 AfterTakingExtraTurn 早已全部派发完毕
-    // （CombatManager.cs:1375-1384 先派发 AfterTakingExtraTurn，再 StartTurn）。
-    private bool _extraTurnGrantedByHeavens;
-
-    /// <summary>这次额外回合是不是天意之力给的（供补丁查询；见 <see cref="_extraTurnGrantedByHeavens"/>）。</summary>
-    public bool ExtraTurnGrantedByHeavens => _extraTurnGrantedByHeavens;
-
-    /// <summary>查询某个玩家身上“天意授予的额外回合”标记（没有该能力时返回 false）。</summary>
-    public static bool IsExtraTurnGrantedByHeavens(Player? player)
-    {
-        return player?.Creature.GetPower<HeavensForcePower>()?.ExtraTurnGrantedByHeavens ?? false;
-    }
-
     // 本场战斗累计失去的天意之力（不含额外回合转化时的内部扣减）
     public int LostThisCombat { get; private set; }
 
@@ -130,15 +113,7 @@ public class HeavensForcePower : ModPowerTemplate
                 return;
             }
 
-            // 天意之力正向转化触发音效（对应 FMOD 事件 event:/newsanguo/sfx/heavens_force）
-            NewsanguoSfx.Play("event:/newsanguo/sfx/heavens_force");
-
-            // 正向转化：执行一次原“天意之助”效果（1层“双倍伤害”+1个额外回合）。
-            // 注意：不能在这里先把数值-10——扣减会改变副资源数值，若恰好10点则扣到0，
-            // 引擎随后询问 ShouldTakeExtraTurn 时状态已被打乱。因此扣数值推迟到
-            // AfterTakingExtraTurn（额外回合被确认授予后）再进行。
             _grantExtraTurn = true;
-            await PowerCmd.Apply<DoubleDamagePower>(choiceContext, Owner, ConversionDoubleDamage, Owner, null, silent: false);
         }
         else if (amount <= -ConversionAmount)
         {
@@ -206,41 +181,27 @@ public class HeavensForcePower : ModPowerTemplate
         }
         bool grant = _grantExtraTurn;
         _grantExtraTurn = false;
-        if (grant)
-        {
-            // 记下“这次额外回合是天意给的”，供 PaelsEye 的补丁跳过它自己的消耗逻辑
-            _extraTurnGrantedByHeavens = true;
-        }
         return grant;
     }
 
-    // 下一次回合开始时清掉“天意授予额外回合”的标记（为什么不能更早清见字段注释）
     public override Task AfterSideTurnStart(CombatSide side, IReadOnlyList<Creature> participants, ICombatState combatState)
     {
-        if (side == Owner.Side && participants.Contains(Owner))
-        {
-            _extraTurnGrantedByHeavens = false;
-        }
+        // If another source took priority, discard the choice from the preceding turn.
+        _grantExtraTurn = false;
         return Task.CompletedTask;
     }
 
-    // 引擎确认授予额外回合后，才扣除本次正向转化消耗的点数（属于内部转化结算，不计入“本场失去的天意之力”账本）。
-    //
-    // ⚠ 必须判断来源：引擎的 Hook.AfterTakingExtraTurn 是**按玩家**派发给所有监听者的
-    // （Hook.cs:1220-1227：`foreach (model) await model.AfterTakingExtraTurn(player)`），
-    // 所以「佩尔之眼」等其他来源授予的额外回合同样会把本方法叫起来 —— 不判断就会白扣 10 点天意之力
-    // （实机复现：由佩尔之眼进入额外回合时天意之力被错误扣减）。
-    // _extraTurnGrantedByHeavens 只在 ShouldTakeExtraTurn 返回 true（= 这次是我们给的）时置位，
-    // 且要到下一次回合开始才清除，因此此刻读到的值就是“这次是谁给的”。
-    //
-    // 另外这里**不**清除该标记：本方法与 PaelsEye 的同名钩子谁先执行不保证，标记要留到下一回合开始
-    // （见字段注释）。
     public override async Task AfterTakingExtraTurn(Player player)
     {
-        if (player?.Creature != Owner || !_extraTurnGrantedByHeavens)
+        // In 0.113 this hook only runs on the source that granted the turn.
+        if (player.Creature != Owner)
         {
             return;
         }
-        await HeavensForce.Lose(new ThrowingPlayerChoiceContext(), player, ConversionAmount, recordLoss: false);
+
+        var context = new ThrowingPlayerChoiceContext();
+        await HeavensForce.Lose(context, player, ConversionAmount, recordLoss: false);
+        await PowerCmd.Apply<DoubleDamagePower>(context, Owner, ConversionDoubleDamage, Owner, null, silent: false);
+        NewsanguoSfx.Play("event:/newsanguo/sfx/heavens_force");
     }
 }

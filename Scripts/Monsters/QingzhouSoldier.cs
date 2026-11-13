@@ -16,9 +16,7 @@ namespace newsanguo.Scripts.Monsters;
 ///
 /// 定位：1 生命值、不攻击、只替主人挡刀的“兵”。
 ///  · 每次召唤都是独立个体（不走原版 <c>OstyCmd.Summon</c> 的“一只、血量累加”合并逻辑）；
-///  · 承伤由 <c>DieForYouPower</c> 提供（挂在这只兵身上，只替 PetOwner 接“强化攻击”），
-///    承伤优先级：青州兵（多只之间按召唤顺序依次穿透）→ 玩家格挡 → 奥斯提 → 玩家，
-///    见 Scripts/Patches/CaoArtOfWarSoldierDamageCascadePatch.cs；
+///  · Uses the base game pre-block damage pipeline, with overflow passed to the next soldier;
 ///  · 阵亡即离场（见 Scripts/Patches/CaoArtOfWarSoldierRemovalPatch.cs），不留尸体等复活；
 ///  · 敌方回合结束时直接离场，不播放死亡动画。
 ///

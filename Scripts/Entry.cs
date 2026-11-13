@@ -54,8 +54,6 @@ public class Entry
         ApplyPatch(harmony, typeof(PragmatistRewardPatch));
         ApplyPatch(harmony, typeof(PragmatistInitialVisibilityPatch));
         ApplyPatch(harmony, typeof(KaleidoscopeRewardPatch));
-        // 天意给的额外回合不要再“吃掉”原版遗物「佩尔之眼」（PaelsEye）
-        ApplyPatch(harmony, typeof(HeavensForcePaelsEyePatch));
         ApplyPatch(harmony, typeof(PaelsWingDuplicateAlternativePatch));
         // 「创造模式」的选牌屏要像图鉴一样能搜索 / 筛选：复用图鉴的侧栏控件，只在那一屏生效
         // （详见 CardSelectSearchPatch.cs 顶部注释；标记由 CreativeModeReward 在弹屏前打开）
@@ -63,7 +61,6 @@ public class Entry
         // 「曹氏兵法」：①独立召唤的 1 生命值青州兵阵亡后立刻离场（否则尸体会留在 Pets 里）
         // ②敌人攻击的承伤优先级改成「青州兵（按召唤顺序依次穿透）→ 玩家格挡 → 奥斯提 → 玩家」
         //   （原版是「玩家格挡 → 奥斯提 → 玩家」，且多只召唤物时一次攻击只有 1 只接刀）
-        ApplyPatch(harmony, typeof(CaoArtOfWarSoldierRemovalPatch));
         ApplyPatch(harmony, typeof(QingzhouSoldierOwnerDeathCleanupPatch));
         ApplyPatch(harmony, typeof(QingzhouSoldierCounterPatch));
         ApplyPatch(harmony, typeof(BewildermentMovePatch));
@@ -86,7 +83,7 @@ public class Entry
         ApplyPatch(harmony, typeof(UnsettlingLampSelfDebuffPatch));
         ApplyPatch(harmony, typeof(SunqianVigorSmartDescriptionPatch));
         ApplyPatch(harmony, typeof(CaoArtOfWarSoldierDamageCascadePatch));
-        ApplyPatch(harmony, typeof(SoldierDamageCascadeNestedHookSkipPatch));
+        ApplyPatch(harmony, typeof(QingzhouSoldierPreBlockTargetPatch));
         // ③青州兵的战斗表现：站位照原版奥斯提的锚点（主人右侧 + 抬高 75px）并在多只时横向错开，
         //   同时把引擎给「非奥斯提」宠物关掉的鼠标交互/血条恢复回来（否则鼠标悬浮看不到名字，见补丁顶部注释）
         ApplyPatch(harmony, typeof(CaoArtOfWarSoldierFormationPatch));

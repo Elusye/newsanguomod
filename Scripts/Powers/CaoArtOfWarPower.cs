@@ -68,18 +68,7 @@ public class CaoArtOfWarPower : ModPowerTemplate
         return WorthAllTheirLivesPower.TryConsumeSoldier(ownerCreature, soldier) || consumed;
     }
 
-    // 供伤害改道补丁判定“这次伤害该不该由青州兵依次承担”：
-    // 任一募集来源的青州兵里还有活着的（不要求曹氏兵法能力在场）。
-    // 见 Scripts/Patches/CaoArtOfWarSoldierDamageCascadePatch.cs
-    internal static bool HasLivingSummonedSoldier(Creature ownerCreature)
-    {
-        return GetLivingSoldiersInSummonOrder(ownerCreature).Count > 0;
-    }
-
-    // 承伤优先级（用户 2026-10-09 指定）：青州兵 → 玩家格挡 → 奥斯提 → 玩家。
-    // 承伤顺序：PlayerCombatState.Pets 保持入场顺序，所以越早召唤的越先挨打（最旧 → 最新）。
-    // 这里只取本能力召唤的青州兵（不含奥斯提）：奥斯提仍由原版 DieForYouPower 的改道接住，
-    // 于是形成“青州兵先挡、奥斯提兜底”的层次（余量伤害交回原版时会被原版改道给活着的奥斯提）。
+    // Pets preserves summon order. Only living soldiers belonging to this player intercept damage.
     internal static IReadOnlyList<Creature> GetLivingSoldiersInSummonOrder(Creature ownerCreature)
     {
         Player? owner = ownerCreature.Player;
@@ -162,7 +151,6 @@ public class CaoArtOfWarPower : ModPowerTemplate
         await CreatureCmd.SetMaxHp(soldier, IndependentSoldierHp);
         await CreatureCmd.Heal(soldier, IndependentSoldierHp, false);
         // “替你去死”：让这只青州兵替你承伤（原版对新建的奥斯提做同样的事）
-        await PowerCmd.Apply<DieForYouPower>(choiceContext, soldier, 1m, null, null);
 
         var combatState = player.Creature.CombatState;
         if (combatState is null)
