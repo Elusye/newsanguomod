@@ -37,7 +37,7 @@ public class CentralPlainsPassPower : ModPowerTemplate
     // 玩家回合开始：按层数获得格挡，发放后移除能力
     public override async Task AfterSideTurnStart(CombatSide side, IReadOnlyList<Creature> participants, ICombatState combatState)
     {
-        if (side == CombatSide.Player && Amount > 0)
+        if (side == CombatSide.Player && participants.Contains(Owner) && Amount > 0)
         {
             // Amount 是打出时经 Hook.ModifyBlock 预计算的修正值（含敏捷加成），
             // 直接以 Unpowered 发放，避免下回合再次修正

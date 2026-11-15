@@ -29,7 +29,6 @@ public class Entry
         var harmony = new Harmony("newsanguo");
         ApplyPatch(harmony, typeof(TonyDefendBlockCapPatch));
         ApplyPatch(harmony, typeof(FragileEnchantmentCombatEndPatch));
-        TerritoryHandOrder.Register();
         TerritoryRightClick.Register();
         ApplyPatch(harmony, typeof(NewsanguoEnergyCounterPatch));
         ApplyPatch(harmony, typeof(FireWaterHarmonyWeakPatch));

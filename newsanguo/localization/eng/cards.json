@@ -376,7 +376,7 @@
   "NEWSANGUO_CARD_FIVE_CENTURIES.title": "Five Centuries",
   "NEWSANGUO_CARD_FIVE_CENTURIES.description": "[gold]Scry[/gold] {ScryAmount:diff()}.\nPlay cards from the top of your Draw Pile until you play a non-Attack card.",
   "NEWSANGUO_CARD_ONE_FOR_SORROW_TWO_FOR_JOY.title": "One for Sorrow, Two for Joy",
-  "NEWSANGUO_CARD_ONE_FOR_SORROW_TWO_FOR_JOY.description": "Whenever one of your cards is [gold]Exhausted[/gold], gain {OneForSorrowTwoForJoyPower:diff()} [gold]Drunken Might[/gold].",
+  "NEWSANGUO_CARD_ONE_FOR_SORROW_TWO_FOR_JOY.description": "Whenever one of your cards is [gold]Exhausted[/gold], gain {OneForSorrowTwoForJoyPower:diff()} [gold]Drunken Might[/gold].\nAdd {Cards} [gold]Sadness[/gold] to your Hand.",
   "NEWSANGUO_CARD_THIRSTY_AXE.title": "Thirsty Axe",
   "NEWSANGUO_CARD_THIRSTY_AXE.description": "Deal {Damage:diff()} damage.\n[gold]Drunken Might[/gold] grants {WineMultiplier:diff()} times its usual bonus damage to Thirsty Axe.",
   "NEWSANGUO_CARD_DONT_BE_ANGRY.title": "Don't Be Angry",

@@ -376,7 +376,7 @@
   "NEWSANGUO_CARD_FIVE_CENTURIES.title": "决定五百年历史",
   "NEWSANGUO_CARD_FIVE_CENTURIES.description": "[gold]预见[/gold]{ScryAmount:diff()}。\n打出抽牌堆顶部的牌直到打出非攻击牌。",
   "NEWSANGUO_CARD_ONE_FOR_SORROW_TWO_FOR_JOY.title": "一者悲伤，二者道喜",
-  "NEWSANGUO_CARD_ONE_FOR_SORROW_TWO_FOR_JOY.description": "每当你有一张牌被[gold]消耗[/gold]时，获得{OneForSorrowTwoForJoyPower:diff()}点[gold]酒力[/gold]。",
+  "NEWSANGUO_CARD_ONE_FOR_SORROW_TWO_FOR_JOY.description": "每当你有一张牌被[gold]消耗[/gold]时，获得{OneForSorrowTwoForJoyPower:diff()}点[gold]酒力[/gold]。\n将{Cards}张[gold]悲伤[/gold]加入你的手牌。",
   "NEWSANGUO_CARD_THIRSTY_AXE.title": "饥渴大斧",
   "NEWSANGUO_CARD_THIRSTY_AXE.description": "造成{Damage:diff()}点伤害。\n[gold]酒力[/gold]的加伤在饥渴大斧上发挥{WineMultiplier:diff()}倍效果。",
   "NEWSANGUO_CARD_DONT_BE_ANGRY.title": "不要愤怒",

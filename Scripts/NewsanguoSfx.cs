@@ -81,7 +81,7 @@ public static class NewsanguoSfx
     // 2026-09-06 校准：默认 1.0× 与游戏其它音效相比整体偏轻约 10 dB（实测需调到 3.25× ≈ +10.2 dB 才正常），
     // 因此把基准从 +3 上调到 +13，使 1.0× 即为校准后的正常响度（倍率滑杆含义不变，仍可 0~4 微调）。
     // 2026-09-07 二次校准：实测默认仍偏轻，开到 2×（≈+6 dB）才正常听见，基准 +13 → +19。
-    private const float MasterVolumeDb = 19f;
+    private static readonly float MasterVolumeDb = 19f + Mathf.LinearToDb(0.67f);
 
     // 依次尝试的音频扩展名
     private static readonly string[] AudioExtensions = [".mp3", ".wav", ".ogg"];
