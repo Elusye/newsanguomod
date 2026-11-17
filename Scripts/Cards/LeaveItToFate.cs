@@ -1,3 +1,4 @@
+using newsanguo.Scripts.Settings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -18,21 +19,39 @@ public class LeaveItToFate : NewsanguoCardTemplate
 {
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");
-    protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<FrailPower>(1m), new EnergyVar(2)
-    ];
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<FrailPower>(), HoverTipFactory.ForEnergy(this)
-    ];
-    public LeaveItToFate() : base(0, CardType.Skill, CardRarity.Common, TargetType.Self) { }
+    protected override IEnumerable<DynamicVar> CanonicalVars => BalanceAdjustments.Enabled ? [
+        new PowerVar<VulnerablePower>(1m), new PowerVar<WeakPower>(1m), new EnergyVar(2)
+    ] : [new PowerVar<FrailPower>(1m), new EnergyVar(2)];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => BalanceAdjustments.Enabled ? [
+        HoverTipFactory.FromPower<VulnerablePower>(), HoverTipFactory.FromPower<WeakPower>(), HoverTipFactory.ForEnergy(this)
+    ] : [HoverTipFactory.FromPower<FrailPower>(), HoverTipFactory.ForEnergy(this)];
+    public override CardRarity Rarity => BalanceAdjustments.Enabled ? CardRarity.Uncommon : CardRarity.Common;
+
+    public LeaveItToFate() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self) { }
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/leave_it_to_fate");
-        var frail = await PowerCmd.Apply<FrailPower>(choiceContext, Owner.Creature,
-            DynamicVars["FrailPower"].IntValue, Owner.Creature, this);
-        // 与无情剑法一致：当轮敌方回合结束即递减，不跳过首次持续时间结算。
-        if (frail is not null)
-            frail.SkipNextDurationTick = false;
+        if (BalanceAdjustments.Enabled)
+        {
+            // 当轮敌方回合结束即递减。
+            var vulnerable = await PowerCmd.Apply<VulnerablePower>(choiceContext, Owner.Creature,
+                DynamicVars["VulnerablePower"].IntValue, Owner.Creature, this);
+            if (vulnerable is not null)
+                vulnerable.SkipNextDurationTick = false;
+
+            var weak = await PowerCmd.Apply<WeakPower>(choiceContext, Owner.Creature,
+                DynamicVars["WeakPower"].IntValue, Owner.Creature, this);
+            if (weak is not null)
+                weak.SkipNextDurationTick = false;
+        }
+        else
+        {
+            var frail = await PowerCmd.Apply<FrailPower>(choiceContext, Owner.Creature,
+                DynamicVars["FrailPower"].IntValue, Owner.Creature, this);
+            if (frail is not null)
+                frail.SkipNextDurationTick = false;
+        }
+
         await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, Owner);
     }
     protected override void OnUpgrade() => DynamicVars.Energy.UpgradeValueBy(1);

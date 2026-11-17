@@ -61,7 +61,7 @@ public class DogEatDog : NewsanguoCardTemplate
             // FromMonster 默认攻击玩家，使用框架接口将目标限定为另一只怪物。
             await DamageCmd.Attack(attack.Damage).FromMonster(attacker.Monster!)
                 .TargetingFiltered([target]).WithHitCount(attack.Hits)
-                .WithHitFx("vfx/vfx_attack_slash").Execute(context);
+                .WithHitFx("vfx/vfx_attack_blunt").Execute(context);
         }
     }
 

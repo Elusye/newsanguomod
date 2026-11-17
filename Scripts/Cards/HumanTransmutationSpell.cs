@@ -23,9 +23,12 @@ using newsanguo.Scripts.Powers;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
+[RegisterCard(typeof(RetiredCardPool))]
 public class HumanTransmutationSpell : NewsanguoCardTemplate
 {
+    public override bool CanBeGeneratedByModifiers => Pool is not RetiredCardPool;
+    public override bool CanBeGeneratedInCombat => Pool is not RetiredCardPool;
+
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(

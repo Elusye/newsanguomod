@@ -13,6 +13,7 @@ using MegaCrit.Sts2.Core.Nodes.Cards;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Settings;
 
 namespace newsanguo.Scripts.Cards;
 
@@ -27,6 +28,7 @@ public class SoImpressive : NeutralCardTemplate
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");
+
     public SoImpressive() : base(1, CardType.Skill, CardRarity.Rare, TargetType.Self) { }
 
     private CardModel? DisplaySource => IsDupe && _copiedTarget is not null
@@ -120,16 +122,23 @@ public class SoImpressive : NeutralCardTemplate
     }
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        if (_copiedTarget is not null)
+        bool exhaust = false;
+        if (_copiedTarget is { } source)
         {
-            // 与History Course相同：保留升级、附魔状态，自动选择合法目标，不支付复制品能量。
+            // 与 History Course 相同，复制品保留升级和附魔，自动选择目标。
+            var copy = source.CreateDupe(Owner);
             using (var playback = NewsanguoSfx.CapturePlayback())
             {
-                await CardCmd.AutoPlay(choiceContext, _copiedTarget.CreateDupe(Owner), null);
+                await CardCmd.AutoPlay(choiceContext, copy, null);
+                exhaust = BalanceAdjustments.Enabled && !IsDupe && copy.Type == CardType.Power &&
+                    CombatManager.Instance.History.CardPlaysFinished.Any(entry => entry.CardPlay.Card == copy);
                 await playback.WaitAsync(leadSeconds: 0.5);
             }
         }
         NewsanguoSfx.Play("event:/newsanguo/sfx/so_impressive");
+
+        if (exhaust && Pile?.Type == PileType.Play && !CombatManager.Instance.IsOverOrEnding)
+            await CardCmd.Exhaust(choiceContext, this);
     }
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -137,4 +146,6 @@ public class SoImpressive : NeutralCardTemplate
         RefreshHandTitle();
     }
     protected override void OnUpgrade() => AddKeyword(CardKeyword.Retain);
+
+    protected override void AfterDowngraded() => RemoveKeyword(CardKeyword.Retain);
 }

@@ -1,3 +1,4 @@
+using newsanguo.Scripts.Settings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -20,6 +21,8 @@ public class PartyOn : NewsanguoCardTemplate
 {
     public override bool CanBeGeneratedByModifiers => Pool is not RetiredCardPool;
     public override bool CanBeGeneratedInCombat => Pool is not RetiredCardPool;
+    public override IEnumerable<CardKeyword> CanonicalKeywords =>
+        BalanceAdjustments.Enabled ? [CardKeyword.Exhaust, .. base.CanonicalKeywords] : base.CanonicalKeywords;
 
 
     // 卡图资源

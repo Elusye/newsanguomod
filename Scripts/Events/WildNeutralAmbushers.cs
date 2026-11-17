@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.Events;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Acts;
+using MegaCrit.Sts2.Core.Models.Encounters;
 using MegaCrit.Sts2.Core.Models.Monsters;
 using MegaCrit.Sts2.Core.Rewards;
 using MegaCrit.Sts2.Core.Rooms;
@@ -15,13 +16,6 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace newsanguo.Scripts.Events;
 
-/// <summary>
-/// 野生中立伏兵（第二幕事件）：
-/// 你可选择「逃跑」直接离开，或「战斗！」迎战一场艰难的战斗
-/// （SlumberingBeetle + BygoneEffigy，精英难度）。胜利后获得标准的精英奖励
-/// （金币 + 卡牌 + 随机遗物等），并额外获得 100 金币与一件随机稀有遗物，
-/// 战斗结束直接进入下一地图点。
-/// </summary>
 [RegisterActEvent(typeof(Hive))]
 public class WildNeutralAmbushers : ModEventTemplate
 {
@@ -32,6 +26,9 @@ public class WildNeutralAmbushers : ModEventTemplate
     // 进入战斗的事件必须是共享事件（多人下由投票决定进入）
     public override bool IsShared => true;
 
+    public override bool IsAllowed(IRunState runState) =>
+        runState.Act is Hive && runState.ActFloor > runState.Map.GetRowCount() / 2;
+
     // 与陈留大食堂一致，在进入事件时播放入场语音。
     public override Task AfterEventStarted()
     {
@@ -39,19 +36,33 @@ public class WildNeutralAmbushers : ModEventTemplate
         return Task.CompletedTask;
     }
 
-    protected override IReadOnlyList<EventOption> GenerateInitialOptions()
+    protected override IReadOnlyList<EventOption> GenerateInitialOptions() =>
+        [new EventOption(this, FightFirst, ModOptionKey("INITIAL", "FIGHT"))];
+
+    private Task FightFirst()
     {
-        return
-        [
-            new EventOption(this, RunAway, ModOptionKey("INITIAL", "RUN_AWAY")),
-            new EventOption(this, ContinueFight, ModOptionKey("INITIAL", "FIGHT"))
-        ];
+        EnterCombatWithoutExitingEvent<WildNeutralAmbushersFirstEncounter>([], shouldResumeAfterCombat: true);
+        return Task.CompletedTask;
     }
 
-    private Task RunAway()
+    public override Task Resume(AbstractRoom exitedRoom)
     {
-        // 逃跑：直接结束事件，继续地图
-        SetEventFinished(PageDescription("RUN_AWAY"));
+        if (exitedRoom is not CombatRoom { Encounter: WildNeutralAmbushersFirstEncounter })
+            return base.Resume(exitedRoom);
+
+        _combatSynchronizer?.ResetState();
+        _combatSynchronizer?.InitializeForEvent(this);
+        SetEventState(PageDescription("AFTER_FIRST"),
+        [
+            new EventOption(this, RunAwayAfterFirst, ModOptionKey("AFTER_FIRST", "RUN_AWAY")),
+            new EventOption(this, ContinueFight, ModOptionKey("AFTER_FIRST", "FIGHT"))
+        ]);
+        return Task.CompletedTask;
+    }
+
+    private Task RunAwayAfterFirst()
+    {
+        SetEventFinished(PageDescription("AFTER_FIRST_RUN_AWAY"));
         return Task.CompletedTask;
     }
 
@@ -68,6 +79,26 @@ public class WildNeutralAmbushers : ModEventTemplate
         EnterCombatWithoutExitingEvent<SkulkingColonyEffigyEncounter>(rewards, shouldResumeAfterCombat: false);
         return Task.CompletedTask;
     }
+}
+
+// 复用原版双盛碗虫遭遇的场景和槽位，保留伏兵事件的首战阵容。
+public sealed class WildNeutralAmbushersFirstEncounter : EncounterModel
+{
+    public override RoomType RoomType => RoomType.Monster;
+    public override bool ShouldGiveRewards => false;
+    public override bool HasScene => true;
+    protected override string ScenePath => "res://scenes/encounters/bowlbugs_weak.tscn";
+    public override float GetCameraScaling() => ModelDb.Encounter<BowlbugsWeak>().GetCameraScaling();
+    public override Godot.Vector2 GetCameraOffset() => ModelDb.Encounter<BowlbugsWeak>().GetCameraOffset();
+
+    public override IEnumerable<MonsterModel> AllPossibleMonsters =>
+        [ModelDb.Monster<BowlbugRock>(), ModelDb.Monster<BowlbugSilk>()];
+
+    protected override IReadOnlyList<(MonsterModel, string?)> GenerateMonsters() =>
+    [
+        (ModelDb.Monster<BowlbugRock>().ToMutable(), "odd"),
+        (ModelDb.Monster<BowlbugSilk>().ToMutable(), "even")
+    ];
 }
 
 /// <summary>

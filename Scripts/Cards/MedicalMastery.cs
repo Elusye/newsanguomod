@@ -19,6 +19,7 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Settings;
 
 namespace newsanguo.Scripts.Cards;
 
@@ -26,9 +27,6 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class MedicalMastery : NewsanguoCardTemplate
 {
-
-    // 基础伤害
-    private const int baseDamage = 15;
 
     // 记录当前已达到的升级层数（引擎降级时会把 CurrentUpgradeLevel 归零，
     // 本字段用于在 AfterDowngraded 中把状态重建为“只降一级”）
@@ -63,9 +61,8 @@ public class MedicalMastery : NewsanguoCardTemplate
         AddIsCloneDescriptionArg(description);
     }
 
-    // 卡牌基础数值：造成 15 点伤害
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(baseDamage, ValueProp.Move)
+        new DamageVar(BalanceAdjustments.Enabled ? 10m : 15m, ValueProp.Move)
     ];
 
     public MedicalMastery() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)

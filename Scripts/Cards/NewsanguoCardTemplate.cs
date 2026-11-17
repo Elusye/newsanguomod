@@ -1,3 +1,4 @@
+using newsanguo.Scripts.Settings;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,6 +24,12 @@ namespace newsanguo.Scripts.Cards;
 public abstract class NewsanguoCardTemplate : ModCardTemplate
 {
     private const string ScryKeywordId = "NEWSANGUO_KEYWORD_SCRY";
+    protected override void AddExtraArgsToDescription(MegaCrit.Sts2.Core.Localization.LocString description)
+    {
+        base.AddExtraArgsToDescription(description);
+        description.Add("BalanceAdjustments", BalanceAdjustments.Enabled);
+    }
+
     private const string TigerDragonKeywordId = "NEWSANGUO_KEYWORD_TIGER_DRAGON";
 
     public virtual bool IsTigerDragonCard => false;
@@ -127,12 +134,13 @@ public abstract class NewsanguoCardTemplate : ModCardTemplate
     /// 每当你失去天意之力时调用（数值真的减少之后由
     /// <see cref="newsanguo.Scripts.Combat.HeavensForce"/> 统一派发，覆盖“卡牌/效果造成的失去”
     /// 与“额外回合的转化扣减”两条路径）。默认什么都不做，
-    /// “参见汉中王！”用它把自己放回手牌。
     /// </summary>
     public virtual Task OnHeavensForceLost(PlayerChoiceContext choiceContext, int amount)
     {
         return Task.CompletedTask;
     }
+
+    public virtual Task OnHeavensForceGained(PlayerChoiceContext choiceContext, int amount) => Task.CompletedTask;
 
     public override IEnumerable<CardKeyword> CanonicalKeywords
     {

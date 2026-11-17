@@ -265,18 +265,23 @@ public static class HeavensForce
     public static async Task Gain(PlayerChoiceContext choiceContext, Player? player, int amount, AbstractModel? source = null,
         bool recordGain = true)
     {
-        if (player is null || amount <= 0)
+        if (player is null || amount <= 0 || AntiMagicField.PreventsHeavensForceGain(player))
         {
             return;
         }
 
+        int previous = Get(player);
+        // 额外点数合并进同一次获得，避免再次触发获得事件。
+        amount += player.Creature.GetPowerAmount<FollowHeavensWillPower>();
         await SecondaryResourceCmd.Gain(player, Id, amount, source);
+        int gained = Get(player) - previous;
         HeavensForcePower? power = await SyncPower(choiceContext, player);
 
         if (recordGain)
         {
             power?.RecordGain(amount);
         }
+        await NotifyGained(choiceContext, player, gained);
     }
 
     /// <summary>
@@ -314,17 +319,39 @@ public static class HeavensForce
         }
 
         int previous = SecondaryResourceCmd.Get(player, Id);
+        if (amount > previous)
+        {
+            if (AntiMagicField.PreventsHeavensForceGain(player))
+                return;
+
+            amount += player.Creature.GetPowerAmount<FollowHeavensWillPower>();
+        }
+
         await SecondaryResourceCmd.Set(player, Id, amount, source);
         await SyncPower(choiceContext, player);
 
-        // 设定为更低的数值也属于“失去天意之力”
-        if (amount < previous)
+        int current = Get(player);
+        if (current > previous)
         {
-            await NotifyLost(choiceContext, player, previous - amount);
+            await NotifyGained(choiceContext, player, current - previous);
+        }
+        else if (current < previous)
+        {
+            await NotifyLost(choiceContext, player, previous - current);
         }
     }
 
-    // 数值实际减少后，通知该玩家战斗中所有的新三国卡牌（“参见汉中王！”等按“失去天意之力”触发的牌）。
+    private static async Task NotifyGained(PlayerChoiceContext choiceContext, Player player, int amount)
+    {
+        if (amount <= 0 || player.PlayerCombatState is not { } combatState ||
+            !player.Creature.IsAlive || CombatManager.Instance.IsOverOrEnding)
+            return;
+
+        foreach (var card in combatState.AllCards.OfType<NewsanguoCardTemplate>().ToArray())
+            await card.OnHeavensForceGained(choiceContext, amount);
+    }
+
+    // 数值实际减少后，通知该玩家战斗中所有的新三国卡牌。
     // 遍历 PlayerCombatState.AllCards（手牌/抽牌堆/弃牌堆/消耗堆/出牌堆，顺序固定），
     // 两端执行同一份同步操作 ⇒ 结果一致，无需 LocalContext.IsMe 判定。
     private static async Task NotifyLost(PlayerChoiceContext choiceContext, Player player, int amount)

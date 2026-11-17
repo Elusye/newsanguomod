@@ -40,7 +40,6 @@ public static class TerritoryHandOrder
             }
             ui.ForceRefreshCardIndices();
         }
-        foreach (var model in hand.Cards) model.BaseReplayCount = model.BaseReplayCount;
     }
 
     public static void Request(CardModel card, int index) => TerritoryHandAction.Request(card, index);

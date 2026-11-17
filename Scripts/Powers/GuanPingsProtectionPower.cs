@@ -29,7 +29,7 @@ public class GuanPingsProtectionPower : ModPowerTemplate
     protected override object InitInternalData() => new Data();
     internal void AddUpgradedTrigger() => GetInternalData<Data>().upgradedTriggers++;
 
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [VirtualCardHoverTip.Create()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [VirtualCardHoverTip.Create(), ..HoverTipFactory.FromEnchantment<MellowWine>()];
 
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;

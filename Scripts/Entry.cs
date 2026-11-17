@@ -28,6 +28,7 @@ public class Entry
         // 逐个应用 Harmony 补丁：单个补丁失败不影响其它补丁与 mod 主体，并在日志中记录失败原因
         var harmony = new Harmony("newsanguo");
         ApplyPatch(harmony, typeof(TonyDefendBlockCapPatch));
+        ApplyPatch(harmony, typeof(ZilongDebuffHistoryPatch));
         ApplyPatch(harmony, typeof(FragileEnchantmentCombatEndPatch));
         TerritoryRightClick.Register();
         ApplyPatch(harmony, typeof(NewsanguoEnergyCounterPatch));
@@ -66,9 +67,20 @@ public class Entry
         ApplyPatch(harmony, typeof(BewildermentSmartDescriptionPatch));
         ApplyPatch(harmony, typeof(BewildermentIntentColorPatch));
         ApplyPatch(harmony, typeof(BewildermentFacingPatch));
-        ApplyPatch(harmony, typeof(TerritoryReplayPatch));
-        ApplyPatch(harmony, typeof(TerritoryReplayCountPatch));
-        ApplyPatch(harmony, typeof(TerritoryReplaySoundPatch));
+        ApplyPatch(harmony, typeof(TerritoryDamageSnapshotPatch));
+        ApplyPatch(harmony, typeof(TerritoryLegacyReplayPatch));
+        ApplyPatch(harmony, typeof(TerritoryLegacyReplaySoundPatch));
+        ApplyPatch(harmony, typeof(TerritoryLegacyReplayRefreshPatch));
+        ApplyPatch(harmony, typeof(BalanceCardTemplateCachePatch));
+        ApplyPatch(harmony, typeof(BalanceRunLoadPatch));
+        ApplyPatch(harmony, typeof(ChallengeSelectionPatch));
+        ApplyPatch(harmony, typeof(HeavenRevisionExtraTurnPatch));
+        ApplyPatch(harmony, typeof(WildNeutralAmbushersReplayPatch));
+        ApplyPatch(harmony, typeof(WildNeutralAmbushersFirstFightSavePatch));
+        ApplyPatch(harmony, typeof(WildNeutralAmbushersOpeningMovesPatch));
+        ApplyPatch(harmony, typeof(WildNeutralAmbushersBeetleSlumberPatch));
+        ApplyPatch(harmony, typeof(ChallengeWinePatch));
+        ApplyPatch(harmony, typeof(ChallengeCombatStartPatch));
         ApplyPatch(harmony, typeof(TerritoryDragPatch));
         ApplyPatch(harmony, typeof(TerritoryRepositionGlowPatch));
         ApplyPatch(harmony, typeof(TerritoryRetainPatch));
@@ -76,7 +88,6 @@ public class Entry
         ApplyPatch(harmony, typeof(TerritoryDiscardSelectionPatch));
         ApplyPatch(harmony, typeof(TerritoryDiscardPromptPatch));
         ApplyPatch(harmony, typeof(TerritoryDescriptionPatch));
-        ApplyPatch(harmony, typeof(TerritoryHandReplayRefreshPatch));
         ApplyPatch(harmony, typeof(AbilitySuppressionPatch));
         ApplyPatch(harmony, typeof(IronCavalrySmartDescriptionPatch));
         ApplyPatch(harmony, typeof(UnsettlingLampSelfDebuffPatch));

@@ -25,7 +25,7 @@ public class HeavensForceVar : SecondaryResourceVar
     public override void UpdateCardPreview(CardModel card, CardPreviewMode previewMode, Creature? target, bool runGlobalHooks)
     {
         base.UpdateCardPreview(card, previewMode, target, runGlobalHooks);
-        if (card is NewsanguoCardTemplate { IsFreeHeavensForce: true })
+        if (card is NewsanguoCardTemplate { LosesHeavensForce: true, IsFreeHeavensForce: true })
         {
             PreviewValue = 0m;
         }

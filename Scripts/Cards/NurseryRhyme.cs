@@ -15,6 +15,8 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public sealed class NurseryRhyme : NewsanguoCardTemplate
 {
+    protected override int CanonicalEnergyCost => Settings.BalanceAdjustments.Enabled ? 2 : 1;
+
     public NurseryRhyme() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self) { }
 
     public override CardAssetProfile AssetProfile => new(

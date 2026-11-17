@@ -28,7 +28,7 @@ public sealed class AnthonysVacation : ModEventTemplate
     public override void CalculateVars()
     {
         // 用进入事件时的最大生命值计算，预览与实际扣血共用同一个整数。
-        DynamicVars.HpLoss.BaseValue = (int)(Owner!.Creature.MaxHp * 0.35m);
+        DynamicVars.HpLoss.BaseValue = Math.Min((int)(Owner!.Creature.MaxHp * 0.35m), 16);
     }
 
     public override EventAssetProfile AssetProfile => new(

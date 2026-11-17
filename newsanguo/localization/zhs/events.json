@@ -24,11 +24,8 @@
   "NEWSANGUO_EVENT_CHENLIU_GRAND_MESS_HALL.pages.HUNGRY_RELIC.description": "你提醒[b][gold]韩馥[/gold][/b]，[b][gold]袁术[/gold][/b]还欠他[b]两万斤粮草[/b]没给。[b][gold]韩馥[/gold][/b]当即就不高兴了，手指着袁术怒道：\n\n“没有[gold][b]粮草[/b][/gold]，叫我的[jitter]兵马[/jitter][red]饿着肚子[/red]奔袭吗？”\n\n众诸侯开始吵了起来，[b]陈留城[/b]内立即炸开了锅。\n“你为何老替他说话，他是你[gold]天王老子[/gold]吗？”\n“[b][gold]韩馥[/gold][/b]！你为何霸占我[gold]当阳三郡[/gold]不还？”\n“[jitter]老子不干了！[/jitter]”\n“[rainbow][sine]太阳从西边升起！[/sine][/rainbow]”\n……\n\n场面一度非常混乱，你趁机偷走了[gold][b]一些东西[/b][/gold]，逃出了[b]陈留城[/b]。",
   "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.title": "野生中立伏兵",
   "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.INITIAL.description": "你正穿行于巢穴的野外地带，忽然听到枝叶间传来[red]窸窣[/red]的响动。\n\n前方突然刷新出来了[sine][b][gold]野生中立伏兵[/gold][/b][/sine]，你被伏击了！",
-  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.INITIAL.options.RUN_AWAY.title": "逃跑",
-  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.INITIAL.options.RUN_AWAY.description": "趁它们还没靠近，转身逃离此地，避免这场战斗。",
   "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.INITIAL.options.FIGHT.title": "战斗！",
-  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.INITIAL.options.FIGHT.description": "开始一场艰难的战斗，赢得众多奖赏。",
-  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.RUN_AWAY.description": "你趁它们尚未逼近，转身没入草丛，头也不回地走了。",
+  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.INITIAL.options.FIGHT.description": "迎战两只盛碗虫。",
   "NEWSANGUO_EVENT_THREE_VISITS_TO_THE_THATCHED_COTTAGE.title": "三顾茅庐",
   "NEWSANGUO_EVENT_THREE_VISITS_TO_THE_THATCHED_COTTAGE.pages.INITIAL.description": "你遵循[red][b]天意[/b][/red]的指引，前往[gold][b]诸葛亮[/b][/gold]所在的茅庐。\n\n不过[gold][b]关羽[/b][/gold]和[gold][b]张飞[/b][/gold]似乎有些不乐意。\n\n“大哥你别信这些，人们都管那些文人叫腐儒呢。腐儒是什么呀，那就是腐烂的臭豆腐！大哥你千万别拿那些臭豆腐当宝贝了！”\n“三弟说的痛切，[rainbow][sine]当浮一大白[/sine][/rainbow]！”\n……",
   "NEWSANGUO_EVENT_THREE_VISITS_TO_THE_THATCHED_COTTAGE.pages.INITIAL.options.ARRIVE.title": "来到茅庐前",
@@ -93,5 +90,11 @@
   "NEWSANGUO_EVENT_ANTHONYS_VACATION.pages.INITIAL.options.WRATH_LOCKED.title": "东尼之怒",
   "NEWSANGUO_EVENT_ANTHONYS_VACATION.pages.INITIAL.options.WRATH_LOCKED.description": "需要少于[blue]20[/blue]张牌。",
   "NEWSANGUO_EVENT_ANTHONYS_VACATION.pages.INITIAL.options.MERCY_LOCKED.title": "向安东尼求饶",
-  "NEWSANGUO_EVENT_ANTHONYS_VACATION.pages.INITIAL.options.MERCY_LOCKED.description": "需要少于[blue]20[/blue]张牌。"
+  "NEWSANGUO_EVENT_ANTHONYS_VACATION.pages.INITIAL.options.MERCY_LOCKED.description": "需要少于[blue]20[/blue]张牌。",
+  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.AFTER_FIRST.description": "两只盛碗虫倒下了。你听见更沉重的脚步声，另一队伏兵正在靠近。",
+  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.AFTER_FIRST.options.RUN_AWAY.title": "离开",
+  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.AFTER_FIRST.options.RUN_AWAY.description": "趁现在离开。",
+  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.AFTER_FIRST.options.FIGHT.title": "继续战斗！",
+  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.AFTER_FIRST.options.FIGHT.description": "迎战精英伏兵，获胜后获得精英奖励、额外100金币和一件稀有遗物。",
+  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.AFTER_FIRST_RUN_AWAY.description": "你趁下一队伏兵还没赶到，转身离开了。"
 }

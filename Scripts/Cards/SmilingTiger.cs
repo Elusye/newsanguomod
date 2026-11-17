@@ -1,3 +1,4 @@
+using newsanguo.Scripts.Settings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -14,7 +15,6 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
-using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
@@ -22,7 +22,7 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NeutralCardPool))]
 public class SmilingTiger : NeutralCardTemplate
 {
-    public override bool IsTigerDragonCard => true;
+    public override bool IsTigerDragonCard => !BalanceAdjustments.Enabled;
 
     // 获得格挡：可被灵巧等格挡附魔识别
     public override bool GainsBlock => true;
@@ -42,8 +42,7 @@ public class SmilingTiger : NeutralCardTemplate
 
     // 鼠标悬停时展示格挡说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.Static(StaticHoverTip.Block),
-        HoverTipFactory.FromPower<DragonOmenPower>()
+        HoverTipFactory.Static(StaticHoverTip.Block)
     ];
 
     public SmilingTiger() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)

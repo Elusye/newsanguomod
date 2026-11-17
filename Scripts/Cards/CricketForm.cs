@@ -66,10 +66,7 @@ public class CricketForm : NewsanguoCardTemplate
             }
         }
 
-        // 附加/叠加“蛐蛐形态”能力：右下角层数（Amount = 打出张数，即每几个回合翻倍）
-        // 由 PowerCmd 累加；右上角“距下次翻倍还剩的回合数”随打出同时 +1
-        CricketFormPower? form = await PowerCmd.Apply<CricketFormPower>(choiceContext, base.Owner.Creature, 1, base.Owner.Creature, this);
-        form?.RegisterCopy();
+        await PowerCmd.Apply<CricketFormPower>(choiceContext, Owner.Creature, 1, Owner.Creature, this);
     }
 
     // 升级：将难以杀灭设为目标值 -1（2 → 1）

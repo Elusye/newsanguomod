@@ -140,7 +140,14 @@ public static class NewsanguoSfx
     // 2026-10-19：复核177个音频；短音效K=0.7、选人K=1，基准-23.1 dB RMS，峰值不超过-3 dBFS。
     private static readonly Dictionary<string, float> LoudnessGainDb = new()
     {
+        ["chancellor_syndrome"] = 1.5f,
+        ["execute_yuan_shao_1"] = -5.5f,
+        ["execute_yuan_shao_2"] = -4f,
+        ["execute_yuan_shao_3"] = -6f,
+        ["flourishing"] = 2.5f,
+        ["follow_heavens_will"] = 2f,
         ["human_footrest"] = -5f,
+        ["iron_chain_fleet"] = 7.5f,
         ["lets_go_drinking"] = 4.5f,
         ["nursery_rhyme"] = 3.5f,
         ["nursery_rhyme_1"] = 4.5f,
@@ -149,6 +156,7 @@ public static class NewsanguoSfx
         ["nursery_rhyme_3_special"] = -1f,
         ["nursery_rhyme_4"] = 3f,
         ["no_return"] = 12.5f,
+        ["sun_ben"] = 1.5f,
         ["switch_allegiance"] = -0.5f,
         ["standard_camp"] = 0f,
         ["one_for_sorrow_two_for_joy"] = 7f,
@@ -156,6 +164,7 @@ public static class NewsanguoSfx
         ["a_gift_of_wheels"] = 4f,
         ["character_death_shuhan"] = 5f,
         ["rest_site_smith_shuhan"] = 11f,
+        ["win_the_peoples_hearts"] = 5f,
         ["yizhou"] = -3.5f,
         ["jingxiang"] = 3.5f,
         ["rest_site_rest_shuhan"] = 3.5f,
@@ -338,8 +347,10 @@ public static class NewsanguoSfx
         ["wolf_vs_dog"] = 7f,
         ["worth_all_their_lives"] = 3.5f,
         ["you_dare_refuse"] = 0.5f,
+        ["zhao_zilong_of_changshan"] = -2f,
         ["zhou_yafu"] = 7.5f,
 
+        ["zilong_locked"] = -1.5f,
     };
 
     // 按音频文件名取响度补偿增益（dB）；未收录的文件视为 0

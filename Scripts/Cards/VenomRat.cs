@@ -3,14 +3,11 @@ using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Models.Powers;
-using MegaCrit.Sts2.Core.Nodes.Rooms;
-using MegaCrit.Sts2.Core.Nodes.Vfx;
 using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -65,9 +62,7 @@ public class VenomRat : NewsanguoCardTemplate
 
         await HeavensForce.Add(choiceContext, Owner, -DynamicVars["HeavensForcePower"].IntValue, this);
 
-        // 在目标身上播放中毒命中特效
-        var child = NPoisonImpactVfx.Create(cardPlay.Target);
-        NCombatRoom.Instance?.CombatVfxContainer.AddChildSafely(child);
+        VfxCmd.PlayOnCreatureCenter(cardPlay.Target, "vfx/vfx_bite");
 
         // 给予目标 7（10）层中毒
         await PowerCmd.Apply<PoisonPower>(

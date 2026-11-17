@@ -36,6 +36,7 @@ public sealed class ChancellorSyndrome : NewsanguoCardTemplate
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay play)
     {
+        NewsanguoSfx.Play("event:/newsanguo/sfx/chancellor_syndrome");
         await CreatureCmd.Heal(Owner.Creature, HealAmount);
         PlayerCmd.EndTurn(Owner, false, null);
     }

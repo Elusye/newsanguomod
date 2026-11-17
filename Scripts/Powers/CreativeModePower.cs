@@ -23,6 +23,16 @@ namespace newsanguo.Scripts.Powers;
 [RegisterPower]
 public class CreativeModePower : ModPowerTemplate
 {
+    public override MegaCrit.Sts2.Core.Localization.LocString Description
+    {
+        get
+        {
+            var description = base.Description;
+            description.Add("BalanceAdjustments", newsanguo.Scripts.Settings.BalanceAdjustments.Enabled);
+            return description;
+        }
+    }
+
     // 正面效果：Buff
     public override PowerType Type => PowerType.Buff;
     // 每层提供一次独立的选牌奖励。

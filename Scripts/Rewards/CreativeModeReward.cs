@@ -1,3 +1,4 @@
+using newsanguo.Scripts.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +50,9 @@ public sealed class CreativeModeReward : ModCustomReward
     // 描述走 mod 自己的 cards 表，避免依赖原版 gameplay_ui 表
     protected override string DescriptionLocTable => "cards";
 
-    protected override string DescriptionLocKey => "NEWSANGUO_CARD_CREATIVE_MODE_REWARD";
+    protected override string DescriptionLocKey => BalanceAdjustments.Enabled
+        ? "NEWSANGUO_CARD_CREATIVE_MODE_REWARD"
+        : "NEWSANGUO_CARD_CREATIVE_MODE_LEGACY_REWARD";
 
     // 复用原版“特殊卡牌奖励”图标；文件缺失时 RitsuLib 只会画一个空图标，不会报错
     protected override string? RewardIconPath => "res://images/ui/reward_screen/reward_icon_special_card.png";
@@ -63,7 +66,7 @@ public sealed class CreativeModeReward : ModCustomReward
     {
         Player player = base.Player;
 
-        // 候选排除停用牌与「创造模式」自己
+        // 候选排除先古牌、停用牌与「创造模式」自己
         string selfEntry = ModelDb.GetId(typeof(CreativeMode)).Entry;
         List<CardCreationResult> options = [];
         // 显式包含中立池，兼容全卡列表已缓存的情况；按 ID 去重，避免共有牌重复。
@@ -71,7 +74,8 @@ public sealed class CreativeModeReward : ModCustomReward
             .DistinctBy(card => card.Id);
         foreach (CardModel canonical in candidates)
         {
-            if (canonical.Pool is RetiredCardPool || string.Equals(canonical.Id.Entry, selfEntry, StringComparison.Ordinal))
+            if ((BalanceAdjustments.Enabled && canonical.Rarity == CardRarity.Ancient) || canonical.Pool is RetiredCardPool ||
+                string.Equals(canonical.Id.Entry, selfEntry, StringComparison.Ordinal))
             {
                 continue;
             }

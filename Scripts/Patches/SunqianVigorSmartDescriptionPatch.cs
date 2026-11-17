@@ -3,6 +3,7 @@ using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using newsanguo.Scripts.Interop;
 using newsanguo.Scripts.Powers;
+using newsanguo.Scripts.Settings;
 
 namespace newsanguo.Scripts.Patches;
 
@@ -12,6 +13,12 @@ public static class SunqianVigorSmartDescriptionPatch
 {
     public static void Postfix(PowerModel __instance, LocString __result)
     {
+        if (__instance is IronChainFleetPower fleet)
+            fleet.AddPreviousCardType(__result);
+
+        if (__instance is TigerWindCloudDragonPower or CreativeModePower)
+            __result.Add("BalanceAdjustments", BalanceAdjustments.Enabled);
+
         if (__instance is ToABiggerGobletPower or WheresWinePower or FeelNoAcidPower
             or SovereignFormPower or TriumphBrewPower)
         {

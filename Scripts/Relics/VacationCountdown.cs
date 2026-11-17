@@ -19,9 +19,9 @@ public sealed class VacationCountdown : ModRelicTemplate
     public override bool ShowCounter => true;
     public override int DisplayAmount => 3 - CompletedBattles;
     public override RelicAssetProfile AssetProfile => new(
-        IconPath: "res://newsanguo/images/relics/Portal.png",
-        IconOutlinePath: "res://newsanguo/images/relics/PortalOutline.png",
-        BigIconPath: "res://newsanguo/images/relics/PortalBig.png");
+        IconPath: "res://newsanguo/images/relics/VacationCountdown.png",
+        IconOutlinePath: "res://newsanguo/images/relics/VacationCountdownOutline.png",
+        BigIconPath: "res://newsanguo/images/relics/VacationCountdownBig.png");
 
     [SavedProperty]
     public int CompletedBattles { get; set; }

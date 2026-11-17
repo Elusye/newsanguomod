@@ -50,8 +50,6 @@ public class NeutralCardPool : TypeListCardPoolModel
         content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.WellFedWellClothed>();
         content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.FeelNoAcid>();
         content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.FeelNoAcid>();
-        content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.DareYouToSlash>();
-        content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.DareYouToSlash>();
         content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.SoImpressive>();
         content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.SoImpressive>();
     }

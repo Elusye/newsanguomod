@@ -53,7 +53,6 @@ public class SlayTheThiefLuBu : NewsanguoCardTemplate
     protected override CardLocation GetResultLocationForCardPlay()
     {
         CardLocation location = base.GetResultLocationForCardPlay();
-        // 保留复制品离场和外部消耗效果的原版处理。
         if (location.pileType == PileType.Discard)
         {
             location.pileType = PileType.Draw;

@@ -1,3 +1,4 @@
+using newsanguo.Scripts.Settings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -31,12 +32,14 @@ public class DeafenMe : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<DragonOmenPower>(15m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<DragonOmenPower>(BalanceAdjustments.Enabled ? 8m : 15m)];
 
     // 悬停提示：展示“帝王之征”说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<DragonOmenPower>()
     ];
+
+    public override CardRarity Rarity => BalanceAdjustments.Enabled ? CardRarity.Common : CardRarity.Uncommon;
 
     public DeafenMe() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
@@ -50,7 +53,7 @@ public class DeafenMe : NewsanguoCardTemplate
         // 播放出牌音效（静音前的最后一声）
         NewsanguoSfx.Play("event:/newsanguo/sfx/deafen_me");
 
-        // 给予选中的敌人15/20层帝王之征。
+        // 给予选中的敌8/11层帝王之征。
         await PowerCmd.Apply<DragonOmenPower>(choiceContext, cardPlay.Target,
             DynamicVars["DragonOmenPower"].IntValue, Owner.Creature, this);
 
@@ -68,7 +71,7 @@ public class DeafenMe : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 帝王之征从15提高到20
-        DynamicVars["DragonOmenPower"].UpgradeValueBy(5);
+        // 帝王之征8提高到11
+        DynamicVars["DragonOmenPower"].UpgradeValueBy(BalanceAdjustments.Enabled ? 3 : 5);
     }
 }

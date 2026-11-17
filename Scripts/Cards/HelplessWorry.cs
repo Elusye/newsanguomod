@@ -1,3 +1,4 @@
+using newsanguo.Scripts.Settings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -18,7 +19,7 @@ public class HelplessWorry : NewsanguoCardTemplate
 {
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(16m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(BalanceAdjustments.Enabled ? 10m : 16m, ValueProp.Move)];
     public override bool GainsBlock => true;
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromCard<Doubt>()];
 
@@ -43,5 +44,5 @@ public class HelplessWorry : NewsanguoCardTemplate
         await Cmd.Wait(0.5f);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(4m);
+    protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(BalanceAdjustments.Enabled ? 3m : 4m);
 }

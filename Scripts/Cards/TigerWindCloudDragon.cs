@@ -1,13 +1,11 @@
+using newsanguo.Scripts.Settings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.Cards;
 using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -17,28 +15,40 @@ using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
-// 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
+// 保留旧曹魏卡牌 ID，供已有存档读取。
+[RegisterCard(typeof(RetiredCardPool))]
 public class TigerWindCloudDragon : NewsanguoCardTemplate
 {
-    public override bool IsTigerDragonCard => true;
+    public override bool CanBeGeneratedByModifiers => Pool is not RetiredCardPool;
+    public override bool CanBeGeneratedInCombat => Pool is not RetiredCardPool;
+
+    public override bool IsTigerDragonCard => !BalanceAdjustments.Enabled;
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 每层能力使每次打出龙虎牌抽 1 张牌。
+    // 每层能力提供 1 点重放。
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new PowerVar<TigerWindCloudDragonPower>(1m)
     ];
 
-    // 展示帝王之征与固定生成的两张龙虎牌。
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<DragonOmenPower>(),
-        HoverTipFactory.FromCard<SmilingTiger>(),
-        this is TigerWindCloudDragonShuHan ? HoverTipFactory.FromCard<DragonOmenShuHan>() : HoverTipFactory.FromCard<DragonOmen>()
-    ];
+    // 展示受影响的笑面虎与重放说明。
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips
+    {
+        get
+        {
+            yield return HoverTipFactory.FromCard<SmilingTiger>();
+            if (BalanceAdjustments.Enabled)
+                yield return HoverTipFactory.Static(StaticHoverTip.ReplayDynamic,
+                    new DynamicVar("Times", DynamicVars["TigerWindCloudDragonPower"].IntValue));
+            else
+                yield return this is TigerWindCloudDragonShuHan
+                    ? HoverTipFactory.FromCard<DragonOmenShuHan>()
+                    : HoverTipFactory.FromCard<DragonOmen>();
+        }
+    }
     // 构造函数
     public TigerWindCloudDragon() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
     {
@@ -47,11 +57,8 @@ public class TigerWindCloudDragon : NewsanguoCardTemplate
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        ICombatState combatState = base.CombatState!;
-
         NewsanguoSfx.Play("event:/newsanguo/sfx/tiger_wind_cloud_dragon");
 
-        // 获得抽牌能力。
         int amount = DynamicVars["TigerWindCloudDragonPower"].IntValue;
         await PowerCmd.Apply<TigerWindCloudDragonPower>(
             choiceContext,
@@ -61,14 +68,17 @@ public class TigerWindCloudDragon : NewsanguoCardTemplate
             this,
             silent: false);
 
-        // 固定各生成一张，保留来源卡池的独立实体。
-        bool useShuHanVariants = this is TigerWindCloudDragonShuHan;
-        CardModel tiger = combatState.CreateCard<SmilingTiger>(Owner);
-        CardModel dragon = useShuHanVariants
-            ? combatState.CreateCard<DragonOmenShuHan>(Owner)
-            : combatState.CreateCard<DragonOmen>(Owner);
-        await CardPileCmd.AddGeneratedCardToCombat(tiger, PileType.Hand, Owner);
-        await CardPileCmd.AddGeneratedCardToCombat(dragon, PileType.Hand, Owner);
+        if (!BalanceAdjustments.Enabled)
+        {
+            var combat = CombatState!;
+            var tiger = combat.CreateCard<SmilingTiger>(Owner);
+            MegaCrit.Sts2.Core.Models.CardModel dragon = this is TigerWindCloudDragonShuHan
+                ? combat.CreateCard<DragonOmenShuHan>(Owner)
+                : combat.CreateCard<DragonOmen>(Owner);
+            await CardPileCmd.AddGeneratedCardToCombat(tiger, PileType.Hand, Owner);
+            await CardPileCmd.AddGeneratedCardToCombat(dragon, PileType.Hand, Owner);
+        }
+
     }
 
     // 升级后的效果逻辑

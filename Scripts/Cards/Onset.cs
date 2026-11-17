@@ -32,7 +32,7 @@ public class Onset : NewsanguoCardTemplate
     // 卡牌基础数值：失去的天意之力（变量用正值，打出时取负）、获得的能量（升级后 2）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new HeavensForceVar(3m),
-        new EnergyVar(1)
+        new EnergyVar(2)
     ];
 
     // 鼠标悬停时显示天意之力与天意侵蚀提示

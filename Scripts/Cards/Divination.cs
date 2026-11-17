@@ -13,6 +13,7 @@ using STS2RitsuLib.Scaffolding.Content;
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
+using newsanguo.Scripts.Settings;
 
 namespace newsanguo.Scripts.Cards;
 
@@ -26,10 +27,9 @@ public class Divination : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：获得 2 点天意之力，抽 2 张牌
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new HeavensForceVar(2m),
-        new CardsVar(2)
+        new CardsVar(BalanceAdjustments.Enabled ? 1 : 2)
     ];
 
     // 鼠标悬停时显示天意之力与天意侵蚀提示
@@ -58,14 +58,15 @@ public class Divination : NewsanguoCardTemplate
         int heavensForceAmount = DynamicVars["HeavensForcePower"].IntValue;
         await HeavensForce.Add(choiceContext, base.Owner, heavensForceAmount, this);
 
-        // 抽两张牌
         await CardPileCmd.Draw(choiceContext, DynamicVars["Cards"].IntValue, base.Owner);
     }
 
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 天意之力从 3 提高到 4
-        DynamicVars["HeavensForcePower"].UpgradeValueBy(1);
+        if (BalanceAdjustments.Enabled)
+            DynamicVars["Cards"].UpgradeValueBy(1);
+        else
+            DynamicVars["HeavensForcePower"].UpgradeValueBy(1);
     }
 }

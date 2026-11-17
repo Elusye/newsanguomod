@@ -63,6 +63,7 @@ public class TimeAcidRain : NewsanguoCardTemplate
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .TargetingAllOpponents(CombatState!)
+            .WithHitFx("vfx/vfx_bloody_impact")
             .Execute(choiceContext);
     }
 

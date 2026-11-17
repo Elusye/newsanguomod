@@ -17,7 +17,7 @@ using newsanguo.Scripts.Characters;
 namespace newsanguo.Scripts.Cards;
 
 // 卡池归属由注册特性决定；保留原类名与存档 ID。
-[RegisterCard(typeof(ShuHanCardPool))]
+[RegisterCard(typeof(NewsanguoCardPool))]
 public class QinJinAlliance : NewsanguoCardTemplate
 {
 

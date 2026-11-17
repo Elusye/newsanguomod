@@ -1,3 +1,4 @@
+using newsanguo.Scripts.Settings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -16,8 +17,8 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到衍生卡池
-// 「四轮车」：0 费衍生的技能牌，获得 4 点格挡 4 次（由「直奔诸葛亮四轮车！」生成）。
-// 升级：每次获得的格挡 4 → 5（次数仍是 4 次）。
+// 「四轮车」：0 费衍生的技能牌，获得 3 点格挡 4 次（由「直奔诸葛亮四轮车！」生成）。
+// 升级：每次获得的格挡 3 → 4（次数仍是 4 次）。
 [RegisterCard(typeof(TokenCardPool))]
 public class FourWheeledCart : NewsanguoCardTemplate
 {
@@ -36,9 +37,9 @@ public class FourWheeledCart : NewsanguoCardTemplate
     // 鼠标悬停时展示格挡说明
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.Static(StaticHoverTip.Block)];
 
-    // 卡牌基础数值：格挡 4 点，结算 4 次
+    // 卡牌基础数值：格挡 3 点，结算 4 次
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new BlockVar(4m, ValueProp.Move),
+        new BlockVar(BalanceAdjustments.Enabled ? 3m : 4m, ValueProp.Move),
         new RepeatVar(4)
     ];
 
@@ -58,7 +59,7 @@ public class FourWheeledCart : NewsanguoCardTemplate
         }
     }
 
-    // 升级：每次获得的格挡 4 → 5（次数仍是 4 次）。
+    // 升级：每次获得的格挡 3 → 4（次数仍是 4 次）。
     // 卡面文案不用改：描述里的 {Block:diff()} 会自动显示升级后的数值并高亮差值。
     protected override void OnUpgrade()
     {

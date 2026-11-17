@@ -14,8 +14,8 @@ using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
-[RegisterCard(typeof(NeutralCardPool))]
-public class DareYouToSlash : NeutralCardTemplate
+[RegisterCard(typeof(ShuHanCardPool))]
+public class DareYouToSlash : NewsanguoCardTemplate
 {
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");

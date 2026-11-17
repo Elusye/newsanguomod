@@ -157,7 +157,6 @@ public class DrunkenMightPower : ModPowerTemplate
 
     private async Task ConsumeThenRefund(PlayerChoiceContext choiceContext, CardModel? cardSource, int target)
     {
-        if (newsanguo.Scripts.Combat.AbilitySuppression.IsSuppressed(this)) return;
         int consumed = Math.Max(0, Amount - target);
         if (Owner is null)
         {
@@ -180,7 +179,6 @@ public class DrunkenMightPower : ModPowerTemplate
     // 把酒力调整为指定值
     private async Task SetAmount(PlayerChoiceContext choiceContext, int target, CardModel? cardSource)
     {
-        if (newsanguo.Scripts.Combat.AbilitySuppression.IsSuppressed(this)) return;
         if (Owner is null || target == Amount)
         {
             return;

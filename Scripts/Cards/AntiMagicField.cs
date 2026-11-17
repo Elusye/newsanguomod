@@ -7,7 +7,6 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
-using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -29,26 +28,9 @@ public class AntiMagicField : TerritoryCardTemplate
     ];
     public AntiMagicField() : base(-1, CardRarity.Token) { }
     protected override void OnUpgrade() => DynamicVars["IronCavalryPower"].UpgradeValueBy(1);
-    protected override void AddExtraArgsToDescription(LocString description)
-    {
-        base.AddExtraArgsToDescription(description);
-        string text = string.Empty;
-        if (IsMutable && CombatManager.Instance.IsInProgress && Pile?.IsCombatPile == true)
-        {
-            var names = Pile.Type == PileType.Hand
-                ? Owner.Creature.Powers.Where(AbilitySuppression.CanSuppressWithHanzhong)
-                    .Select(power => power.Title.GetFormattedText()).Distinct().ToArray()
-                : System.Array.Empty<string>();
-            string separator = new LocString("powers", "NEWSANGUO_POWER_IRON_CAVALRY_POWER.listSeparator").GetFormattedText();
-            string list = names.Length == 0
-                ? new LocString("powers", "NEWSANGUO_POWER_IRON_CAVALRY_POWER.noSuppressedPowers").GetFormattedText()
-                : string.Join(separator, names);
-            var line = new LocString("cards", "NEWSANGUO_CARD_ANTI_MAGIC_FIELD.inactivePowers");
-            line.Add("Powers", list);
-            text = line.GetFormattedText();
-        }
-        description.Add("InactiveDescription", text);
-    }
+    internal static bool PreventsHeavensForceGain(Player player) =>
+        player.PlayerCombatState?.Hand.Cards.Any(card => card is AntiMagicField) == true;
+
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext context, Player player)
     {
         if (player != Owner || !Owner.Creature.IsAlive || Pile?.Type != PileType.Hand) return;

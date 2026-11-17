@@ -148,3 +148,24 @@ public sealed class WineIsTheOldHeroShuHan : WineIsTheOldHero
 {
     public override CardAssetProfile AssetProfile => ShuHanSharedCardAssets.ReusePortraitOf<WineIsTheOldHero>();
 }
+
+[RegisterCard(typeof(ShuHanCardPool))]
+public sealed class LightningStrikeShuHan : LightningStrike
+{
+    public override CardAssetProfile AssetProfile => ShuHanSharedCardAssets.ReusePortraitOf<LightningStrike>();
+}
+
+[RegisterCard(typeof(RetiredCardPool))]
+public sealed class SeaChangeShuHan : SeaChange
+{
+    public override bool CanBeGeneratedByModifiers => false;
+    public override bool CanBeGeneratedInCombat => false;
+
+    public override CardAssetProfile AssetProfile => ShuHanSharedCardAssets.ReusePortraitOf<SeaChange>();
+}
+
+[RegisterCard(typeof(ShuHanCardPool))]
+public sealed class VictoryByHeavensWillShuHan : VictoryByHeavensWill
+{
+    public override CardAssetProfile AssetProfile => ShuHanSharedCardAssets.ReusePortraitOf<VictoryByHeavensWill>();
+}

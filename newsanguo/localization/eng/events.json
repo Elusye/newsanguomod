@@ -24,11 +24,8 @@
   "NEWSANGUO_EVENT_CHENLIU_GRAND_MESS_HALL.pages.HUNGRY_RELIC.description": "You remind [b][gold]Han Fu[/gold][/b] that [b][gold]Yuan Shu[/gold][/b] still owes him [b]twenty thousand catties of grain[/b] and hasn't paid up. [b][gold]Han Fu[/gold][/b] is instantly displeased, and jabs a finger at Yuan Shu:\n\n“With no [gold][b]grain[/b][/gold], am I supposed to send my [jitter]soldiers[/jitter] on a forced march [red]on empty stomachs[/red]?”\n\nThe lords start quarreling, and all of [b]Chenliu[/b] erupts.\n“Why do you always speak up for him? Is he your [gold]lord and master[/gold]?”\n“[b][gold]Han Fu[/gold][/b]! Why do you keep my [gold]three commanderies of Dangyang[/gold] and refuse to give them back?”\n“[jitter]I'm done with this![/jitter]”\n“[rainbow][sine]The sun rises in the west![/sine][/rainbow]”\n...\n\nThe scene descends into chaos, and you seize the moment to make off with [gold][b]a few things[/b][/gold] and slip out of [b]Chenliu[/b].",
   "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.title": "Wild Neutral Ambushers",
   "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.INITIAL.description": "You are crossing the wilds of the Nest when you hear a [red]rustling[/red] among the branches.\n\nSuddenly [sine][b][gold]Wild Neutral Ambushers[/gold][/b][/sine] spawn ahead of you—you've been ambushed!",
-  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.INITIAL.options.RUN_AWAY.title": "Run Away",
-  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.INITIAL.options.RUN_AWAY.description": "Turn and flee before they close in, avoiding this fight.",
   "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.INITIAL.options.FIGHT.title": "Fight!",
-  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.INITIAL.options.FIGHT.description": "Begin a difficult fight, and reap plentiful rewards.",
-  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.RUN_AWAY.description": "Before they can close in, you turn, slip into the undergrowth, and walk away without looking back.",
+  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.INITIAL.options.FIGHT.description": "Fight the two Bowlbugs.",
   "NEWSANGUO_EVENT_THREE_VISITS_TO_THE_THATCHED_COTTAGE.title": "Three Visits to the Thatched Cottage",
   "NEWSANGUO_EVENT_THREE_VISITS_TO_THE_THATCHED_COTTAGE.pages.INITIAL.description": "Following the guidance of [red][b]Heaven[/b][/red], you set out for the thatched cottage where [gold][b]Zhuge Liang[/b][/gold] dwells.\n\nBut [gold][b]Guan Yu[/b][/gold] and [gold][b]Zhang Fei[/b][/gold] don't seem too happy about it.\n\n“Brother, don't believe any of this. Everyone calls those scholars 'rotten Confucians'. And what is a rotten Confucian? Rotten stinky tofu! Whatever you do, don't go treating that stinky tofu like treasure!”\n“Third Brother speaks to the heart—[rainbow][sine]A Grand Toast[/sine][/rainbow]!”\n...",
   "NEWSANGUO_EVENT_THREE_VISITS_TO_THE_THATCHED_COTTAGE.pages.INITIAL.options.ARRIVE.title": "Arrive at the Cottage",
@@ -93,5 +90,11 @@
   "NEWSANGUO_EVENT_ANTHONYS_VACATION.pages.INITIAL.options.WRATH_LOCKED.title": "Tony’s Wrath",
   "NEWSANGUO_EVENT_ANTHONYS_VACATION.pages.INITIAL.options.WRATH_LOCKED.description": "Requires fewer than [blue]20[/blue] cards in your deck.",
   "NEWSANGUO_EVENT_ANTHONYS_VACATION.pages.INITIAL.options.MERCY_LOCKED.title": "Beg Anthony for Mercy",
-  "NEWSANGUO_EVENT_ANTHONYS_VACATION.pages.INITIAL.options.MERCY_LOCKED.description": "Requires fewer than [blue]20[/blue] cards in your deck."
+  "NEWSANGUO_EVENT_ANTHONYS_VACATION.pages.INITIAL.options.MERCY_LOCKED.description": "Requires fewer than [blue]20[/blue] cards in your deck.",
+  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.AFTER_FIRST.description": "The two Bowlbugs fall. Heavier footsteps signal another group of ambushers approaching.",
+  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.AFTER_FIRST.options.RUN_AWAY.title": "Leave",
+  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.AFTER_FIRST.options.RUN_AWAY.description": "Leave while you can.",
+  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.AFTER_FIRST.options.FIGHT.title": "Fight On!",
+  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.AFTER_FIRST.options.FIGHT.description": "Face the elite ambushers for elite rewards, 100 extra Gold, and a rare Relic.",
+  "NEWSANGUO_EVENT_WILD_NEUTRAL_AMBUSHERS.pages.AFTER_FIRST_RUN_AWAY.description": "You slip away before the next group of ambushers arrives."
 }

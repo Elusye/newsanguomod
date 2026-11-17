@@ -7,7 +7,6 @@ using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
-using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 namespace newsanguo.Scripts.Patches;
 
@@ -15,7 +14,7 @@ namespace newsanguo.Scripts.Patches;
 public static class ReversalPresentation
 {
     internal static bool IsActive(PowerModel power) => power.IsMutable &&
-        power.Owner.HasPower<ReversalPower>() && !AbilitySuppression.HoldsHanzhong(power.Owner);
+        power.Owner.HasPower<ReversalPower>();
 
     internal static string? Kind(PowerModel power) => power switch
     {
@@ -43,11 +42,6 @@ public static class ReversalPresentation
         if (!power.IsMutable)
         {
             description.Add("ReversalStatus", string.Empty);
-            return;
-        }
-        if (AbilitySuppression.HoldsHanzhong(power.Owner))
-        {
-            description.Add("ReversalStatus", new LocString("powers", "NEWSANGUO_REVERSAL_STATUS.paused").GetFormattedText());
             return;
         }
         var names = power.Owner.Powers.Where(p => p.Amount > 0 && Kind(p) is not null)

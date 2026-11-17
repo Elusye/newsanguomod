@@ -18,6 +18,7 @@ using STS2RitsuLib.Scaffolding.Content;
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
+using newsanguo.Scripts.Settings;
 
 namespace newsanguo.Scripts.Cards;
 
@@ -31,7 +32,7 @@ public class NeverHadThese : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：获得 8（11）点格挡；每消耗一张非攻击牌获得 1（升级 2）点天意之力
+    // 卡牌基础数值：获得 8（11）点格挡；每消耗一张非攻击牌获得 1（普通规则下升级为 2）点天意之力
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new BlockVar(8, ValueProp.Move),
         new HeavensForceVar(1m)
@@ -88,10 +89,11 @@ public class NeverHadThese : NewsanguoCardTemplate
         await HeavensForce.Add(choiceContext, base.Owner, heavensForcePerCard * nonAttackCards.Count, this);
     }
 
-    // 升级：格挡 8 → 11，每张消耗的非攻击牌额外获得 1 点天意之力（1 → 2）
+    // 两套规则都提升格挡，普通规则也提升天意之力。
     protected override void OnUpgrade()
     {
         DynamicVars.Block.UpgradeValueBy(3);
-        DynamicVars["HeavensForcePower"].UpgradeValueBy(1);
+        if (!BalanceAdjustments.Enabled)
+            DynamicVars["HeavensForcePower"].UpgradeValueBy(1);
     }
 }

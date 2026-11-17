@@ -16,15 +16,15 @@ using newsanguo.Scripts.Characters;
 
 namespace newsanguo.Scripts.Cards;
 
-// 注册卡牌到新三国（曹魏）专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
+// 蜀汉卡池，君王形态也可以生成此牌。
+[RegisterCard(typeof(ShuHanCardPool))]
 public class HailKingOfHanzhong : NewsanguoCardTemplate
 {
     // 获得格挡：可被灵巧等格挡附魔识别
     public override bool GainsBlock => true;
 
     // 2026-10-05：按要求算作天意牌，计入「恨天剑法」的天意牌统计
-    // （本牌自身不消耗天意之力，只是“失去天意之力时回手”的天意体系牌）
+    // （本牌自身不消耗天意之力，只是“获得天意之力时回手”的天意体系牌）
     public override bool IsHeavensCard => true;
 
     // 卡图资源（立绘由美术补充：newsanguo/images/cards/HailKingOfHanzhong.png）
@@ -59,13 +59,13 @@ public class HailKingOfHanzhong : NewsanguoCardTemplate
     }
 
     /// <summary>
-    /// 每当你失去天意之力时，将这张牌放入你的手牌。
-    /// 由 <see cref="newsanguo.Scripts.Combat.HeavensForce"/> 在数值真的减少后统一派发，
+    /// 每当你获得天意之力时，将这张牌放入你的手牌。
+    /// 由 <see cref="newsanguo.Scripts.Combat.HeavensForce"/> 在数值真的增加后统一派发，
     /// 已经握在手上时不重复加入。
     /// </summary>
-    public override async Task OnHeavensForceLost(PlayerChoiceContext choiceContext, int amount)
+    public override async Task OnHeavensForceGained(PlayerChoiceContext choiceContext, int amount)
     {
-        if (!IsMutable || base.Owner is null || Pile?.Type == PileType.Hand)
+        if (!IsMutable || base.Owner is null || Pile is null || Pile.Type is PileType.Hand or PileType.Play)
         {
             return;
         }
@@ -80,7 +80,7 @@ public class HailKingOfHanzhong : NewsanguoCardTemplate
     }
 
     // 生成 1 张“参见汉中王！”并加入手牌（供其它卡牌调用，参考原版 Shiv.CreateInHand）
-    public static async Task<CardModel?> CreateInHand(Player owner, ICombatState combatState)
+    public static async Task<CardModel?> CreateInHand(Player owner, ICombatState combatState, bool upgraded = false)
     {
         // 战斗已结束或正在结束时不再生成，避免收尾阶段状态错乱
         if (CombatManager.Instance.IsOverOrEnding)
@@ -89,6 +89,10 @@ public class HailKingOfHanzhong : NewsanguoCardTemplate
         }
 
         CardModel card = combatState.CreateCard<HailKingOfHanzhong>(owner);
+        if (upgraded)
+        {
+            CardCmd.Upgrade(card);
+        }
         await CardPileCmd.AddGeneratedCardsToCombat([card], PileType.Hand, owner);
         return card;
     }

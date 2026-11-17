@@ -26,11 +26,14 @@ public class WorthAllTheirLives : NewsanguoCardTemplate
         RecruitKeyword.Recruit(DynamicVars.Summon), HeavensForce.HoverTip()
     ];
 
+    protected override int CanonicalEnergyCost => newsanguo.Scripts.Settings.BalanceAdjustments.Enabled ? 2 : 1;
+
     public WorthAllTheirLives() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self) { }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/worth_all_their_lives");
+        VfxCmd.PlayFullScreenInCombat("vfx/vfx_adrenaline", Owner.Creature);
         // 先挂载能力，使募集期间发生的死亡也能获得奖励。
         await PowerCmd.Apply<WorthAllTheirLivesPower>(choiceContext, Owner.Creature, 1, Owner.Creature, this);
         WorthAllTheirLivesPower power = Owner.Creature.GetPower<WorthAllTheirLivesPower>()!;

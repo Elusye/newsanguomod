@@ -1,3 +1,4 @@
+using newsanguo.Scripts.Settings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -20,6 +21,9 @@ public sealed class LetsGoDrinking : NewsanguoCardTemplate
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: "res://newsanguo/images/cards/LetsGoDrinking.png");
+
+    public override IEnumerable<CardKeyword> CanonicalKeywords =>
+        BalanceAdjustments.Enabled ? [CardKeyword.Exhaust, .. base.CanonicalKeywords] : base.CanonicalKeywords;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new PowerVar<DrunkenMightPower>(6m), new DynamicVar("EnemyDrunkenMight", 2m)];

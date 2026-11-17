@@ -25,7 +25,7 @@ public class Lightweight : NewsanguoCardTemplate
     );
 
     // 关键词：打出后消耗（对应文本由引擎自动追加）
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, CardKeyword.Ethereal, .. base.CanonicalKeywords];
 
     // 状态牌不能升级
     public override int MaxUpgradeLevel => 0;
