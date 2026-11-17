@@ -29,7 +29,7 @@ public class ThirstyAxe : NeutralCardTemplate
     {
         ArgumentNullException.ThrowIfNull(play.Target);
         NewsanguoSfx.Play("event:/newsanguo/sfx/thirsty_axe");
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this)
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, play)
             .Targeting(play.Target).Execute(context);
     }
 }

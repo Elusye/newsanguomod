@@ -46,7 +46,7 @@ public class StrikeShuhan : NewsanguoCardTemplate
         NewsanguoSfx.Play("event:/newsanguo/sfx/strike_newsanguo");
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this)
+            .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);

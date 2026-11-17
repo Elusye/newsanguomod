@@ -54,14 +54,14 @@ public class TimeAcidRain : NewsanguoCardTemplate
         // 先移除格挡和符合原界铁骑范围的正面状态，再结算攻击。
         foreach (var enemy in CombatState!.GetOpponentsOf(Owner.Creature).Where(c => c.IsAlive).ToList())
         {
-            await CreatureCmd.LoseBlock(enemy, enemy.Block);
+            await CreatureCmd.LoseBlock(choiceContext, enemy, enemy.Block, Owner.Creature);
             foreach (PowerModel power in enemy.Powers.Where(CanRemovePositivePower).ToList())
             {
                 await PowerCmd.Remove(power);
             }
         }
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this)
+            .FromCard(this, cardPlay)
             .TargetingAllOpponents(CombatState!)
             .Execute(choiceContext);
     }

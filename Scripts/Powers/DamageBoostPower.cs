@@ -20,6 +20,6 @@ public class DamageBoostPower : ModPowerTemplate
 
     // 每层提升 1% 攻击伤害，不受飞行、振翅或翱翔状态限制。
     public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount,
-        ValueProp props, Creature? dealer, MegaCrit.Sts2.Core.Models.CardModel? cardSource) =>
+        ValueProp props, Creature? dealer, MegaCrit.Sts2.Core.Models.CardModel? cardSource, CardPlay? cardPlay) =>
         dealer == Owner && props.IsPoweredAttack() ? (100m + Amount) / 100m : 1m;
 }

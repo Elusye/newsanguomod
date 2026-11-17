@@ -26,7 +26,7 @@ public class SlayTheThiefLuBu : NewsanguoCardTemplate
 
     private int GetHitCount(CardPlay? currentPlay = null) => !IsMutable || !IsInCombat ? 1 :
         1 + CombatManager.Instance.History.CardPlaysStarted.Count(entry =>
-            entry.CardPlay != currentPlay && entry.CardPlay.Card.Owner == Owner && entry.CardPlay.Card.Id == Id);
+            entry.CardPlay != currentPlay && entry.CardPlay.Player == Owner && entry.CardPlay.Card.Id == Id);
 
     protected override void AddExtraArgsToDescription(LocString description)
     {
@@ -43,7 +43,7 @@ public class SlayTheThiefLuBu : NewsanguoCardTemplate
         // ID 不随升级变化，也不会把联机队友的出牌算入。
         int hitCount = GetHitCount(cardPlay);
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this)
+            .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
             .WithHitCount(hitCount)
             .WithHitFx("vfx/vfx_attack_slash")

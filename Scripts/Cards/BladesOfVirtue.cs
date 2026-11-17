@@ -61,7 +61,7 @@ public class BladesOfVirtue : NewsanguoCardTemplate, IAttackHitHookListener
         ArgumentNullException.ThrowIfNull(cardPlay.Target, "cardPlay.Target");
 
         AttackCommand attack = DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this)
+            .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
             .WithHitCount(2)
             .WithHitFx("vfx/vfx_attack_slash");

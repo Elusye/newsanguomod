@@ -1,0 +1,8 @@
+{
+  "NEWSANGUO_ENCHANTMENT_FINE_TUNING.title": "微调",
+  "NEWSANGUO_ENCHANTMENT_FINE_TUNING.description": "每当你抽到这张牌时，其获得的[gold]格挡[/gold]永久-1或+1。如果这张牌能提供大于15点格挡，必定-1。",
+  "NEWSANGUO_ENCHANTMENT_MELLOW_WINE.title": "醇醪",
+  "NEWSANGUO_ENCHANTMENT_MELLOW_WINE.description": "打出此牌后，返还此牌消耗的[gold]酒力[/gold]。",
+  "NEWSANGUO_ENCHANTMENT_FRAGILE.title": "易碎",
+  "NEWSANGUO_ENCHANTMENT_FRAGILE.description": "这张牌拥有[gold]固有[/gold]和[gold]重放1[/gold]，但在一场战斗后从你的牌组中移除。"
+}

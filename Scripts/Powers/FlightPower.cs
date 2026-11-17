@@ -37,7 +37,7 @@ public class FlightPower : ModPowerTemplate
     );
 
     // 敌人对你造成的伤害降低50%（乘法修正）
-    public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource)
+    public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
     {
         if (target != Owner || !props.IsPoweredAttack())
         {

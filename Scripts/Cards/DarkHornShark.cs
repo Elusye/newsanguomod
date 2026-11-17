@@ -47,7 +47,7 @@ public class DarkHornShark : NeutralCardTemplate
         NewsanguoSfx.Play("event:/newsanguo/sfx/dark_horn_shark");
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this)
+            .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);

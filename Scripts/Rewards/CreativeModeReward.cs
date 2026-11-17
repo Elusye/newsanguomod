@@ -63,7 +63,7 @@ public sealed class CreativeModeReward : ModCustomReward
     {
         Player player = base.Player;
 
-        // 候选 = 游戏里的全部卡牌，只排除「创造模式」自己
+        // 候选排除停用牌与「创造模式」自己
         string selfEntry = ModelDb.GetId(typeof(CreativeMode)).Entry;
         List<CardCreationResult> options = [];
         // 显式包含中立池，兼容全卡列表已缓存的情况；按 ID 去重，避免共有牌重复。
@@ -71,7 +71,7 @@ public sealed class CreativeModeReward : ModCustomReward
             .DistinctBy(card => card.Id);
         foreach (CardModel canonical in candidates)
         {
-            if (string.Equals(canonical.Id.Entry, selfEntry, StringComparison.Ordinal))
+            if (canonical.Pool is RetiredCardPool || string.Equals(canonical.Id.Entry, selfEntry, StringComparison.Ordinal))
             {
                 continue;
             }

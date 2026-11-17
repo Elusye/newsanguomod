@@ -140,6 +140,14 @@ public static class NewsanguoSfx
     // 2026-10-19：复核177个音频；短音效K=0.7、选人K=1，基准-23.1 dB RMS，峰值不超过-3 dBFS。
     private static readonly Dictionary<string, float> LoudnessGainDb = new()
     {
+        ["human_footrest"] = -5f,
+        ["lets_go_drinking"] = 4.5f,
+        ["nursery_rhyme"] = 3.5f,
+        ["nursery_rhyme_1"] = 4.5f,
+        ["nursery_rhyme_2"] = 6.5f,
+        ["nursery_rhyme_3"] = 4f,
+        ["nursery_rhyme_3_special"] = -1f,
+        ["nursery_rhyme_4"] = 3f,
         ["no_return"] = 12.5f,
         ["switch_allegiance"] = -0.5f,
         ["standard_camp"] = 0f,

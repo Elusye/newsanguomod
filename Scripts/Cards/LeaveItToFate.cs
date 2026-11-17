@@ -19,20 +19,20 @@ public class LeaveItToFate : NewsanguoCardTemplate
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<VulnerablePower>(1m), new EnergyVar(2)
+        new PowerVar<FrailPower>(1m), new EnergyVar(2)
     ];
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<VulnerablePower>(), HoverTipFactory.ForEnergy(this)
+        HoverTipFactory.FromPower<FrailPower>(), HoverTipFactory.ForEnergy(this)
     ];
     public LeaveItToFate() : base(0, CardType.Skill, CardRarity.Common, TargetType.Self) { }
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/leave_it_to_fate");
-        var vulnerable = await PowerCmd.Apply<VulnerablePower>(choiceContext, Owner.Creature,
-            DynamicVars["VulnerablePower"].IntValue, Owner.Creature, this);
+        var frail = await PowerCmd.Apply<FrailPower>(choiceContext, Owner.Creature,
+            DynamicVars["FrailPower"].IntValue, Owner.Creature, this);
         // 与无情剑法一致：当轮敌方回合结束即递减，不跳过首次持续时间结算。
-        if (vulnerable is not null)
-            vulnerable.SkipNextDurationTick = false;
+        if (frail is not null)
+            frail.SkipNextDurationTick = false;
         await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, Owner);
     }
     protected override void OnUpgrade() => DynamicVars.Energy.UpgradeValueBy(1);

@@ -31,7 +31,7 @@ public class ThreesACrowd : NewsanguoCardTemplate
         NewsanguoSfx.Play("event:/newsanguo/sfx/threes_a_crowd");
         ArgumentNullException.ThrowIfNull(cardPlay.Target);
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this)
+            .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);

@@ -52,7 +52,7 @@ public class MaClanQuadBlast : NewsanguoCardTemplate, IAttackHitHookListener
         }
 
         AttackCommand attack = DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this)
+            .FromCard(this, cardPlay)
             .TargetingAllOpponents(CombatState)
             .WithHitCount(4);
 

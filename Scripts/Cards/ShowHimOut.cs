@@ -34,9 +34,7 @@ public class ShowHimOut : NewsanguoCardTemplate
         // 在消耗触发其他效果前记录费用；X 费以此刻剩余能量为准。
         int energy = card.EnergyCost.CostsX ? Owner.PlayerCombatState!.Energy :
             Math.Max(0, card.EnergyCost.GetWithModifiers(CostModifiers.All));
-        if (MegaCrit.Sts2.Core.Combat.CombatManager.Instance.IsOverOrEnding) return;
-        await CardCmd.Exhaust(context, card);
-        if (!MegaCrit.Sts2.Core.Combat.CombatManager.Instance.IsOverOrEnding && energy > 0)
+        if (await CardCmd.Exhaust(context, card) is not null && energy > 0)
             await PlayerCmd.GainEnergy(energy, Owner);
     }
 }

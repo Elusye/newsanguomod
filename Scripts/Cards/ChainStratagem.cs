@@ -69,7 +69,7 @@ public class ChainStratagem : NeutralCardTemplate
 
         // 1. 造成当前伤害（尚未包含本次加成，与“夷陵之火”一致）
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this)
+            .FromCard(this, cardPlay)
             .Targeting(targetCreature)
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);

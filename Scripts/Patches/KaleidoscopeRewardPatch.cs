@@ -39,8 +39,9 @@ public static class KaleidoscopeRewardPatch
             foreach (CardPoolModel pool in pools)
             {
                 var options = new CardCreationOptions(new[] { pool }, CardCreationSource.Other,
-                    CardRarityOddsType.RegularEncounter, card => !usedIds.Contains(card.Id.Entry))
-                    .WithFlags(CardCreationFlags.NoCardPoolModifications);
+                    CardRarityOddsType.RegularEncounter)
+                    .WithFlags(CardCreationFlags.NoCardPoolModifications)
+                    .WithFilter(card => !usedIds.Contains(card.Id.Entry));
                 CardModel card = CardFactory.CreateForReward(player, 1, options).First().Card;
                 cards.Add(card);
                 usedIds.Add(card.Id.Entry);

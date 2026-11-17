@@ -58,7 +58,7 @@ public class BowangSlopeParadox : NewsanguoCardTemplate
         // 抽到的牌本回合「保留」：引擎自带的单回合保留，回合结束时自动清除
         foreach (CardModel card in drawn)
         {
-            card.GiveSingleTurnRetain();
+            CardCmd.ApplySingleTurnRetain(card);
         }
 
         // 抽到的牌本回合耗能增加1，由悖论能力按引用标记；回合结束时恢复。

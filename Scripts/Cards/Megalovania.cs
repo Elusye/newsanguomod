@@ -14,7 +14,7 @@ using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
-/// <summary>狂妄之人：获得2层易伤，每回合额外获得1点能量；升级后2点。</summary>
+/// <summary>狂妄之人：获得2层易伤，能量上限提高1点；升级后2点。</summary>
 [RegisterCard(typeof(ShuHanCardPool))]
 public class Megalovania : NewsanguoCardTemplate
 {
@@ -23,7 +23,7 @@ public class Megalovania : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：自身易伤固定2层、每回合额外获得能量1（升级后2）
+    // 卡牌基础数值：自身易伤固定2层、能量上限提高1（升级后2）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new PowerVar<VulnerablePower>(2m),
         new EnergyVar(1)
@@ -40,7 +40,7 @@ public class Megalovania : NewsanguoCardTemplate
 
     ];
 
-    // 打出时的效果逻辑：先给自己叠易伤（代价），再挂上「狂妄之人」能力（每回合额外获得能量）
+    // 打出时的效果逻辑：先给自己叠易伤（代价），再挂上「狂妄之人」能力（提高能量上限）
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/megalovania");
@@ -60,12 +60,12 @@ public class Megalovania : NewsanguoCardTemplate
             vulnerable.SkipNextDurationTick = false;
         }
 
-        // 能力：每回合额外获得1/2点能量，重复打出可叠加
+        // 能力：能量上限提高1/2点，重复打出可叠加
         await PowerCmd.Apply<MegalovaniaPower>(
             choiceContext, base.Owner.Creature, DynamicVars.Energy.IntValue, base.Owner.Creature, this, silent: false);
     }
 
-    // 升级后的效果逻辑：额外能量1 → 2
+    // 升级后的效果逻辑：能量上限加成1 → 2
     protected override void OnUpgrade()
     {
         DynamicVars.Energy.UpgradeValueBy(1);

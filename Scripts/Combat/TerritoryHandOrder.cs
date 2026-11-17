@@ -19,7 +19,7 @@ public static class TerritoryHandOrder
 {
     internal static bool CanReposition(CardModel card) => card is not InvincibleWithinThreeHundredLi ||
         (card.CombatState is { } combat && !CombatManager.Instance.History.CardPlaysStarted.Any(entry =>
-            entry.CardPlay.Card.Owner == card.Owner && !entry.CardPlay.IsAutoPlay && entry.HappenedThisTurn(combat)));
+            entry.CardPlay.Player == card.Owner && !entry.CardPlay.IsAutoPlay && entry.HappenedThisTurn(combat)));
 
     private readonly record struct Move(uint CardId, int Index);
     private static readonly RitsuLibManagedNetActionDescriptor<Move> Descriptor = new(

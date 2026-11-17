@@ -31,9 +31,7 @@ public class DontBeAngry : NewsanguoCardTemplate
         foreach (var card in attacks)
         {
             if (card.Pile?.Type != PileType.Hand) continue;
-            if (MegaCrit.Sts2.Core.Combat.CombatManager.Instance.IsOverOrEnding) break;
-            await CardCmd.Exhaust(context, card);
-            if (!MegaCrit.Sts2.Core.Combat.CombatManager.Instance.IsOverOrEnding)
+            if (await CardCmd.Exhaust(context, card) is not null)
                 await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, play, fast: false);
         }
         await PowerCmd.Apply<DontBeAngryPower>(context, Owner.Creature, 1m, Owner.Creature, this);

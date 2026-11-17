@@ -4,7 +4,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 rem Usage: git-push.bat ["commit message"]  (optional custom message, default below)
-set "MSG=Update newsanguo source code to 0.3.8-release.1"
+set "MSG=Update newsanguo source code to 0.3.10-beta.1"
 if not "%~1"=="" set "MSG=%~1"
 
 rem NOTE: keep this file ASCII-only.
@@ -48,7 +48,7 @@ if errorlevel 1 goto :err
 
 :pull
 echo === Pulling latest from GitHub (rebase) ===
-git pull --rebase origin codex/release-0.107
+git pull --rebase origin main
 if errorlevel 1 goto :pull_failed
 
 :push

@@ -9,7 +9,6 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Cards;
-using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -20,9 +19,11 @@ using newsanguo.Scripts.Characters;
 namespace newsanguo.Scripts.Cards;
 
 // 原曹魏实体保留供存档读取，不再进入曹魏卡池；蜀汉实体继续独立注册。
-[RegisterCard(typeof(TokenCardPool))]
+[RegisterCard(typeof(RetiredCardPool))]
 public class FortySixtyTax : NewsanguoCardTemplate
 {
+    public override bool CanBeGeneratedByModifiers => Pool is not RetiredCardPool;
+
 
     // 不可通过战斗内的变化/随机生成获得（防止利用金币效果刷金）
     public override bool CanBeGeneratedInCombat => false;

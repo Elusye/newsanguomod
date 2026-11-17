@@ -18,7 +18,7 @@ public class OneForSorrowTwoForJoy : NewsanguoCardTemplate
     public OneForSorrowTwoForJoy() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self) { }
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: "res://newsanguo/images/cards/OneForSorrowTwoForJoy.png");
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<OneForSorrowTwoForJoyPower>(1m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<OneForSorrowTwoForJoyPower>(2m)];
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
         [HoverTipFactory.FromKeyword(CardKeyword.Exhaust), HoverTipFactory.FromPower<DrunkenMightPower>()];
     protected override void OnUpgrade() => DynamicVars["OneForSorrowTwoForJoyPower"].UpgradeValueBy(1m);

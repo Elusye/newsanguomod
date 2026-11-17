@@ -7,7 +7,7 @@
   "NEWSANGUO_RELIC_CENTURY_BREW.flavor": "百年佳酿，恭候嘉宾。",
   "NEWSANGUO_RELIC_A_CERTAIN_FORBIDDEN_SPELL_INDEX.title": "魔法禁术目录",
   "NEWSANGUO_RELIC_A_CERTAIN_FORBIDDEN_SPELL_INDEX.description": "在你的第3、2、5个回合开始时，将一张随机的会失去[gold]天意之力[/gold]的稀有攻击牌或技能牌加入你的手牌，那张牌在该回合免费打出且不花费[gold]天意之力[/gold]。",
-  "NEWSANGUO_RELIC_A_CERTAIN_FORBIDDEN_SPELL_INDEX.flavor": "一部详尽记载新三国特殊机制的书，由各大新三学者精心编撰而成。阅读此书对穿越到新三国的人大有裨益。",
+  "NEWSANGUO_RELIC_A_CERTAIN_FORBIDDEN_SPELL_INDEX.flavor": "一部详尽记载新三国特殊机制的书，由各大新三学者精心编撰而成。",
   "NEWSANGUO_RELIC_PORTAL.title": "传送门",
   "NEWSANGUO_RELIC_PORTAL.description": "你下{Rooms}次选择下一层的房间时可以无视当前的路线。",
   "NEWSANGUO_RELIC_PORTAL.flavor": "门后是什么？或许只有天意知道。",
@@ -27,5 +27,14 @@
   "SEA_GLASS.NEWSANGUO_CHARACTER_CAO_WEI_CHARACTER.title": "酒客玻璃",
   "NEWSANGUO_RELIC_BOULDER.title": "巨石",
   "NEWSANGUO_RELIC_BOULDER.description": "拾起时，将一张[purple]注能[/purple][gold]滚石+[/gold]加入你的[gold]牌组[/gold]。",
-  "NEWSANGUO_RELIC_BOULDER.flavor": "这似乎是某个游戏创始人的最爱…"
+  "NEWSANGUO_RELIC_BOULDER.flavor": "这似乎是某个游戏创始人的最爱…",
+  "NEWSANGUO_RELIC_VACATION_COUNTDOWN.title": "假期倒计时",
+  "NEWSANGUO_RELIC_VACATION_COUNTDOWN.description": "完成3场战斗后，获得一件随机遗物。",
+  "NEWSANGUO_RELIC_VACATION_COUNTDOWN.flavor": "耐心等候下一次更新。",
+  "NEWSANGUO_RELIC_SELF_CONTROL.title": "克己",
+  "NEWSANGUO_RELIC_SELF_CONTROL.description": "若你本回合未打出攻击牌，回合结束时[gold]保留[/gold]所有手牌。",
+  "NEWSANGUO_RELIC_SELF_CONTROL.flavor": "留得青山在，不怕没柴烧！",
+  "NEWSANGUO_RELIC_HEIRLOOM_CODEX.title": "传世名典",
+  "NEWSANGUO_RELIC_HEIRLOOM_CODEX.description": "在每场战斗结束时，将你本场战斗中打出的最后一张牌添加到你的牌组，并为其附魔：[purple]易碎[/purple]。",
+  "NEWSANGUO_RELIC_HEIRLOOM_CODEX.flavor": "只留最后一笔。"
 }

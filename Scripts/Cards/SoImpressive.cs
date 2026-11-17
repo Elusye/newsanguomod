@@ -76,7 +76,7 @@ public class SoImpressive : NeutralCardTemplate
         // 按实际开始出牌的顺序恢复记录，也包括正在结算并生成此牌的来源牌。
         _recordedCard = CombatManager.Instance.History.CardPlaysStarted
             .LastOrDefault(entry => entry.HappenedThisTurn(CombatState) &&
-                entry.CardPlay.Card.Owner == Owner && entry.CardPlay.Card is not SoImpressive)
+                entry.CardPlay.Player == Owner && entry.CardPlay.Card is not SoImpressive)
             ?.CardPlay.Card ?? CombatState.CreateCard<SunBen>(Owner);
     }
     public override Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
@@ -102,7 +102,7 @@ public class SoImpressive : NeutralCardTemplate
     }
     public override Task BeforeCardPlayed(CardPlay cardPlay)
     {
-        if (cardPlay.Card.Owner != Owner) return Task.CompletedTask;
+        if (cardPlay.Player != Owner) return Task.CompletedTask;
         InitializeRecord();
         if (cardPlay.Card is not SoImpressive)
         {
@@ -125,7 +125,7 @@ public class SoImpressive : NeutralCardTemplate
             // 与History Course相同：保留升级、附魔状态，自动选择合法目标，不支付复制品能量。
             using (var playback = NewsanguoSfx.CapturePlayback())
             {
-                await CardCmd.AutoPlay(choiceContext, _copiedTarget.CreateDupe(), null);
+                await CardCmd.AutoPlay(choiceContext, _copiedTarget.CreateDupe(Owner), null);
                 await playback.WaitAsync(leadSeconds: 0.5);
             }
         }

@@ -1,14 +1,14 @@
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 namespace newsanguo.Scripts.Powers;
 
-// “国贼”（国贼董卓嘛！施加）：目标身上的易伤无法被减少。
-// 阻断一切施加到目标身上的负向易伤变化（包括回合结束时的自然衰减与净化类移除）。
+// 国贼：受到的攻击伤害增加 50%，没有回合递减。
 [RegisterPower]
 public class TraitorTyrannyPower : ModPowerTemplate
 {
@@ -28,16 +28,7 @@ public class TraitorTyrannyPower : ModPowerTemplate
         BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png"
     );
 
-    // 阻断目标受到的易伤减少
-    public override bool TryModifyPowerAmountReceived(PowerModel canonicalPower, Creature target, decimal amount, Creature? applier, out decimal modifiedAmount)
-    {
-        if (target == Owner && canonicalPower is VulnerablePower && amount < 0)
-        {
-            modifiedAmount = 0;
-            return true;
-        }
-
-        modifiedAmount = amount;
-        return false;
-    }
+    public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount,
+        ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay) =>
+        target == Owner && props.IsPoweredAttack() ? 1.5m : 1m;
 }

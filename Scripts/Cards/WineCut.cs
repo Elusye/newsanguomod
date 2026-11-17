@@ -13,15 +13,17 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
-using MegaCrit.Sts2.Core.Models.CardPools;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(TokenCardPool))]
+[RegisterCard(typeof(RetiredCardPool))]
 public class WineCut : NewsanguoCardTemplate
 {
+    public override bool CanBeGeneratedByModifiers => Pool is not RetiredCardPool;
+    public override bool CanBeGeneratedInCombat => Pool is not RetiredCardPool;
+
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
@@ -51,7 +53,7 @@ public class WineCut : NewsanguoCardTemplate
 
         // 造成伤害（享受当前酒力加成）
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this)
+            .FromCard(this, cardPlay)
             .Targeting(target)
             .WithHitFx("vfx/vfx_attack_slash")
             .Execute(choiceContext);

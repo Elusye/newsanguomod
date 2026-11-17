@@ -42,7 +42,7 @@ public static class BewildermentFacingPatch
             return;
         bool flip = node.Entity.Side == CombatSide.Enemy &&
             node.Entity.GetPower<BewildermentPower>() is { Amount: > 0 };
-        Apply(visuals.GetNodeOrNull<Node2D>("%Visuals"), flip);
+        Apply(visuals.Body, flip);
         Apply(visuals.GetNodeOrNull<Node2D>("%PhobiaModeVisuals"), flip);
     }
 

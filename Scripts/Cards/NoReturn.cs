@@ -99,7 +99,7 @@ public class NoReturn : NewsanguoCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay play)
     {
         CardModel? target = _useFallback
-            ? CombatState!.CreateCard<SunBen>(Owner).CreateDupe()
+            ? CombatState!.CreateCard<SunBen>(Owner).CreateDupe(Owner)
             : _lockedTarget is not null && IsEligible(_lockedTarget) ? _lockedTarget : null;
         if (target is not null)
         {
@@ -111,9 +111,8 @@ public class NoReturn : NewsanguoCardTemplate
         }
         NewsanguoSfx.Play("event:/newsanguo/sfx/no_return");
     }
-    public override (PileType, CardPilePosition) ModifyCardPlayResultPileTypeAndPosition(
-        CardModel card, bool isAutoPlay, ResourceInfo resources, PileType pileType, CardPilePosition position) =>
-        card == _resolvingCard ? (PileType.Exhaust, CardPilePosition.Bottom) : (pileType, position);
-
+    public override CardLocation ModifyCardPlayResultLocation(CardModel card, bool isAutoPlay,
+        ResourceInfo resources, CardLocation location) => card == _resolvingCard
+        ? new CardLocation(Owner, PileType.Exhaust, CardPilePosition.Bottom) : location;
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }

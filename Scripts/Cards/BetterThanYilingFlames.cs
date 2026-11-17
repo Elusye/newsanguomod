@@ -26,9 +26,12 @@ using newsanguo.Scripts.Characters;
 namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
-[RegisterCard(typeof(NewsanguoCardPool))]
+[RegisterCard(typeof(RetiredCardPool))]
 public class BetterThanYilingFlames : NewsanguoCardTemplate
 {
+    public override bool CanBeGeneratedByModifiers => Pool is not RetiredCardPool;
+    public override bool CanBeGeneratedInCombat => Pool is not RetiredCardPool;
+
     // 基础伤害。永久成长在此之上累加，本体数值不变。
     private const int BaseDamage = 12;
 
@@ -95,7 +98,7 @@ public class BetterThanYilingFlames : NewsanguoCardTemplate
         // 1) 先造成当前伤害：本次攻击的数值在此刻已经固定，
         //    下面消费手牌换来的成长只影响以后的打出（与卡面文案顺序一致）。
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this)
+            .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)
             .Execute(choiceContext);
 

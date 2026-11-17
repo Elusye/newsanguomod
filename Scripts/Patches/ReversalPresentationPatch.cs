@@ -30,8 +30,8 @@ public static class ReversalPresentation
         // 读取已经过实际反转补丁处理的倍率，兼容原版对虚弱/易伤倍率的修正。
         decimal multiplier = power switch
         {
-            WeakPower weak => weak.ModifyDamageMultiplicative(null, 0m, ValueProp.Move, power.Owner, null),
-            VulnerablePower vulnerable => vulnerable.ModifyDamageMultiplicative(power.Owner, 0m, ValueProp.Move, null, null),
+            WeakPower weak => weak.ModifyDamageMultiplicative(null, 0m, ValueProp.Move, power.Owner, null, null),
+            VulnerablePower vulnerable => vulnerable.ModifyDamageMultiplicative(power.Owner, 0m, ValueProp.Move, null, null, null),
             FrailPower frail => frail.ModifyBlockMultiplicative(power.Owner, 0m, ValueProp.Move, null, null),
             _ => 1m
         };
