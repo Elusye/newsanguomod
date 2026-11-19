@@ -15,22 +15,20 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public sealed class NurseryRhyme : NewsanguoCardTemplate
 {
-    protected override int CanonicalEnergyCost => Settings.BalanceAdjustments.Enabled ? 2 : 1;
-
     public NurseryRhyme() : base(1, CardType.Power, CardRarity.Rare, TargetType.Self) { }
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: "res://newsanguo/images/cards/NurseryRhyme.png");
     protected override bool IsScryCard => true;
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("ScryAmount", 2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("ScryAmount", 1m)];
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<NurseryRhymePower>()];
 
-    protected override void OnUpgrade() => DynamicVars["ScryAmount"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => AddKeyword(CardKeyword.Innate);
+    protected override void AfterDowngraded() => RemoveKeyword(CardKeyword.Innate);
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay play)
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/nursery_rhyme");
-        var power = await PowerCmd.Apply<NurseryRhymePower>(context, Owner.Creature, 1m, Owner.Creature, this);
-        if (IsUpgraded && power is not null) power.AddUpgradedTrigger();
+        await PowerCmd.Apply<NurseryRhymePower>(context, Owner.Creature, 1m, Owner.Creature, this);
     }
 }

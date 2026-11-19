@@ -13,7 +13,6 @@ using STS2RitsuLib.Scaffolding.Content;
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
-using newsanguo.Scripts.Settings;
 
 namespace newsanguo.Scripts.Cards;
 
@@ -29,7 +28,7 @@ public class Divination : NewsanguoCardTemplate
 
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new HeavensForceVar(2m),
-        new CardsVar(BalanceAdjustments.Enabled ? 1 : 2)
+        new CardsVar(1)
     ];
 
     // 鼠标悬停时显示天意之力与天意侵蚀提示
@@ -64,9 +63,6 @@ public class Divination : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        if (BalanceAdjustments.Enabled)
-            DynamicVars["Cards"].UpgradeValueBy(1);
-        else
-            DynamicVars["HeavensForcePower"].UpgradeValueBy(1);
+        DynamicVars["Cards"].UpgradeValueBy(1);
     }
 }

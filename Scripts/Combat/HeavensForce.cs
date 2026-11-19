@@ -122,6 +122,7 @@ public static class HeavensForce
 
         // 只在本角色下常驻显示（数值为 0 时也显示，便于玩家看到“透支”进度）
         resources.AlwaysShowInCombatUiForCharacter<CaoWeiCharacter>(LocalId);
+        resources.AlwaysShowInCombatUiForCharacter<ShuHanCharacter>(LocalId);
         // 框架默认仅把高于初始值的资源视为已使用；天意之力可直接透支为负数。
         // 对其他角色也显示非零值，并借由战斗内常驻的逻辑载体保留回到零后的计数器。
         resources.RegisterCombatUiAlwaysVisibleWhen(LocalId, context =>

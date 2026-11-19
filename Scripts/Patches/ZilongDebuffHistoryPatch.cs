@@ -18,6 +18,8 @@ public static class ZilongDebuffHistoryPatch
 
     private static readonly ConditionalWeakTable<object, Counter> Counts = new();
 
+    internal static int CountFor(object state) => Counts.TryGetValue(state, out var counter) ? counter.Count : 0;
+
     internal static int Track(object state, ZilongLocked card)
     {
         var counter = Counts.GetValue(state, static _ => new Counter());

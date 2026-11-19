@@ -7,6 +7,8 @@ namespace newsanguo.Scripts.Enchantments;
 [RegisterEnchantment]
 public sealed class Fragile : ModEnchantmentTemplate
 {
+    public override bool HasExtraCardText => true;
+
     public override EnchantmentAssetProfile AssetProfile => new(IconPath: "res://newsanguo/images/enchantments/Fragile.png");
 
     protected override void OnEnchant() => Card.AddKeyword(CardKeyword.Innate);

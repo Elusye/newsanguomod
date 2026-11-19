@@ -27,16 +27,20 @@ public static class ChallengeSelectionPatch
             return;
 
         bool chinese = LocManager.Instance.Language.StartsWith("zh", StringComparison.OrdinalIgnoreCase);
-        var selector = new OptionButton { Name = "NewsanguoChallenge", ZIndex = 1 };
+        var selector = new OptionButton
+        {
+            Name = "NewsanguoChallenge", ZIndex = 1,
+            Visible = BalanceAdjustments.ShowAdjustmentOptions
+        };
         string[] labels = chinese
-            ? ["挑战模式：关闭", "挑战 1：平衡性调整", "挑战 2：酒力获得量降低", "挑战 3：开战失去天意之力"]
-            : ["Challenge Mode: Off", "Challenge 1: Balance Adjustments", "Challenge 2: Reduced Wine", "Challenge 3: Lose Heaven's Force"];
+            ? ["挑战模式：关闭", "挑战 1：原版向调整", "挑战 2：酒力获得量降低", "挑战 3：开战失去天意之力"]
+            : ["Challenge Mode: Off", "Challenge 1: Vanilla-Oriented Adjustments", "Challenge 2: Reduced Wine", "Challenge 3: Lose Heaven's Force"];
         foreach (string label in labels)
             selector.AddItem(label);
 
         selector.TooltipText = chinese
-            ? "挑战等级累计生效。\n1：启用平衡性调整。\n2：卡牌给予的酒力降低 25%，向下取整。\n3：每场战斗开始时失去 5 点天意之力。"
-            : "Challenges are cumulative.\n1: Enable balance adjustments.\n2: Cards grant 25% less Wine, rounded down.\n3: Lose 5 Heaven's Force at the start of each combat.";
+            ? "挑战等级累计生效。\n1：启用原版向调整。\n2：卡牌给予的酒力降低 25%，向下取整。\n3：每场战斗开始时失去 5 点天意之力。"
+            : "Challenges are cumulative.\n1: Enable vanilla-oriented adjustments.\n2: Cards grant 25% less Wine, rounded down.\n3: Lose 5 Heaven's Force at the start of each combat.";
 
         if (__instance.Lobby.NetService.Type == NetGameType.Client)
         {

@@ -18,6 +18,8 @@ using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Powers;
+using newsanguo.Scripts.Settings;
+using System.Runtime.CompilerServices;
 
 namespace newsanguo.Scripts.Cards;
 
@@ -25,6 +27,16 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(ShuHanCardPool))]
 public class LoathToLeaveTheTable : NewsanguoCardTemplate
 {
+    private sealed class BranchState
+    {
+        public bool Used;
+    }
+
+    private static readonly ConditionalWeakTable<PlayerCombatState, BranchState> Branches = new();
+
+    private bool CanTriggerBranch => !BalanceAdjustments.Enabled ||
+        Owner.PlayerCombatState is { } state && !Branches.GetValue(state, static _ => new BranchState()).Used;
+
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
@@ -46,7 +58,7 @@ public class LoathToLeaveTheTable : NewsanguoCardTemplate
         get
         {
             DrunkenMightPower? wine = base.Owner.Creature.GetPower<DrunkenMightPower>();
-            return wine is not null && wine.Amount >= DynamicVars["WineThreshold"].IntValue;
+            return CanTriggerBranch && wine is not null && wine.Amount >= DynamicVars["WineThreshold"].IntValue;
         }
     }
 
@@ -93,8 +105,12 @@ public class LoathToLeaveTheTable : NewsanguoCardTemplate
 
         // 若你的酒力不小于阈值（基础 6，升级 4）：
         int wineThreshold = DynamicVars["WineThreshold"].IntValue;
-        if (wineAmount >= wineThreshold)
+        if (wineAmount >= wineThreshold && CanTriggerBranch)
         {
+            // 同一玩家本场战斗共享限制，复制品和重放也计入。
+            if (BalanceAdjustments.Enabled && Owner.PlayerCombatState is { } state)
+                Branches.GetValue(state, static _ => new BranchState()).Used = true;
+
             // 语音播 0.6s 起头后启动聚光灯，不等语音播完（两者并行）。
             await Cmd.Wait(SpotlightLeadInSeconds);
 

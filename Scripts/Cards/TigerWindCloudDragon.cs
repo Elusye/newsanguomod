@@ -22,7 +22,7 @@ public class TigerWindCloudDragon : NewsanguoCardTemplate
     public override bool CanBeGeneratedByModifiers => Pool is not RetiredCardPool;
     public override bool CanBeGeneratedInCombat => Pool is not RetiredCardPool;
 
-    public override bool IsTigerDragonCard => !BalanceAdjustments.Enabled;
+    public override bool IsTigerDragonCard => false;
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
@@ -84,7 +84,9 @@ public class TigerWindCloudDragon : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 耗能从 1 降低到 0
-        EnergyCost.UpgradeBy(-1);
+        if (BalanceAdjustments.Enabled)
+            DynamicVars["TigerWindCloudDragonPower"].UpgradeValueBy(1m);
+        else
+            EnergyCost.UpgradeBy(-1);
     }
 }

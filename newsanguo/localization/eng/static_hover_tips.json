@@ -8,5 +8,7 @@
   "NEWSANGUO_SUNQIAN_VIGOR_INTEROP.gainHover": "For characters from the [purple]Sunqian Universe mod[/purple], this effect triggers when gaining [gold]Vigor[/gold] instead of [gold]Drunken Might[/gold].",
   "NEWSANGUO_SUNQIAN_VIGOR_INTEROP.loseHover": "For characters from the [purple]Sunqian Universe mod[/purple], this effect triggers when losing [gold]Vigor[/gold] instead of [gold]Drunken Might[/gold].",
   "NEWSANGUO_VIRTUAL_CARD.title": "Virtual Card",
-  "NEWSANGUO_VIRTUAL_CARD.description": "After being played, a virtual card enters neither the [gold]discard pile[/gold] nor the [gold]exhaust pile[/gold]."
+  "NEWSANGUO_VIRTUAL_CARD.description": "After being played, a virtual card enters neither the [gold]discard pile[/gold] nor the [gold]exhaust pile[/gold].",
+  "NEWSANGUO_BALANCE_ADJUSTMENTS.title": "Vanilla-Oriented Adjustments",
+  "NEWSANGUO_BALANCE_ADJUSTMENTS.description": "Vanilla-oriented adjustments are active for this card, indicated by a blue border. See Newsanguo Settings for the full list of changes."
 }

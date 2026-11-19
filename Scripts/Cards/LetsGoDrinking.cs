@@ -26,7 +26,8 @@ public sealed class LetsGoDrinking : NewsanguoCardTemplate
         BalanceAdjustments.Enabled ? [CardKeyword.Exhaust, .. base.CanonicalKeywords] : base.CanonicalKeywords;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<DrunkenMightPower>(6m), new DynamicVar("EnemyDrunkenMight", 2m)];
+        [new PowerVar<DrunkenMightPower>(BalanceAdjustments.Enabled ? 9m : 6m),
+            new DynamicVar("EnemyDrunkenMight", BalanceAdjustments.Enabled ? 1m : 2m)];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
         [HoverTipFactory.FromPower<DrunkenMightPower>()];
@@ -40,7 +41,8 @@ public sealed class LetsGoDrinking : NewsanguoCardTemplate
             DynamicVars["DrunkenMightPower"].IntValue, Owner.Creature, this);
 
         if (play.Target is not { IsAlive: true } enemy) return;
-        await CreatureCmd.Stun(enemy);
+        if (!BalanceAdjustments.Enabled)
+            await CreatureCmd.Stun(enemy);
         await PowerCmd.Apply<DrunkenMightPower>(context, enemy,
             DynamicVars["EnemyDrunkenMight"].IntValue, Owner.Creature, this);
     }

@@ -20,6 +20,19 @@ namespace newsanguo.Scripts.Combat;
 /// </summary>
 public static class AutoPlayRightToLeft
 {
+    private sealed class TakeoverTurn
+    {
+        public int Number = -1;
+    }
+
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<PlayerCombatState, TakeoverTurn>
+        PlayedTurns = new();
+
+    internal static bool PlayedThisTurn(Player player) =>
+        player.PlayerCombatState is { } state && PlayedTurns.TryGetValue(state, out var turn) &&
+        turn.Number == state.TurnNumber;
+
+
     public const int MaxCardsToPlay = 13;
     private static readonly ConditionalWeakTable<Player, object> ActivePlayers = new();
 
@@ -84,7 +97,13 @@ public static class AutoPlayRightToLeft
 
                 Creature? target = GetTarget(card, combatState, owner);
                 await card.SpendResources();
+                int finishedBefore = CombatManager.Instance.History.CardPlaysFinished.Count();
                 await CardCmd.AutoPlay(choiceContext, card, target, AutoPlayType.Default, skipXCapture: true);
+                if (CombatManager.Instance.History.CardPlaysFinished.Skip(finishedBefore)
+                    .Any(entry => entry.CardPlay.Card == card))
+                {
+                    PlayedTurns.GetValue(playerCombatState, static _ => new TakeoverTurn()).Number = startTurn;
+                }
                 // 仅接管器实际打出的牌扣层数，手动出牌或其他来源的自动打牌不扣。
                 if (owner.Creature.GetPower<AutoPilotPower>() is { Amount: > 0 } autoPilot)
                     await PowerCmd.ModifyAmount(choiceContext, autoPilot, -1, owner.Creature, card);

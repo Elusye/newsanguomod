@@ -14,10 +14,7 @@ namespace newsanguo.Scripts.Powers;
 [RegisterPower]
 public sealed class NurseryRhymePower : ModPowerTemplate
 {
-    private int _upgradedTriggers;
     private int _nextVoice = 1;
-
-    internal void AddUpgradedTrigger() => _upgradedTriggers++;
 
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
@@ -30,7 +27,6 @@ public sealed class NurseryRhymePower : ModPowerTemplate
         if (player.Creature != Owner || !Owner.IsAlive || CombatManager.Instance.IsOverOrEnding) return;
 
         int count = Amount;
-        int upgraded = Math.Min(_upgradedTriggers, count);
         Flash();
         int voice = _nextVoice;
         _nextVoice = voice == 4 ? 1 : voice + 1;
@@ -39,7 +35,7 @@ public sealed class NurseryRhymePower : ModPowerTemplate
         for (int i = 0; i < count; i++)
         {
             if (!Owner.IsAlive || CombatManager.Instance.IsOverOrEnding) break;
-            await ScryCmd.Scry(context, player, i < upgraded ? 3 : 2);
+            await ScryCmd.Scry(context, player, 1);
             if (!Owner.IsAlive || CombatManager.Instance.IsOverOrEnding) break;
             await CardPileCmd.Draw(context, 1m, player);
         }

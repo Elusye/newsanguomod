@@ -18,7 +18,6 @@ using STS2RitsuLib.Scaffolding.Content;
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
-using newsanguo.Scripts.Settings;
 
 namespace newsanguo.Scripts.Cards;
 
@@ -89,11 +88,9 @@ public class NeverHadThese : NewsanguoCardTemplate
         await HeavensForce.Add(choiceContext, base.Owner, heavensForcePerCard * nonAttackCards.Count, this);
     }
 
-    // 两套规则都提升格挡，普通规则也提升天意之力。
+    // 升级仅提升格挡。
     protected override void OnUpgrade()
     {
         DynamicVars.Block.UpgradeValueBy(3);
-        if (!BalanceAdjustments.Enabled)
-            DynamicVars["HeavensForcePower"].UpgradeValueBy(1);
     }
 }

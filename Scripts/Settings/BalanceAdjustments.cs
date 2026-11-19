@@ -15,6 +15,9 @@ internal static class BalanceAdjustments
 
     internal const string DataKey = "balance_adjustments";
 
+    // 暂时隐藏调整与挑战入口；原版向调整统一关闭。
+    internal static bool ShowAdjustmentOptions => false;
+
     [ThreadStatic]
     internal static bool? RestoringRules;
 
@@ -29,14 +32,12 @@ internal static class BalanceAdjustments
     internal static int ChallengeLevel => ActiveRun is { } run &&
         _rules is not null && _rules.TryGet(run, out var rules) ? rules.ChallengeLevel : 0;
 
-    internal static bool Enabled => RestoringRules ?? (ActiveRun is { } run
-        ? _rules is not null && _rules.TryGet(run, out var rules) &&
-            (rules.Enabled || rules.ChallengeLevel >= 1)
-        : Preference);
+    // 不读取本地偏好、挑战等级或读档规则，确保所有场景始终关闭。
+    internal static bool Enabled => false;
 
     private static Rules CreateRules() => new()
     {
-        Enabled = Preference || SelectedChallengeLevel >= 1,
+        Enabled = false,
         ChallengeLevel = SelectedChallengeLevel
     };
 

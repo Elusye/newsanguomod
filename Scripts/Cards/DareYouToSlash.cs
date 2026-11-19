@@ -25,6 +25,8 @@ public class DareYouToSlash : NewsanguoCardTemplate
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<VulnerablePower>(), HoverTipFactory.FromPower<DrunkenMightPower>()
     ];
+    public override CardRarity Rarity => Settings.BalanceAdjustments.Enabled ? CardRarity.Uncommon : CardRarity.Common;
+
     public DareYouToSlash() : base(1, CardType.Skill, CardRarity.Common, TargetType.Self) { }
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

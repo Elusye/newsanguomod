@@ -1,4 +1,3 @@
-using newsanguo.Scripts.Settings;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -29,9 +28,9 @@ public class TenThousandTransparentHoles : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 平衡性调整将每段伤害从 2 点提高到 3 点。
+    // 每段造成 2 点伤害，基础攻击 4X 次，升级后 5X 次。
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(BalanceAdjustments.Enabled ? 3m : 2m, ValueProp.Move)
+        new DamageVar(2m, ValueProp.Move)
     ];
 
     // 自带“消耗”关键词（合并 base 以保留模板附加的模组关键词）
@@ -51,7 +50,7 @@ public class TenThousandTransparentHoles : NewsanguoCardTemplate
 
         // X 由游戏的 X 费结算提供。
         int x = ResolveEnergyXValue();
-        int hits = x * ((BalanceAdjustments.Enabled ? 3 : 4) + (IsUpgraded ? 1 : 0));
+        int hits = x * (4 + (IsUpgraded ? 1 : 0));
         if (hits <= 0)
         {
             return;

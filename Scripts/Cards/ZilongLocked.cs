@@ -33,13 +33,13 @@ public class ZilongLocked : NewsanguoCardTemplate
         : base.Title;
 
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DragonOmenPower>(18m),
+        new PowerVar<DragonOmenPower>(25m),
         new EnergyVar(1)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DragonOmenPower>()];
 
-    public ZilongLocked() : base(4, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy) { }
+    public ZilongLocked() : base(3, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy) { }
 
     public override Task AfterCardEnteredCombat(CardModel card)
     {
@@ -80,7 +80,6 @@ public class ZilongLocked : NewsanguoCardTemplate
 
     protected override void OnUpgrade()
     {
-        EnergyCost.UpgradeBy(-1);
-        DynamicVars["DragonOmenPower"].UpgradeValueBy(4);
+        DynamicVars["DragonOmenPower"].UpgradeValueBy(8);
     }
 }

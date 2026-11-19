@@ -45,6 +45,7 @@ public class Entry
         ApplyPatch(harmony, typeof(SecondAmountLabelPatch));
         ApplyPatch(harmony, typeof(HeavensForceHoverTipPatch));
         ApplyPatch(harmony, typeof(HeavensForcePlayLimitPatch));
+        ApplyPatch(harmony, typeof(PaelsEyeTakeoverPatch));
         ApplyPatch(harmony, typeof(FatherIHaveFailedYouPowerPatch));
         ApplyPatch(harmony, typeof(RestSiteSmithSfxPatch));
         ApplyPatch(harmony, typeof(RestSiteHealSfxPatch));
@@ -72,6 +73,8 @@ public class Entry
         ApplyPatch(harmony, typeof(TerritoryLegacyReplaySoundPatch));
         ApplyPatch(harmony, typeof(TerritoryLegacyReplayRefreshPatch));
         ApplyPatch(harmony, typeof(BalanceCardTemplateCachePatch));
+        ApplyPatch(harmony, typeof(BalanceCardDescriptionPatch));
+        ApplyPatch(harmony, typeof(BalanceCardHoverTipPatch));
         ApplyPatch(harmony, typeof(BalanceRunLoadPatch));
         ApplyPatch(harmony, typeof(ChallengeSelectionPatch));
         ApplyPatch(harmony, typeof(HeavenRevisionExtraTurnPatch));

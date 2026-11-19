@@ -22,6 +22,7 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
+using newsanguo.Scripts.Settings;
 
 namespace newsanguo.Scripts.Cards;
 
@@ -33,12 +34,12 @@ public class BetterThanYilingFlames : NewsanguoCardTemplate
     public override bool CanBeGeneratedInCombat => Pool is not RetiredCardPool;
 
     // 基础伤害。永久成长在此之上累加，本体数值不变。
-    private const int BaseDamage = 12;
+    private static int BaseDamage => BalanceAdjustments.Enabled ? 2 : 12;
 
     // 当前伤害与累计的永久成长值。
     // 参照原版「基因算法」（GeneticAlgorithm.cs:22-57）：两者都用 [SavedProperty] 跟随牌库本体存档，
     // 跨战斗保留；且属性 setter 里同步 DynamicVars，这样读档/降级后引擎回填属性时卡面数值立刻跟上。
-    private int _currentDamage = BaseDamage;
+    private int? _currentDamage;
     private int _increasedDamage;
 
     // 卡图资源
@@ -50,8 +51,12 @@ public class BetterThanYilingFlames : NewsanguoCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(CurrentDamage, ValueProp.Move),
-        new DynamicVar("Increase", 1m)
+        new DynamicVar("Increase", BalanceAdjustments.Enabled ? 3m : 1m)
     ];
+
+    public override IEnumerable<CardKeyword> CanonicalKeywords => BalanceAdjustments.Enabled
+        ? [CardKeyword.Exhaust, .. base.CanonicalKeywords]
+        : base.CanonicalKeywords;
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromKeyword(CardKeyword.Exhaust)];
 
@@ -63,12 +68,12 @@ public class BetterThanYilingFlames : NewsanguoCardTemplate
     [SavedProperty]
     public int CurrentDamage
     {
-        get => _currentDamage;
+        get => _currentDamage ?? BaseDamage;
         set
         {
             AssertMutable();
             _currentDamage = value;
-            DynamicVars.Damage.BaseValue = _currentDamage;
+            DynamicVars.Damage.BaseValue = value;
         }
     }
 

@@ -1,4 +1,3 @@
-using newsanguo.Scripts.Settings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -34,7 +33,7 @@ public class StarryNight : NeutralCardTemplate
 
     // 卡牌基础数值：获得 6 点格挡，本回合 2 点敏捷
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new BlockVar(BalanceAdjustments.Enabled ? 6 : 8, ValueProp.Move),
+        new BlockVar(6, ValueProp.Move),
         new PowerVar<DexterityPower>(2m)
     ];
 
@@ -75,7 +74,7 @@ public class StarryNight : NeutralCardTemplate
     protected override void OnUpgrade()
     {
         // 格挡从 6 提高到 8
-        DynamicVars.Block.UpgradeValueBy(BalanceAdjustments.Enabled ? 2 : 3);
+        DynamicVars.Block.UpgradeValueBy(2);
         // 敏捷从 2 提高到 3
         DynamicVars.Dexterity.UpgradeValueBy(1);
     }

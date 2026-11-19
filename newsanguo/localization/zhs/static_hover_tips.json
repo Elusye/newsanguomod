@@ -8,5 +8,7 @@
   "NEWSANGUO_SUNQIAN_VIGOR_INTEROP.gainHover": "对于[purple]孙乾宇宙模组[/purple]角色，此效果将在获得[gold]活力[/gold]时触发，而非[gold]酒力[/gold]。",
   "NEWSANGUO_SUNQIAN_VIGOR_INTEROP.loseHover": "对于[purple]孙乾宇宙模组[/purple]角色，此效果将在失去[gold]活力[/gold]时触发，而非[gold]酒力[/gold]。",
   "NEWSANGUO_VIRTUAL_CARD.title": "虚拟牌",
-  "NEWSANGUO_VIRTUAL_CARD.description": "虚拟牌打出后既不会进入[gold]弃牌堆[/gold]也不会进入[gold]消耗牌堆[/gold]。"
+  "NEWSANGUO_VIRTUAL_CARD.description": "虚拟牌打出后既不会进入[gold]弃牌堆[/gold]也不会进入[gold]消耗牌堆[/gold]。",
+  "NEWSANGUO_BALANCE_ADJUSTMENTS.title": "原版向调整",
+  "NEWSANGUO_BALANCE_ADJUSTMENTS.description": "这张牌已应用原版向调整，以蓝色边框标识。具体改动可在新三国设置中查看。"
 }

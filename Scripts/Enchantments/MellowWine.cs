@@ -8,6 +8,8 @@ namespace newsanguo.Scripts.Enchantments;
 [RegisterEnchantment]
 public sealed class MellowWine : ModEnchantmentTemplate
 {
+    public override bool HasExtraCardText => true;
+
     public override EnchantmentAssetProfile AssetProfile => new(IconPath: "res://newsanguo/images/enchantments/MellowWine.png");
 
     public override bool CanEnchant(CardModel card) => card.Type == CardType.Attack && base.CanEnchant(card);

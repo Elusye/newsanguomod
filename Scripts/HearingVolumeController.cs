@@ -23,16 +23,15 @@ public static class HearingVolumeController
     public static bool IsReduced => _reduced;
 
     /// <summary>把本机听到的声音音量降低25%（保留75%）（幂等）。</summary>
-    public static void ReduceVolumeByQuarter()
+    public static void SetReduction(int percent)
     {
-        if (_reduced)
-        {
-            return;
-        }
-        _reduced = true;
-        ApplyFmodMasterScale(TargetLinearVolume);
-        NewsanguoSfx.ApplyVolumeReduction();
+        percent = Math.Clamp(percent, 0, 100);
+        _reduced = percent > 0;
+        ApplyFmodMasterScale(1f - percent / 100f);
+        NewsanguoSfx.SetHearingReduction(percent);
     }
+
+    public static void ReduceVolumeByQuarter() => SetReduction(25);
 
     // 保留旧公共方法签名，兼容已有外部调用。
     public static void ReduceToQuarterVolume() => ReduceVolumeByQuarter();

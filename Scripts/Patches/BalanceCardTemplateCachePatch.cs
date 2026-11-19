@@ -32,9 +32,7 @@ public static class BalanceCardTemplateCachePatch
     public static void Prefix(object __instance)
     {
         if (__instance is not CardModel { IsMutable: false } card ||
-            card is not (BrightFuture or DeafenMe or Divination or FourWheeledCart or HelplessWorry or HumanPrinter or MedicalMastery or NurseryRhyme or
-                LeaveItToFate or LetsGoDrinking or PartyOn or SmilingTiger or StandardCamp or
-                StarryNight or TenThousandTransparentHoles or TigerWindCloudDragon or WorthAllTheirLives))
+            card is not (BetterThanYilingFlames or LeaveItToFate or LetsGoDrinking or PartyOn or TigerWindCloudDragon))
         {
             return;
         }

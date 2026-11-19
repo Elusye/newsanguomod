@@ -1,4 +1,4 @@
-using newsanguo.Scripts.Settings;
+using newsanguo.Scripts.Patches;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -32,14 +32,15 @@ public class DeafenMe : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<DragonOmenPower>(BalanceAdjustments.Enabled ? 8m : 15m)];
-
-    // 悬停提示：展示“帝王之征”说明
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromPower<DragonOmenPower>()
+    protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new PowerVar<DragonOmenPower>(10m),
+        new DynamicVar("ExtraOmen", 4m),
+        new PowerVar<DeafenMePower>(10m)
     ];
 
-    public override CardRarity Rarity => BalanceAdjustments.Enabled ? CardRarity.Common : CardRarity.Uncommon;
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
+        [HoverTipFactory.FromPower<DragonOmenPower>(), HoverTipFactory.FromPower<DeafenMePower>()];
+
 
     public DeafenMe() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
@@ -53,25 +54,17 @@ public class DeafenMe : NewsanguoCardTemplate
         // 播放出牌音效（静音前的最后一声）
         NewsanguoSfx.Play("event:/newsanguo/sfx/deafen_me");
 
-        // 给予选中的敌8/11层帝王之征。
-        await PowerCmd.Apply<DragonOmenPower>(choiceContext, cardPlay.Target,
-            DynamicVars["DragonOmenPower"].IntValue, Owner.Creature, this);
-
-        // 3. 附加“听觉受损”能力，标记本场战斗音量降低状态（战斗结束由能力恢复音量）
-        await PowerCmd.Apply<DeafenMePower>(choiceContext, base.Owner.Creature, 1, base.Owner.Creature, this);
-
-        // 4. 本场战斗中你听到的声音音量降低25%（保留75%）：FMOD 主总线与本 mod 的 Godot 播放音效分别保留75%。
-        // 仅在本机执行（LocalContext.IsMe），否则多人游戏中所有玩家的音频都会被压低
-        if (LocalContext.IsMe(base.Owner))
-        {
-            HearingVolumeController.ReduceVolumeByQuarter();
-        }
+        int debuffs = Owner.PlayerCombatState is { } state ? ZilongDebuffHistoryPatch.CountFor(state) : 0;
+        int omen = DynamicVars["DragonOmenPower"].IntValue + debuffs * DynamicVars["ExtraOmen"].IntValue;
+        await PowerCmd.Apply<DragonOmenPower>(choiceContext, cardPlay.Target, omen, Owner.Creature, this);
+        await PowerCmd.Apply<DeafenMePower>(choiceContext, Owner.Creature,
+            DynamicVars["DeafenMePower"].IntValue, Owner.Creature, this);
     }
 
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 帝王之征8提高到11
-        DynamicVars["DragonOmenPower"].UpgradeValueBy(BalanceAdjustments.Enabled ? 3 : 5);
+        DynamicVars["DragonOmenPower"].UpgradeValueBy(4m);
+        DynamicVars["ExtraOmen"].UpgradeValueBy(2m);
     }
 }

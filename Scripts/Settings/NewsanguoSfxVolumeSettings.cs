@@ -38,44 +38,32 @@ public static class NewsanguoSfxVolumeSettings
                 .WithDescription(ModSettingsText.Literal(
                     "新三国 mod 的通用设置：卡牌、能力及事件音效。"))
                 .AddSection("balance", section => section
+                    .WithVisibleWhen(() => BalanceAdjustments.ShowAdjustmentOptions)
                     .WithTitle(ModSettingsText.Literal("玩法"))
                     .AddToggle(
                         id: "balance_adjustments",
-                        label: ModSettingsText.Literal("平衡性调整"),
+                        label: ModSettingsText.Literal("原版向调整"),
                         binding: ModSettingsBindings.Callback<bool>(
                             ModId, "balance_adjustments", () => BalanceAdjustments.Preference,
                             BalanceAdjustments.SetPreference, () => { }),
                         description: ModSettingsText.Literal(
-                            "新开跑局生效。联机以房主设置为准，挑战 1 或更高也会启用。")))
+                            "仅控制机制、词条及稀有度调整；纯数值调整始终生效。新开跑局生效，联机以房主设置为准，挑战 1 或更高也会启用。")))
                 .AddSection("balance_details", section => section
-                    .WithTitle(ModSettingsText.Literal("平衡性调整清单"))
+                    .WithVisibleWhen(() => BalanceAdjustments.ShowAdjustmentOptions)
+                    .WithTitle(ModSettingsText.Literal("原版向调整清单"))
                     .Collapsible(true)
-                    .AddParagraph("balance_values", ModSettingsText.Literal(
-                        """
-                        扎聋我自己的耳朵！：罕见→普通，帝王之征 15/20→8/11 层。
-                        四轮车：格挡 4/5→3/4。
-                        无能忧虑：格挡 16/20→10/13。
-                        人肉打印机：复制 5→3 张牌。
-                        医术高明：基础伤害 15→10。
-                        全死了我都值！：费用 1→2。
-                        童谣：费用 1→2。
-                        从来没有这些！：升级只将格挡从 8 提升到 11，每张消耗的牌仍提供 1 点天意之力。
-                        占卜：抽 1/2 张牌，升级前后均获得 2 点天意之力。
-                        制式大营：精甲 6/8→3/4。
-                        星夜：格挡 8/11→6/8。
-                        一万个透明窟窿！：每段 3 点伤害，攻击 3X/4X 次。
-                        前途灿烂：费用 2/2→3/2，每回合打出 1 张随机能力牌。
-                        """), ModSettingsText.Literal("数值与费用（基础／升级）"))
                     .AddParagraph("balance_effects", ModSettingsText.Literal(
                         """
+                        比夷陵之火还好啊：初始伤害 12→2，每消耗一张牌永久加伤 3/4 点，自身增加消耗。
                         创造模式：战后选牌排除先古稀有度。
                         方圆三百里无敌：相邻牌的伤害翻倍，取代重放。
-                        风从虎，云从龙：龙牌和笑面虎获得重放 1，取代抽牌和生成牌。
-                        笑面虎：移除龙牌身份。
+                        风从虎，云从龙：龙牌和笑面虎获得重放 1/2，升级提升重放次数，取代减费、抽牌和生成牌。
                         好厉害呀！：成功打出能力牌后消耗自身。
-                        走，喝酒去！：基础版和升级版都有消耗。
+                        你是舍不得这张帅案吧！：酒力达到 6/4 的击晕与弃牌分支，每位玩家每场战斗最多触发一次。
+                        走，喝酒去！：获得 9/11 点酒力，给予敌人 1 点酒力，移除击晕，基础版和升级版都有消耗。
                         接着奏乐接着舞：增加消耗。
                         听天由命：普通→罕见，获得 1 层易伤和 1 层虚弱，取代脆弱。
+                        有本事你就砍了去！：普通→罕见。
                         """), ModSettingsText.Literal("机制与词条")))
                 .AddSection(SoundSectionId, section =>
                 {

@@ -4,5 +4,7 @@
   "NEWSANGUO_ENCHANTMENT_MELLOW_WINE.title": "Mellow Wine",
   "NEWSANGUO_ENCHANTMENT_MELLOW_WINE.description": "After playing this card, refund the [gold]Drunken Might[/gold] it consumed.",
   "NEWSANGUO_ENCHANTMENT_FRAGILE.title": "Fragile",
-  "NEWSANGUO_ENCHANTMENT_FRAGILE.description": "This card has [gold]Innate[/gold] and [gold]Replay 1[/gold]. Remove it from your deck after one combat."
+  "NEWSANGUO_ENCHANTMENT_FRAGILE.description": "This card has [gold]Innate[/gold] and [gold]Replay 1[/gold]. Remove it from your deck after one combat.",
+  "NEWSANGUO_ENCHANTMENT_MELLOW_WINE.extraCardText": "After playing this card, refund the [gold]Drunken Might[/gold] it consumed.",
+  "NEWSANGUO_ENCHANTMENT_FRAGILE.extraCardText": "Remove this card from your deck after one combat."
 }

@@ -1,4 +1,3 @@
-using newsanguo.Scripts.Settings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -18,12 +17,11 @@ public class BrightFuture : NewsanguoCardTemplate
 {
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<BrightFuturePower>(1m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<BrightFuturePower>(2m)];
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<BrightFuturePower>()
     ];
-    protected override int CanonicalEnergyCost => BalanceAdjustments.Enabled ? 3 : 2;
-    public BrightFuture() : base(2, CardType.Power, CardRarity.Rare, TargetType.Self) { }
+    public BrightFuture() : base(3, CardType.Power, CardRarity.Rare, TargetType.Self) { }
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/bright_future");
@@ -31,9 +29,6 @@ public class BrightFuture : NewsanguoCardTemplate
     }
     protected override void OnUpgrade()
     {
-        if (BalanceAdjustments.Enabled)
-            EnergyCost.UpgradeBy(-1);
-        else
-            DynamicVars["BrightFuturePower"].UpgradeValueBy(1m);
+        EnergyCost.UpgradeBy(-1);
     }
 }

@@ -19,7 +19,6 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
-using newsanguo.Scripts.Settings;
 
 namespace newsanguo.Scripts.Cards;
 
@@ -62,7 +61,7 @@ public class MedicalMastery : NewsanguoCardTemplate
     }
 
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(BalanceAdjustments.Enabled ? 10m : 15m, ValueProp.Move)
+        new DamageVar(10m, ValueProp.Move)
     ];
 
     public MedicalMastery() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)

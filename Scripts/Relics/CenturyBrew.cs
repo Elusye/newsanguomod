@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Combat;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -26,9 +28,9 @@ public class CenturyBrew : ModRelicTemplate
 
     public override RelicRarity Rarity => RelicRarity.Ancient;
 
-    // 描述中的 {drunken_might}：每个回合开始时获得的酒力层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DrunkenMightPower>(4m)
+        new PowerVar<DrunkenMightPower>(7m),
+        new IntVar("TurnEndWine", 2)
     ];
 
     // 悬停提示：展示“酒力”能力说明
@@ -36,20 +38,25 @@ public class CenturyBrew : ModRelicTemplate
 
     public override bool ShouldReceiveCombatHooks => true;
 
-    // 每个回合开始时：获得 4 点酒力（多人下只在 Owner 自己的回合触发）
-    public override async Task AfterAutoPrePlayPhaseEntered(PlayerChoiceContext choiceContext, Player player)
+    public override Task BeforeCombatStart()
     {
-        if (player != Owner || Owner?.Creature is null)
-        {
-            return;
-        }
+        if (Owner?.Creature is null)
+            return Task.CompletedTask;
 
-        await PowerCmd.Apply<DrunkenMightPower>(
-            choiceContext: choiceContext,
-            target: Owner.Creature,
-            amount: DynamicVars["DrunkenMightPower"].IntValue,
-            applier: Owner.Creature,
-            cardSource: null,
-            silent: false);
+        return PowerCmd.Apply<DrunkenMightPower>(
+            new ThrowingPlayerChoiceContext(), Owner.Creature,
+            DynamicVars["DrunkenMightPower"].IntValue, Owner.Creature, null);
+    }
+
+    public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
+        IEnumerable<Creature> participants)
+    {
+        if (side != CombatSide.Player || Owner?.Creature is not { IsAlive: true } creature ||
+            !participants.Contains(creature))
+            return;
+
+        Flash();
+        await PowerCmd.Apply<DrunkenMightPower>(choiceContext, creature,
+            DynamicVars["TurnEndWine"].IntValue, creature, null);
     }
 }

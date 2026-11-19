@@ -552,22 +552,22 @@ public static class NewsanguoSfx
     public static void SaveSfxConfig() => SaveConfig();
 
     // “听觉受损”门：置位后本 mod 的 Godot 音效整体降低约2.5 dB（线性音量0.75），战斗结束/回主菜单时复位。
-    private const float ReducedVolumeDb = 2.498775f; // -20*log10(0.75)，保留75%线性音量
+    private static float ReducedVolumeDb = 2.498775f; // -20*log10(0.75)，保留75%线性音量
 
     private static bool _volumeReduced;
 
     public static bool VolumeReduced => _volumeReduced;
 
-    // 把本 mod 的全部 Godot 播放音效音量保留75%（已降则幂等跳过）
-    public static void ApplyVolumeReduction()
+    public static void SetHearingReduction(int percent)
     {
-        if (_volumeReduced)
-        {
-            return;
-        }
-        _volumeReduced = true;
-        ShiftActiveVolumes(-ReducedVolumeDb);
+        float previous = _volumeReduced ? ReducedVolumeDb : 0f;
+        percent = Math.Clamp(percent, 0, 100);
+        ReducedVolumeDb = percent >= 100 ? 80f : -Mathf.LinearToDb(1f - percent / 100f);
+        _volumeReduced = percent > 0;
+        ShiftActiveVolumes(previous - ReducedVolumeDb);
     }
+
+    public static void ApplyVolumeReduction() => SetHearingReduction(25);
 
     // 恢复本 mod 的 Godot 音效音量（未降则幂等跳过）
     public static void RestoreVolume()

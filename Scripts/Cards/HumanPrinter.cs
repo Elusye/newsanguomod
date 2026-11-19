@@ -1,4 +1,3 @@
-using newsanguo.Scripts.Settings;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,7 +26,7 @@ public class HumanPrinter : NewsanguoCardTemplate
     // 卡牌基础数值：复制 3 张（升级只改费用，张数不变）
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new RepeatVar(BalanceAdjustments.Enabled ? 3 : 5)
+        new RepeatVar(3)
     ];
 
     // 升级前后都自带“消耗”关键词（合并 base 以保留模板附加的模组关键词）

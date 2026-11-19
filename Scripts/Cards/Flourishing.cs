@@ -16,7 +16,7 @@ public sealed class Flourishing : NewsanguoCardTemplate
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
-    public Flourishing() : base(1, CardType.Skill, CardRarity.Common, TargetType.Self) { }
+    public Flourishing() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self) { }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -27,7 +27,7 @@ public sealed class Flourishing : NewsanguoCardTemplate
             ModelDb.Card<AntiMagicField>(),
             ModelDb.Card<BowangSlopeParadox>(),
             ModelDb.Card<AutoPilot>(),
-            ModelDb.Card<SunBen>(),
+            ModelDb.Card<Hanzhong>(),
             ModelDb.Card<ZhouYafu>(),
             ModelDb.Card<SoImpressive>(),
             ModelDb.Card<NoReturn>(),

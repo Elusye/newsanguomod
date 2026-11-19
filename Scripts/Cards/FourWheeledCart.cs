@@ -1,4 +1,3 @@
-using newsanguo.Scripts.Settings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -39,7 +38,7 @@ public class FourWheeledCart : NewsanguoCardTemplate
 
     // 卡牌基础数值：格挡 3 点，结算 4 次
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new BlockVar(BalanceAdjustments.Enabled ? 3m : 4m, ValueProp.Move),
+        new BlockVar(3m, ValueProp.Move),
         new RepeatVar(4)
     ];
 

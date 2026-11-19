@@ -1,4 +1,3 @@
-using newsanguo.Scripts.Settings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -22,7 +21,7 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NeutralCardPool))]
 public class SmilingTiger : NeutralCardTemplate
 {
-    public override bool IsTigerDragonCard => !BalanceAdjustments.Enabled;
+    public override bool IsTigerDragonCard => false;
 
     // 获得格挡：可被灵巧等格挡附魔识别
     public override bool GainsBlock => true;

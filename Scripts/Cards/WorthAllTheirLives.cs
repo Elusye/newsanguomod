@@ -26,8 +26,6 @@ public class WorthAllTheirLives : NewsanguoCardTemplate
         RecruitKeyword.Recruit(DynamicVars.Summon), HeavensForce.HoverTip()
     ];
 
-    protected override int CanonicalEnergyCost => newsanguo.Scripts.Settings.BalanceAdjustments.Enabled ? 2 : 1;
-
     public WorthAllTheirLives() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self) { }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
