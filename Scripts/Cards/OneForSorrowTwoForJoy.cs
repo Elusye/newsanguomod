@@ -37,7 +37,7 @@ public class OneForSorrowTwoForJoy : NewsanguoCardTemplate
 
         for (int i = 0; i < DynamicVars.Cards.IntValue; i++)
         {
-            await CardPileCmd.AddGeneratedCardToCombat(combat.CreateCard<Sadness>(Owner), PileType.Draw, Owner);
+            await CardPileCmd.AddGeneratedCardToCombat(combat.CreateCard<Sadness>(Owner), PileType.Draw, Owner, CardPilePosition.Random);
         }
     }
 }
