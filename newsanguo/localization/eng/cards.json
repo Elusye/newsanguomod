@@ -352,7 +352,7 @@
   "NEWSANGUO_CARD_ANTI_MAGIC_FIELD.description": "[gold]Territory[/gold]: You cannot gain [gold]Heaven’s Force[/gold]. At the start of your turn, apply {IronCavalryPower:diff()} [gold]Enhanced Iron Cavalry[/gold] to ALL enemies.",
   "NEWSANGUO_CARD_ENDLESS_ENERGY.title": "Endless Energy",
   "NEWSANGUO_CARD_ENDLESS_ENERGY.description": "[gold]Territory[/gold]: After the start of each turn, draw {Cards:diff()} cards. If you have Flight, instead draw until your [gold]Hand[/gold] is full, filling remaining spaces with [gold]Soldiers[/gold].",
-  "NEWSANGUO_QINGZHOU_COUNTER": "Qingzhou Soldiers: {Amount}\nMaximum: 99.",
+  "NEWSANGUO_QINGZHOU_COUNTER": "Qingzhou Soldiers: {Amount}\nMaximum: 15.",
   "NEWSANGUO_CARD_JINGXIANG.title": "Jingxiang",
   "NEWSANGUO_CARD_JINGXIANG.description": "Gain 1 [gold]Flight[/gold].\nAdd a [gold]Heaven and Earth[/gold] to your [gold]Hand[/gold].",
   "NEWSANGUO_CARD_HANZHONG.title": "Hanzhong",

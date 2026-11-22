@@ -352,7 +352,7 @@
   "NEWSANGUO_CARD_ANTI_MAGIC_FIELD.description": "你不能再获取[gold]天意之力[/gold]。在你的回合开始时，给予所有敌人{IronCavalryPower:diff()}层[gold]界铁骑[/gold]。",
   "NEWSANGUO_CARD_ENDLESS_ENERGY.title": "无尽能源",
   "NEWSANGUO_CARD_ENDLESS_ENERGY.description": "每回合开始后，抽{Cards:diff()}张牌。如果你拥有飞行，改为抽满[gold]手牌[/gold]（不足则用[gold]士兵[/gold]填满[gold]手牌[/gold]）。",
-  "NEWSANGUO_QINGZHOU_COUNTER": "青州兵：{Amount}名\n数量上限为99。",
+  "NEWSANGUO_QINGZHOU_COUNTER": "青州兵：{Amount}名\n数量上限为15。",
   "NEWSANGUO_CARD_JINGXIANG.title": "荆襄",
   "NEWSANGUO_CARD_JINGXIANG.description": "获得1层[gold]飞行[/gold]。\n将一张[gold]天上人间[/gold]加入你的[gold]手牌[/gold]。",
   "NEWSANGUO_CARD_HANZHONG.title": "汉中",

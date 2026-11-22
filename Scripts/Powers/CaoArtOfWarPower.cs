@@ -27,8 +27,8 @@ public class CaoArtOfWarPower : ModPowerTemplate
     // 独立召唤的青州兵生命值固定为 1（需求：以 1 生命值独立召唤）
     private const decimal IndependentSoldierHp = 1m;
 
-    // 每位玩家同时存活的募集青州兵最多 99 名，阵亡后可再次募集补足。
-    private const int MaxLivingSoldiers = 99;
+    // 每位玩家同时存活的募集青州兵最多 15 名，阵亡后可再次募集补足。
+    private const int MaxLivingSoldiers = 15;
 
     private class Data
     {
