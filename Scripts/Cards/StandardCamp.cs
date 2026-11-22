@@ -24,7 +24,7 @@ public class StandardCamp : NeutralCardTemplate
         [CardKeyword.Innate, CardKeyword.Exhaust, .. base.CanonicalKeywords];
     protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<FineArmorPower>(6m)];
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<FineArmorPower>()];
-    protected override void OnUpgrade() => DynamicVars["FineArmorPower"].UpgradeValueBy(2m);
+    protected override void OnUpgrade() => DynamicVars["FineArmorPower"].UpgradeValueBy(1m);
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay play)
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/standard_camp");

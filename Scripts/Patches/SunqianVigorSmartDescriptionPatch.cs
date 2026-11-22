@@ -13,11 +13,10 @@ public static class SunqianVigorSmartDescriptionPatch
 {
     public static void Postfix(PowerModel __instance, LocString __result)
     {
+        if (__instance is OneForSorrowTwoForJoyPower sorrow)
+            __result.Add("UpgradedJoy", sorrow.IsJoyUpgraded);
         if (__instance is IronChainFleetPower fleet)
             fleet.AddPreviousCardType(__result);
-
-        if (__instance is TigerWindCloudDragonPower or CreativeModePower)
-            __result.Add("BalanceAdjustments", BalanceAdjustments.Enabled);
 
         if (__instance is ToABiggerGobletPower or WheresWinePower or FeelNoAcidPower
             or SovereignFormPower or TriumphBrewPower)

@@ -31,7 +31,7 @@ public class HanXin : NewsanguoCardTemplate
     ];
 
     // 卡牌自带“消耗”关键词
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, CardKeyword.Retain];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     public HanXin() : base(0, CardType.Skill, CardRarity.Token, TargetType.Self)
     {
@@ -46,10 +46,7 @@ public class HanXin : NewsanguoCardTemplate
         await CardPileCmd.Draw(choiceContext, DynamicVars.Cards.BaseValue, base.Owner);
     }
 
-    // 升级后的效果逻辑
-    protected override void OnUpgrade()
-    {
-        // 抽牌数 2 → 3
-        DynamicVars.Cards.UpgradeValueBy(1);
-    }
+    protected override void OnUpgrade() => AddKeyword(CardKeyword.Retain);
+
+    protected override void AfterDowngraded() => RemoveKeyword(CardKeyword.Retain);
 }

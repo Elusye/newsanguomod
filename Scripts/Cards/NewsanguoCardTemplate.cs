@@ -27,7 +27,6 @@ public abstract class NewsanguoCardTemplate : ModCardTemplate
     protected override void AddExtraArgsToDescription(MegaCrit.Sts2.Core.Localization.LocString description)
     {
         base.AddExtraArgsToDescription(description);
-        description.Add("BalanceAdjustments", BalanceAdjustments.Enabled);
     }
 
     private const string TigerDragonKeywordId = "NEWSANGUO_KEYWORD_TIGER_DRAGON";

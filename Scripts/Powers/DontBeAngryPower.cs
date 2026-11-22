@@ -1,4 +1,5 @@
 using System.Linq;
+using newsanguo.Scripts.Helpers;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
@@ -32,7 +33,9 @@ public class DontBeAngryPower : ModPowerTemplate
         for (int i = 0; i < count; i++)
         {
             if (!Owner.IsAlive || CombatManager.Instance.IsOverOrEnding) break;
-            var attacks = PileType.Exhaust.GetPile(player).Cards.Where(card => card.Type == CardType.Attack).ToList();
+            var attacks = PileType.Exhaust.GetPile(player).Cards
+                .Where(card => card.Type == CardType.Attack && !CardPlayInteraction.RequiresSelection(card))
+                .ToList();
             if (attacks.Count == 0) break;
             var card = attacks[player.RunState.Rng.CombatCardGeneration.NextInt(attacks.Count)];
             Flash();

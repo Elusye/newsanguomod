@@ -14,6 +14,7 @@ public static class ZilongDebuffHistoryPatch
     {
         public int Count;
         public HashSet<ZilongLocked> Cards { get; } = new();
+        public HashSet<DeafenMe> OmenCards { get; } = new();
     }
 
     private static readonly ConditionalWeakTable<object, Counter> Counts = new();
@@ -26,6 +27,9 @@ public static class ZilongDebuffHistoryPatch
         counter.Cards.Add(card);
         return counter.Count;
     }
+
+    internal static void Track(object state, DeafenMe card) =>
+        Counts.GetValue(state, static _ => new Counter()).OmenCards.Add(card);
 
     public static void Postfix(PowerModel power, decimal amount)
     {
@@ -44,5 +48,7 @@ public static class ZilongDebuffHistoryPatch
         counter.Count++;
         foreach (var card in counter.Cards.ToArray())
             card.RefreshDiscount();
+        foreach (var card in counter.OmenCards.ToArray())
+            card.RefreshOmenPreview();
     }
 }

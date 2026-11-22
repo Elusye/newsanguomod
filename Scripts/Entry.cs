@@ -35,6 +35,7 @@ public class Entry
         ApplyPatch(harmony, typeof(FireWaterHarmonyWeakPatch));
         ApplyPatch(harmony, typeof(FireWaterHarmonyVulnerablePatch));
         ApplyPatch(harmony, typeof(FireWaterHarmonyFrailPatch));
+        ApplyPatch(harmony, typeof(FireWaterHarmonyTaintedPatch));
         ApplyPatch(harmony, typeof(ReversalPowerTitlePatch));
         ApplyPatch(harmony, typeof(ReversalPowerDescriptionPatch));
         ApplyPatch(harmony, typeof(AlwaysMineDiscardSelectPatch));
@@ -72,9 +73,6 @@ public class Entry
         ApplyPatch(harmony, typeof(TerritoryLegacyReplayPatch));
         ApplyPatch(harmony, typeof(TerritoryLegacyReplaySoundPatch));
         ApplyPatch(harmony, typeof(TerritoryLegacyReplayRefreshPatch));
-        ApplyPatch(harmony, typeof(BalanceCardTemplateCachePatch));
-        ApplyPatch(harmony, typeof(BalanceCardDescriptionPatch));
-        ApplyPatch(harmony, typeof(BalanceCardHoverTipPatch));
         ApplyPatch(harmony, typeof(BalanceRunLoadPatch));
         ApplyPatch(harmony, typeof(ChallengeSelectionPatch));
         ApplyPatch(harmony, typeof(HeavenRevisionExtraTurnPatch));

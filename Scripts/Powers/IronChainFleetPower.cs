@@ -1,4 +1,5 @@
 using MegaCrit.Sts2.Core.Combat;
+using newsanguo.Scripts.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -33,7 +34,7 @@ public class IronChainFleetPower : ModPowerTemplate
 
         var previous = OwnPlaysNewestFirst().SkipWhile(play => play != cardPlay).Skip(1).FirstOrDefault();
         if (previous?.Card.Type == cardPlay.Card.Type)
-            await PowerCmd.Apply<AnticipatePower>(context, Owner, Amount, Owner, cardPlay.Card);
+            await HeavensForce.Gain(context, Owner.Player!, Amount, cardPlay.Card);
     }
 
     internal void AddPreviousCardType(LocString description)

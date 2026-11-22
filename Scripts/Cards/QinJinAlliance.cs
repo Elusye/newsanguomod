@@ -8,6 +8,8 @@ using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.Models.Cards;
+using MegaCrit.Sts2.Core.Models.Powers;
+using newsanguo.Scripts.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -21,25 +23,11 @@ namespace newsanguo.Scripts.Cards;
 public class QinJinAlliance : NewsanguoCardTemplate
 {
 
-    // 鼠标悬停时显示格挡提示
-    public override bool GainsBlock => true;
-
-    // 卡图资源
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
-    );
+        PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");
 
-    // 卡牌基础数值：你获得 10（13）点格挡；目标敌人获得固定的 5 点格挡
-    // （历史：本牌曾额外给予目标 1 层残影 BlurPower，已按需求移除）
-    protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new BlockVar(10, ValueProp.Move),
-        new IntVar("EnemyBlock", 5)
-    ];
-
-    // 鼠标悬停时展示格挡说明
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.Static(StaticHoverTip.Block)
-    ];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new IntVar("StrengthLoss", 8)];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<StrengthPower>()];
 
     public QinJinAlliance() : base(1, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)
     {
@@ -55,17 +43,10 @@ public class QinJinAlliance : NewsanguoCardTemplate
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
-        // 你获得 10（13）点格挡（受敏捷/脆弱正常影响）
-        await CreatureCmd.GainBlock(base.Owner.Creature, DynamicVars.Block, cardPlay, fast: true);
-
-        // 目标敌人获得固定的 5 点格挡（Move|Unpowered 使敏捷与脆弱不参与修正）
-        await CreatureCmd.GainBlock(cardPlay.Target, DynamicVars["EnemyBlock"].IntValue, ValueProp.Move | ValueProp.Unpowered, cardPlay, fast: true);
+        int loss = DynamicVars["StrengthLoss"].IntValue;
+        await PowerCmd.Apply<QinJinAllianceStrengthPower>(choiceContext, Owner.Creature, loss, Owner.Creature, this);
+        await PowerCmd.Apply<QinJinAllianceStrengthPower>(choiceContext, cardPlay.Target, loss, Owner.Creature, this);
     }
 
-    // 升级后的效果逻辑
-    protected override void OnUpgrade()
-    {
-        // 格挡从 10 提高到 13
-        DynamicVars.Block.UpgradeValueBy(3);
-    }
+    protected override void OnUpgrade() => DynamicVars["StrengthLoss"].UpgradeValueBy(3);
 }

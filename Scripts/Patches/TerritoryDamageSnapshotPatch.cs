@@ -87,8 +87,7 @@ public static class TerritoryLegacyReplayPatch
 {
     public static void Postfix(CardModel __instance, ref int __result)
     {
-        if (!BalanceAdjustments.Enabled)
-            __result += TerritoryDamageSnapshotPatch.GetReplay(__instance);
+        __result += TerritoryDamageSnapshotPatch.GetReplay(__instance);
     }
 }
 
@@ -97,7 +96,7 @@ public static class TerritoryLegacyReplayRefreshPatch
 {
     public static void Postfix(CardPile __instance)
     {
-        if (BalanceAdjustments.Enabled || __instance.Type != PileType.Hand) return;
+        if (__instance.Type != PileType.Hand) return;
         foreach (var card in __instance.Cards.ToArray())
             card.BaseReplayCount = card.BaseReplayCount;
     }
@@ -109,7 +108,7 @@ public static class TerritoryLegacyReplaySoundPatch
 {
     public static void Postfix(CardModel __instance, ref Task<int> __result)
     {
-        if (!BalanceAdjustments.Enabled && __instance is not TerritoryCardTemplate &&
+        if (__instance is not TerritoryCardTemplate &&
             TerritoryDamageSnapshotPatch.GetReplay(__instance) > 0)
         {
             __result = PlayForReplay(__result);

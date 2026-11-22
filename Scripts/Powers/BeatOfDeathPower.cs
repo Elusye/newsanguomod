@@ -8,16 +8,16 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.ValueProps;
+using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.HoverTips;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
-using newsanguo.Scripts;
 namespace newsanguo.Scripts.Powers;
 
 /// <summary>
-/// “本回合死亡律动”（Beat of Death）：本回合内每打出一张牌，就对自己造成 Amount 点伤害（不受力量等伤害修饰）。
-/// 由“自刎归天”附加，回合结束时自动移除。Amount 即每打出一张牌的自伤数值。
+/// “自刎归天”：本回合内每打出一张牌，就获得 Amount 层原版污染。
+/// 由“自刎归天”附加，回合结束时自动移除。Amount 即每打出一张牌获得的污染层数。
 /// 显示名/描述在 localization/*/powers.json 的 NEWSANGUO_POWER_BEAT_OF_DEATH_POWER.* 里；
 /// 内部 id 与类名保持不变（存档兼容，且能力图标路径按类名取 res://…/powers/BeatOfDeathPower.png）。
 /// </summary>
@@ -34,12 +34,9 @@ public class BeatOfDeathPower : ModPowerTemplate
         public readonly Dictionary<CardModel, int> amountsForPlayedCards = new();
     }
 
-    // 本次结算的死亡律动伤害是否正由奥斯提承担（仅在 Damage 调用期间为 true）
-    private bool ostyIsTakingThisDamage;
-
     // 负面效果
     public override PowerType Type => PowerType.Debuff;
-    // 叠加方式：计数器，Amount 表示“每打出一张牌对自己造成的伤害”
+    // 叠加方式：计数器，Amount 表示每次出牌获得的污染层数
     public override PowerStackType StackType => PowerStackType.Counter;
     public override bool AllowNegative => false;
     // 允许接收战斗钩子，否则 BeforeCardPlayed / AfterCardPlayed / AfterSideTurnEnd 不会被调用
@@ -50,6 +47,9 @@ public class BeatOfDeathPower : ModPowerTemplate
         IconPath: $"res://newsanguo/images/powers/{GetType().Name}.png",
         BigIconPath: $"res://newsanguo/images/powers/{GetType().Name}Big.png"
     );
+
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
+        [HoverTipFactory.FromPower<TaintedPower>()];
 
     protected override object InitInternalData()
     {
@@ -67,51 +67,20 @@ public class BeatOfDeathPower : ModPowerTemplate
         return Task.CompletedTask;
     }
 
-    // 打出后核销并结算：对自己造成 hpCost 点伤害（不可受力量等修饰，但仍可被格挡）
+    // 打出后核销并施加污染；附加此能力的牌本身不触发。
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // 在册才触发，顺带清理字典（未登记的牌：非攻击牌、其他玩家的牌、附加本能力的牌）
-        if (!GetInternalData<Data>().amountsForPlayedCards.Remove(cardPlay.Card, out int hpCost))
+        // 在册才触发，顺带清理字典（其他玩家的牌、附加本能力的牌不会登记）
+        if (!GetInternalData<Data>().amountsForPlayedCards.Remove(cardPlay.Card, out int taintedAmount))
         {
             return;
         }
-        if (!Owner.IsAlive || hpCost <= 0)
+        if (!Owner.IsAlive || taintedAmount <= 0)
         {
             return;
         }
 
-        // 死亡律动伤害触发音效（对应 FMOD 事件 event:/newsanguo/sfx/blood_loss）
-        NewsanguoSfx.Play("event:/newsanguo/sfx/blood_loss");
-
-        // ValueProp.Unpowered：来自能力造成的伤害，不受力量等伤害修饰（仍可被格挡）。
-        // 若场上有存活的奥斯提，则由它承担这次死亡律动伤害（见 ModifyUnblockedDamageTarget）。
-        ostyIsTakingThisDamage = true;
-        try
-        {
-            await CreatureCmd.Damage(choiceContext, Owner, hpCost, ValueProp.Unpowered, dealer: Owner, cardSource: null, cardPlay: null);
-        }
-        finally
-        {
-            ostyIsTakingThisDamage = false;
-        }
-    }
-
-    /// <summary>
-    /// 把这次死亡律动的未被格挡伤害转给奥斯提承担。走引擎自带的伤害转移通道，
-    /// 因此格挡、溢出伤害（奥斯提被打死时多出的部分回到你身上）、死亡结算都与原版奥斯提“替你去死”一致。
-    /// </summary>
-    public override Creature ModifyUnblockedDamageTarget(Creature target, decimal amount, ValueProp props, Creature? dealer)
-    {
-        if (!ostyIsTakingThisDamage || target != Owner)
-        {
-            return target;
-        }
-        Player? player = Owner.Player;
-        if (player is null || !player.IsOstyAlive)
-        {
-            return target;
-        }
-        return player.Osty!;
+        await PowerCmd.Apply<TaintedPower>(choiceContext, Owner, taintedAmount, Owner, cardPlay.Card);
     }
 
     // 回合结束时移除本能力

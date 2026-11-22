@@ -36,9 +36,9 @@ public class ReanimationSpell : NewsanguoCardTemplate
     // 卡牌自带“消耗”关键词（合并 base 以保留模板附加的模组关键词）
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
-    // 卡牌基础数值：失去 5 点天意之力（变量用正值，打出时取负）
+    // 卡牌基础数值：失去 2 点天意之力（变量用正值，打出时取负）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new HeavensForceVar(5m)
+        new HeavensForceVar(2m)
     ];
 
     // 鼠标悬停时显示天意之力与天意侵蚀提示
@@ -51,7 +51,7 @@ public class ReanimationSpell : NewsanguoCardTemplate
     public override bool IsHeavensCard => true;
 
 
-    public ReanimationSpell() : base(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
+    public ReanimationSpell() : base(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {
     }
 
@@ -91,7 +91,6 @@ public class ReanimationSpell : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 失去的天意之力从 5 减少到 4
-        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
+        EnergyCost.UpgradeBy(-1);
     }
 }

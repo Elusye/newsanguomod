@@ -36,18 +36,18 @@ public class DivineInsight : NewsanguoCardTemplate
         HoverTipFactory.FromPower<HeavensDecayPower>()
     ];
 
-    // 卡牌基础数值：打出时失去 7 点天意之力；每打出一张牌获得 1 点天意之力
+    // 卡牌基础数值：打出时失去 3 点天意之力；每打出一张牌获得 1 点天意之力
     // 失去的天意之力用 IntVar（而非 HeavensForceVar）：它是“失去”数值，
     // 不应参与卡面数值预览钩子，否则会被加成类钩子错误地加高显示
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new IntVar("HeavensLost", 7),
+        new IntVar("HeavensLost", 3),
         new PowerVar<DivineInsightPower>(1m)
     ];
 
     // 属于“天意”体系（涉及天意之力/天意侵蚀）
     public override bool IsHeavensCard => true;
 
-    public DivineInsight() : base(0, CardType.Power, CardRarity.Ancient, TargetType.Self)
+    public DivineInsight() : base(1, CardType.Power, CardRarity.Ancient, TargetType.Self)
     {
     }
 
@@ -56,7 +56,7 @@ public class DivineInsight : NewsanguoCardTemplate
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/divine_insight");
 
-        // 先失去 7 点天意之力（天意之力允许负值，可透支/结余为负）
+        // 先失去 3 点天意之力（天意之力允许负值，可透支/结余为负）
         await HeavensForce.Add(choiceContext, base.Owner, -DynamicVars["HeavensLost"].IntValue, this);
 
         // 再获得“参悟天意”能力：每打出一张牌，获得对应点数的天意之力（可叠加）。

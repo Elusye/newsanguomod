@@ -39,10 +39,10 @@ public sealed class WineIsTheOldHeroPower : ModPowerTemplate
             return;
 
         var owner = Owner;
-        int block = owner.Block;
+        int wine = owner.Block / 2;
         int copies = Amount;
         await PowerCmd.Remove(this);
-        for (int i = 0; i < copies && block > 0 && owner.IsAlive && !CombatManager.Instance.IsOverOrEnding; i++)
-            await SunqianUniverseVigorInterop.ApplyActiveResource(context, owner, block, owner, null);
+        for (int i = 0; i < copies && wine > 0 && owner.IsAlive && !CombatManager.Instance.IsOverOrEnding; i++)
+            await SunqianUniverseVigorInterop.ApplyActiveResource(context, owner, wine, owner, null);
     }
 }

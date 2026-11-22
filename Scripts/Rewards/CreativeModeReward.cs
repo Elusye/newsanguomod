@@ -50,9 +50,7 @@ public sealed class CreativeModeReward : ModCustomReward
     // 描述走 mod 自己的 cards 表，避免依赖原版 gameplay_ui 表
     protected override string DescriptionLocTable => "cards";
 
-    protected override string DescriptionLocKey => BalanceAdjustments.Enabled
-        ? "NEWSANGUO_CARD_CREATIVE_MODE_REWARD"
-        : "NEWSANGUO_CARD_CREATIVE_MODE_LEGACY_REWARD";
+    protected override string DescriptionLocKey => "NEWSANGUO_CARD_CREATIVE_MODE_REWARD";
 
     // 复用原版“特殊卡牌奖励”图标；文件缺失时 RitsuLib 只会画一个空图标，不会报错
     protected override string? RewardIconPath => "res://images/ui/reward_screen/reward_icon_special_card.png";
@@ -74,7 +72,7 @@ public sealed class CreativeModeReward : ModCustomReward
             .DistinctBy(card => card.Id);
         foreach (CardModel canonical in candidates)
         {
-            if ((BalanceAdjustments.Enabled && canonical.Rarity == CardRarity.Ancient) || canonical.Pool is RetiredCardPool ||
+            if (canonical.Rarity == CardRarity.Ancient || canonical.Pool is RetiredCardPool ||
                 string.Equals(canonical.Id.Entry, selfEntry, StringComparison.Ordinal))
             {
                 continue;

@@ -19,15 +19,17 @@ public class OneForSorrowTwoForJoy : NewsanguoCardTemplate
     public OneForSorrowTwoForJoy() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self) { }
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: "res://newsanguo/images/cards/OneForSorrowTwoForJoy.png");
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<OneForSorrowTwoForJoyPower>(2m), new CardsVar(2)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<OneForSorrowTwoForJoyPower>(1m), new CardsVar(2)];
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
-        [HoverTipFactory.FromKeyword(CardKeyword.Exhaust), HoverTipFactory.FromPower<DrunkenMightPower>(), HoverTipFactory.FromCard<Sadness>()];
+        [HoverTipFactory.FromCard<Joy>(IsUpgraded), HoverTipFactory.FromCard<Sadness>()];
     protected override void OnUpgrade() => DynamicVars["OneForSorrowTwoForJoyPower"].UpgradeValueBy(1m);
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay play)
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/one_for_sorrow_two_for_joy");
         await PowerCmd.Apply<OneForSorrowTwoForJoyPower>(context, Owner.Creature,
             DynamicVars["OneForSorrowTwoForJoyPower"].BaseValue, Owner.Creature, this);
+        if (Owner.Creature.GetPower<OneForSorrowTwoForJoyPower>() is { } power)
+            power.IsJoyUpgraded |= IsUpgraded;
         if (CombatState is not { } combat)
         {
             return;
@@ -35,7 +37,7 @@ public class OneForSorrowTwoForJoy : NewsanguoCardTemplate
 
         for (int i = 0; i < DynamicVars.Cards.IntValue; i++)
         {
-            await CardPileCmd.AddGeneratedCardToCombat(combat.CreateCard<Sadness>(Owner), PileType.Hand, Owner);
+            await CardPileCmd.AddGeneratedCardToCombat(combat.CreateCard<Sadness>(Owner), PileType.Draw, Owner);
         }
     }
 }

@@ -33,11 +33,13 @@ public class HeavenHatingSwordplay : NewsanguoCardTemplate
 
     // 本牌属于“天意”体系（涉及天意之力，自身也计入伤害加成）
     public override bool IsHeavensCard => true;
+    public override bool LosesHeavensForce => true;
 
-    // 卡牌基础数值：基础伤害 6；每有一张天意相关牌额外造成 2（升级 3）点伤害
+    // 卡牌基础数值：基础伤害 8；每有一张天意相关牌额外造成 2（升级 3）点伤害
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
-        new CalculationBaseVar(6m),
+        new HeavensForceVar(1m),
+        new CalculationBaseVar(8m),
         new ExtraDamageVar(2m),
         new CalculatedDamageVar(ValueProp.Move).WithMultiplier(
             (card, _) => card.Owner?.PlayerCombatState?.AllCards
@@ -61,6 +63,8 @@ public class HeavenHatingSwordplay : NewsanguoCardTemplate
 
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/heaven_hating_swordplay");
+
+        await HeavensForce.Add(choiceContext, Owner, -DynamicVars["HeavensForcePower"].IntValue, this);
 
         // 造成计算伤害（基础 6 + 天意相关牌数量 × 每张额外伤害）
         await DamageCmd.Attack(DynamicVars.CalculatedDamage)

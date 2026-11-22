@@ -3,7 +3,7 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 namespace newsanguo.Scripts.Powers;
 
-/// <summary>水火兼容：反转已有与之后获得的虚弱、易伤、脆弱，保留层数和持续时间。</summary>
+/// <summary>水火兼容：反转已有与之后获得的虚弱、易伤、脆弱和污染，保留层数和持续时间。</summary>
 [RegisterPower]
 public class ReversalPower : ModPowerTemplate
 {

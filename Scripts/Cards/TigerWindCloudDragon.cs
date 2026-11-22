@@ -39,14 +39,10 @@ public class TigerWindCloudDragon : NewsanguoCardTemplate
     {
         get
         {
-            yield return HoverTipFactory.FromCard<SmilingTiger>();
-            if (BalanceAdjustments.Enabled)
-                yield return HoverTipFactory.Static(StaticHoverTip.ReplayDynamic,
-                    new DynamicVar("Times", DynamicVars["TigerWindCloudDragonPower"].IntValue));
-            else
-                yield return this is TigerWindCloudDragonShuHan
-                    ? HoverTipFactory.FromCard<DragonOmenShuHan>()
-                    : HoverTipFactory.FromCard<DragonOmen>();
+            yield return HoverTipFactory.FromCard<SmilingTiger>(IsUpgraded);
+            yield return this is TigerWindCloudDragonShuHan
+                    ? HoverTipFactory.FromCard<DragonOmenShuHan>(IsUpgraded)
+                    : HoverTipFactory.FromCard<DragonOmen>(IsUpgraded);
         }
     }
     // 构造函数
@@ -68,13 +64,17 @@ public class TigerWindCloudDragon : NewsanguoCardTemplate
             this,
             silent: false);
 
-        if (!BalanceAdjustments.Enabled)
         {
             var combat = CombatState!;
             var tiger = combat.CreateCard<SmilingTiger>(Owner);
             MegaCrit.Sts2.Core.Models.CardModel dragon = this is TigerWindCloudDragonShuHan
                 ? combat.CreateCard<DragonOmenShuHan>(Owner)
                 : combat.CreateCard<DragonOmen>(Owner);
+            if (IsUpgraded)
+            {
+                CardCmd.Upgrade(tiger);
+                CardCmd.Upgrade(dragon);
+            }
             await CardPileCmd.AddGeneratedCardToCombat(tiger, PileType.Hand, Owner);
             await CardPileCmd.AddGeneratedCardToCombat(dragon, PileType.Hand, Owner);
         }
@@ -84,9 +84,6 @@ public class TigerWindCloudDragon : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        if (BalanceAdjustments.Enabled)
-            DynamicVars["TigerWindCloudDragonPower"].UpgradeValueBy(1m);
-        else
-            EnergyCost.UpgradeBy(-1);
+        // 升级后的生成牌由 OnPlay 按 IsUpgraded 升级。
     }
 }

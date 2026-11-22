@@ -67,7 +67,7 @@ public class WolfVsDog : NewsanguoCardTemplate
             .Execute(choiceContext);
     }
 
-    // 升级：伤害 6 → 9
+    // 升级：伤害 7 → 10
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(3m);

@@ -8,6 +8,8 @@ using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Hooks;
+using MegaCrit.Sts2.Core.Nodes.Cards;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
@@ -33,7 +35,7 @@ public class DeafenMe : NewsanguoCardTemplate
     );
 
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DragonOmenPower>(10m),
+        new OmenVar(10m),
         new DynamicVar("ExtraOmen", 4m),
         new PowerVar<DeafenMePower>(10m)
     ];
@@ -46,6 +48,42 @@ public class DeafenMe : NewsanguoCardTemplate
     {
     }
 
+    private sealed class OmenVar(decimal amount) : PowerVar<DragonOmenPower>(amount)
+    {
+        public override void UpdateCardPreview(CardModel card, CardPreviewMode previewMode,
+            Creature? target, bool runGlobalHooks)
+        {
+            decimal total = card is DeafenMe deafen ? deafen.GetOmenAmount() : BaseValue;
+            PreviewValue = runGlobalHooks && card.CombatState is { } combat
+                ? Hook.ModifyPowerAmountGiven(combat, ModelDb.Power<DragonOmenPower>(),
+                    card.Owner.Creature, total, target, card, out _)
+                : total;
+        }
+    }
+
+    private int GetOmenAmount()
+    {
+        int debuffs = IsMutable && IsInCombat && Owner.PlayerCombatState is { } state
+            ? ZilongDebuffHistoryPatch.CountFor(state) : 0;
+        return DynamicVars["DragonOmenPower"].IntValue + debuffs * DynamicVars["ExtraOmen"].IntValue;
+    }
+
+    public override Task AfterCardEnteredCombat(CardModel card)
+    {
+        if (card == this)
+            RefreshOmenPreview();
+        return Task.CompletedTask;
+    }
+
+    internal void RefreshOmenPreview()
+    {
+        if (Owner.PlayerCombatState is not { } state)
+            return;
+        ZilongDebuffHistoryPatch.Track(state, this);
+        if (Pile?.Type == PileType.Hand)
+            NCard.FindOnTable(this)?.UpdateVisuals(PileType.Hand, CardPreviewMode.Normal);
+    }
+
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -54,8 +92,7 @@ public class DeafenMe : NewsanguoCardTemplate
         // 播放出牌音效（静音前的最后一声）
         NewsanguoSfx.Play("event:/newsanguo/sfx/deafen_me");
 
-        int debuffs = Owner.PlayerCombatState is { } state ? ZilongDebuffHistoryPatch.CountFor(state) : 0;
-        int omen = DynamicVars["DragonOmenPower"].IntValue + debuffs * DynamicVars["ExtraOmen"].IntValue;
+        int omen = GetOmenAmount();
         await PowerCmd.Apply<DragonOmenPower>(choiceContext, cardPlay.Target, omen, Owner.Creature, this);
         await PowerCmd.Apply<DeafenMePower>(choiceContext, Owner.Creature,
             DynamicVars["DeafenMePower"].IntValue, Owner.Creature, this);

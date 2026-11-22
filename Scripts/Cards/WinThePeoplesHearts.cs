@@ -9,9 +9,12 @@ using newsanguo.Scripts.Combat;
 
 namespace newsanguo.Scripts.Cards;
 
-[RegisterCard(typeof(ShuHanCardPool))]
+[RegisterCard(typeof(RetiredCardPool))]
 public sealed class WinThePeoplesHearts : NewsanguoCardTemplate
 {
+    public override bool CanBeGeneratedByModifiers => false;
+    public override bool CanBeGeneratedInCombat => false;
+
     public override bool IsHeavensCard => true;
 
     public override CardAssetProfile AssetProfile => new(

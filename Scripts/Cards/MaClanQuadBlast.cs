@@ -25,7 +25,7 @@ public class MaClanQuadBlast : NewsanguoCardTemplate, IAttackHitHookListener
     );
 
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(4m, ValueProp.Move),
+        new DamageVar(3m, ValueProp.Move),
         new RepeatVar(4)
     ];
 

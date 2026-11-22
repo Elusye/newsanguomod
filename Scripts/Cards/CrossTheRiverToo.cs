@@ -31,7 +31,7 @@ public class CrossTheRiverToo : NewsanguoCardTemplate
 
     // 卡牌基础数值：能量获得量
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new EnergyVar(2)
+        new EnergyVar(3)
     ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.ForEnergy(this)];
@@ -63,7 +63,7 @@ public class CrossTheRiverToo : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 能量获得量从 2 提高到 3
+        // 能量获得量从 3 提高到 4
         DynamicVars.Energy.UpgradeValueBy(1);
     }
 }

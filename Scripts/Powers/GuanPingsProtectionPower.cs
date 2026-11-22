@@ -13,6 +13,7 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.HoverTips;
 using newsanguo.Scripts.Cards;
 using newsanguo.Scripts.Enchantments;
+using newsanguo.Scripts.Helpers;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -53,7 +54,8 @@ public class GuanPingsProtectionPower : ModPowerTemplate
                 break;
             var pool = player.Character.CardPool
                 .GetUnlockedCards(player.UnlockState, player.RunState.CardMultiplayerConstraint)
-                .Where(c => c.Type == CardType.Attack && !c.EnergyCost.CostsX && !c.HasStarCostX);
+                .Where(c => c.Type == CardType.Attack && !c.EnergyCost.CostsX && !c.HasStarCostX &&
+                    !CardPlayInteraction.RequiresSelection(c));
             CardModel? card = CardFactory.GetDistinctForCombat(player, pool, 1,
                 player.RunState.Rng.CombatCardGeneration).FirstOrDefault();
             if (card is null)

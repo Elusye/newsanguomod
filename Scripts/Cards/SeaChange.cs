@@ -26,6 +26,9 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class SeaChange : NewsanguoCardTemplate
 {
+    public override IEnumerable<CardKeyword> CanonicalKeywords =>
+        [CardKeyword.Retain, .. base.CanonicalKeywords];
+
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(

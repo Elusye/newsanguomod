@@ -34,7 +34,7 @@ public class BetterThanYilingFlames : NewsanguoCardTemplate
     public override bool CanBeGeneratedInCombat => Pool is not RetiredCardPool;
 
     // 基础伤害。永久成长在此之上累加，本体数值不变。
-    private static int BaseDamage => BalanceAdjustments.Enabled ? 2 : 12;
+    private static int BaseDamage => 2;
 
     // 当前伤害与累计的永久成长值。
     // 参照原版「基因算法」（GeneticAlgorithm.cs:22-57）：两者都用 [SavedProperty] 跟随牌库本体存档，
@@ -51,12 +51,10 @@ public class BetterThanYilingFlames : NewsanguoCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DamageVar(CurrentDamage, ValueProp.Move),
-        new DynamicVar("Increase", BalanceAdjustments.Enabled ? 3m : 1m)
+        new DynamicVar("Increase", 3m)
     ];
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => BalanceAdjustments.Enabled
-        ? [CardKeyword.Exhaust, .. base.CanonicalKeywords]
-        : base.CanonicalKeywords;
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromKeyword(CardKeyword.Exhaust)];
 
@@ -64,7 +62,7 @@ public class BetterThanYilingFlames : NewsanguoCardTemplate
     {
     }
 
-    // 本牌当前的伤害值（= 基础 12 + 永久成长）
+    // 本牌当前的伤害值（= 基础 2 + 永久成长）
     [SavedProperty]
     public int CurrentDamage
     {

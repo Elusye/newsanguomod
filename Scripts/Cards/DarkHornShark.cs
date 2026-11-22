@@ -26,9 +26,9 @@ public class DarkHornShark : NeutralCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 5 点伤害
+    // 卡牌基础数值：造成 4 点伤害
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(5, ValueProp.Move)
+        new DamageVar(4, ValueProp.Move)
     ];
 
     // 卡牌自带“消耗”关键词
@@ -74,7 +74,7 @@ public class DarkHornShark : NeutralCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 伤害从 5 提高到 7
+        // 伤害从 4 提高到 6
         DynamicVars.Damage.UpgradeValueBy(2);
     }
 }

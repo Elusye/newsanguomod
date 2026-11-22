@@ -37,7 +37,7 @@ public class WhatToEat : NeutralCardTemplate
         HoverTipFactory.FromCard<ChowDown>(IsUpgraded)
     ];
 
-    public WhatToEat() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.AllAllies)
+    public WhatToEat() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.AllAllies)
     {
     }
 

@@ -27,8 +27,6 @@ public class GoldenRebellion : NeutralCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 自带“消耗”关键词
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
     public GoldenRebellion() : base(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {
@@ -71,6 +69,5 @@ public class GoldenRebellion : NeutralCardTemplate
 
         selected.SetToFreeThisTurn();
         var result = await CardPileCmd.AddGeneratedCardToCombat(selected, PileType.Hand, base.Owner);
-        CardCmd.PreviewCardPileAdd(result, 1.2f);
     }
 }

@@ -33,9 +33,9 @@ public class PeekIntoHeaven : NewsanguoCardTemplate
 
     // 卡牌基础数值：预见数量、抽牌数、失去的天意之力（变量用正值，打出时取负）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DynamicVar("ScryAmount", 7m),
+        new DynamicVar("ScryAmount", 3m),
         new CardsVar(3),
-        new HeavensForceVar(3m)
+        new HeavensForceVar(2m)
     ];
 
     // 鼠标悬停时显示天意之力与天意侵蚀提示
@@ -74,9 +74,8 @@ public class PeekIntoHeaven : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
+        DynamicVars["ScryAmount"].UpgradeValueBy(1m);
         // 抽牌数从 3 增加到 4
         DynamicVars["Cards"].UpgradeValueBy(1);
-        // 失去的天意之力从 3 减少到 2
-        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
     }
 }

@@ -13,7 +13,6 @@ using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 using newsanguo.Scripts.Characters;
-using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
 
 namespace newsanguo.Scripts.Cards;
@@ -22,41 +21,23 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class HeavenlyTroops : NewsanguoCardTemplate
 {
-    public override bool LosesHeavensForce => true;
-
-
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 悬停提示：展示“士兵”卡牌标注（升级时显示升级版士兵）、天意之力与天意侵蚀说明
-    // （描述中会提到“天意之力”，两者须成对展示）
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HoverTipFactory.FromCard<Soldier>(IsUpgraded),
-        HeavensForce.HoverTip(),
-        HoverTipFactory.FromPower<HeavensDecayPower>()
+        HoverTipFactory.FromCard<Soldier>(IsUpgraded)
     ];
 
     // 卡牌基础数值：经过 2 个回合结束后发放 5 张士兵（TurnDelay 需与 heavenly_troops_power 的倒计时保持同步）；
-    // 打出时失去 3 点天意之力（升级后 2 点）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new HeavensForceVar(3m),
         new IntVar("SoldierCount", 5),
         new IntVar("TurnDelay", 2)
     ];
 
-    // 属于“天意”体系（涉及天意之力/天意侵蚀）
-    public override bool IsHeavensCard => true;
-
     public HeavenlyTroops() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
     {
-    }
-
-    // 升级效果：失去的天意之力从 3 减少到 2
-    protected override void OnUpgrade()
-    {
-        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
     }
 
     // 打出时的效果逻辑
@@ -66,10 +47,6 @@ public class HeavenlyTroops : NewsanguoCardTemplate
 
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
-
-        // 失去天意之力
-        int lostAmount = DynamicVars["HeavensForcePower"].IntValue;
-        await HeavensForce.Add(choiceContext, base.Owner, -lostAmount, this);
 
         // 附加“天降雄兵”能力：经过 2 次玩家回合结束后，将对应数量的士兵加入手牌。
         // 升级后改为“天降雄兵+”，发放升级版“士兵+”。

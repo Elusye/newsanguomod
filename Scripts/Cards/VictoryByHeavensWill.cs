@@ -27,7 +27,7 @@ public class VictoryByHeavensWill : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：每回合开始时获得 2 点天意之力（升级不改变数值，改为获得“固有”）
+    // 每回合开始时获得 2 点天意之力，升级后提高到 3 点。
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new PowerVar<VictoryByHeavensWillPower>(2m)
     ];
@@ -65,13 +65,7 @@ public class VictoryByHeavensWill : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 升级：获得“固有”（战斗开始时该牌必定在手牌中）
-        AddKeyword(CardKeyword.Innate);
+        DynamicVars["VictoryByHeavensWillPower"].UpgradeValueBy(1m);
     }
 
-    // 降级后的效果逻辑（升级被移除或回退时调用）
-    protected override void AfterDowngraded()
-    {
-        RemoveKeyword(CardKeyword.Innate);
-    }
 }

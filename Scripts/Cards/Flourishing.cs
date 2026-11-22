@@ -2,6 +2,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Factories;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 using newsanguo.Scripts.Characters;
@@ -33,13 +34,20 @@ public sealed class Flourishing : NewsanguoCardTemplate
             ModelDb.Card<NoReturn>(),
             ModelDb.Card<MyThreeGenerals>()
         ];
-        int index = Owner.RunState.Rng.CombatCardGeneration.NextInt(pool.Length);
-        var generated = CombatState!.CreateCard(pool[index], Owner);
-        if (generated is not TerritoryCardTemplate)
-            generated.SetToFreeThisTurn();
+        List<CardModel> options = CardFactory.GetDistinctForCombat(
+            Owner, pool, 3, Owner.RunState.Rng.CombatCardGeneration).ToList();
+        CardModel? selected = await CardSelectCmd.FromChooseACardScreen(
+            choiceContext, options, Owner, canSkip: false);
+        if (selected is null)
+            return;
 
-        await CardPileCmd.AddGeneratedCardToCombat(generated, PileType.Hand, Owner);
+        if (selected is not TerritoryCardTemplate)
+            selected.SetToFreeThisTurn();
+
+        await CardPileCmd.AddGeneratedCardToCombat(selected, PileType.Hand, Owner);
     }
 
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
+    protected override void OnUpgrade() => RemoveKeyword(CardKeyword.Exhaust);
+
+    protected override void AfterDowngraded() => AddKeyword(CardKeyword.Exhaust);
 }

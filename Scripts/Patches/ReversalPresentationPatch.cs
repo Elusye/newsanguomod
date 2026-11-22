@@ -21,6 +21,7 @@ public static class ReversalPresentation
         WeakPower => "WEAK",
         VulnerablePower => "VULNERABLE",
         FrailPower => "FRAIL",
+        TaintedPower => "TAINTED",
         _ => null
     };
 

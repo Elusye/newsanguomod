@@ -21,6 +21,7 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(ShuHanCardPool))]
 public class WhyPickThatUp : NewsanguoCardTemplate
 {
+    public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"

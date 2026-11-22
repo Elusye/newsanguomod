@@ -21,8 +21,6 @@ public class PartyOn : NewsanguoCardTemplate
 {
     public override bool CanBeGeneratedByModifiers => Pool is not RetiredCardPool;
     public override bool CanBeGeneratedInCombat => Pool is not RetiredCardPool;
-    public override IEnumerable<CardKeyword> CanonicalKeywords =>
-        BalanceAdjustments.Enabled ? [CardKeyword.Exhaust, .. base.CanonicalKeywords] : base.CanonicalKeywords;
 
 
     // 卡图资源
@@ -30,10 +28,10 @@ public class PartyOn : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：本回合获得的能量 1、抽牌数 2（升级后能量 2）
+    // 卡牌基础数值：本回合获得的能量 1、抽牌数 3（升级后能量 2、抽牌数 4）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new EnergyVar(1),
-        new CardsVar(2)
+        new CardsVar(3)
     ];
 
     // 悬停提示：展示能量
@@ -71,7 +69,6 @@ public class PartyOn : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 能量从 1 提高到 2
-        DynamicVars.Energy.UpgradeValueBy(1);
+        DynamicVars.Cards.UpgradeValueBy(1);
     }
 }

@@ -31,10 +31,10 @@ public class StarryNight : NeutralCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：获得 6 点格挡，本回合 2 点敏捷
+    // 卡牌基础数值：获得 6 点格挡，本回合 3 点敏捷
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new BlockVar(6, ValueProp.Move),
-        new PowerVar<DexterityPower>(2m)
+        new PowerVar<DexterityPower>(3m)
     ];
 
     // 鼠标悬停时显示格挡与敏捷提示
@@ -75,7 +75,7 @@ public class StarryNight : NeutralCardTemplate
     {
         // 格挡从 6 提高到 8
         DynamicVars.Block.UpgradeValueBy(2);
-        // 敏捷从 2 提高到 3
+        // 敏捷从 3 提高到 4
         DynamicVars.Dexterity.UpgradeValueBy(1);
     }
 }

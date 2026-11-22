@@ -31,9 +31,9 @@ public class NeverHadThese : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：获得 8（11）点格挡；每消耗一张非攻击牌获得 1（普通规则下升级为 2）点天意之力
+    // 每消耗一张非攻击手牌，获得 3（升级后 4）点格挡和 1 点天意之力。
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new BlockVar(8, ValueProp.Move),
+        new BlockVar(3, ValueProp.Move),
         new HeavensForceVar(1m)
     ];
 
@@ -64,9 +64,6 @@ public class NeverHadThese : NewsanguoCardTemplate
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
-        // 获得 8（11）点格挡（先于消耗）
-        await CreatureCmd.GainBlock(base.Owner.Creature, DynamicVars.Block, cardPlay, fast: false);
-
         // 收集手牌中的所有非攻击牌
         List<CardModel> nonAttackCards = PileType.Hand.GetPile(base.Owner).Cards
             .Where(card => card.Type != CardType.Attack)
@@ -82,15 +79,17 @@ public class NeverHadThese : NewsanguoCardTemplate
         // 消耗手牌中的所有非攻击牌
         foreach (CardModel card in nonAttackCards)
         {
+            if (card.Pile?.Type != PileType.Hand)
+                continue;
             await CardCmd.Exhaust(choiceContext, card);
+            await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay, fast: false);
+            await HeavensForce.Add(choiceContext, Owner, heavensForcePerCard, this);
         }
-
-        await HeavensForce.Add(choiceContext, base.Owner, heavensForcePerCard * nonAttackCards.Count, this);
     }
 
     // 升级仅提升格挡。
     protected override void OnUpgrade()
     {
-        DynamicVars.Block.UpgradeValueBy(3);
+        DynamicVars.Block.UpgradeValueBy(1);
     }
 }

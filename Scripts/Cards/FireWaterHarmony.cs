@@ -20,7 +20,8 @@ public class FireWaterHarmony : NewsanguoCardTemplate
         HoverTipFactory.FromPower<ReversalPower>(),
         HoverTipFactory.FromPower<WeakPower>(),
         HoverTipFactory.FromPower<VulnerablePower>(),
-        HoverTipFactory.FromPower<FrailPower>()
+        HoverTipFactory.FromPower<FrailPower>(),
+        HoverTipFactory.FromPower<TaintedPower>()
     ];
     public FireWaterHarmony() : base(2, CardType.Power, CardRarity.Uncommon, TargetType.Self) { }
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)

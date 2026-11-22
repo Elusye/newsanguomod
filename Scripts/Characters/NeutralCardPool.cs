@@ -14,8 +14,6 @@ public class NeutralCardPool : TypeListCardPoolModel
     internal static void RegisterSharedCards()
     {
         var content = STS2RitsuLib.Content.ModContentRegistry.For(Entry.ModId);
-        content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.ThirstyAxe>();
-        content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.ThirstyAxe>();
         content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.StandardCamp>();
         content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.StandardCamp>();
         content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.SecretStratagem>();
@@ -24,8 +22,6 @@ public class NeutralCardPool : TypeListCardPoolModel
         content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.ThrowHimOut>();
         content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.StarryNight>();
         content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.StarryNight>();
-        content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.CheckThePremiere>();
-        content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.CheckThePremiere>();
         content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.ThreeBlades>();
         content.RegisterCard<ShuHanCardPool, newsanguo.Scripts.Cards.ThreeBlades>();
         content.RegisterCard<NewsanguoCardPool, newsanguo.Scripts.Cards.QuakeBeforeMe>();

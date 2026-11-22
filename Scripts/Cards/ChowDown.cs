@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Commands.Builders;
@@ -34,7 +35,7 @@ public class ChowDown : NewsanguoCardTemplate
         new HealVar(2m)
     ];
 
-    public ChowDown() : base(1, CardType.Attack, CardRarity.Token, TargetType.AnyEnemy)
+    public ChowDown() : base(0, CardType.Attack, CardRarity.Token, TargetType.AnyEnemy)
     {
     }
 
@@ -46,11 +47,19 @@ public class ChowDown : NewsanguoCardTemplate
         // 播放出牌音效
         NewsanguoSfx.Play("event:/newsanguo/sfx/chow_down");
 
+        Player[] players = CombatState!.Players.Where(p => p.Creature.IsAlive).ToArray();
+
         // 造成伤害并回复生命
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).Targeting(cardPlay.Target)
             .WithHitFx("vfx/vfx_bite", null, "blunt_attack.mp3")
             .Execute(choiceContext);
         await CreatureCmd.Heal(base.Owner.Creature, DynamicVars.Heal.BaseValue);
+
+        foreach (Player player in players)
+        {
+            CardModel copy = CreateCloneForPlayer(player);
+            await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Discard, Owner);
+        }
     }
 
     // 升级：伤害 7 → 8，回复 2 → 3

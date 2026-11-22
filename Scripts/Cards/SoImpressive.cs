@@ -122,7 +122,6 @@ public class SoImpressive : NeutralCardTemplate
     }
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        bool exhaust = false;
         if (_copiedTarget is { } source)
         {
             // 与 History Course 相同，复制品保留升级和附魔，自动选择目标。
@@ -130,15 +129,11 @@ public class SoImpressive : NeutralCardTemplate
             using (var playback = NewsanguoSfx.CapturePlayback())
             {
                 await CardCmd.AutoPlay(choiceContext, copy, null);
-                exhaust = BalanceAdjustments.Enabled && !IsDupe && copy.Type == CardType.Power &&
-                    CombatManager.Instance.History.CardPlaysFinished.Any(entry => entry.CardPlay.Card == copy);
                 await playback.WaitAsync(leadSeconds: 0.5);
             }
         }
         NewsanguoSfx.Play("event:/newsanguo/sfx/so_impressive");
 
-        if (exhaust && Pile?.Type == PileType.Play && !CombatManager.Instance.IsOverOrEnding)
-            await CardCmd.Exhaust(choiceContext, this);
     }
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

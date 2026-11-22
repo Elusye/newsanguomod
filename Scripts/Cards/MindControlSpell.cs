@@ -31,9 +31,9 @@ public class MindControlSpell : NewsanguoCardTemplate
     // 卡牌自带“消耗”关键词（合并 base 以保留模板附加的模组关键词）
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
-    // 卡牌基础数值：失去 5 点天意之力（变量用正值，打出时取负）
+    // 卡牌基础数值：失去 4 点天意之力（变量用正值，打出时取负）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new HeavensForceVar(5m),
+        new HeavensForceVar(4m),
         new PowerVar<BewildermentPower>(2m)
     ];
 
@@ -85,8 +85,6 @@ public class MindControlSpell : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 失去的天意之力从 5 减少到 4
-        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
         DynamicVars["BewildermentPower"].UpgradeValueBy(1);
     }
 }

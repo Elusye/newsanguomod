@@ -29,9 +29,9 @@ public class BladesOfVirtue : NewsanguoCardTemplate, IAttackHitHookListener
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：分两段各造成 3 点伤害；给予目标 1 层虚弱、1 层易伤
+    // 卡牌基础数值：分两段各造成 4 点伤害；给予目标 1 层虚弱、1 层易伤
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(3, ValueProp.Move),
+        new DamageVar(4, ValueProp.Move),
         new PowerVar<WeakPower>(1m),
         new PowerVar<VulnerablePower>(1m)
     ];
@@ -123,7 +123,7 @@ public class BladesOfVirtue : NewsanguoCardTemplate, IAttackHitHookListener
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 每次伤害从 3 提高到 5
+        // 每次伤害从 4 提高到 6
         DynamicVars.Damage.UpgradeValueBy(2);
     }
 }

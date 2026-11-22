@@ -27,8 +27,8 @@ public class Divination : NewsanguoCardTemplate
     );
 
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new HeavensForceVar(2m),
-        new CardsVar(1)
+        new HeavensForceVar(3m),
+        new CardsVar(2)
     ];
 
     // 鼠标悬停时显示天意之力与天意侵蚀提示
@@ -63,6 +63,6 @@ public class Divination : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        DynamicVars["Cards"].UpgradeValueBy(1);
+        DynamicVars["HeavensForcePower"].UpgradeValueBy(1);
     }
 }

@@ -19,6 +19,9 @@ public class WineIsTheOldHero : NewsanguoCardTemplate
 {
     public override bool GainsBlock => true;
 
+    public override IEnumerable<CardKeyword> CanonicalKeywords =>
+        [CardKeyword.Exhaust, .. base.CanonicalKeywords];
+
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");
 
@@ -54,5 +57,10 @@ public class WineIsTheOldHero : NewsanguoCardTemplate
         await PowerCmd.Apply<WineIsTheOldHeroPower>(choiceContext, Owner.Creature, 1, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
+    protected override void OnUpgrade()
+    {
+        RemoveKeyword(CardKeyword.Exhaust);
+    }
+
+    protected override void AfterDowngraded() => AddKeyword(CardKeyword.Exhaust);
 }

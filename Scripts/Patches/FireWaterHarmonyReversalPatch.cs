@@ -29,3 +29,13 @@ public static class FireWaterHarmonyFrailPatch
 {
     public static void Postfix(FrailPower __instance, ref decimal __result) => FireWaterHarmonyReversal.Apply(__instance, ref __result);
 }
+
+[HarmonyPatch(typeof(TaintedPower), nameof(TaintedPower.ModifyDamageAdditive))]
+public static class FireWaterHarmonyTaintedPatch
+{
+    public static void Postfix(TaintedPower __instance, ref decimal __result)
+    {
+        if (ReversalPresentation.IsActive(__instance))
+            __result = -__result;
+    }
+}

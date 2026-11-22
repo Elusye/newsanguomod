@@ -1,4 +1,5 @@
 using MegaCrit.Sts2.Core.Commands;
+using newsanguo.Scripts.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
@@ -18,9 +19,9 @@ public class IronChainFleet : NewsanguoCardTemplate
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: "res://newsanguo/images/cards/IronChainFleet.png");
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<IronChainFleetPower>(2m)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<IronChainFleetPower>(1m)];
 
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<DexterityPower>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HeavensForce.HoverTip()];
 
     public IronChainFleet() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self) { }
 
@@ -31,5 +32,5 @@ public class IronChainFleet : NewsanguoCardTemplate
             DynamicVars["IronChainFleetPower"].IntValue, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars["IronChainFleetPower"].UpgradeValueBy(1m);
+    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }

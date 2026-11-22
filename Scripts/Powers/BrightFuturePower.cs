@@ -1,3 +1,5 @@
+using MegaCrit.Sts2.Core.CardSelection;
+using MegaCrit.Sts2.Core.Localization;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,16 +39,18 @@ public class BrightFuturePower : ModPowerTemplate
         var candidates = ModelDb.AllCards.Where(IsCandidate).DistinctBy(card => card.Id)
             .OrderBy(card => card.Id.ToString(), StringComparer.Ordinal).ToList();
         if (candidates.Count == 0) return;
-        // 固定本次触发张数；若随机打出前途灿烂，新层数从下次回合开始生效。
-        int count = Amount;
-        for (int i = 0; i < count; i++)
+        if (Owner.CombatState is not { } combat) return;
+        int count = Math.Min(Amount, candidates.Count);
+        var options = candidates.Select(card => combat.CreateCard(card, player)).ToList();
+        foreach (var card in options)
         {
-            if (!Owner.IsAlive || CombatManager.Instance.IsOverOrEnding || Owner.CombatState is not { } combat)
-                break;
-            var canonical = candidates[player.RunState.Rng.CombatCardGeneration.NextInt(candidates.Count)];
-            var card = combat.CreateCard(canonical, player);
-            Flash();
-            await CardCmd.AutoPlay(context, card, null);
+            card.AddKeyword(CardKeyword.Ethereal);
+            card.SetToFreeThisTurn();
         }
+        var selected = (await CardSelectCmd.FromSimpleGrid(context, options, player,
+            new CardSelectorPrefs(new LocString("cards", "NEWSANGUO_CARD_SELECT_ANY"), count))).ToList();
+        Flash();
+        foreach (var card in selected)
+            await CardPileCmd.AddGeneratedCardToCombat(card, PileType.Hand, player);
     }
 }

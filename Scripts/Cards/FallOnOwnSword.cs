@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Cards;
+using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Cards.DynamicVars;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -26,17 +27,18 @@ public class FallOnOwnSword : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：获得的能量、抽牌数、本回合内每打出一张牌对自己造成的伤害
+    // 卡牌基础数值：获得的能量、抽牌数、本回合内每打出一张牌获得的污染层数
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new EnergyVar(2),
         new CardsVar(3),
-        new DynamicVar("HpCostPerCard", 2m)
+        new PowerVar<TaintedPower>(3m)
     ];
 
     // 卡牌自带“消耗”关键词（合并 base 以保留模板附加的模组关键词）
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.ForEnergy(this)];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
+        [HoverTipFactory.ForEnergy(this), HoverTipFactory.FromPower<TaintedPower>()];
 
     public FallOnOwnSword() : base(0, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {
@@ -57,11 +59,8 @@ public class FallOnOwnSword : NewsanguoCardTemplate
         // 抽牌
         await CardPileCmd.Draw(choiceContext, DynamicVars["Cards"].IntValue, base.Owner);
 
-        // 附加“本回合死亡律动”能力：本回合内每打出一张牌，对自己造成 HpCostPerCard 点伤害（只持续本回合）。
-        // 同一回合多次打出会叠加 Amount（两张即为每张 4 点），但不会延长持续时间；
-        // 能力内部“打出前登记、打出后核销”，因此附加它的这张牌自己不会触发
-        //（同回合再打第二张时，会被第一张留下的那个能力实例算进去）。
-        await PowerCmd.Apply<BeatOfDeathPower>(choiceContext, base.Owner.Creature, DynamicVars["HpCostPerCard"].IntValue, base.Owner.Creature, this);
+        // 本回合后续每打出一张牌获得污染，本牌自身不触发新施加的能力。
+        await PowerCmd.Apply<BeatOfDeathPower>(choiceContext, base.Owner.Creature, DynamicVars["TaintedPower"].IntValue, base.Owner.Creature, this);
     }
 
     // 升级：抽牌 3 → 5

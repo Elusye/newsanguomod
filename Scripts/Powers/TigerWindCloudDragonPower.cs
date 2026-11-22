@@ -15,15 +15,6 @@ namespace newsanguo.Scripts.Powers;
 [RegisterPower]
 public class TigerWindCloudDragonPower : ModPowerTemplate
 {
-    public override MegaCrit.Sts2.Core.Localization.LocString Description
-    {
-        get
-        {
-            var description = base.Description;
-            description.Add("BalanceAdjustments", newsanguo.Scripts.Settings.BalanceAdjustments.Enabled);
-            return description;
-        }
-    }
 
     public override PowerType Type => PowerType.Buff;
     // 叠加方式：计数器，Amount 表示额外重放次数（每打出一次“风从虎，云从龙”叠加）
@@ -48,7 +39,7 @@ public class TigerWindCloudDragonPower : ModPowerTemplate
 
     public override Task BeforeCardPlayed(CardPlay cardPlay)
     {
-        if (!BalanceAdjustments.Enabled && Owner.IsAlive &&
+        if (Owner.IsAlive &&
             cardPlay.Card is NewsanguoCardTemplate { IsTigerDragonCard: true } card &&
             card.Owner.Creature == Owner)
         {
@@ -59,16 +50,11 @@ public class TigerWindCloudDragonPower : ModPowerTemplate
 
     public override async Task AfterCardPlayed(PlayerChoiceContext context, CardPlay play)
     {
-        if (!BalanceAdjustments.Enabled && Owner.IsAlive &&
+        if (Owner.IsAlive &&
             GetInternalData<DrawData>().DrawCounts.Remove(play.Card, out int amount) && amount > 0)
         {
             await CardPileCmd.Draw(context, amount, play.Card.Owner);
         }
     }
 
-    public override int ModifyCardPlayCount(CardModel card, Creature? target, int playCount) =>
-        BalanceAdjustments.Enabled && card.Owner.Creature == Owner &&
-        card is (SmilingTiger or NewsanguoCardTemplate { IsTigerDragonCard: true })
-            ? playCount + Amount
-            : playCount;
 }

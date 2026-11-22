@@ -57,7 +57,7 @@ public class DragonOmen : NewsanguoCardTemplate
         // 播放角色施法动画
         await CreatureCmd.TriggerAnim(base.Owner.Creature, "Cast", base.Owner.Character.CastAnimDelay);
 
-        // 给予目标敌人 4（6）层帝王之征（单体给予）
+        // 给予目标敌人 4（7）层帝王之征（单体给予）
         await PowerCmd.Apply<DragonOmenPower>(
             choiceContext,
             cardPlay.Target,
@@ -71,7 +71,7 @@ public class DragonOmen : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 帝王之征层数从 4 提高到 6
-        DynamicVars["DragonOmenPower"].UpgradeValueBy(2);
+        // 帝王之征层数从 4 提高到 7
+        DynamicVars["DragonOmenPower"].UpgradeValueBy(3);
     }
 }

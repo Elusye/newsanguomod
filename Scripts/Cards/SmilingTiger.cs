@@ -31,9 +31,9 @@ public class SmilingTiger : NeutralCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：获得 4 点格挡
+    // 卡牌基础数值：获得 3 点格挡
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new BlockVar(4, ValueProp.Move)
+        new BlockVar(3, ValueProp.Move)
     ];
 
     // 卡牌自带“消耗”关键词
@@ -44,7 +44,7 @@ public class SmilingTiger : NeutralCardTemplate
         HoverTipFactory.Static(StaticHoverTip.Block)
     ];
 
-    public SmilingTiger() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
+    public SmilingTiger() : base(0, CardType.Skill, CardRarity.Common, TargetType.Self)
     {
     }
 
@@ -78,7 +78,7 @@ public class SmilingTiger : NeutralCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 格挡从 4 提高到 6
+        // 格挡从 3 提高到 5
         DynamicVars.Block.UpgradeValueBy(2);
     }
 }

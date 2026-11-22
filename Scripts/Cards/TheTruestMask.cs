@@ -27,7 +27,7 @@ public class TheTruestMask : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 7 点伤害，攻击 2 次（升级后 11）；给予所有敌人 2 层虚弱与易伤
+    // 卡牌基础数值：造成 7 点伤害，攻击 2 次（升级后 10）；给予所有敌人 2 层虚弱与易伤
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(7m, ValueProp.Move),
         new RepeatVar(2),
@@ -83,7 +83,7 @@ public class TheTruestMask : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 每次伤害从 7 提高到 11
-        DynamicVars.Damage.UpgradeValueBy(4m);
+        // 每次伤害从 7 提高到 10
+        DynamicVars.Damage.UpgradeValueBy(3m);
     }
 }

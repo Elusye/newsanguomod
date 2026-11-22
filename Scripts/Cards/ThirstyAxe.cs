@@ -13,8 +13,8 @@ using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Powers;
 namespace newsanguo.Scripts.Cards;
 
-[RegisterCard(typeof(NeutralCardPool))]
-public class ThirstyAxe : NeutralCardTemplate
+[RegisterCard(typeof(ShuHanCardPool))]
+public class ThirstyAxe : NewsanguoCardTemplate
 {
     public ThirstyAxe() : base(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy) { }
     public override CardAssetProfile AssetProfile => new(

@@ -36,10 +36,10 @@ public class HeavenlyDeluge : NewsanguoCardTemplate
     // 属于“天意”体系（涉及天意之力）
     public override bool IsHeavensCard => true;
 
-    // 卡牌基础数值：对所有敌人造成 20（升级 26）点伤害；失去 5（升级 4）点天意之力
+    // 卡牌基础数值：对所有敌人造成 20（升级 26）点伤害；失去 3（升级 2）点天意之力
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(20m, ValueProp.Move),
-        new HeavensForceVar(5m)
+        new HeavensForceVar(3m)
     ];
 
     // 悬停提示：展示“天意之力”与“天意侵蚀”说明
@@ -52,7 +52,7 @@ public class HeavenlyDeluge : NewsanguoCardTemplate
     {
     }
 
-    // 升级后的效果逻辑：伤害 20 → 26；失去的天意之力 5 → 4
+    // 升级后的效果逻辑：伤害 20 → 26；失去的天意之力 3 → 2
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(6m);

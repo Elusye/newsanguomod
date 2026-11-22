@@ -20,8 +20,6 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public sealed class ExecuteYuanShao : NewsanguoCardTemplate
 {
-    public override bool IsHeavensCard => true;
-    public override bool LosesHeavensForce => true;
 
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: "res://newsanguo/images/cards/ExecuteYuanShao.png");
@@ -29,11 +27,9 @@ public sealed class ExecuteYuanShao : NewsanguoCardTemplate
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [
         new DynamicVar("ExecuteThreshold", 25m),
-        new HeavensForceVar(5m),
         new DamageVar(12m, ValueProp.Move)
     ];
 
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HeavensForce.HoverTip()];
 
     public ExecuteYuanShao() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy) { }
 
@@ -58,7 +54,6 @@ public sealed class ExecuteYuanShao : NewsanguoCardTemplate
                 var vfx = target.GetVfxContainer();
                 vfx?.AddChildSafely(NBigSlashVfx.Create(target));
                 vfx?.AddChildSafely(NBigSlashImpactVfx.Create(target));
-                await HeavensForce.Add(choiceContext, Owner, -DynamicVars["HeavensForcePower"].IntValue, this);
                 if (target.IsAlive)
                     await CreatureCmd.SetCurrentHp(target, 0m);
             }
@@ -103,7 +98,6 @@ public sealed class ExecuteYuanShao : NewsanguoCardTemplate
 
     protected override void OnUpgrade()
     {
-        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1m);
         DynamicVars.Damage.UpgradeValueBy(4m);
     }
 }

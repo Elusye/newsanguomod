@@ -28,13 +28,13 @@ public class ZhouYafu : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：获得 8 点格挡
+    // 卡牌基础数值：获得 7 点格挡
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new BlockVar(8, ValueProp.Move)
+        new BlockVar(7, ValueProp.Move)
     ];
 
     // 卡牌自带“消耗”关键词
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, CardKeyword.Retain];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     public ZhouYafu() : base(0, CardType.Skill, CardRarity.Token, TargetType.Self)
     {
@@ -45,14 +45,11 @@ public class ZhouYafu : NewsanguoCardTemplate
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/zhou_yafu");
 
-        // 获得 8 点格挡
+        // 获得 7 点格挡
         await CreatureCmd.GainBlock(base.Owner.Creature, DynamicVars.Block, cardPlay, fast: false);
     }
 
-    // 升级后的效果逻辑
-    protected override void OnUpgrade()
-    {
-        // 格挡 8 → 11
-        DynamicVars.Block.UpgradeValueBy(3);
-    }
+    protected override void OnUpgrade() => AddKeyword(CardKeyword.Retain);
+
+    protected override void AfterDowngraded() => RemoveKeyword(CardKeyword.Retain);
 }

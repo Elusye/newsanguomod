@@ -29,9 +29,9 @@ public class SlamTheBowl : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 10（升级 12）点伤害
+    // 卡牌基础数值：造成 8（升级 12）点伤害
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(10, ValueProp.Move)
+        new DamageVar(8, ValueProp.Move)
     ];
 
     public SlamTheBowl() : base(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
@@ -86,7 +86,7 @@ public class SlamTheBowl : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 伤害从 10 提高到 12
-        DynamicVars.Damage.UpgradeValueBy(2);
+        // 伤害从 8 提高到 12
+        DynamicVars.Damage.UpgradeValueBy(4);
     }
 }

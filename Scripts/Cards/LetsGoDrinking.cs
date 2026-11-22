@@ -1,4 +1,4 @@
-using newsanguo.Scripts.Settings;
+using MegaCrit.Sts2.Core.Models.Powers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
@@ -22,17 +22,20 @@ public sealed class LetsGoDrinking : NewsanguoCardTemplate
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: "res://newsanguo/images/cards/LetsGoDrinking.png");
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords =>
-        BalanceAdjustments.Enabled ? [CardKeyword.Exhaust, .. base.CanonicalKeywords] : base.CanonicalKeywords;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<DrunkenMightPower>(BalanceAdjustments.Enabled ? 9m : 6m),
-            new DynamicVar("EnemyDrunkenMight", BalanceAdjustments.Enabled ? 1m : 2m)];
+        [new PowerVar<DrunkenMightPower>(6m),
+            new PowerVar<ToABiggerGobletPower>(4m),
+            new PowerVar<StrengthPower>(1m)];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
-        [HoverTipFactory.FromPower<DrunkenMightPower>()];
+        [HoverTipFactory.FromPower<DrunkenMightPower>(), HoverTipFactory.FromPower<ToABiggerGobletPower>(), HoverTipFactory.FromPower<StrengthPower>()];
 
-    protected override void OnUpgrade() => DynamicVars["DrunkenMightPower"].UpgradeValueBy(2m);
+    protected override void OnUpgrade()
+    {
+        DynamicVars["DrunkenMightPower"].UpgradeValueBy(1m);
+        DynamicVars["ToABiggerGobletPower"].UpgradeValueBy(1m);
+    }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay play)
     {
@@ -40,10 +43,11 @@ public sealed class LetsGoDrinking : NewsanguoCardTemplate
         await PowerCmd.Apply<DrunkenMightPower>(context, Owner.Creature,
             DynamicVars["DrunkenMightPower"].IntValue, Owner.Creature, this);
 
+        await PowerCmd.Apply<ToABiggerGobletPower>(context, Owner.Creature,
+            DynamicVars["ToABiggerGobletPower"].IntValue, Owner.Creature, this);
+
         if (play.Target is not { IsAlive: true } enemy) return;
-        if (!BalanceAdjustments.Enabled)
-            await CreatureCmd.Stun(enemy);
-        await PowerCmd.Apply<DrunkenMightPower>(context, enemy,
-            DynamicVars["EnemyDrunkenMight"].IntValue, Owner.Creature, this);
+        await PowerCmd.Apply<StrengthPower>(context, enemy,
+            DynamicVars["StrengthPower"].IntValue, Owner.Creature, this);
     }
 }

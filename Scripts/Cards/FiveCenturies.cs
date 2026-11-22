@@ -16,7 +16,7 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class FiveCenturies : NewsanguoCardTemplate
 {
-    public FiveCenturies() : base(1, CardType.Skill, CardRarity.Rare, TargetType.Self) { }
+    public FiveCenturies() : base(0, CardType.Skill, CardRarity.Rare, TargetType.Self) { }
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: "res://newsanguo/images/cards/FiveCenturies.png");
     protected override bool IsScryCard => true;

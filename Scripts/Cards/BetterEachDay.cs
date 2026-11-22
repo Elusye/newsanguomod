@@ -48,14 +48,14 @@ public class BetterEachDay : NewsanguoCardTemplate
         // X = 本回合为打出此牌花费的能量
         int x = ResolveEnergyXValue();
 
-        // 升级加成：未升级 X+1，升级后 X+2
-        int bonus = IsUpgraded ? 2 : 1;
+        // 升级加成：未升级 X，升级后 X+1
+        int bonus = IsUpgraded ? 1 : 0;
 
         // 下一回合抽 X+bonus 张牌、获得 X+bonus 点能量（原版下回合能力）
         await PowerCmd.Apply<DrawCardsNextTurnPower>(choiceContext, base.Owner.Creature, x + bonus, base.Owner.Creature, this);
         await PowerCmd.Apply<EnergyNextTurnPower>(choiceContext, base.Owner.Creature, x + bonus, base.Owner.Creature, this);
     }
 
-    // 升级：不再移除“消耗”（该关键词常驻，见 CanonicalKeywords），而是把下回合的 X+1 提升为 X+2。
-    // 数值在 OnPlay 里按 IsUpgraded 结算，卡面文案用 {IfUpgraded:show:X+2|X+1} 切换，此处无需再改数值。
+    // 升级：不再移除“消耗”（该关键词常驻，见 CanonicalKeywords），而是把下回合的 X 提升为 X+1。
+    // 数值在 OnPlay 里按 IsUpgraded 结算，卡面文案用 {IfUpgraded:show:X+1|X} 切换，此处无需再改数值。
 }

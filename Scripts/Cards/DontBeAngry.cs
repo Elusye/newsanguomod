@@ -20,7 +20,7 @@ public class DontBeAngry : NewsanguoCardTemplate
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: "res://newsanguo/images/cards/DontBeAngry.png");
     public override bool GainsBlock => true;
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(5m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(4m, ValueProp.Move)];
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
         [HoverTipFactory.FromKeyword(CardKeyword.Exhaust), HoverTipFactory.Static(StaticHoverTip.Block)];
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(2m);

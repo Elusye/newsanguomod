@@ -20,7 +20,7 @@ public class SlayTheThiefLuBu : NewsanguoCardTemplate
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(7m, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(5m, ValueProp.Move)];
 
     public SlayTheThiefLuBu() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy) { }
 
@@ -61,5 +61,5 @@ public class SlayTheThiefLuBu : NewsanguoCardTemplate
         return location;
     }
 
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2m);
 }

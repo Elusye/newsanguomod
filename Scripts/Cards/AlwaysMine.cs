@@ -32,32 +32,13 @@ public class AlwaysMine : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    public override bool IsEmberCard => true;
     public override bool IsHeavensCard => true;
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Sly, .. base.CanonicalKeywords];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Sly, CardKeyword.Exhaust, .. base.CanonicalKeywords];
     protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(1), new HeavensForceVar(2m)];
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
-        HeavensForce.HoverTip(), HoverTipFactory.FromPower<HeavensDecayPower>()
+        HeavensForce.HoverTip()
     ];
-    private bool _resolvingEmber;
-
     public AlwaysMine() : base(1, CardType.Skill, CardRarity.Common, TargetType.Self) { }
-
-    public override async Task AfterCardExhausted(PlayerChoiceContext choiceContext, CardModel card, bool causedByEthereal)
-    {
-        if (card != this || _resolvingEmber)
-            return;
-        _resolvingEmber = true;
-        try
-        {
-            // 打出本体，结算后按正常规则进入弃牌堆；不生成复制品。
-            await CardCmd.AutoPlay(choiceContext, this, null);
-        }
-        finally
-        {
-            _resolvingEmber = false;
-        }
-    }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -98,9 +79,11 @@ public class AlwaysMine : NewsanguoCardTemplate
         await CardPileCmd.Add(selectedList, PileType.Hand);
     }
 
-    // 升级：从弃牌堆拿回的张数 1 → 2
+    // 升级：天意之力 +1，去除消耗
     protected override void OnUpgrade()
     {
-        DynamicVars.Cards.UpgradeValueBy(1m);
+        DynamicVars["HeavensForcePower"].UpgradeValueBy(1m);
+        RemoveKeyword(CardKeyword.Exhaust);
     }
+    protected override void AfterDowngraded() => AddKeyword(CardKeyword.Exhaust);
 }

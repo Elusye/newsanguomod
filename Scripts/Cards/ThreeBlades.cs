@@ -32,9 +32,9 @@ public class ThreeBlades : NeutralCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 9（升级 12）点伤害 3 次
+    // 卡牌基础数值：造成 8（升级 11）点伤害 3 次
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(9, ValueProp.Move),
+        new DamageVar(8, ValueProp.Move),
         new RepeatVar(3)
     ];
 
@@ -90,7 +90,7 @@ public class ThreeBlades : NeutralCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 伤害从 9 提高到 12
+        // 伤害从 8 提高到 11
         DynamicVars.Damage.UpgradeValueBy(3);
     }
 }

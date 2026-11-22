@@ -34,10 +34,10 @@ public class LongevitySpell : NewsanguoCardTemplate
     // 卡牌自带“消耗”关键词（合并 base 以保留模板附加的模组关键词）
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust, .. base.CanonicalKeywords];
 
-    // 卡牌基础数值：失去 5 点天意之力（升级后 4）；抽 3 张牌（升级后 5）
+    // 卡牌基础数值：失去 6 点天意之力；抽 3 张牌（升级后 5）
     // HeavensForceVar：被“魔法禁术目录”标记的回合内，卡面显示 0 点
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new HeavensForceVar(5m),
+        new HeavensForceVar(6m),
         new CardsVar(3)
     ];
 
@@ -55,7 +55,7 @@ public class LongevitySpell : NewsanguoCardTemplate
 
 
     public LongevitySpell() :
-        base(2, CardType.Skill, CardRarity.Rare, TargetType.Self)
+        base(0, CardType.Skill, CardRarity.Rare, TargetType.Self)
     {
     }
 
@@ -74,7 +74,7 @@ public class LongevitySpell : NewsanguoCardTemplate
         // 失去天意之力后抽牌
         await CardPileCmd.Draw(choiceContext, DynamicVars["Cards"].IntValue, base.Owner);
 
-        // 选择任意张手牌中无附魔、自带“消耗”关键词的牌，附加“灵魂”附魔（移除其消耗）
+        // 选择至多 3 张手牌中无附魔、自带“消耗”关键词的牌，附加“灵魂”附魔（移除其消耗）
         List<CardModel> selectableCards = PileType.Hand.GetPile(base.Owner).Cards
             .Where(card => EnchantHelper.CanReceiveCardGrantedEnchantment(card) && card.Keywords.Contains(CardKeyword.Exhaust))
             .ToList();
@@ -84,7 +84,7 @@ public class LongevitySpell : NewsanguoCardTemplate
         }
 
         List<CardModel> selected = (await CardSelectCmd.FromHand(
-            prefs: new CardSelectorPrefs(SelectionScreenPrompt, 0, selectableCards.Count),
+            prefs: new CardSelectorPrefs(SelectionScreenPrompt, 0, Math.Min(3, selectableCards.Count)),
             context: choiceContext,
             player: base.Owner,
             filter: selectableCards.Contains,
@@ -96,10 +96,9 @@ public class LongevitySpell : NewsanguoCardTemplate
         }
     }
 
-    // 升级后的效果逻辑：失去的天意之力 5 → 4、抽牌数 3 → 5
+    // 升级后的效果逻辑：抽牌数 3 → 5
     protected override void OnUpgrade()
     {
-        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1m);
         DynamicVars["Cards"].UpgradeValueBy(2m);
     }
 }

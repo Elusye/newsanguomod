@@ -27,7 +27,7 @@ public class TimeAcidRain : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");
     public override bool IsHeavensCard => true;
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new HeavensForceVar(5m), new DamageVar(10m, ValueProp.Move)
+        new HeavensForceVar(3m), new DamageVar(7m, ValueProp.Move)
     ];
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HeavensForce.HoverTip(),
@@ -40,12 +40,8 @@ public class TimeAcidRain : NewsanguoCardTemplate
     public TimeAcidRain() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies) { }
     protected override void OnUpgrade()
     {
-        AddKeyword(CardKeyword.Innate);
-        DynamicVars.Damage.UpgradeValueBy(3);
-        DynamicVars["HeavensForcePower"].UpgradeValueBy(-1);
+        DynamicVars.Damage.UpgradeValueBy(4);
     }
-
-    protected override void AfterDowngraded() => RemoveKeyword(CardKeyword.Innate);
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {

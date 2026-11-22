@@ -23,29 +23,13 @@ public class InvincibleWithinThreeHundredLi : TerritoryCardTemplate
         !CombatManager.Instance.IsOverOrEnding && TerritoryHandOrder.CanReposition(this);
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("ReplayAmount", 1m)];
     public int GrantedReplay => DynamicVars["ReplayAmount"].IntValue;
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => BalanceAdjustments.Enabled
-        ? base.AdditionalHoverTips
-        : [..base.AdditionalHoverTips, HoverTipFactory.Static(StaticHoverTip.ReplayDynamic, new DynamicVar("Times", GrantedReplay))];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [..base.AdditionalHoverTips, HoverTipFactory.Static(StaticHoverTip.ReplayDynamic, new DynamicVar("Times", GrantedReplay))];
 
     protected override void OnUpgrade()
     {
-        if (!BalanceAdjustments.Enabled)
-            DynamicVars["ReplayAmount"].UpgradeValueBy(1m);
+        DynamicVars["ReplayAmount"].UpgradeValueBy(1m);
     }
 
     public InvincibleWithinThreeHundredLi() : base(-1, CardRarity.Token) { }
 
-    public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props,
-        Creature? dealer, CardModel? cardSource, CardPlay? cardPlay) =>
-        BalanceAdjustments.Enabled && Pile?.Type == PileType.Hand && cardSource is not null &&
-        TerritoryDamageSnapshotPatch.GetNeighbor(cardSource) == this ? 2m : 1m;
-
-    public override Task AfterModifyingDamageAmount(CardModel? cardSource)
-    {
-        if (cardSource is not null)
-        {
-            TerritoryDamageSnapshotPatch.PlaySound(cardSource, this);
-        }
-        return Task.CompletedTask;
-    }
 }

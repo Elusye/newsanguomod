@@ -20,7 +20,7 @@ public class WellFedWellClothed : NeutralCardTemplate
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<DrunkenMightPower>(4m), new PowerVar<PlatedArmorPower>(4m)
+        new PowerVar<WellFedWellClothedPower>(3m), new PowerVar<PlatedArmorPower>(4m)
     ];
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         HoverTipFactory.FromPower<DrunkenMightPower>(),
@@ -32,15 +32,15 @@ public class WellFedWellClothed : NeutralCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/well_fed_well_clothed");
-        await PowerCmd.Apply<DrunkenMightPower>(choiceContext, Owner.Creature,
-            DynamicVars["DrunkenMightPower"].IntValue, Owner.Creature, this);
+        await PowerCmd.Apply<WellFedWellClothedPower>(choiceContext, Owner.Creature,
+            DynamicVars["WellFedWellClothedPower"].IntValue, Owner.Creature, this);
         await PowerCmd.Apply<PlatedArmorPower>(choiceContext, Owner.Creature,
             DynamicVars["PlatedArmorPower"].IntValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars["DrunkenMightPower"].UpgradeValueBy(2);
+        DynamicVars["WellFedWellClothedPower"].UpgradeValueBy(1);
         DynamicVars["PlatedArmorPower"].UpgradeValueBy(2);
     }
 }

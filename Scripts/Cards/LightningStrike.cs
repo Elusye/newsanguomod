@@ -24,9 +24,9 @@ public class LightningStrike : NewsanguoCardTemplate
     );
 
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(5m, ValueProp.Move),
         new ("PlayMax", 3m),
-        new HeavensForceVar(2m)
+        new HeavensForceVar(2m),
+        new DamageVar(5m, ValueProp.Move)
     ];
 
     protected override bool ShouldGlowGoldInternal => CanObtainForce;
@@ -63,12 +63,12 @@ public class LightningStrike : NewsanguoCardTemplate
         {
             NewsanguoSfx.Play("event:/newsanguo/sfx/lightning_strike");
             await Cmd.CustomScaledWait(0.1f, 0.2f);
+            await HeavensForce.Add(choiceContext, Owner, DynamicVars["HeavensForcePower"].IntValue, this);
             await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
                 .FromCard(this, cardPlay)
                 .Targeting(cardPlay.Target)
                 .WithHitFx("vfx/vfx_attack_lightning", null, "lightning_orb_evoke.mp3")
                 .Execute(choiceContext);
-            await HeavensForce.Add(choiceContext, Owner, DynamicVars["HeavensForcePower"].IntValue, this);
         }
         else
         {
@@ -83,7 +83,7 @@ public class LightningStrike : NewsanguoCardTemplate
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(3m);
         DynamicVars["PlayMax"].UpgradeValueBy(1m);
+        DynamicVars.Damage.UpgradeValueBy(1m);
     }
 }

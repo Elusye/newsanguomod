@@ -12,7 +12,7 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(NewsanguoCardPool))]
 public class RewardEveryEscape : NewsanguoCardTemplate
 {
-    public RewardEveryEscape() : base(2, CardType.Power, CardRarity.Uncommon, TargetType.Self) { }
+    public RewardEveryEscape() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.Self) { }
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: "res://newsanguo/images/cards/RewardEveryEscape.png");
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);

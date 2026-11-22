@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.ValueProps;
 using newsanguo.Scripts.Characters;
 using newsanguo.Scripts.Combat;
 using newsanguo.Scripts.Powers;
@@ -18,15 +19,16 @@ namespace newsanguo.Scripts.Cards;
 public class WorthAllTheirLives : NewsanguoCardTemplate
 {
     public override bool IsHeavensCard => true;
+    public override bool GainsBlock => true;
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png");
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new SummonVar(5)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new SummonVar(4), new BlockVar(7m, ValueProp.Move)];
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [
         RecruitKeyword.Recruit(DynamicVars.Summon), HeavensForce.HoverTip()
     ];
 
-    public WorthAllTheirLives() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self) { }
+    public WorthAllTheirLives() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self) { }
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
@@ -44,7 +46,12 @@ public class WorthAllTheirLives : NewsanguoCardTemplate
             }
             power.TrackSoldier(soldier);
         }
+        await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Summon.UpgradeValueBy(2);
+    protected override void OnUpgrade()
+    {
+        DynamicVars.Summon.UpgradeValueBy(1);
+        DynamicVars.Block.UpgradeValueBy(2);
+    }
 }

@@ -20,7 +20,10 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(ShuHanCardPool))]
 public class SwitchAllegiance : NewsanguoCardTemplate
 {
-    public SwitchAllegiance() : base(1, CardType.Skill, CardRarity.Rare, TargetType.Self) { }
+    public override IEnumerable<CardKeyword> CanonicalKeywords =>
+        [CardKeyword.Retain, .. base.CanonicalKeywords];
+
+    public SwitchAllegiance() : base(0, CardType.Skill, CardRarity.Rare, TargetType.Self) { }
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: "res://newsanguo/images/cards/SwitchAllegiance.png");
     protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(3)];
