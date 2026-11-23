@@ -64,7 +64,7 @@ public class DeafenMe : NewsanguoCardTemplate
     private int GetOmenAmount()
     {
         int debuffs = IsMutable && IsInCombat && Owner.PlayerCombatState is { } state
-            ? ZilongDebuffHistoryPatch.CountFor(state) : 0;
+            ? ZilongDebuffHistoryPatch.CountFor(state, CombatState!) : 0;
         return DynamicVars["DragonOmenPower"].IntValue + debuffs * DynamicVars["ExtraOmen"].IntValue;
     }
 

@@ -40,7 +40,9 @@ public static class BewildermentFacingPatch
         if (!GodotObject.IsInstanceValid(node) ||
             node.Visuals is not { } visuals || !GodotObject.IsInstanceValid(visuals) || !visuals.IsNodeReady())
             return;
-        bool flip = node.Entity.Side == CombatSide.Enemy &&
+        // 与原版缩小一致，特殊模型禁止通过缩放改变外观时不翻转。
+        bool flip = node.Entity.Monster?.CanChangeScale != false &&
+            node.Entity.Side == CombatSide.Enemy &&
             node.Entity.GetPower<BewildermentPower>() is { Amount: > 0 };
         Apply(visuals.Body, flip);
         Apply(visuals.GetNodeOrNull<Node2D>("%PhobiaModeVisuals"), flip);

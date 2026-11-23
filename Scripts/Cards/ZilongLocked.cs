@@ -19,6 +19,7 @@ namespace newsanguo.Scripts.Cards;
 public class ZilongLocked : NewsanguoCardTemplate
 {
     private int _discountApplied;
+    private object? _discountCombatState;
     private bool Unlocked => IsMutable && IsInCombat && EnergyCost.GetWithModifiers(CostModifiers.All) <= 1;
     private const string LockedArt = "res://newsanguo/images/cards/ZilongLocked.png";
     private const string UnlockedArt = "res://newsanguo/images/cards/ZhaoZilongOfChangshan.png";
@@ -53,6 +54,13 @@ public class ZilongLocked : NewsanguoCardTemplate
         if (Owner.PlayerCombatState is not { } state)
             return;
 
+        // 战斗费用修正会在战斗结束时清除，实例字段也必须按战斗重新计数。
+        // 战斗内克隆保留同一 state 与费用修正，避免重复减费。
+        if (!ReferenceEquals(_discountCombatState, Owner.Creature.CombatState))
+        {
+            _discountCombatState = Owner.Creature.CombatState;
+            _discountApplied = 0;
+        }
         int count = ZilongDebuffHistoryPatch.Track(state, this);
         int newlyGained = count - _discountApplied;
         if (newlyGained <= 0)

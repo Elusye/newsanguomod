@@ -29,6 +29,7 @@ public class Entry
         var harmony = new Harmony("newsanguo");
         ApplyPatch(harmony, typeof(TonyDefendBlockCapPatch));
         ApplyPatch(harmony, typeof(ZilongDebuffHistoryPatch));
+        ApplyPatch(harmony, typeof(ZilongDebuffBeforeChangePatch));
         ApplyPatch(harmony, typeof(FragileEnchantmentCombatEndPatch));
         TerritoryRightClick.Register();
         ApplyPatch(harmony, typeof(NewsanguoEnergyCounterPatch));

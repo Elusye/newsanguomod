@@ -19,6 +19,8 @@ namespace newsanguo.Scripts.Cards;
 [RegisterCard(typeof(StatusCardPool))]
 public class Lightweight : NewsanguoCardTemplate
 {
+    protected override bool ShouldGlowRedInternal => true;
+
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"

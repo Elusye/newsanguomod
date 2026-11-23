@@ -33,12 +33,8 @@ public class DesperateResolveShuPower : ModPowerTemplate
     public override async Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power,
         decimal amount, Creature? applier, CardModel? cardSource)
     {
-        if (power.Owner != Owner || !_before.Remove(power, out int before) ||
-            power.TypeForCurrentAmount != PowerType.Debuff) return;
-        // 正层数负面效果按增加触发；负层数（如永久缩小、负力量）按继续降低触发。
-        // 减层、归零、被人工制品抵消或没有实际变化均不触发。
-        bool gainedDebuff = amount > 0 && power.Amount > 0 && power.Amount > before ||
-            amount < 0 && power.Amount < 0 && power.Amount < System.Math.Min(before, 0);
+        if (power.Owner != Owner || !_before.Remove(power, out int before)) return;
+        bool gainedDebuff = newsanguo.Scripts.Patches.ZilongDebuffHistoryPatch.IsGainedDebuff(power, amount, before);
         if (gainedDebuff && Owner.IsAlive)
             await PowerCmd.Apply<DamageBoostPower>(choiceContext, Owner, 10m * Amount, Owner, cardSource);
     }

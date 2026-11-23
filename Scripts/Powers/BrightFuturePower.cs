@@ -1,5 +1,3 @@
-using MegaCrit.Sts2.Core.CardSelection;
-using MegaCrit.Sts2.Core.Localization;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -40,17 +38,15 @@ public class BrightFuturePower : ModPowerTemplate
             .OrderBy(card => card.Id.ToString(), StringComparer.Ordinal).ToList();
         if (candidates.Count == 0) return;
         if (Owner.CombatState is not { } combat) return;
-        int count = Math.Min(Amount, candidates.Count);
-        var options = candidates.Select(card => combat.CreateCard(card, player)).ToList();
-        foreach (var card in options)
+        int count = Amount;
+        Flash();
+        for (int i = 0; i < count; i++)
         {
+            var canonical = candidates[player.RunState.Rng.CombatCardGeneration.NextInt(candidates.Count)];
+            var card = combat.CreateCard(canonical, player);
             card.AddKeyword(CardKeyword.Ethereal);
             card.SetToFreeThisTurn();
-        }
-        var selected = (await CardSelectCmd.FromSimpleGrid(context, options, player,
-            new CardSelectorPrefs(new LocString("cards", "NEWSANGUO_CARD_SELECT_ANY"), count))).ToList();
-        Flash();
-        foreach (var card in selected)
             await CardPileCmd.AddGeneratedCardToCombat(card, PileType.Hand, player);
+        }
     }
 }

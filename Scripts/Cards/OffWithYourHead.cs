@@ -38,9 +38,9 @@ public class OffWithYourHead : NewsanguoCardTemplate
         new RepeatVar(2)
     ];
 
-    // 存在攻击意图的敌人时金色高亮，提示多段攻击分支。
+    // 存在非攻击意图的敌人时金色高亮，提示多段攻击分支。
     protected override bool ShouldGlowGoldInternal =>
-        base.CombatState?.HittableEnemies.Any(e => e.Monster?.IntendsToAttack == true) ?? false;
+        base.CombatState?.HittableEnemies.Any(e => e.Monster?.IntendsToAttack == false) ?? false;
 
     public OffWithYourHead() : base(0, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
@@ -51,13 +51,13 @@ public class OffWithYourHead : NewsanguoCardTemplate
     {
         ArgumentNullException.ThrowIfNull(cardPlay.Target, "cardPlay.Target");
 
-        // 攻击意图：攻击 2/3 次；其余意图：攻击 1 次。
+        // 非攻击意图：攻击 2/3 次；攻击意图：攻击 1 次。
         bool intendsToAttack = cardPlay.Target.Monster?.IntendsToAttack == true;
-        int hitCount = intendsToAttack ? DynamicVars["Repeat"].IntValue : 1;
+        int hitCount = !intendsToAttack ? DynamicVars["Repeat"].IntValue : 1;
 
         // 播放出牌音效：一次攻击与两次攻击使用不同的事件
         // 对应 FMOD 事件 event:/newsanguo/sfx/off_with_your_head / _double
-        if (!intendsToAttack)
+        if (intendsToAttack)
         {
             NewsanguoSfx.Play("event:/newsanguo/sfx/off_with_your_head");
         }
@@ -77,7 +77,7 @@ public class OffWithYourHead : NewsanguoCardTemplate
     // 升级后的效果逻辑
     protected override void OnUpgrade()
     {
-        // 升级提高攻击意图分支的攻击次数，单段伤害不变。
+        // 升级提高非攻击意图分支的攻击次数，单段伤害不变。
         DynamicVars["Repeat"].UpgradeValueBy(1);
     }
 }
