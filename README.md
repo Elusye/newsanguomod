@@ -4,40 +4,65 @@
 
 《杀戮尖塔 2》（Slay the Spire 2）的自定义角色/内容 mod，基于 [RitsuLib](https://steamcommunity.com/sharedfiles/filedetails/?id=3747602295) 框架开发。
 
+## 当前版本与下载
+
+- **版本：0.3.12-beta.1**（本仓库 `main` 为 Beta 开发分支）
+- **游戏：0.114.0**
+- **前置：RitsuLib 0.6.16 或更高版本**
+
+[下载可直接安装的 ZIP](https://github.com/Elusye/newsanguomod/releases/download/v0.3.12-beta.1/newsanguo-0.3.12-beta.1-sts2-0.114.0.zip) · [全部发布版本](https://github.com/Elusye/newsanguomod/releases) · [RitsuLib 下载](https://github.com/BAKAOLC/STS2-RitsuLib/releases/tag/v0.6.16)
+
+工坊更新审核期间，可从 GitHub Releases 下载已打包的版本，无需自行编译。请下载发布页的模组 ZIP，自动生成的 `Source code` 压缩包只有源码。
+
+## 安装与更新
+
+1. 关闭游戏。在 Steam 中选择游戏的“管理 → 浏览本地文件”，打开安装目录。
+2. 安装或更新 **RitsuLib ≥0.6.16**，使用与游戏版本匹配的安装包；已安装且满足版本要求时可跳过。
+3. 下载上方新三国 ZIP，将其中的 `newsanguo` 文件夹解压到游戏的 `mods` 文件夹，更新时覆盖同名文件。
+4. 启动游戏，在模组列表启用新三国及 RitsuLib。
+
+正确的文件结构：
+
+```text
+Slay the Spire 2/
+  mods/
+    newsanguo/
+      newsanguo.dll
+      newsanguo.json
+      newsanguo.pck
+```
+
+不要额外套一层同名文件夹。如果同时订阅了工坊版，请只启用一份新三国，避免重复加载。联机玩家应使用相同的模组文件；仅版本号相同不能保证文件一致。
+
+Release 分支针对其他游戏版本维护，不随 Beta 自动同步；旧游戏版本请使用对应的兼容版本。
+
 ## 内容总览
 
-- 两个角色：
-  - **曹魏**：默认可用
-  - **蜀汉**：施工中，默认不出现在角色选择界面，需在 mod 设置里打开「测试模式」（见下）
-- 126 张卡牌（曹魏卡池 / 蜀汉卡池，含 6 张「旧版」备份牌）
-- 10 件遗物、2 种药水、5 个事件、2 种怪物、40 余个能力
-- 中/英双语本地化（含 9 位先古的对话）
+- **曹魏、蜀汉**两个可玩角色，均可直接选择，无需开启测试模式。
+- 两个角色专属卡池，以及双方共有的中立牌。
+- 自定义遗物、药水、事件、怪物与能力。
+- 旧版卡牌衍生池，包含旧神话形态及旧版塔罗牌，可通过“看看首播版”等效果获得。
+- 中英文双语本地化与先古对话。
 
 ### 核心机制
 
 | 机制 | 说明 |
 | --- | --- |
-| 天意之力 | 资源型能力，卡牌获得/消耗，负值时部分卡牌有额外效果 |
-| 酒力 | 攻击加成资源，来自酒相关卡牌与初始遗物 |
-| 附魔系统 | 战斗内为手牌附加随机附魔（`EnchantHelper`） |
+| 天意之力 | 可获得与失去的资源，关联额外回合及天意侵蚀 |
+| 酒力 | 攻击加成资源，可与多种卡牌及能力互动 |
+| 募集 | 召唤优先承受攻击的青州兵，每位玩家最多15名 |
+| 地域牌 | 持有于手牌时生效，可右键消耗 |
+| 附魔 | 为卡牌赋予额外效果 |
 
-### 测试模式
+### 游戏内设置
 
-「蜀汉」仍在施工中，默认**不会**出现在角色选择界面，也不会被「随机角色」选中。打开方式：
+在 **设置 → Mod设置 → 新三国设置** 中可调整：
 
-**设置 → Mod 设置 → 新三国设置 → 测试模式**
+- 卡牌、能力和事件音效的开关与音量倍率。
+- 三国杀基础出牌音效开关。
+- **启用新三国mod事件**：默认开启，新跑局生效，联机以房主设置为准。
 
-- 默认关闭，开关状态落盘在游戏用户数据目录的 `newsanguo_test_mode.json`
-- 切换后**重新进入角色选择界面**即可生效，不需要重启游戏
-- 图鉴（卡牌总览）里的蜀汉卡池筛选项始终可见，关闭测试模式时也允许查阅卡牌
-
-同一设置页另有「音效音量」分区（卡牌/能力音效开关与倍率），并配有控制台命令 `newsanguo_sfx_volume`。
-
-## 安装
-
-1. 订阅安装 [RitsuLib](https://steamcommunity.com/sharedfiles/filedetails/?id=3747602295)（创意工坊物品 3747602295），或将其内容复制到 `mods\RitsuLib\` 使用
-2. 将本项目构建产物部署到 `mods\newsanguo\`（见下节）
-3. 启动游戏（主菜单勾选 mod）
+角色选择界面也有“新三国设置”入口。音量还可使用控制台命令 `newsanguo_sfx_volume` 调整。
 
 ## 构建与部署
 
@@ -104,11 +129,11 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\export-pck.ps1
 
 ### 5. 运行依赖
 
-- `newsanguo.json` 声明依赖 `STS2-RitsuLib >= 0.6.2`，游戏版本 `>= 0.111.0`
+- `newsanguo.json` 声明依赖 `STS2-RitsuLib >= 0.6.16`，游戏版本 `>= 0.114.0`
 
 ### 本地双开联机测试（无需 Steam）
 
-将 RitsuLib 工作坊内容完整复制到 `mods\RitsuLib\`（本地目录 mod 加载需要），然后：
+将 RitsuLib 工作坊内容完整复制到 `mods\STS2-RitsuLib\`（本地目录 mod 加载需要），然后：
 
 ```powershell
 # 主机
@@ -122,20 +147,20 @@ SlayTheSpire2.exe --fastmp join --force-steam off
 ```
 Scripts/
   Api/         跨 mod 公开 API（NewsanguoPublicApi）
-  Cards/       卡牌（126 张，含「旧版」备份牌）
+  Cards/       卡牌（含旧版衍生牌）
   Characters/  角色与卡池/遗物池/药水池定义（曹魏、蜀汉）
   Combat/      战斗辅助（天意之力、Scry、从右到左自动打出）
   DevConsole/  控制台命令
-  Events/      事件（新三国道、陈留大食堂、野生中立伏兵、三顾茅庐、实践主义者）
+  Events/      事件（新三国道、陈留大食堂、野生中立伏兵、三顾茅庐、实践主义者、东尼先生的假期）
   Helpers/     工具（EnchantHelper 附魔）
   Monsters/    怪物（盛碗虫（巨石）、青州兵）
-  Patches/     Harmony 补丁（17 个）
+  Patches/     Harmony 补丁
   Potions/     药水（杏花村、天意爷的小纸条）
-  Powers/      能力（40 余个）
-  Relics/      遗物（沛国佳酿、百年佳酿、魔法禁术目录、传送门、空城计、R键、
+  Powers/      自定义能力
+  Relics/      遗物（沛国佳酿、百年佳酿、魔法禁术目录、传送门、R键、
                天子经济学、卫星城小沛、种地将军于禁、巨石）
   Rewards/     奖励（创造模式）
-  Settings/    mod 设置（音效音量、测试模式）
+  Settings/    mod 设置（音效音量、事件开关）
   Telemetry/   遥测
   Entry.cs     mod 入口与补丁注册
   NewsanguoSfx.cs      音效表与播放封装
@@ -149,8 +174,7 @@ newsanguo/
 ## 开发约定
 
 - **卡牌类名同时是卡牌 id、本地化键与卡图文件名**：本地化键为 `NEWSANGUO_CARD_` + 类名的 UPPER_SNAKE 形式（`CaoArtOfWar` → `NEWSANGUO_CARD_CAO_ART_OF_WAR`），卡图路径为 `res://newsanguo/images/cards/{类名}.png`。**类名一经发布不要再改**：改类名等于换 id，老存档牌组里的这些牌会认不出来，卡图、`.import` 与 `localization/{zhs,eng}/cards.json` 的键都要跟着改
-- **卡池归属由 `[RegisterCard(typeof(...))]` 特性决定**，不是 `CardTypes` 列表（后者已标记 `[Obsolete]`，仅为基类保留）：只属于曹魏写 `typeof(NewsanguoCardPool)`；只属于蜀汉写 `typeof(ShuHanCardPool)`；两角色共有＝特性写 `typeof(NewsanguoCardPool)` 并在 `ShuHanCardPool.CardTypes` 里再列一次
-- **测试中的内容用 `NewsanguoTestModeSettings.TestModeEnabled` 控制可见性**，不要用 epoch 解锁或改 `IsPlayable`（会把「随机角色」整块藏掉）
+- **卡池归属**：单角色牌通过 `[RegisterCard(typeof(...))]` 注册到曹魏或蜀汉池；中立牌注册到 `NeutralCardPool` 并继承 `NeutralCardTemplate`，在 `NeutralCardPool.RegisterSharedCards()` 中注入双方奖励池。不要同时重复注册，也不要恢复已弃用的 `CardTypes` 列表。迁移中立牌时同步移除额外注入。
 - **卡牌类与能力类不可同名**：能力一律加 `_power` 后缀（如 `heavens_decay` 卡牌 / `heavens_decay_power` 能力），避免 `FromPower<T>` 命名空间解析冲突
 - **卡牌描述动态数值**：使用 `PowerVar<T>` / `DamageVar` / `BlockVar` / `IntVar` 等 `CanonicalVars`，描述中配合 `{Name:diff()}` 实时显示
 - **升级/降级关键字增减**：在 `OnUpgrade()` / `AfterDowngraded()` 中用 `AddKeyword` / `RemoveKeyword`，不要直接改 `CanonicalKeywords`
