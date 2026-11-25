@@ -51,7 +51,15 @@ public class CheckThePremiere : NewsanguoCardTemplate
             combatState.CreateCard<OldCompact>(base.Owner),
             combatState.CreateCard<OldExpectAFight>(base.Owner),
             combatState.CreateCard<OldFuel>(base.Owner),
-            combatState.CreateCard<OldMementoMori>(base.Owner)
+            combatState.CreateCard<OldMementoMori>(base.Owner),
+            combatState.CreateCard<OldMythicForm>(base.Owner),
+            combatState.CreateCard<OldTheHierophant>(base.Owner),
+            combatState.CreateCard<OldTheEmperor>(base.Owner),
+            combatState.CreateCard<OldTheTower>(base.Owner),
+            combatState.CreateCard<OldTemperance>(base.Owner),
+            combatState.CreateCard<OldTheSun>(base.Owner),
+            combatState.CreateCard<OldTheHermit>(base.Owner),
+            combatState.CreateCard<OldDeath>(base.Owner)
         ];
         // 旧版牌禁止通用随机生成，直接抽样以保留这些专属候选。
         List<CardModel> options = templates.TakeRandom(3, Owner.RunState.Rng.CombatCardGeneration).ToList();

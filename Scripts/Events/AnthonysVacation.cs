@@ -23,6 +23,9 @@ namespace newsanguo.Scripts.Events;
 [RegisterActEvent(typeof(Glory))]
 public sealed class AnthonysVacation : ModEventTemplate
 {
+    public override bool IsAllowed(MegaCrit.Sts2.Core.Runs.IRunState runState) =>
+        newsanguo.Scripts.Settings.NewsanguoEventSettings.IsEnabled(runState) && base.IsAllowed(runState);
+
     protected override IEnumerable<DynamicVar> CanonicalVars => [new MaxHpVar(5m), new HpLossVar(0m)];
 
     public override void CalculateVars()

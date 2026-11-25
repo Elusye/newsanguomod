@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Commands.Builders;
+using STS2RitsuLib.Combat.AttackHits;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -18,8 +20,11 @@ namespace newsanguo.Scripts.Cards;
 
 // 注册卡牌到新三国专属卡池
 [RegisterCard(typeof(NewsanguoCardPool))]
-public class UnclesAndAunts : NewsanguoCardTemplate
+public class UnclesAndAunts : NewsanguoCardTemplate, IAttackHitHookListener
 {
+    private AttackCommand? _currentAttack;
+    private CardPlay? _currentPlay;
+
     // X 费卡（参考原版“天际钻头”HeavenlyDrill）
     protected override bool HasEnergyCostX => true;
 
@@ -74,16 +79,29 @@ public class UnclesAndAunts : NewsanguoCardTemplate
         var x = ResolveEnergyXValue();
         var repeat = x + (IsUpgraded ? 1 : 0);
 
-        // 每轮先获得格挡再造成伤害，重复“次数”轮。
-        // 不再返还能量（原先的“找零 1 点能量”已移除）。
-        for (var i = 0; i < repeat; i++)
+        if (repeat <= 0) return;
+        // 多段共用一个攻击命令，活力在所有段数结算完毕后消耗。
+        var attack = DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+            .FromCard(this, cardPlay)
+            .Targeting(cardPlay.Target)
+            .WithHitCount(repeat)
+            .WithHitFx("vfx/vfx_attack_slash");
+        _currentAttack = attack;
+        _currentPlay = cardPlay;
+        try
         {
-            await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-                .FromCard(this, cardPlay)
-                .Targeting(cardPlay.Target)
-                .WithHitFx("vfx/vfx_attack_slash")
-                .Execute(choiceContext);
+            await attack.Execute(choiceContext);
+        }
+        finally
+        {
+            _currentAttack = null;
+            _currentPlay = null;
         }
     }
+
+    // 每段仍按先格挡、后伤害的顺序结算。
+    public Task BeforeAttackHit(AttackHitContext context) =>
+        context.Attack == _currentAttack && _currentPlay is { } play
+            ? CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, play)
+            : Task.CompletedTask;
 }

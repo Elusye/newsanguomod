@@ -1,5 +1,7 @@
 using Godot;
+using STS2RitsuLib.Combat.AttackHits;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Commands.Builders;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -20,7 +22,7 @@ using newsanguo.Scripts.Powers;
 namespace newsanguo.Scripts.Cards;
 
 [RegisterCard(typeof(NewsanguoCardPool))]
-public class ScorchingStarfall : NewsanguoCardTemplate
+public class ScorchingStarfall : NewsanguoCardTemplate, IAttackHitHookListener
 {
     /// <summary>
     /// 播放特效的段数上限：段数 ≤ 这个数时**逐段播放**特效（与旧版一致），超过就整张牌完全不播
@@ -29,6 +31,8 @@ public class ScorchingStarfall : NewsanguoCardTemplate
     /// （见 <see cref="PlayStarfallVfxPerHit" /> 的说明）。想调档位就改这一个数。
     /// </summary>
     private const int MaxHitsForVfx = 10;
+    private AttackCommand? _currentAttack;
+    private bool _playVfxPerHit;
 
     /// <summary>
     /// 出手次数的硬上限：无论酒力被叠到多高，「酒力 ÷ 阈值」都不会超过这个数。
@@ -92,22 +96,28 @@ public class ScorchingStarfall : NewsanguoCardTemplate
             // 段数超过上限时整张牌一个特效都不播（正好 10 段仍然播）。
             // 见 PlayStarfallVfxPerHit 说明：逐段播的节点数最多是 MaxHitsForVfx × (1 + 敌人数)，
             // 不会像以前那样随酒力无限增长。
-            var playVfxPerHit = hits <= MaxHitsForVfx;
-
-            for (var i = 0; i < hits; i++)
+            _playVfxPerHit = hits <= MaxHitsForVfx;
+            var attack = DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+                .FromCard(this, cardPlay)
+                .TargetingAllOpponents(combatState)
+                .WithHitCount(hits);
+            _currentAttack = attack;
+            try
             {
-                if (playVfxPerHit)
-                {
-                    await PlayStarfallVfxPerHit(combatState);
-                }
-
-                await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-                    .FromCard(this, cardPlay)
-                    .TargetingAllOpponents(combatState)
-                    .Execute(choiceContext);
+                await attack.Execute(choiceContext);
+            }
+            finally
+            {
+                _currentAttack = null;
+                _playVfxPerHit = false;
             }
         }
     }
+
+    public Task BeforeAttackHit(AttackHitContext context) =>
+        context.Attack == _currentAttack && _playVfxPerHit && CombatState is { } combat
+            ? PlayStarfallVfxPerHit(combat)
+            : Task.CompletedTask;
 
     /// <summary>
     /// 播放一段「流星雨」特效（旧版写法，**每段调用一次**）：

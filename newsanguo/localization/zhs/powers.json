@@ -23,7 +23,7 @@
   "NEWSANGUO_POWER_FLIGHT_POWER.description": "敌人对你造成的伤害降低50%。当你受到未被格挡的伤害时，飞行层数减少1。",
   "NEWSANGUO_POWER_FLIGHT_POWER.smartDescription": "敌人对你造成的伤害降低50%。当你受到未被格挡的伤害时，飞行层数减少1。",
   "NEWSANGUO_POWER_CRICKET_FORM_POWER.title": "蛐蛐形态",
-  "NEWSANGUO_POWER_CRICKET_FORM_POWER.description": "在你的回合开始时，将你的[gold]难以杀灭[/gold]层数翻倍。",
+  "NEWSANGUO_POWER_CRICKET_FORM_POWER.description": "在你的回合开始时，将你的[gold]难以杀灭（旧）[/gold]层数翻倍。",
   "NEWSANGUO_POWER_CENTRAL_PLAINS_PASS_POWER.title": "中原雄关",
   "NEWSANGUO_POWER_CENTRAL_PLAINS_PASS_POWER.description": "下回合开始时获得[blue]{Amount}[/blue]点[gold]格挡[/gold]。若受到未被格挡的伤害，则失去所有层数。",
   "NEWSANGUO_POWER_CENTRAL_PLAINS_PASS_POWER.smartDescription": "下回合开始时获得[blue]{Amount}[/blue]点[gold]格挡[/gold]。若受到未被格挡的伤害，则失去所有层数。",
@@ -195,5 +195,11 @@
   "NEWSANGUO_REVERSAL_TAINTED.smartDescription": "污染的效果已反转，受到的攻击伤害减少[blue]{Amount}[/blue]点。在敌方回合结束时移除。",
   "NEWSANGUO_POWER_WELL_FED_WELL_CLOTHED_POWER.title": "不缺吃穿",
   "NEWSANGUO_POWER_WELL_FED_WELL_CLOTHED_POWER.description": "在你的回合开始时，获得[blue]{Amount}[/blue]点[gold]酒力[/gold]。",
-  "NEWSANGUO_POWER_WELL_FED_WELL_CLOTHED_POWER.smartDescription": "在你的回合开始时，获得[blue]{Amount}[/blue]点[gold]酒力[/gold]。"
+  "NEWSANGUO_POWER_WELL_FED_WELL_CLOTHED_POWER.smartDescription": "在你的回合开始时，获得[blue]{Amount}[/blue]点[gold]酒力[/gold]。",
+  "NEWSANGUO_POWER_OLD_HARD_TO_KILL_POWER.title": "难以杀灭（旧）",
+  "NEWSANGUO_POWER_OLD_HARD_TO_KILL_POWER.description": "每次受到的伤害不会超过层数。",
+  "NEWSANGUO_POWER_OLD_HARD_TO_KILL_POWER.smartDescription": "每次受到的伤害不会超过[blue]{Amount}[/blue]点。",
+  "NEWSANGUO_POWER_OLD_MYTHIC_FORM_POWER.title": "神话形态（旧）",
+  "NEWSANGUO_POWER_OLD_MYTHIC_FORM_POWER.description": "在你的回合开始时，将[blue]{Amount}[/blue]张随机[gold]塔罗牌[/gold]加入你的[gold]手牌[/gold]，其中[blue]{Upgraded}[/blue]张为升级版。",
+  "NEWSANGUO_POWER_OLD_MYTHIC_FORM_POWER.smartDescription": "在你的回合开始时，将[blue]{Amount}[/blue]张随机[gold]塔罗牌[/gold]加入你的[gold]手牌[/gold]，其中[blue]{Upgraded}[/blue]张为升级版。"
 }

@@ -23,7 +23,7 @@
   "NEWSANGUO_POWER_FLIGHT_POWER.description": "Enemies deal [blue]50%[/blue] less damage to you. When you take unblocked damage, lose [blue]1[/blue] [gold]Flight[/gold].",
   "NEWSANGUO_POWER_FLIGHT_POWER.smartDescription": "Enemies deal [blue]50%[/blue] less damage to you. When you take unblocked damage, lose [blue]1[/blue] [gold]Flight[/gold].",
   "NEWSANGUO_POWER_CRICKET_FORM_POWER.title": "Cricket Form",
-  "NEWSANGUO_POWER_CRICKET_FORM_POWER.description": "At the start of your turn, double your [gold]Hard to Kill[/gold].",
+  "NEWSANGUO_POWER_CRICKET_FORM_POWER.description": "At the start of your turn, double your [gold]Hard to Kill (Old)[/gold].",
   "NEWSANGUO_POWER_CENTRAL_PLAINS_PASS_POWER.title": "Central Plains Pass",
   "NEWSANGUO_POWER_CENTRAL_PLAINS_PASS_POWER.description": "At the start of your next turn, gain [blue]{Amount}[/blue] [gold]Block[/gold]. If you take unblocked damage, you lose all stacks.",
   "NEWSANGUO_POWER_CENTRAL_PLAINS_PASS_POWER.smartDescription": "At the start of your next turn, gain [blue]{Amount}[/blue] [gold]Block[/gold]. If you take unblocked damage, you lose all stacks.",
@@ -195,5 +195,11 @@
   "NEWSANGUO_REVERSAL_TAINTED.smartDescription": "Tainted is reversed: Receive [blue]{Amount}[/blue] less damage from Attacks. Removed at the end of the enemy turn.",
   "NEWSANGUO_POWER_WELL_FED_WELL_CLOTHED_POWER.title": "Well Fed, Well Clothed",
   "NEWSANGUO_POWER_WELL_FED_WELL_CLOTHED_POWER.description": "At the start of your turn, gain [blue]{Amount}[/blue] [gold]Drunken Might[/gold].",
-  "NEWSANGUO_POWER_WELL_FED_WELL_CLOTHED_POWER.smartDescription": "At the start of your turn, gain [blue]{Amount}[/blue] [gold]Drunken Might[/gold]."
+  "NEWSANGUO_POWER_WELL_FED_WELL_CLOTHED_POWER.smartDescription": "At the start of your turn, gain [blue]{Amount}[/blue] [gold]Drunken Might[/gold].",
+  "NEWSANGUO_POWER_OLD_HARD_TO_KILL_POWER.title": "Hard to Kill (Old)",
+  "NEWSANGUO_POWER_OLD_HARD_TO_KILL_POWER.description": "Damage taken per hit cannot exceed the number of stacks.",
+  "NEWSANGUO_POWER_OLD_HARD_TO_KILL_POWER.smartDescription": "Damage taken per hit cannot exceed [blue]{Amount}[/blue].",
+  "NEWSANGUO_POWER_OLD_MYTHIC_FORM_POWER.title": "Mythic Form (Old)",
+  "NEWSANGUO_POWER_OLD_MYTHIC_FORM_POWER.description": "At the start of your turn, add [blue]{Amount}[/blue] random [gold]Tarot[/gold] cards to your [gold]hand[/gold]. [blue]{Upgraded}[/blue] are Upgraded.",
+  "NEWSANGUO_POWER_OLD_MYTHIC_FORM_POWER.smartDescription": "At the start of your turn, add [blue]{Amount}[/blue] random [gold]Tarot[/gold] cards to your [gold]hand[/gold]. [blue]{Upgraded}[/blue] are Upgraded."
 }

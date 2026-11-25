@@ -27,6 +27,7 @@ public class WildNeutralAmbushers : ModEventTemplate
     public override bool IsShared => true;
 
     public override bool IsAllowed(IRunState runState) =>
+        newsanguo.Scripts.Settings.NewsanguoEventSettings.IsEnabled(runState) &&
         runState.Act is Hive && runState.ActFloor > runState.Map.GetRowCount() / 2;
 
     // 与陈留大食堂一致，在进入事件时播放入场语音。

@@ -30,7 +30,7 @@ public class CricketForm : NewsanguoCardTemplate
 
     // 卡牌基础数值：每次打出将难以杀灭层数设为此值（2；升级后 1）
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new PowerVar<HardToKillPower>(2m)
+        new PowerVar<OldHardToKillPower>(2m)
     ];
 
     public CricketForm() : base(3, CardType.Power, CardRarity.Rare, TargetType.Self)
@@ -38,7 +38,7 @@ public class CricketForm : NewsanguoCardTemplate
     }
 
     // 悬停提示：展示“难以杀灭”正面效果的说明
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<HardToKillPower>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<OldHardToKillPower>()];
 
     // 打出时的效果逻辑
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
@@ -48,13 +48,13 @@ public class CricketForm : NewsanguoCardTemplate
 
         // 每次打出都将“难以杀灭”层数设为卡面数值（基础 2；升级后 1），
         // 让再打出的蛐蛐形态“刷新”护盾，而不是把层数越叠越高
-        int target = DynamicVars["HardToKillPower"].IntValue;
-        HardToKillPower? hardToKill = base.Owner.Creature.GetPower<HardToKillPower>();
+        int target = DynamicVars["OldHardToKillPower"].IntValue;
+        OldHardToKillPower? hardToKill = base.Owner.Creature.GetPower<OldHardToKillPower>();
         if (hardToKill is null)
         {
             if (target > 0)
             {
-                await PowerCmd.Apply<HardToKillPower>(choiceContext, base.Owner.Creature, target, base.Owner.Creature, this);
+                await PowerCmd.Apply<OldHardToKillPower>(choiceContext, base.Owner.Creature, target, base.Owner.Creature, this);
             }
         }
         else
@@ -72,6 +72,6 @@ public class CricketForm : NewsanguoCardTemplate
     // 升级：将难以杀灭设为目标值 -1（2 → 1）
     protected override void OnUpgrade()
     {
-        DynamicVars["HardToKillPower"].UpgradeValueBy(-1);
+        DynamicVars["OldHardToKillPower"].UpgradeValueBy(-1);
     }
 }

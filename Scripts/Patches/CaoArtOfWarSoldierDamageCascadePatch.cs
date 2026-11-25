@@ -1,13 +1,13 @@
 using System.Reflection;
-using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Hooks;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Runs;
 using MegaCrit.Sts2.Core.ValueProps;
 using newsanguo.Scripts.Monsters;
 using newsanguo.Scripts.Powers;
@@ -19,78 +19,86 @@ public static class QingzhouSoldierPreBlockTargetPatch
 {
     public static void Postfix(Creature originalTarget, ValueProp props, ref Creature? __result)
     {
-        if (originalTarget.IsAlive && props.IsPoweredAttack())
+        if (CaoArtOfWarSoldierDamageCascadePatch.Recalculating)
         {
-            __result = CaoArtOfWarPower.GetLivingSoldiersInSummonOrder(originalTarget).FirstOrDefault() ?? __result;
+            __result = null;
+            return;
         }
+        if (originalTarget.IsAlive && props.IsPoweredAttack())
+            __result = CaoArtOfWarPower.GetLivingSoldiersInSummonOrder(originalTarget).FirstOrDefault() ?? __result;
     }
 }
 
-[HarmonyPatch]
+// 0.114：只在试算阶段构建额外结果，实际扣血和回调在结算阶段执行。
+[HarmonyPatch(typeof(CreatureCmd), "GetDamageResults")]
 public static class CaoArtOfWarSoldierDamageCascadePatch
 {
-    private static MethodBase TargetMethod()
+    [ThreadStatic] internal static bool Recalculating;
+    private static readonly ConditionalWeakTable<DamageResult, List<DamageResult>> ExtraResults = new();
+    private static readonly MethodInfo Calculate = AccessTools.Method(typeof(CreatureCmd), "GetDamageResults");
+
+    public static void Postfix(IRunState runState, ICombatState? combatState, Creature target,
+        ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay, ref DamageResults __result)
     {
-        var damage = AccessTools.Method(typeof(CreatureCmd), nameof(CreatureCmd.Damage),
-            [typeof(PlayerChoiceContext), typeof(IEnumerable<DamageTargetData>), typeof(decimal),
-             typeof(ValueProp), typeof(Creature), typeof(CardModel), typeof(CardPlay), typeof(ModifyDamageHookType)]);
-        return AccessTools.AsyncMoveNext(damage);
-    }
+        if (Recalculating || __result.preBlockRedirect is not { } first ||
+            first.Receiver.Monster is not QingzhouSoldier || first.Receiver.PetOwner?.Creature != target ||
+            first.OverkillDamage <= 0) return;
 
-    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-    {
-        var code = instructions.ToList();
-        var preBlock = AccessTools.Method(typeof(Hook), nameof(Hook.ModifyPreBlockDamageTarget));
-        var overkill = AccessTools.PropertyGetter(typeof(DamageResult), nameof(DamageResult.OverkillDamage));
-        var addResult = AccessTools.Method(typeof(List<DamageResult>), nameof(List<DamageResult>.Add));
-
-        int preBlockIndex = code.FindIndex(instruction => instruction.Calls(preBlock));
-        int index = preBlockIndex < 0 ? -1 : code.FindIndex(preBlockIndex + 1, instruction => instruction.Calls(overkill));
-        // 原版把首个格挡前承伤结果加入列表，再读取该结果的溢出量。
-        if (index < 6 || !code[index - 3].Calls(addResult) ||
-            code[index - 5].operand is not FieldInfo field || field.FieldType != typeof(List<DamageResult>) ||
-            code[index - 6].opcode != OpCodes.Ldarg_0)
-        {
-            throw new InvalidOperationException("Could not locate pre-block damage overflow in CreatureCmd.Damage.");
-        }
-
-        var readOverflow = code[index];
-        var loadStateMachine = new CodeInstruction(OpCodes.Ldarg_0);
-        loadStateMachine.labels.AddRange(readOverflow.labels);
-        readOverflow.labels.Clear();
-        code.InsertRange(index, [loadStateMachine, new CodeInstruction(OpCodes.Ldfld, field)]);
-        readOverflow.opcode = OpCodes.Call;
-        readOverflow.operand = AccessTools.Method(typeof(CaoArtOfWarSoldierDamageCascadePatch), nameof(DistributeOverflow));
-        return code;
-    }
-
-    private static int DistributeOverflow(DamageResult first, List<DamageResult> results)
-    {
         int remaining = first.OverkillDamage;
-        if (remaining <= 0 || first.Receiver.Monster is not QingzhouSoldier ||
-            first.Receiver.PetOwner?.Creature != first.OriginalTarget)
+        List<DamageResult> extras = [];
+        foreach (var soldier in CaoArtOfWarPower.GetLivingSoldiersInSummonOrder(target))
         {
-            return remaining;
+            if (remaining <= 0) break;
+            if (soldier == first.Receiver || !soldier.IsAlive) continue;
+            var loss = soldier.LoseHpInternal(remaining, dryRun: true);
+            extras.Add(new DamageResult(soldier, props)
+            {
+                OriginalTarget = target,
+                IntendedHpLoss = remaining,
+                UnblockedDamage = loss.hpLost,
+                WasTargetKilled = loss.killed,
+                OverkillDamage = loss.overkillAmount
+            });
+            remaining = loss.overkillAmount;
         }
+        if (extras.Count == 0) return;
 
-        foreach (Creature soldier in CaoArtOfWarPower.GetLivingSoldiersInSummonOrder(first.OriginalTarget))
+        // 前置承伤和 BeforeWuppy 限额已结算，只重算剩余伤害的格挡／奥斯提部分。
+        Recalculating = true;
+        DamageResults rest;
+        try
         {
-            if (remaining <= 0)
-            {
-                break;
-            }
-            if (soldier == first.Receiver || !soldier.IsAlive)
-            {
-                continue;
-            }
-
-            // 与瓦皮相同，格挡前直接扣生命，结果交由原版派发伤害和死亡回调。
-            DamageResult result = soldier.LoseHpInternal(remaining, first.Props);
-            result.OriginalTarget = first.OriginalTarget;
-            result.IntendedHpLoss = remaining;
-            results.Add(result);
-            remaining = result.OverkillDamage;
+            rest = (DamageResults)Calculate.Invoke(null,
+                [runState, combatState, target, (decimal)remaining, props, dealer, cardSource, cardPlay])!;
         }
-        return remaining;
+        finally { Recalculating = false; }
+        rest.preBlockRedirect = first;
+        rest.beforeWuppyHpLossModifiers = __result.beforeWuppyHpLossModifiers;
+        ExtraResults.Add(first, extras);
+        __result = rest;
+    }
+
+    internal static IReadOnlyList<DamageResult> Extras(DamageResults results) =>
+        results.preBlockRedirect is { } first && ExtraResults.TryGetValue(first, out var extras)
+            ? extras : Array.Empty<DamageResult>();
+}
+
+[HarmonyPatch(typeof(DamageResults), nameof(DamageResults.AllResults))]
+public static class QingzhouSoldierExtraDamageResultsPatch
+{
+    public static void Postfix(DamageResults __instance, ref IEnumerable<DamageResult> __result)
+    {
+        var extras = CaoArtOfWarSoldierDamageCascadePatch.Extras(__instance);
+        if (extras.Count > 0) __result = __result.Concat(extras);
+    }
+}
+
+[HarmonyPatch(typeof(CreatureCmd), "ApplyDamageResults")]
+public static class QingzhouSoldierApplyExtraDamagePatch
+{
+    public static void Prefix(DamageResults results)
+    {
+        foreach (var extra in CaoArtOfWarSoldierDamageCascadePatch.Extras(results))
+            extra.Receiver.LoseHpInternal(extra.UnblockedDamage);
     }
 }

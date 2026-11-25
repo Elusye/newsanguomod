@@ -32,6 +32,7 @@ public class NewThreeKingdomsWay : ModEventTemplate
     // 所以 IsAllowed 返回 false 就能让本事件在多人局彻底不入池。
     public override bool IsAllowed(IRunState runState)
     {
+        if (!newsanguo.Scripts.Settings.NewsanguoEventSettings.IsEnabled(runState)) return false;
         return runState.Players.Count == 1;
     }
 

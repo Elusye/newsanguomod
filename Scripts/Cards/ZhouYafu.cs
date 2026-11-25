@@ -28,9 +28,9 @@ public class ZhouYafu : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：获得 7 点格挡
+    // 卡牌基础数值：获得 9 点格挡
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new BlockVar(7, ValueProp.Move)
+        new BlockVar(9, ValueProp.Move)
     ];
 
     // 卡牌自带“消耗”关键词
@@ -45,7 +45,7 @@ public class ZhouYafu : NewsanguoCardTemplate
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/zhou_yafu");
 
-        // 获得 7 点格挡
+        // 获得 9 点格挡
         await CreatureCmd.GainBlock(base.Owner.Creature, DynamicVars.Block, cardPlay, fast: false);
     }
 

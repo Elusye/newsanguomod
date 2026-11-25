@@ -34,6 +34,7 @@ public class ThreeVisitsToTheThatchedCottage : ModEventTemplate
 {
     // 参照原版 ColossalFlower：所有玩家均能承担两次失去生命后，事件才可出现。
     public override bool IsAllowed(IRunState runState) =>
+        newsanguo.Scripts.Settings.NewsanguoEventSettings.IsEnabled(runState) &&
         runState.Players.All(player => player.Creature.CurrentHp > 8);
 
     // 页面名（对应本地化键里的 pages.<页面名>）

@@ -30,6 +30,7 @@ public static class NewsanguoSfxVolumeSettings
     public static void Register()
     {
         BalanceAdjustments.Register();
+        NewsanguoEventSettings.Register();
         RitsuLibFramework.RegisterModSettings(ModId, page =>
         {
             page.WithSortOrder(0)
@@ -37,6 +38,14 @@ public static class NewsanguoSfxVolumeSettings
                 .WithTitle(ModSettingsText.Literal("新三国设置"))
                 .WithDescription(ModSettingsText.Literal(
                     "新三国 mod 的通用设置：卡牌、能力及事件音效。"))
+                .AddSection("events", section => section
+                    .WithTitle(ModSettingsText.Literal("事件"))
+                    .AddToggle(
+                        id: "events_enabled",
+                        label: ModSettingsText.Literal("启用新三国mod事件"),
+                        binding: ModSettingsBindings.Callback<bool>(ModId, "events_enabled",
+                            () => NewsanguoEventSettings.Preference, NewsanguoEventSettings.SetPreference, () => { }),
+                        description: ModSettingsText.Literal("关闭后不再随机遇到新三国mod事件。新开跑局生效，联机以房主设置为准。")))
                 .AddSection(SoundSectionId, section =>
                 {
                     section.WithTitle(ModSettingsText.Literal("音效音量"))

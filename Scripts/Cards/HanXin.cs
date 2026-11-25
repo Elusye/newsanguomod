@@ -25,9 +25,9 @@ public class HanXin : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：抽 2 张牌
+    // 卡牌基础数值：抽 3 张牌
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new CardsVar(2)
+        new CardsVar(3)
     ];
 
     // 卡牌自带“消耗”关键词
@@ -42,7 +42,7 @@ public class HanXin : NewsanguoCardTemplate
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/han_xin");
 
-        // 抽 2（升级后 3）张牌
+        // 抽3张牌
         await CardPileCmd.Draw(choiceContext, DynamicVars.Cards.BaseValue, base.Owner);
     }
 

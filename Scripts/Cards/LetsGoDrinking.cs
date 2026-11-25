@@ -24,8 +24,8 @@ public sealed class LetsGoDrinking : NewsanguoCardTemplate
 
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<DrunkenMightPower>(6m),
-            new PowerVar<ToABiggerGobletPower>(4m),
+        [new PowerVar<DrunkenMightPower>(3m),
+            new PowerVar<ToABiggerGobletPower>(2m),
             new PowerVar<StrengthPower>(1m)];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
@@ -40,8 +40,11 @@ public sealed class LetsGoDrinking : NewsanguoCardTemplate
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay play)
     {
         NewsanguoSfx.Play("event:/newsanguo/sfx/lets_go_drinking");
-        await PowerCmd.Apply<DrunkenMightPower>(context, Owner.Creature,
+        for (int i = 0; i < 2; i++)
+        {
+            await PowerCmd.Apply<DrunkenMightPower>(context, Owner.Creature,
             DynamicVars["DrunkenMightPower"].IntValue, Owner.Creature, this);
+        }
 
         await PowerCmd.Apply<ToABiggerGobletPower>(context, Owner.Creature,
             DynamicVars["ToABiggerGobletPower"].IntValue, Owner.Creature, this);

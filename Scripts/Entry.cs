@@ -57,6 +57,8 @@ public class Entry
         ApplyPatch(harmony, typeof(PragmatistRewardPatch));
         ApplyPatch(harmony, typeof(PragmatistInitialVisibilityPatch));
         ApplyPatch(harmony, typeof(KaleidoscopeRewardPatch));
+        ApplyPatch(harmony, typeof(OldCardLibraryPatch));
+        ApplyPatch(harmony, typeof(OldTarotVoiceCompatibilityPatch));
         ApplyPatch(harmony, typeof(PaelsWingDuplicateAlternativePatch));
         // 「创造模式」的选牌屏要像图鉴一样能搜索 / 筛选：复用图鉴的侧栏控件，只在那一屏生效
         // （详见 CardSelectSearchPatch.cs 顶部注释；标记由 CreativeModeReward 在弹屏前打开）
@@ -95,6 +97,8 @@ public class Entry
         ApplyPatch(harmony, typeof(UnsettlingLampSelfDebuffPatch));
         ApplyPatch(harmony, typeof(SunqianVigorSmartDescriptionPatch));
         ApplyPatch(harmony, typeof(CaoArtOfWarSoldierDamageCascadePatch));
+        ApplyPatch(harmony, typeof(QingzhouSoldierExtraDamageResultsPatch));
+        ApplyPatch(harmony, typeof(QingzhouSoldierApplyExtraDamagePatch));
         ApplyPatch(harmony, typeof(QingzhouSoldierPreBlockTargetPatch));
         // ③青州兵的战斗表现：站位照原版奥斯提的锚点（主人右侧 + 抬高 75px）并在多只时横向错开，
         //   同时把引擎给「非奥斯提」宠物关掉的鼠标交互/血条恢复回来（否则鼠标悬浮看不到名字，见补丁顶部注释）

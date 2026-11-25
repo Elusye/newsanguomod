@@ -29,6 +29,9 @@ namespace newsanguo.Scripts.Events;
 [RegisterActEvent(typeof(Glory))]
 public class ChenliuGrandMessHall : ModEventTemplate
 {
+    public override bool IsAllowed(MegaCrit.Sts2.Core.Runs.IRunState runState) =>
+        newsanguo.Scripts.Settings.NewsanguoEventSettings.IsEnabled(runState) && base.IsAllowed(runState);
+
     public override EventAssetProfile AssetProfile => new(
         InitialPortraitPath: $"res://newsanguo/images/events/{GetType().Name}.png"
     );

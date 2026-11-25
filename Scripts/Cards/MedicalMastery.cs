@@ -27,10 +27,6 @@ namespace newsanguo.Scripts.Cards;
 public class MedicalMastery : NewsanguoCardTemplate
 {
 
-    // 记录当前已达到的升级层数（引擎降级时会把 CurrentUpgradeLevel 归零，
-    // 本字段用于在 AfterDowngraded 中把状态重建为“只降一级”）
-    private int _savedUpgradeLevel;
-
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
@@ -131,27 +127,8 @@ public class MedicalMastery : NewsanguoCardTemplate
     // 存档读档时引擎按升级次数重放本方法，数值自动保持一致。
     protected override void OnUpgrade()
     {
-        _savedUpgradeLevel = CurrentUpgradeLevel;
         DynamicVars.Damage.UpgradeValueBy(CurrentUpgradeLevel + 2);
     }
 
-    // 降级处理：引擎的 DowngradeInternal 会把升级层数与所有数值偏移一次性归零
-    // （对只能升 1 级的卡等价于“降一级回初始”，但本卡可无限升级）。
-    // 这里按引擎读档同款重放方式，把状态重建为“降级前层数 - 1”，而不是清空全部层数。
-    protected override void AfterDowngraded()
-    {
-        int oldLevel = _savedUpgradeLevel;
-        if (oldLevel <= 0)
-        {
-            return;
-        }
-
-        // 防重入：先把记录清空，重建循环里的 OnUpgrade 会逐层重新记录
-        _savedUpgradeLevel = 0;
-        for (int level = 1; level <= oldLevel - 1; level++)
-        {
-            UpgradeInternal();
-            FinalizeUpgradeInternal();
-        }
-    }
+    // 0.114 由原版 DowngradeInternal 重建剩余升级，不再重复补偿。
 }

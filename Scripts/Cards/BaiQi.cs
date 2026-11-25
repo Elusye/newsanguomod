@@ -25,9 +25,9 @@ public class BaiQi : NewsanguoCardTemplate
         PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
     );
 
-    // 卡牌基础数值：造成 9 点伤害
+    // 卡牌基础数值：造成 12 点伤害
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(9, ValueProp.Move)
+        new DamageVar(12, ValueProp.Move)
     ];
 
     // 卡牌自带“消耗”关键词
@@ -44,7 +44,7 @@ public class BaiQi : NewsanguoCardTemplate
 
         NewsanguoSfx.Play("event:/newsanguo/sfx/bai_qi");
 
-        // 造成 9 点伤害
+        // 造成 12 点伤害
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target)

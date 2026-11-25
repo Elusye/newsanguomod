@@ -36,7 +36,7 @@
                 日后可能自动拉到更新的不兼容版本（此前 Version="*" 就是这样把 0.5.x 拉到 0.6.11 的）；
              2) 0.6.11 的兼容目标是游戏 API 0.113.0，与 newsanguo.json 的 min_game_version 一致；
              3) 框架本体不随本 mod 分发，由 mods/STS2-RitsuLib 运行时提供（见下方 Target）。 -->
-        <PackageReference Include="STS2.RitsuLib" Version="[0.6.11]" />
+        <PackageReference Include="STS2.RitsuLib" Version="[0.6.16]" />
     </ItemGroup>
 
     <Target Name="Validate Local Paths" BeforeTargets="ResolveAssemblyReferences">

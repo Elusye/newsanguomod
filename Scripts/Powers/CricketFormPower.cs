@@ -28,7 +28,7 @@ public class CricketFormPower : ModPowerTemplate
     // 将玩家的难以杀灭层数翻倍（上限999）
     private async Task DoubleHardToKill(PlayerChoiceContext choiceContext)
     {
-        HardToKillPower? hardToKill = Owner.GetPower<HardToKillPower>();
+        OldHardToKillPower? hardToKill = Owner.GetPower<OldHardToKillPower>();
         if (hardToKill is null || hardToKill.Amount <= 0)
         {
             return;
