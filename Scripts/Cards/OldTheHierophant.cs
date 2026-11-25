@@ -23,7 +23,7 @@ public sealed class OldTheHierophant : NewsanguoCardTemplate
 
 	public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-	protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(3)];
+	protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(3), new EnergyVar(1)];
 
 	public OldTheHierophant()
 		: base(0, CardType.Skill, CardRarity.Token, TargetType.Self)

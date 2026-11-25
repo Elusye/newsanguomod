@@ -46,7 +46,6 @@ public sealed class OldMythicFormPower : STS2RitsuLib.Scaffolding.Content.ModPow
                     TheTower => ModelDb.Card<OldTheTower>(),
                     Temperance => ModelDb.Card<OldTemperance>(),
                     TheSun => ModelDb.Card<OldTheSun>(),
-                    TheHermit => ModelDb.Card<OldTheHermit>(),
                     Death => ModelDb.Card<OldDeath>(),
                     _ => card
                 }).Where((CardModel c) => c.IsAllowedInRun(player.RunState)));

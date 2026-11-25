@@ -30,7 +30,7 @@ public class OldExpectAFight : NewsanguoCardTemplate
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
+        PortraitPath: ModelDb.Card<ExpectAFight>().PortraitPath
     );
 
     // 卡牌基础数值：照搬原版 ExpectAFight —— EnergyVar 固定为 0，

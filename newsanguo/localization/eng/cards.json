@@ -423,17 +423,15 @@
   "NEWSANGUO_CARD_OLD_MYTHIC_FORM.title": "Mythic Form (Old)",
   "NEWSANGUO_CARD_OLD_MYTHIC_FORM.description": "At the start of your turn, add a random {IfUpgraded:show:Upgraded }[gold]Tarot[/gold] card to your [gold]hand[/gold].",
   "NEWSANGUO_CARD_OLD_THE_HIEROPHANT.title": "The Hierophant (Old)",
-  "NEWSANGUO_CARD_OLD_THE_HIEROPHANT.description": "Add {Cards:diff()} random Colorless cards to your [gold]hand[/gold]. They cost 1 less this turn or until played.",
+  "NEWSANGUO_CARD_OLD_THE_HIEROPHANT.description": "Add {Cards:diff()} random Colorless cards to your [gold]hand[/gold].\nThese cards cost 1 less {Energy:energyIcons()} this turn.",
   "NEWSANGUO_CARD_OLD_THE_EMPEROR.title": "The Emperor (Old)",
   "NEWSANGUO_CARD_OLD_THE_EMPEROR.description": "Gain {Energy:energyIcons()}.",
   "NEWSANGUO_CARD_OLD_THE_TOWER.title": "The Tower (Old)",
-  "NEWSANGUO_CARD_OLD_THE_TOWER.description": "Deal {ExtraDamage:diff()} damage for each floor climbed.{InCombat:\n(Deal {CalculatedDamage:diff()} damage.)|}",
+  "NEWSANGUO_CARD_OLD_THE_TOWER.description": "Deal {ExtraDamage:diff()} × the current floor number damage.",
   "NEWSANGUO_CARD_OLD_TEMPERANCE.title": "Temperance (Old)",
   "NEWSANGUO_CARD_OLD_TEMPERANCE.description": "Gain {Block:diff()} [gold]Block[/gold].",
   "NEWSANGUO_CARD_OLD_THE_SUN.title": "The Sun (Old)",
   "NEWSANGUO_CARD_OLD_THE_SUN.description": "Draw {Cards:diff()} cards.\nGain {Energy:energyIcons()}.\nAdd a [gold]Soot[/gold] to your [gold]discard pile[/gold].",
-  "NEWSANGUO_CARD_OLD_THE_HERMIT.title": "The Hermit (Old)",
-  "NEWSANGUO_CARD_OLD_THE_HERMIT.description": "Discard a card. If it is a Curse, [gold]Exhaust[/gold] it instead.\nDraw {Cards:diff()} cards.",
   "NEWSANGUO_CARD_OLD_DEATH.title": "Death (Old)",
-  "NEWSANGUO_CARD_OLD_DEATH.description": "Apply {Doom:diff()} [gold]Doom[/gold]."
+  "NEWSANGUO_CARD_OLD_DEATH.description": "Apply {DoomPower:diff()} [gold]Doom[/gold]."
 }

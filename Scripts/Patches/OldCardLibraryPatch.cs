@@ -15,6 +15,6 @@ public static class OldCardLibraryPatch
         ____poolFilters[____miscPoolFilter] = card => original(card) || card is
             OldForgottenRitual or OldBorrowedTime or OldDirge or OldCompact or
             OldExpectAFight or OldFuel or OldMementoMori or OldMythicForm or
-            OldTheHierophant or OldTheEmperor or OldTheTower or OldTemperance or OldTheSun or OldTheHermit or OldDeath;
+            OldTheHierophant or OldTheEmperor or OldTheTower or OldTemperance or OldTheSun or OldDeath;
     }
 }

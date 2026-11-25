@@ -1,3 +1,4 @@
+using MegaCrit.Sts2.Core.Models.Cards;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Combat.History.Entries;
 using MegaCrit.Sts2.Core.Commands;
@@ -18,7 +19,7 @@ public sealed class OldMementoMori : NewsanguoCardTemplate
     public override CardPoolModel VisualCardPool => ModelDb.CardPool<SilentCardPool>();
 
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: "res://newsanguo/images/cards/OldMementoMori.png");
+        PortraitPath: ModelDb.Card<MementoMori>().PortraitPath);
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
     [

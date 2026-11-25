@@ -423,17 +423,15 @@
   "NEWSANGUO_CARD_OLD_MYTHIC_FORM.title": "神话形态（旧）",
   "NEWSANGUO_CARD_OLD_MYTHIC_FORM.description": "在你的回合开始时，将一张随机{IfUpgraded:show:升级过的}[gold]塔罗牌[/gold]加入你的[gold]手牌[/gold]。",
   "NEWSANGUO_CARD_OLD_THE_HIEROPHANT.title": "教皇（旧）",
-  "NEWSANGUO_CARD_OLD_THE_HIEROPHANT.description": "将{Cards:diff()}张随机无色牌加入你的[gold]手牌[/gold]，这些牌在本回合或打出前耗能减少1。",
+  "NEWSANGUO_CARD_OLD_THE_HIEROPHANT.description": "将{Cards:diff()}张随机无色牌加入你的[gold]手牌[/gold]。\n这些牌在本回合的{Energy:energyIcons()}耗能减少1。",
   "NEWSANGUO_CARD_OLD_THE_EMPEROR.title": "皇帝（旧）",
   "NEWSANGUO_CARD_OLD_THE_EMPEROR.description": "获得{Energy:energyIcons()}。",
   "NEWSANGUO_CARD_OLD_THE_TOWER.title": "塔（旧）",
-  "NEWSANGUO_CARD_OLD_THE_TOWER.description": "你每攀爬一层，造成{ExtraDamage:diff()}点伤害。{InCombat:\n（造成{CalculatedDamage:diff()}点伤害）|}",
+  "NEWSANGUO_CARD_OLD_THE_TOWER.description": "造成{ExtraDamage:diff()}×当前楼层数的伤害。",
   "NEWSANGUO_CARD_OLD_TEMPERANCE.title": "节制（旧）",
   "NEWSANGUO_CARD_OLD_TEMPERANCE.description": "获得{Block:diff()}点[gold]格挡[/gold]。",
   "NEWSANGUO_CARD_OLD_THE_SUN.title": "太阳（旧）",
-  "NEWSANGUO_CARD_OLD_THE_SUN.description": "抽{Cards:diff()}张牌。\n获得{Energy:energyIcons()}。\n将一张[gold]煤灰[/gold]加入你的[gold]弃牌堆[/gold]。",
-  "NEWSANGUO_CARD_OLD_THE_HERMIT.title": "隐者（旧）",
-  "NEWSANGUO_CARD_OLD_THE_HERMIT.description": "丢弃一张牌。如果它是诅咒牌，改为将其[gold]消耗[/gold]。\n抽{Cards:diff()}张牌。",
+  "NEWSANGUO_CARD_OLD_THE_SUN.description": "抽{Cards:diff()}张牌。\n获得{Energy:energyIcons()}。\n在你的[gold]弃牌堆[/gold]中加入一张[gold]煤灰[/gold]。",
   "NEWSANGUO_CARD_OLD_DEATH.title": "死神（旧）",
-  "NEWSANGUO_CARD_OLD_DEATH.description": "给予{Doom:diff()}层[gold]毁灭[/gold]。"
+  "NEWSANGUO_CARD_OLD_DEATH.description": "给予{DoomPower:diff()}层[gold]灾厄[/gold]。"
 }

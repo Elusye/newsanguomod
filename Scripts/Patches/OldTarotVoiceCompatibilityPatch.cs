@@ -20,7 +20,6 @@ public static class OldTarotVoiceCompatibilityPatch
         (typeof(TheTower), typeof(OldTheTower)),
         (typeof(Temperance), typeof(OldTemperance)),
         (typeof(TheSun), typeof(OldTheSun)),
-        (typeof(TheHermit), typeof(OldTheHermit)),
         (typeof(Death), typeof(OldDeath))
     ];
     [HarmonyPriority(Priority.First)]

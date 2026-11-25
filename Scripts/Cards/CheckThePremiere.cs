@@ -58,7 +58,6 @@ public class CheckThePremiere : NewsanguoCardTemplate
             combatState.CreateCard<OldTheTower>(base.Owner),
             combatState.CreateCard<OldTemperance>(base.Owner),
             combatState.CreateCard<OldTheSun>(base.Owner),
-            combatState.CreateCard<OldTheHermit>(base.Owner),
             combatState.CreateCard<OldDeath>(base.Owner)
         ];
         // 旧版牌禁止通用随机生成，直接抽样以保留这些专属候选。

@@ -36,7 +36,7 @@ public class OldForgottenRitual : NewsanguoCardTemplate
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
+        PortraitPath: ModelDb.Card<ForgottenRitual>().PortraitPath
     );
 
     // 卡牌基础数值：获得的能量

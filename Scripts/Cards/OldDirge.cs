@@ -29,7 +29,7 @@ public class OldDirge : NewsanguoCardTemplate
 
     // 卡图资源
     public override CardAssetProfile AssetProfile => new(
-        PortraitPath: $"res://newsanguo/images/cards/{GetType().Name}.png"
+        PortraitPath: ModelDb.Card<Dirge>().PortraitPath
     );
 
     // 每次召唤的奥斯提数量（升级后 4）
